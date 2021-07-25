@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /w/load.php?
+Allow: /w/resources
+Allow: /w/skins
+Allow: /w/extensions
+Disallow: /w/
+Disallow: /Special:
+Disallow: /wiki/Special:
+Disallow: /MediaWiki:
+Disallow: /wiki/MediaWiki:

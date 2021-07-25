@@ -1,0 +1,454 @@
+From 96d2f172b5d26da6fe6e1c6bd724026136fcc705 Mon Sep 17 00:00:00 2001
+From: Vedmaka <god.vedmaka@gmail.com>
+Date: Thu, 15 Jul 2021 15:25:51 +0300
+Subject: [PATCH] Allows managing site-wide fields visibility via
+ Special:ManageFields page
+
+- introduces new `manage-profiles-fields` right
+- introduces new `Special:ManageFields` page
+- adds new `user_profile_fields_disabled` table
+- patches location and hometown fields display making it respect visibility settings
+- makes the Special:UpdateProfile page listed
+---
+ SocialProfile.php                             |  6 ++
+ SocialProfileHooks.php                        |  1 +
+ UserProfile/i18n/en.json                      | 14 +++
+ UserProfile/i18n/qqq.json                     | 14 +++
+ UserProfile/includes/SPUserSecurity.php       |  6 ++
+ UserProfile/includes/UserProfile.php          | 90 ++++++++++++++++++
+ UserProfile/includes/UserProfilePage.php      | 20 +++-
+ .../includes/specials/SpecialManageFields.php | 93 +++++++++++++++++++
+ .../specials/SpecialUpdateProfile.php         |  2 +-
+ .../user_profile_fields_disabled.postgres.sql |  7 ++
+ .../sql/user_profile_fields_disabled.sql      |  7 ++
+ 11 files changed, 257 insertions(+), 3 deletions(-)
+ create mode 100644 UserProfile/includes/specials/SpecialManageFields.php
+ create mode 100644 UserProfile/sql/user_profile_fields_disabled.postgres.sql
+ create mode 100644 UserProfile/sql/user_profile_fields_disabled.sql
+
+diff --git a/SocialProfile.php b/SocialProfile.php
+index 9ff5322d..c0c7ae6b 100644
+--- a/SocialProfile.php
++++ b/SocialProfile.php
+@@ -55,6 +55,7 @@ $wgAutoloadClasses['SpecialPopulateUserProfiles'] = __DIR__ . '/UserProfile/incl
+ $wgAutoloadClasses['SpecialToggleUserPage'] = __DIR__ . '/UserProfile/includes/specials/SpecialToggleUserPageType.php';
+ $wgAutoloadClasses['SpecialUpdateProfile'] = __DIR__ . '/UserProfile/includes/specials/SpecialUpdateProfile.php';
+ $wgAutoloadClasses['SpecialUploadAvatar'] = __DIR__ . '/UserProfile/includes/specials/SpecialUploadAvatar.php';
++$wgAutoloadClasses['SpecialManageFields'] = __DIR__ . '/UserProfile/includes/specials/SpecialManageFields.php';
+ $wgAutoloadClasses['UploadAvatar'] = __DIR__ . '/UserProfile/includes/avatar/UploadAvatar.php';
+ $wgAutoloadClasses['RemoveAvatar'] = __DIR__ . '/UserProfile/includes/specials/SpecialRemoveAvatar.php';
+ $wgAutoloadClasses['UserProfile'] = __DIR__ . '/UserProfile/includes/UserProfile.php';
+@@ -86,6 +87,11 @@ $wgSpecialPages['RemoveAvatar'] = 'RemoveAvatar';
+ $wgSpecialPages['ToggleUserPage'] = 'SpecialToggleUserPage';
+ $wgSpecialPages['UpdateProfile'] = 'SpecialUpdateProfile';
+ $wgSpecialPages['UploadAvatar'] = 'SpecialUploadAvatar';
++$wgSpecialPages['ManageFields'] = 'SpecialManageFields';
++
++// Permission to manage fields visibility site-wide
++$wgAvailableRights[] = 'manage-profiles-fields';
++$wgGroupPermissions['sysop']['manage-profiles-fields'] = true;
+ 
+ // What to display on social profile pages by default?
+ $wgUserProfileDisplay['board'] = true;
+diff --git a/SocialProfileHooks.php b/SocialProfileHooks.php
+index 2552b016..5c80aaef 100644
+--- a/SocialProfileHooks.php
++++ b/SocialProfileHooks.php
+@@ -60,6 +60,7 @@ class SocialProfileHooks {
+ 		$updater->addExtensionTable( 'user_points_weekly', "$dir/UserStats/sql/user_points_weekly$dbExt.sql" );
+ 		$updater->addExtensionTable( 'user_points_monthly', "$dir/UserStats/sql/user_points_monthly$dbExt.sql" );
+ 		$updater->addExtensionTable( 'user_points_archive', "$dir/UserStats/sql/user_points_archive$dbExt.sql" );
++		$updater->addExtensionTable( 'user_profile_fields_disabled', "$dir/UserProfile/sql/user_profile_fields_disabled$dbExt.sql" );
+ 
+ 		$updater->dropExtensionField( 'user_stats', 'stats_year_id', "$dir/UserStats/sql/patches/patch-drop-column-stats_year_id.sql" );
+ 		$updater->dropExtensionField( 'user_profile', 'up_last_seen', "$dir/UserProfile/sql/patches/patch-drop-column-up_last_seen.sql" );
+diff --git a/UserProfile/i18n/en.json b/UserProfile/i18n/en.json
+index e51ce9ab..598c3988 100644
+--- a/UserProfile/i18n/en.json
++++ b/UserProfile/i18n/en.json
+@@ -8,6 +8,9 @@
+ 	"editprofile": "Edit other users' profiles",
+ 	"populateuserprofiles": "Populate user profiles",
+ 	"populateuserprofiles-confirm": "Are you sure you want to populate existing users' profiles?",
++	"managefields": "Manage profiles fields visibility site-wide",
++	"managefields-desc": "Please select which fields will be hidden site-wide ignoring user privacy settings",
++	"managefields-saved": "Changes has been saved successfully!",
+ 	"user-time-ago": "$1 ago",
+ 	"user-awards-title": "Awards",
+ 	"user-gifts-title": "Gifts",
+@@ -56,6 +59,10 @@
+ 	"custom-info-field2": "Custom 2",
+ 	"custom-info-field3": "Custom 3",
+ 	"custom-info-field4": "Custom 4",
++	"custom-info-setting-field1": "Custom Information 1",
++	"custom-info-setting-field2": "Custom Information 2",
++	"custom-info-setting-field3": "Custom Information 3",
++	"custom-info-setting-field4": "Custom Information 4",
+ 	"custom-no-info": "No custom information",
+ 	"profile-updated-personal": "Update your profile",
+ 	"profile-not-provided": "Not provided",
+@@ -66,7 +73,13 @@
+ 	"user-no-personal-info": "No personal information",
+ 	"user-personal-info-real-name": "Real name",
+ 	"user-personal-info-location": "Location",
++	"user-personal-info-location-city": "Location (City)",
++	"user-personal-info-location-state": "Location (State)",
++	"user-personal-info-location-country": "Location (Country)",
+ 	"user-personal-info-hometown": "Hometown",
++	"user-personal-info-hometown-city": "Hometown (City)",
++	"user-personal-info-hometown-state": "Hometown (State)",
++	"user-personal-info-hometown-country": "Hometown (Country)",
+ 	"user-personal-info-birthday": "Birthday",
+ 	"user-personal-info-occupation": "Occupation",
+ 	"user-personal-info-websites": "Websites",
+@@ -192,6 +205,7 @@
+ 	"user-type-toggle-new": "Use social userpage",
+ 	"user-board-login-message": "You must be [[Special:UserLogin|logged in]] to post messages to other users",
+ 	"user-board-confirm-delete": "Are you sure you want to delete this message?",
++	"updateprofile": "Update your profile",
+ 	"removeavatar": "Remove avatar",
+ 	"removeavatar-remove-my-avatar": "Remove my avatar",
+ 	"removeavatar-remove-your-avatar": "Remove your avatar",
+diff --git a/UserProfile/i18n/qqq.json b/UserProfile/i18n/qqq.json
+index 40ae9778..253c605d 100644
+--- a/UserProfile/i18n/qqq.json
++++ b/UserProfile/i18n/qqq.json
+@@ -16,6 +16,9 @@
+ 	"editprofile": "Page title of Special:EditProfile, the special page which allows privileged users (usually admins, but not always) to edit other users' social profiles; generally speaking users can only edit their own social profiles, but it might be necessary for admins to be able to edit others' profiles to e.g. remove spam or personal attacks, etc.",
+ 	"populateuserprofiles": "Page title of Special:PopulateUserProfiles, the special page which privileged users (those with the <code>populate-user-profiles</code> user right; usually, but not necessarily always, admins) can use to populate the <code>user_profile</code> database table with information about existing users who already have created their own User: page. Once that process is done, users who had an existing User: page prior to SocialProfile being installed will keep their wikitext user page as the default when someone accesses their user page.",
+ 	"populateuserprofiles-confirm": "Confirmation message shown on Special:PopulateUserProfiles for privileged users ((those with the <code>populate-user-profiles</code> user right)",
++	"managefields": "Page title of Special:ManageFields",
++	"managefields-desc": "Intro text for the ManageFields special page",
++	"managefields-saved": "Message displayed after successful save on ManageFields page",
+ 	"user-time-ago": "Timestamp thing; $1 is an appropriate combination of {{msg-mw|userboard-time-days}} and/or {{msg-mw|userboard-time-hours}} and/or {{msg-mw|userboard-time-minutes}} and/or {{msg-mw|userboard-time-seconds}} and the actual formatted timestamp. See also {{msg-mw|userboard_posted_ago}} and [[phab:T159089]], [[phab:T69962]] & [[phab:T69964]].",
+ 	"user-awards-title": "Social profile section header; see the [[mw:File:Social user profile.png|screenshot]]. Awards a.k.a system gifts are rewards awarded to users automatically by the software once they reach certain thresholds (which site administrators or other privileged users are able to define via Special:SystemGiftManager) like having made 100 edits or gained 5 new friends, etc.",
+ 	"user-gifts-title": "Social profile section header; see the [[mw:File:Social user profile.png|screenshot]]. Gifts are little rewards that users can send to each other (as opposed to awards a.k.a system gifts, which are automatically given out once the user reaches certain thresholds). Power users (those with the <code>giftmanager</code> user right) can configure gifts via Special:GiftManager and regular users are also able to create and edit gifts only they can send out if the configuration variable <code>$wgMaxCustomUserGiftCount</code> is set to a value higher than zero in the wiki's [[mw:Manual:LocalSettings.php|LocalSettings.php]] file.",
+@@ -63,6 +66,10 @@
+ 	"custom-info-field2": "Social profile section item; see the [[mw:File:Social user profile.png|screenshot]] for details. This and the related messages ({{msg-mw|custom-info-field1}}, {{msg-mw|custom-info-field2}}, {{msg-mw|custom-info-field4}}) are meant for sites to customize as needed. For example, ArmchairGM (a sports-themed wiki; the site where the [[mw:social tools|social tools]] were originally developed) used these fields to provide the fields \"favorite sports moment\", \"least favorite sports moment\", \"favorite athlete\" and \"least favorite athlete\".",
+ 	"custom-info-field3": "Social profile section item; see the [[mw:File:Social user profile.png|screenshot]] for details. This and the related messages ({{msg-mw|custom-info-field1}}, {{msg-mw|custom-info-field2}}, {{msg-mw|custom-info-field4}}) are meant for sites to customize as needed. For example, ArmchairGM (a sports-themed wiki; the site where the [[mw:social tools|social tools]] were originally developed) used these fields to provide the fields \"favorite sports moment\", \"least favorite sports moment\", \"favorite athlete\" and \"least favorite athlete\".",
+ 	"custom-info-field4": "Social profile section item; see the [[mw:File:Social user profile.png|screenshot]] for details. This and the related messages ({{msg-mw|custom-info-field1}}, {{msg-mw|custom-info-field2}}, {{msg-mw|custom-info-field3}}) are meant for sites to customize as needed. For example, ArmchairGM (a sports-themed wiki; the site where the [[mw:social tools|social tools]] were originally developed) used these fields to provide the fields \"favorite sports moment\", \"least favorite sports moment\", \"favorite athlete\" and \"least favorite athlete\".",
++	"custom-info-setting-field1": "Social profile section item 1; for Special:ManageFields",
++	"custom-info-setting-field2": "Social profile section item 2; for Special:ManageFields",
++	"custom-info-setting-field3": "Social profile section item 3; for Special:ManageFields",
++	"custom-info-setting-field4": "Social profile section item 4; for Special:ManageFields",
+ 	"custom-no-info": "Shown on social profile pages when the \"custom information\" section is completely empty (the user hasn't filled it out yet).",
+ 	"profile-updated-personal": "Link text shown on your social profile page only to you",
+ 	"profile-not-provided": "Theoretically shown on social profile pages when certain information hasn't been provided by the user, but in reality I haven't seen this message ever in use though the PHP code certainly is using it. I need to look into this.",
+@@ -73,7 +80,13 @@
+ 	"user-no-personal-info": "Shown on social profile pages when the \"personal information\" section is completely empty (the user hasn't filled it out yet).",
+ 	"user-personal-info-real-name": "Social profile section item; see the [[mw:File:Social user profile.png|screenshot]] for details.\n{{Identical|Real name}}",
+ 	"user-personal-info-location": "Social profile section item; see the [[mw:File:Social user profile.png|screenshot]] for details.\n{{Identical|Location}}",
++	"user-personal-info-location-city": "Location (City) label displayed on Special:ManageFields",
++	"user-personal-info-location-state": "Location (State) label displayed on Special:ManageFields",
++	"user-personal-info-location-country": "Location (Country) label displayed on Special:ManageFields",
+ 	"user-personal-info-hometown": "Social profile section item; see the [[mw:File:Social user profile.png|screenshot]] for details.\n{{Identical|Hometown}}",
++	"user-personal-info-hometown-city": "Hometown (City) label displayed on Special:ManageFields",
++	"user-personal-info-hometown-state": "Hometown (State) label displayed on Special:ManageFields",
++	"user-personal-info-hometown-country": "Hometown (Country) label displayed on Special:ManageFields",
+ 	"user-personal-info-birthday": "Social profile section item; see the [[mw:File:Social user profile.png|screenshot]] for details.\n{{Identical|Birthday}}",
+ 	"user-personal-info-occupation": "Social profile section item; see the [[mw:File:Social user profile.png|screenshot]] for details.\n{{Identical|Occupation}}",
+ 	"user-personal-info-websites": "Social profile section item; see the [[mw:File:Social user profile.png|screenshot]] for details.\n{{Identical|Websites}}",
+@@ -200,6 +213,7 @@
+ 	"user-type-toggle-new": "Shown on your own social profile page; clicking on this link allows you to use the structured social profile as your primary User: page, as opposed to the regular wikitext page.",
+ 	"user-board-login-message": "Shown on the user board section of social profile pages to anonymous users informing them that they cannot post messages to the user's board.",
+ 	"user-board-confirm-delete": "Confirmation message shown via JavaScript when attempting to delete user board messages via your profile page",
++	"updateprofile": "Special:UpdateProfile page title on Special:SpecialPages list",
+ 	"removeavatar": "Page title of Special:RemoveAvatar for users who have the <code>avatarremove</code> user right, i.e. users who can remove others' avatars, to be displayed on Special:SpecialPages. See also {{msg-mw|avatarupload-removeavatar}}, {{msg-mw|removeavatar-remove-my-avatar}}, {{msg-mw|removeavatar-remove-my-avatar}}.",
+ 	"removeavatar-remove-my-avatar": "Page title of Special:RemoveAvatar for regular users, i.e. those who don't have the <code>avatarremove</code> user right, to be displayed on Special:SpecialPages. See also {{msg-mw|removeavatar}}, {{msg-mw|avatarupload-removeavatar}}, {{msg-mw|removeavatar-remove-my-avatar}}.",
+ 	"removeavatar-remove-your-avatar": "Page title of Special:RemoveAvatar for regular users, i.e. those who don't have the <code>avatarremove</code> user right, to be displayed on Special:RemoveAvatar. See also {{msg-mw|removeavatar}}, {{msg-mw|avatarupload-removeavatar}}, {{msg-mw|removeavatar-remove-my-avatar}}.",
+diff --git a/UserProfile/includes/SPUserSecurity.php b/UserProfile/includes/SPUserSecurity.php
+index 18e549f6..2a74e0fc 100644
+--- a/UserProfile/includes/SPUserSecurity.php
++++ b/UserProfile/includes/SPUserSecurity.php
+@@ -149,7 +149,13 @@ class SPUserSecurity {
+ 		$profile = new UserProfile( $owner );
+ 		$fields = $profile->profile_fields;
+ 
++		$disabledFields = UserProfile::getDisabledFields();
++
+ 		foreach ( $fields as $field ) {
++			// Overrides field visibility based on UserProfile::getDisabledFields
++			if( in_array( 'up_' . $field, $disabledFields ) ) {
++				continue;
++			}
+ 			if ( self::isFieldVisible( $owner, 'up_' . $field, $viewer ) ) {
+ 				$result[] = 'up_' . $field;
+ 			}
+diff --git a/UserProfile/includes/UserProfile.php b/UserProfile/includes/UserProfile.php
+index 37dbd995..53b562f8 100644
+--- a/UserProfile/includes/UserProfile.php
++++ b/UserProfile/includes/UserProfile.php
+@@ -273,4 +273,94 @@ class UserProfile {
+ 
+ 		return $output;
+ 	}
++
++	/**
++	 * @return string[]
++	 */
++	public static function getDisabledFields() {
++		$dbr = wfGetDB( DB_REPLICA );
++		return $dbr->selectFieldValues(
++			'user_profile_fields_disabled',
++			'up_field_name'
++		);
++	}
++
++	/**
++	 * @param string $fieldName
++	 */
++	public static function disableField( $fieldName ) {
++		$dbw = wfGetDB( DB_MASTER );
++		if( !$dbw->selectRow(
++			'user_profile_fields_disabled',
++			'up_field_name',
++			['up_field_name' => $fieldName]
++		) ) {
++			$dbw->insert( 'user_profile_fields_disabled', [
++				'up_field_name' => $fieldName
++			] );
++		}
++	}
++
++	/**
++	 * @param string $fieldName
++	 */
++	public static function enableField( $fieldName ) {
++		$dbw = wfGetDB( DB_MASTER );
++		$dbw->delete(
++			'user_profile_fields_disabled',
++			[
++				'up_field_name' => $fieldName
++			]
++		);
++	}
++
++	public static function resetDisabledFields() {
++		$dbw = wfGetDB( DB_MASTER );
++		$dbw->delete(
++			'user_profile_fields_disabled',
++			[
++				'up_field_name IS NOT NULL'
++			]
++		);
++	}
++
++	/**
++	 * Returns list of all db fields being used with their i18n messages linked
++	 * @return string[]
++	 */
++	public static function getFields() {
++		return [
++			'up_real_name' => 'user-personal-info-real-name',
++			'up_location_city' => 'user-personal-info-location-city',
++			'up_location_state' => 'user-personal-info-location-state',
++			'up_location_country' => 'user-personal-info-location-country',
++			'up_hometown_city' => 'user-personal-info-hometown-city',
++			'up_hometown_state' => 'user-personal-info-hometown-state',
++			'up_hometown_country' => 'user-personal-info-hometown-country',
++			'up_birthday' => 'user-personal-info-birthday',
++			//'up_relationship' => '',
++			'up_occupation' => 'user-personal-info-occupation',
++			//'up_companies' => '',
++			'up_about' => 'user-personal-info-about-me',
++			'up_places_lived' => 'user-personal-info-places-lived',
++			'up_schools' => 'user-personal-info-schools',
++			'up_websites' => 'user-personal-info-websites',
++			'up_movies' => 'other-info-movies',
++			'up_books' => 'other-info-books',
++			'up_magazines' => 'other-info-magazines',
++			'up_music' => 'other-info-music',
++			'up_tv' => 'other-info-tv',
++			'up_drinks' => 'other-info-drinks',
++			'up_snacks' => 'other-info-snacks',
++			'up_video_games' => 'other-info-video-games',
++			'up_interests' => 'user-profile-section-interests',
++			//'up_quotes' => '',
++			'up_custom_1' => 'custom-info-setting-field1',
++			'up_custom_2' => 'custom-info-setting-field2',
++			'up_custom_3' => 'custom-info-setting-field3',
++			'up_custom_4' => 'custom-info-setting-field4',
++			//'up_custom_5' => 'custom-info-field5'
++		];
++	}
++
+ }
+diff --git a/UserProfile/includes/UserProfilePage.php b/UserProfile/includes/UserProfilePage.php
+index 24a709a4..e193891f 100644
+--- a/UserProfile/includes/UserProfilePage.php
++++ b/UserProfile/includes/UserProfilePage.php
+@@ -640,7 +640,15 @@ class UserProfilePage extends Article {
+ 		$defaultCountry = wfMessage( 'user-profile-default-country' )->inContentLanguage()->text();
+ 
+ 		// Current location
+-		$location = $profile_data['location_city'] . ', ' . $profile_data['location_state'];
++		$location = '';
++		if ( in_array( 'up_location_city', $this->profile_visible_fields ) ) {
++			$location .= $profile_data['location_city'];
++		}
++		$location .= ', ';
++		if ( in_array( 'up_location_state', $this->profile_visible_fields ) ) {
++			$location .= $profile_data['location_state'];
++		}
++
+ 		if ( $profile_data['location_country'] != $defaultCountry ) {
+ 			if ( $profile_data['location_city'] && $profile_data['location_state'] ) { // city AND state
+ 				$location = $profile_data['location_city'] . ', ' .
+@@ -681,7 +689,15 @@ class UserProfilePage extends Article {
+ 		}
+ 
+ 		// Hometown
+-		$hometown = $profile_data['hometown_city'] . ', ' . $profile_data['hometown_state'];
++		$hometown = '';
++		if ( in_array( 'up_hometown_city', $this->profile_visible_fields ) ) {
++			$location .= $profile_data['hometown_city'];
++		}
++		$hometown .= ', ';
++		if ( in_array( 'up_hometown_state', $this->profile_visible_fields ) ) {
++			$location .= $profile_data['hometown_state'];
++		}
++
+ 		if ( $profile_data['hometown_country'] != $defaultCountry ) {
+ 			if ( $profile_data['hometown_city'] && $profile_data['hometown_state'] ) { // city AND state
+ 				$hometown = $profile_data['hometown_city'] . ', ' .
+diff --git a/UserProfile/includes/specials/SpecialManageFields.php b/UserProfile/includes/specials/SpecialManageFields.php
+new file mode 100644
+index 00000000..53d24616
+--- /dev/null
++++ b/UserProfile/includes/specials/SpecialManageFields.php
+@@ -0,0 +1,93 @@
++<?php
++/**
++ * A special page for managing glabal state of profiles fields
++ *
++ * @file
++ * @ingroup Extensions
++ * @author WikiTeq
++ * @copyright Copyright © 2021, WikiTeq
++ * @license GPL-2.0-or-later
++ */
++
++class SpecialManageFields extends SpecialPage {
++
++	public function __construct() {
++		parent::__construct( 'ManageFields', 'manage-profiles-fields' );
++	}
++
++	public function doesWrites() {
++		return true;
++	}
++
++	/**
++	 * Show the special page
++	 *
++	 * @param string|null $params
++	 */
++	public function execute( $params ) {
++		$out = $this->getOutput();
++		$request = $this->getRequest();
++		$user = $this->getUser();
++
++		// Make sure user has the correct permissions
++		$this->checkPermissions();
++
++		// Show a message if the database is in read-only mode
++		$this->checkReadOnly();
++
++		// If user is blocked, they don't need to access this page
++		if ( $user->isBlocked() ) {
++			throw new UserBlockedError( $user->getBlock() );
++		}
++
++		// Set the page title, robot policy, etc.
++		$this->setHeaders();
++
++		if ( $request->wasPosted() && $user->matchEditToken( $request->getVal( 'wpEditToken' ) ) ) {
++			$fieldsToDisable = $this->getRequest()->getArray('fields', []);
++			UserProfile::resetDisabledFields();
++			if( count( $fieldsToDisable ) ) {
++				$fieldsToDisable = array_keys( $fieldsToDisable );
++				foreach ( $fieldsToDisable as $fieldToDisable ) {
++					UserProfile::disableField( $fieldToDisable );
++				}
++			}
++			$this->getOutput()->addWikiMsg( 'managefields-saved' );
++		}
++
++		$out->addHTML( $this->displayForm() );
++
++	}
++
++	/**
++	 * Render the confirmation form
++	 *
++	 * @return string HTML
++	 */
++	private function displayForm() {
++		$form = '<form method="post" name="manage-profiles-fields" action="">';
++		$form .= '<p>' . $this->msg( 'managefields-desc' )->escaped() . '</p>';
++		$form .= '<br />';
++
++		$fields = UserProfile::getFields();
++		$disabledFields = UserProfile::getDisabledFields();
++
++		foreach ( $fields as $field => $msg ) {
++			$form .= Html::rawElement(
++				'div',
++				[],
++				Html::check( 'fields['.$field.']', in_array( $field, $disabledFields ), [ 'id' => $field ] ) .
++				Html::label( $this->msg( $msg ), $field )
++			);
++		}
++
++		$form .= Html::hidden( 'wpEditToken', $this->getUser()->getEditToken() );
++		// passing null as the 1st argument makes the button use the browser default text
++		// (on Firefox 72 with English localization this is "Submit Query" which is good enough,
++		// since MW core lacks a generic "submit" message and I don't feel like introducing
++		// a new i18n msg just for this button...)
++		$form .= Html::submitButton( null, [ 'name' => 'wpSubmit' ] );
++		$form .= '</form>';
++		return $form;
++	}
++}
+diff --git a/UserProfile/includes/specials/SpecialUpdateProfile.php b/UserProfile/includes/specials/SpecialUpdateProfile.php
+index a0187178..98430a38 100644
+--- a/UserProfile/includes/specials/SpecialUpdateProfile.php
++++ b/UserProfile/includes/specials/SpecialUpdateProfile.php
+@@ -12,7 +12,7 @@ use MediaWiki\User\UserIdentity;
+  * @license GPL-2.0-or-later
+  */
+ 
+-class SpecialUpdateProfile extends UnlistedSpecialPage {
++class SpecialUpdateProfile extends SpecialPage {
+ 
+ 	public function __construct() {
+ 		parent::__construct( 'UpdateProfile' );
+diff --git a/UserProfile/sql/user_profile_fields_disabled.postgres.sql b/UserProfile/sql/user_profile_fields_disabled.postgres.sql
+new file mode 100644
+index 00000000..16487c16
+--- /dev/null
++++ b/UserProfile/sql/user_profile_fields_disabled.postgres.sql
+@@ -0,0 +1,7 @@
++-- Postgres version
++-- Table structure for table `user_profile_fields_disabled`
++--
++
++CREATE TABLE user_profile_fields_disabled (
++  up_field_name TEXT NOT NULL
++);
+diff --git a/UserProfile/sql/user_profile_fields_disabled.sql b/UserProfile/sql/user_profile_fields_disabled.sql
+new file mode 100644
+index 00000000..9614a79a
+--- /dev/null
++++ b/UserProfile/sql/user_profile_fields_disabled.sql
+@@ -0,0 +1,7 @@
++--
++-- Table structure for table `user_profile_fields_disabled`
++--
++
++CREATE TABLE IF NOT EXISTS /*_*/user_profile_fields_disabled (
++  `up_field_name` varchar(255) NOT NULL
++) /*$wgDBTableOptions*/;
+-- 
+2.30.1 (Apple Git-130)
+

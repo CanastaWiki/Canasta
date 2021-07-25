@@ -1,0 +1,18 @@
+RewriteEngine On
+
+# Close access to git repo
+RedirectMatch 404 /\.git
+
+# Disable directory indexing
+Options -Indexes
+
+# VisualEditor support
+RewriteRule ^/?w/rest.php/ - [L,NC]
+
+# Redirect / to Main Page
+RewriteRule ^/*$ %{DOCUMENT_ROOT}/w/index.php [L]
+
+# see https://www.mediawiki.org/wiki/Manual:Short_URL/Apache
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-d
+RewriteRule ^(.*)$ %{DOCUMENT_ROOT}/w/index.php [L]

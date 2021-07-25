@@ -1,0 +1,58 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password --expire_logs_days=3 --secure-file-priv=""
+    cap_add:
+      - SYS_NICE  # CAP_SYS_NICE, fix error mbind: Operation not permitted
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD:-mediawiki}
+      - MYSQL_DATABASE=mediawiki
+    volumes:
+      - ./_initdb:/docker-entrypoint-initdb.d
+      - mysql-data-volume:/var/lib/mysql
+
+  web:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    restart: unless-stopped
+    ports:
+      - "${PORT:-80}:80"
+    depends_on:
+      - db
+      - elasticsearch
+    links:
+      - db
+    environment:
+      # Sourced from .env
+      - MW_SITE_SERVER=${MW_SITE_SERVER:-http://localhost}
+      - PHP_UPLOAD_MAX_FILESIZE=${PHP_UPLOAD_MAX_FILESIZE:-10M}
+      - PHP_POST_MAX_SIZE=${PHP_UPLOAD_MAX_FILESIZE:-10M}
+    volumes:
+      - ./extensions:/var/www/mediawiki/w/extensions
+      - ./skins:/var/www/mediawiki/w/skins
+      - ./config:/mediawiki/config
+      - ./images:/mediawiki/images
+      - sitemap:/mediawiki/sitemap
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.13
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
+
+volumes:
+  mysql-data-volume:
+  elasticsearch:
+  sitemap:

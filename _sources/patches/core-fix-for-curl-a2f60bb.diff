@@ -1,0 +1,31 @@
+From a2f60bbbc4d6e2d53f498140374462e164962e96 Mon Sep 17 00:00:00 2001
+From: Reedy <reedy@wikimedia.org>
+Date: Wed, 02 Dec 2020 01:05:54 +0000
+Subject: [PATCH] Make use of CURLMOPT_MAX_HOST_CONNECTIONS conditional on having curl >= 7.30.0
+
+Bug: T264986
+Change-Id: I0a91eaf456d855b3f064bf5e4202bab1ced4a94c
+(cherry picked from commit 898ba5f607afa9d1fb410e22768efd89379f389c)
+---
+
+diff --git a/includes/libs/http/MultiHttpClient.php b/includes/libs/http/MultiHttpClient.php
+index 1a73361..3962eec 100644
+--- a/includes/libs/http/MultiHttpClient.php
++++ b/includes/libs/http/MultiHttpClient.php
+@@ -443,9 +443,13 @@
+ 			$this->cmh = $cmh;
+ 		}
+ 
+-		// Limit the number of in-flight requests for any given host
+-		$maxHostConns = $opts['maxConnsPerHost'] ?? $this->maxConnsPerHost;
+-		curl_multi_setopt( $this->cmh, CURLMOPT_MAX_HOST_CONNECTIONS, (int)$maxHostConns );
++		// CURLMOPT_MAX_HOST_CONNECTIONS is available since PHP 7.0.7 and cURL 7.30.0
++		if ( version_compare( curl_version()['version'], '7.30.0', '>=' ) ) {
++			// Limit the number of in-flight requests for any given host
++			$maxHostConns = $opts['maxConnsPerHost'] ?? $this->maxConnsPerHost;
++			curl_multi_setopt( $this->cmh, CURLMOPT_MAX_HOST_CONNECTIONS, (int)$maxHostConns );
++		}
++
+ 		// Configure when to multiplex multiple requests onto single TCP handles
+ 		$pipelining = $opts['usePipelining'] ?? $this->usePipelining;
+ 		curl_multi_setopt( $this->cmh, CURLMOPT_PIPELINING, $pipelining ? 3 : 0 );

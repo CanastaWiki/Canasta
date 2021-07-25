@@ -1,0 +1,126 @@
+From 5b1242138fc4b4870216e64b5e761284d9d9bfd2 Mon Sep 17 00:00:00 2001
+From: Pavel Astakhov <pastakhov@yandex.ru>
+Date: Sun, 31 Jan 2021 17:21:03 +0600
+Subject: [PATCH 1/2] Remove jquery.ui.core from dependencies in Resources.php
+
+---
+ Resources.php | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/Resources.php b/Resources.php
+index 26871a9e..caacd6f5 100644
+--- a/Resources.php
++++ b/Resources.php
+@@ -64,7 +64,6 @@
+ 		'scripts' => 'resources/jquery/multiselect/jquery.multiselect.js',
+ 		'styles'  => 'resources/jquery/multiselect/jquery.multiselect.css',
+ 		'dependencies' => [
+-			'jquery.ui.core',
+ 			'jquery.ui.widget'
+ 		]
+ 	],
+@@ -89,7 +88,6 @@
+ 		],
+ 		'styles' => 'resources/jquery/jqgrid/ui.jqgrid.css',
+ 		'dependencies' => [
+-			'jquery.ui.core',
+ 			'ext.jquery.migration.browser'
+ 		]
+ 	],
+@@ -172,7 +170,6 @@
+ 		],
+ 		'dependencies' => [
+ 			'ext.srf',
+-			'jquery.ui.core',
+ 			'jquery.ui.widget',
+ 			'jquery.ui.button',
+ 			'jquery.ui.slider',
+@@ -739,7 +736,6 @@
+ 			'calendar/resources/ext.srf.widgets.calendarlegend.js',
+ 		],
+ 		'dependencies' =>  [
+-			'jquery.ui.core',
+ 			'jquery.ui.widget',
+ 			'jquery.ui.datepicker',
+ 			'jquery.ui.slider',
+@@ -951,7 +947,6 @@
+ 		'dependencies' => [
+ 			'jquery.dataTables',
+ 			'jquery.dataTables.extras',
+-			'jquery.ui.core',
+ 			'jquery.ui.widget',
+ 			'jquery.ui.button',
+ 			'ext.smw.dataItem',
+
+From b9923ec13c7834b5b141b3e7427aa8c311d987cb Mon Sep 17 00:00:00 2001
+From: Pavel Astakhov <pastakhov@yandex.ru>
+Date: Sun, 31 Jan 2021 21:11:39 +0600
+Subject: [PATCH 2/2] Replace jquery.ui.* modules with jquery.ui in
+ Resources.php
+
+---
+ Resources.php | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
+
+diff --git a/Resources.php b/Resources.php
+index caacd6f5..5f033b66 100644
+--- a/Resources.php
++++ b/Resources.php
+@@ -64,7 +64,7 @@
+ 		'scripts' => 'resources/jquery/multiselect/jquery.multiselect.js',
+ 		'styles'  => 'resources/jquery/multiselect/jquery.multiselect.css',
+ 		'dependencies' => [
+-			'jquery.ui.widget'
++			'jquery.ui',
+ 		]
+ 	],
+ 
+@@ -88,6 +88,7 @@
+ 		],
+ 		'styles' => 'resources/jquery/jqgrid/ui.jqgrid.css',
+ 		'dependencies' => [
++			'jquery.ui',
+ 			'ext.jquery.migration.browser'
+ 		]
+ 	],
+@@ -170,9 +171,7 @@
+ 		],
+ 		'dependencies' => [
+ 			'ext.srf',
+-			'jquery.ui.widget',
+-			'jquery.ui.button',
+-			'jquery.ui.slider',
++			'jquery.ui',
+ 			'ext.jquery.multiselect'
+ 		],
+ 		'messages' => [
+@@ -185,7 +184,7 @@
+ 		'scripts' => 'resources/ext.srf.util.grid.js',
+ 		'styles'  => 'resources/ext.srf.util.grid.css',
+ 		'dependencies' => [
+-			'jquery.ui.tabs',
++			'jquery.ui',
+ 			'ext.srf.util',
+ 			'ext.jquery.jqgrid',
+ 		],
+@@ -736,9 +735,7 @@
+ 			'calendar/resources/ext.srf.widgets.calendarlegend.js',
+ 		],
+ 		'dependencies' =>  [
+-			'jquery.ui.widget',
+-			'jquery.ui.datepicker',
+-			'jquery.ui.slider',
++			'jquery.ui',
+ 			'ext.smw.tooltip',
+ 			'ext.srf.util',
+ 			'ext.srf.api',
+@@ -947,8 +944,7 @@
+ 		'dependencies' => [
+ 			'jquery.dataTables',
+ 			'jquery.dataTables.extras',
+-			'jquery.ui.widget',
+-			'jquery.ui.button',
++			'jquery.ui',
+ 			'ext.smw.dataItem',
+ 			'ext.smw.api',
+ 			'ext.srf.api',

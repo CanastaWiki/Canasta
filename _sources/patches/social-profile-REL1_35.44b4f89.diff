@@ -1,0 +1,960 @@
+From 44b4f89caa781ec8cfa3a864e65062d0d5fa4ecb Mon Sep 17 00:00:00 2001
+From: Jack Phoenix <ashley@uncyclomedia.co>
+Date: Sun, 16 May 2021 10:13:15 +0300
+Subject: [PATCH] [SECURITY] Fix XSS in various SystemGifts/UserGifts-related special pages
+
+Also:
+* Adjust escaping as appropriate
+** E.g. LinkRenderer escapes the output by default so passing $this->msg( ... )->text() to it is not just safe but expected; whereas passing $this->msg( ... )->escaped() would potentially result in double escaping
+** Also htmlspecialchars( $this->msg( ... )->plain() ) is ugly and overly verbose when $this->msg( ... )->escaped() literally does the same
+* Pass Message objects to OutputPage#setPageTitle for readability
+* Make timestamps on Special:ViewSystemGift/Special:ViewGift more human-readable (thanks legoktm!)
+** Previously they were like "2020-07-18 23:25:37" but now they're like "23:25, 18 July 2020" and properly escaped on top of that
+
+Bug: T281043
+Change-Id: Id915eba45497a1a0dc1c4e00818a2fd4c0ce55d3
+(cherry picked from commit 58d2420c0f726cd469c638043ed66a4374b136f2)
+---
+
+diff --git a/SystemGifts/includes/specials/SpecialRemoveMasterSystemGift.php b/SystemGifts/includes/specials/SpecialRemoveMasterSystemGift.php
+index 97cfe01..179e86e 100644
+--- a/SystemGifts/includes/specials/SpecialRemoveMasterSystemGift.php
++++ b/SystemGifts/includes/specials/SpecialRemoveMasterSystemGift.php
+@@ -71,8 +71,8 @@
+ 		$this->gift_id = $request->getInt( 'gift_id', $par );
+ 
+ 		if ( !$this->gift_id || !is_numeric( $this->gift_id ) ) {
+-			$out->setPageTitle( $this->msg( 'ga-error-title' )->plain() );
+-			$out->addHTML( $this->msg( 'ga-error-message-invalid-link' )->plain() );
++			$out->setPageTitle( $this->msg( 'ga-error-title' ) );
++			$out->addHTML( $this->msg( 'ga-error-message-invalid-link' )->escaped() );
+ 			return false;
+ 		}
+ 
+@@ -102,14 +102,14 @@
+ 			$this->deleteImage( $this->gift_id, 'l' );
+ 			$this->deleteImage( $this->gift_id, 'ml' );
+ 
+-			$out->setPageTitle( $this->msg( 'ga-remove-success-title', $gift['gift_name'] )->plain() );
++			$out->setPageTitle( $this->msg( 'ga-remove-success-title', $gift['gift_name'] ) );
+ 
+ 			$output = '<div class="back-links">
+ 				<a href="' . htmlspecialchars( SpecialPage::getTitleFor( 'SystemGiftManager' )->getFullURL() ) . '">' .
+-					$this->msg( 'ga-viewlist' )->plain() . '</a>
++					$this->msg( 'ga-viewlist' )->escaped() . '</a>
+ 			</div>
+ 			<div class="ga-container">' .
+-				$this->msg( 'ga-remove-success-message', $gift['gift_name'] )->plain() .
++				$this->msg( 'ga-remove-success-message', $gift['gift_name'] )->escaped() .
+ 				'<div class="visualClear"></div>
+ 			</div>';
+ 
+@@ -131,24 +131,24 @@
+ 		$systemGiftIcon = new SystemGiftIcon( $this->gift_id, 'l' );
+ 		$icon = $systemGiftIcon->getIconHTML();
+ 
+-		$this->getOutput()->setPageTitle( $this->msg( 'ga-remove-title', $gift['gift_name'] )->plain() );
++		$this->getOutput()->setPageTitle( $this->msg( 'ga-remove-title', $gift['gift_name'] ) );
+ 
+ 		$output = '<div class="back-links">
+ 			<a href="' . htmlspecialchars( SpecialPage::getTitleFor( 'SystemGiftManager' )->getFullURL() ) . '">' .
+-				$this->msg( 'ga-viewlist' )->plain() . '</a>
++				$this->msg( 'ga-viewlist' )->escaped() . '</a>
+ 		</div>
+ 		<form action="" method="post" enctype="multipart/form-data" name="form1">
+ 			<div class="ga-remove-message">' .
+-				$this->msg( 'ga-delete-message', $gift['gift_name'] ) .
++				$this->msg( 'ga-delete-message', $gift['gift_name'] )->escaped() .
+ 			'</div>
+ 			<div class="ga-container">' .
+ 				$icon .
+-				'<div class="ga-name">' . $gift['gift_name'] . '</div>
++				'<div class="ga-name">' . htmlspecialchars( $gift['gift_name'], ENT_QUOTES ) . '</div>
+ 			</div>
+ 			<div class="visualClear"></div>
+ 			<div class="ga-buttons">
+-				<input type="button" class="site-button" value="' . $this->msg( 'ga-remove' )->plain() . '" size="20" onclick="document.form1.submit()" />
+-				<input type="button" class="site-button" value="' . $this->msg( 'cancel' )->plain() . '" size="20" onclick="history.go(-1)" />
++				<input type="button" class="site-button" value="' . $this->msg( 'ga-remove' )->escaped() . '" size="20" onclick="document.form1.submit()" />
++				<input type="button" class="site-button" value="' . $this->msg( 'cancel' )->escaped() . '" size="20" onclick="history.go(-1)" />
+ 			</div>
+ 			<input type="hidden" name="wpEditToken" value="' . htmlspecialchars( $this->getUser()->getEditToken(), ENT_QUOTES ) . '" />
+ 		</form>';
+diff --git a/SystemGifts/includes/specials/SpecialSystemGiftManager.php b/SystemGifts/includes/specials/SpecialSystemGiftManager.php
+index 651f445..f2464e7 100644
+--- a/SystemGifts/includes/specials/SpecialSystemGiftManager.php
++++ b/SystemGifts/includes/specials/SpecialSystemGiftManager.php
+@@ -58,7 +58,7 @@
+ 				);
+ 				$out->addHTML(
+ 					'<span class="view-status">' .
+-					$this->msg( 'ga-created' )->plain() .
++					$this->msg( 'ga-created' )->escaped() .
+ 					'</span><br /><br />'
+ 				);
+ 			} else {
+@@ -72,7 +72,7 @@
+ 				);
+ 				$out->addHTML(
+ 					'<span class="view-status">' .
+-					$this->msg( 'ga-saved' )->plain() .
++					$this->msg( 'ga-saved' )->escaped() .
+ 					'</span><br /><br />'
+ 				);
+ 			}
+@@ -86,7 +86,7 @@
+ 				$out->addHTML(
+ 					'<div><b><a href="' .
+ 					htmlspecialchars( $this->getPageTitle()->getFullURL( 'method=edit' ) ) . '">' .
+-						$this->msg( 'ga-addnew' )->plain() . '</a></b></div>'
++						$this->msg( 'ga-addnew' )->escaped() . '</a></b></div>'
+ 				);
+ 				$out->addHTML( $this->displayGiftList() );
+ 			}
+@@ -114,12 +114,12 @@
+ 					$removePage = SpecialPage::getTitleFor( 'RemoveMasterSystemGift' );
+ 					$deleteLink = '<a class="ga-remove-link" href="' .
+ 						htmlspecialchars( $removePage->getFullURL( "gift_id={$gift['id']}" ) ) .
+-						'">' . $this->msg( 'delete' )->plain() . '</a>';
++						'">' . $this->msg( 'delete' )->escaped() . '</a>';
+ 				}
+ 
+ 				$output .= '<div class="Item">
+ 					<a href="' . htmlspecialchars( $this->getPageTitle()->getFullURL( 'id=' . $gift['id'] ) ) . '">' .
+-						$gift['gift_name'] . '</a> ' .
++						htmlspecialchars( $gift['gift_name'], ENT_QUOTES ) . '</a> ' .
+ 						$deleteLink . '</div>' . "\n";
+ 			}
+ 		}
+@@ -127,9 +127,9 @@
+ 		return '<div id="views">' . $output . '</div>';
+ 	}
+ 
+-	function displayForm( $gift_id ) {
++	function displayForm( int $gift_id ) {
+ 		$form = '<div><b><a href="' . htmlspecialchars( $this->getPageTitle()->getFullURL() ) .
+-			'">' . $this->msg( 'ga-viewlist' )->plain() . '</a></b></div>';
++			'">' . $this->msg( 'ga-viewlist' )->escaped() . '</a></b></div>';
+ 
+ 		if ( $gift_id ) {
+ 			$gift = SystemGifts::getGift( $gift_id );
+@@ -138,15 +138,19 @@
+ 		$form .= '<form action="" method="post" enctype="multipart/form-data" name="gift">
+ 		<table>
+ 			<tr>
+-				<td class="view-form">' . $this->msg( 'ga-giftname' )->plain() . '</td>
+-				<td class="view-container"><input type="text" size="45" class="createbox" name="gift_name" value="' . ( $gift['gift_name'] ?? '' ) . '"/></td>
++				<td class="view-form">' . $this->msg( 'ga-giftname' )->escaped() . '</td>
++				<td class="view-container"><input type="text" size="45" class="createbox" name="gift_name" value="' .
++					( isset( $gift['gift_name'] ) && $gift['gift_name'] ? htmlspecialchars( $gift['gift_name'], ENT_QUOTES ) : '' ) .
++					'"/></td>
+ 			</tr>
+ 			<tr>
+-				<td class="view-form" valign="top">' . $this->msg( 'ga-giftdesc' )->plain() . '</td>
+-				<td class="view-container"><textarea class="createbox" name="gift_description" rows="2" cols="30">' . ( $gift['gift_description'] ?? '' ) . '</textarea></td>
++				<td class="view-form" valign="top">' . $this->msg( 'ga-giftdesc' )->escaped() . '</td>
++				<td class="view-container"><textarea class="createbox" name="gift_description" rows="2" cols="30">' .
++					( isset( $gift['gift_description'] ) && $gift['gift_description'] ? htmlspecialchars( $gift['gift_description'], ENT_QUOTES ) : '' ) .
++			'</textarea></td>
+ 			</tr>
+ 			<tr>
+-				<td class="view-form">' . $this->msg( 'ga-gifttype' )->plain() . '</td>
++				<td class="view-form">' . $this->msg( 'ga-gifttype' )->escaped() . '</td>
+ 				<td class="view-container">
+ 					<select name="gift_category">' . "\n";
+ 			$g = new SystemGifts();
+@@ -163,9 +167,9 @@
+ 				</td>
+ 			</tr>
+ 		<tr>
+-			<td class="view-form">' . $this->msg( 'ga-threshold' )->plain() . '</td>
++			<td class="view-form">' . $this->msg( 'ga-threshold' )->escaped() . '</td>
+ 			<td class="view-container"><input type="text" size="25" class="createbox" name="gift_threshold" value="' .
+-				( $gift['gift_threshold'] ?? '' ) . '"/></td>
++				( isset( $gift['gift_threshold'] ) && $gift['gift_threshold'] ? (int)$gift['gift_threshold'] : '' ) . '"/></td>
+ 		</tr>';
+ 
+ 		if ( $gift_id ) {
+@@ -174,27 +178,27 @@
+ 			$icon = $systemGiftIcon->getIconHTML();
+ 
+ 			$form .= '<tr>
+-			<td class="view-form" valign="top">' . $this->msg( 'ga-giftimage' )->plain() . '</td>
++			<td class="view-form" valign="top">' . $this->msg( 'ga-giftimage' )->escaped() . '</td>
+ 			<td class="view-container">' .
+ 				$icon .
+ 				'<a href="' . htmlspecialchars( $sgml->getFullURL( 'gift_id=' . $gift_id ) ) . '">' .
+-					$this->msg( 'ga-img' )->plain() . '</a>
++					$this->msg( 'ga-img' )->escaped() . '</a>
+ 				</td>
+ 			</tr>';
+ 		}
+ 
+ 		if ( isset( $gift['gift_id'] ) ) {
+-			$button = $this->msg( 'edit' )->plain();
++			$button = $this->msg( 'edit' )->escaped();
+ 		} else {
+-			$button = $this->msg( 'ga-create-gift' )->plain();
++			$button = $this->msg( 'ga-create-gift' )->escaped();
+ 		}
+ 
+ 		$form .= '<tr>
+ 		<td colspan="2">
+-			<input type="hidden" name="id" value="' . ( $gift['gift_id'] ?? '' ) . '" />
++			<input type="hidden" name="id" value="' . ( isset( $gift['gift_id'] ) ? (int)$gift['gift_id'] : '' ) . '" />
+ 			<input type="hidden" name="wpEditToken" value="' . htmlspecialchars( $this->getUser()->getEditToken(), ENT_QUOTES ) . '" />
+ 			<input type="button" class="createbox" value="' . $button . '" size="20" onclick="document.gift.submit()" />
+-			<input type="button" class="createbox" value="' . $this->msg( 'cancel' )->plain() . '" size="20" onclick="history.go(-1)" />
++			<input type="button" class="createbox" value="' . $this->msg( 'cancel' )->escaped() . '" size="20" onclick="history.go(-1)" />
+ 		</td>
+ 		</tr>
+ 		</table>
+diff --git a/SystemGifts/includes/specials/SpecialSystemGiftManagerLogo.php b/SystemGifts/includes/specials/SpecialSystemGiftManagerLogo.php
+index 54baee9..a729a5c 100644
+--- a/SystemGifts/includes/specials/SpecialSystemGiftManagerLogo.php
++++ b/SystemGifts/includes/specials/SpecialSystemGiftManagerLogo.php
+@@ -167,7 +167,7 @@
+ 		 * If there was no filename or a zero size given, give up quick.
+ 		 */
+ 		if ( trim( $this->mOname ) == '' || empty( $this->mUploadSize ) ) {
+-			return $this->mainUploadForm( '<li>' . $this->msg( 'emptyfile' )->plain() . '</li>' );
++			return $this->mainUploadForm( '<li>' . $this->msg( 'emptyfile' )->escaped() . '</li>' );
+ 		}
+ 
+ 		# Chop off any directories in the given filename
+@@ -236,7 +236,7 @@
+ 			}
+ 
+ 			if ( $this->mUploadSize == 0 ) {
+-				$warning .= '<li>' . $this->msg( 'emptyfile' )->plain() . '</li>';
++				$warning .= '<li>' . $this->msg( 'emptyfile' )->escaped() . '</li>';
+ 			}
+ 
+ 			if ( $warning != '' ) {
+@@ -512,8 +512,8 @@
+ 		$ext = 'jpg';
+ 		$ts = rand();
+ 
+-		$output = '<h2>' . $this->msg( 'ga-uploadsuccess' )->plain() . '</h2>';
+-		$output .= '<h5>' . $this->msg( 'ga-imagesbelow' )->plain() . '</h5>';
++		$output = '<h2>' . $this->msg( 'ga-uploadsuccess' )->escaped() . '</h2>';
++		$output .= '<h5>' . $this->msg( 'ga-imagesbelow' )->escaped() . '</h5>';
+ 		if ( $status == 1 ) {
+ 			$ext = 'gif';
+ 		}
+@@ -526,33 +526,33 @@
+ 
+ 		$output .= '<table class="ga-upload-success-page">
+ 		<tr>
+-			<td class="title-cell" valign="top">' . $this->msg( 'ga-large' )->plain() . '</td>
++			<td class="title-cell" valign="top">' . $this->msg( 'ga-large' )->escaped() . '</td>
+ 			<td><img src="' . $uploadPath . '/awards/sg_' . $this->gift_id . '_l.' . $ext . '?ts=' . $ts . '" alt="" /></td>
+ 		</tr>
+ 		<tr>
+-			<td class="title-cell" valign="top">' . $this->msg( 'ga-mediumlarge' )->plain() . '</td>
++			<td class="title-cell" valign="top">' . $this->msg( 'ga-mediumlarge' )->escaped() . '</td>
+ 			<td><img src="' . $uploadPath . '/awards/sg_' . $this->gift_id . '_ml.' . $ext . '?ts=' . $ts . '" alt="" /></td>
+ 		</tr>
+ 		<tr>
+-			<td class="title-cell" valign="top">' . $this->msg( 'ga-medium' )->plain() . '</td>
++			<td class="title-cell" valign="top">' . $this->msg( 'ga-medium' )->escaped() . '</td>
+ 			<td><img src="' . $uploadPath . '/awards/sg_' . $this->gift_id . '_m.' . $ext . '?ts=' . $ts . '" alt="" /></td>
+ 		</tr>
+ 		<tr>
+-			<td class="title-cell" valign="top">' . $this->msg( 'ga-small' )->plain() . '</td>
++			<td class="title-cell" valign="top">' . $this->msg( 'ga-small' )->escaped() . '</td>
+ 			<td><img src="' . $uploadPath . '/awards/sg_' . $this->gift_id . '_s.' . $ext . '?ts=' . $ts . '" alt="" /></td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+-				<input type="button" onclick="javascript:history.go(-1)" value="' . $this->msg( 'ga-goback' )->plain() . '" />
++				<input type="button" onclick="javascript:history.go(-1)" value="' . $this->msg( 'ga-goback' )->escaped() . '" />
+ 			</td>
+ 		</tr>';
+ 
+ 		$systemGiftManager = SpecialPage::getTitleFor( 'SystemGiftManager' );
+ 		$output .= $this->getLanguage()->pipeList( [
+ 			'<tr><td><a href="' . htmlspecialchars( $systemGiftManager->getFullURL() ) . '">' .
+-				$this->msg( 'ga-back-gift-list' )->plain() . '</a>&#160;',
++				$this->msg( 'ga-back-gift-list' )->escaped() . '</a>&#160;',
+ 			'&#160;<a href="' . htmlspecialchars( $systemGiftManager->getFullURL( 'id=' . $this->gift_id ) ) . '">' .
+-				$this->msg( 'ga-back-edit-gift' )->plain() . '</a></td></tr>'
++				$this->msg( 'ga-back-edit-gift' )->escaped() . '</a></td></tr>'
+ 		] );
+ 		$output .= '</table>';
+ 		$this->getOutput()->addHTML( $output );
+@@ -563,10 +563,10 @@
+ 	 */
+ 	function uploadError( $error ) {
+ 		$out = $this->getOutput();
+-		$sub = $this->msg( 'uploadwarning' )->plain();
++		$sub = $this->msg( 'uploadwarning' )->escaped();
+ 		$out->addHTML( "<h2>{$sub}</h2>\n" );
+ 		$out->addHTML( "<h4 class='error'>{$error}</h4>\n" );
+-		$out->addHTML( '<br /><input type="button" onclick="javascript:history.go(-1)" value="' . $this->msg( 'ga-goback' )->plain() . '">' );
++		$out->addHTML( '<br /><input type="button" onclick="javascript:history.go(-1)" value="' . $this->msg( 'ga-goback' )->escaped() . '">' );
+ 	}
+ 
+ 	/**
+@@ -586,7 +586,7 @@
+ 		}
+ 
+ 		$out = $this->getOutput();
+-		$sub = $this->msg( 'uploadwarning' )->plain();
++		$sub = $this->msg( 'uploadwarning' )->escaped();
+ 		$out->addHTML( "<h2>{$sub}</h2>\n" );
+ 		$out->addHTML( "<ul class='warning'>{$warning}</ul><br />\n" );
+ 
+@@ -616,7 +616,7 @@
+ 
+ 			<tr>
+ 				<td align='right'>
+-					<input tabindex='2' type='button' onclick=javascript:history.go(-1) value='" . $this->msg( 'ga-goback' )->plain() . "' />
++					<input tabindex='2' type='button' onclick=javascript:history.go(-1) value='" . $this->msg( 'ga-goback' )->escaped() . "' />
+ 				</td>
+ 
+ 			</tr>
+@@ -635,22 +635,22 @@
+ 
+ 		$out = $this->getOutput();
+ 		if ( $msg != '' ) {
+-			$sub = $this->msg( 'uploaderror' )->plain();
++			$sub = $this->msg( 'uploaderror' )->escaped();
+ 			$out->addHTML( "<h2>{$sub}</h2>\n" .
+ 				"<h4 class='error'>{$msg}</h4>\n" );
+ 		}
+ 
+-		$ulb = $this->msg( 'uploadbtn' )->plain();
++		$ulb = $this->msg( 'uploadbtn' )->escaped();
+ 
+ 		$source = null;
+ 
+ 		if ( $wgUseCopyrightUpload ) {
+ 			$source = "
+-	<td align='right' nowrap='nowrap'>" . $this->msg( 'filestatus' )->plain() . "</td>
++	<td align='right' nowrap='nowrap'>" . $this->msg( 'filestatus' )->escaped() . "</td>
+ 	<td><input tabindex='3' type='text' name=\"wpUploadCopyStatus\" value=\"" .
+ 	htmlspecialchars( $this->mUploadCopyStatus ) . "\" size='40' /></td>
+ 	</tr><tr>
+-	<td align='right'>" . $this->msg( 'filesource' )->plain() . "</td>
++	<td align='right'>" . $this->msg( 'filesource' )->escaped() . "</td>
+ 	<td><input tabindex='4' type='text' name='wpUploadSource' id='wpUploadSource' value=\"" .
+ 	htmlspecialchars( $this->mUploadSource ) . "\" /></td>
+ 	";
+@@ -661,7 +661,7 @@
+ 		$output = '<table>
+ 			<tr>
+ 				<td class="title-cell">' .
+-					$this->msg( 'ga-currentimage' )->plain() .
++					$this->msg( 'ga-currentimage' )->escaped() .
+ 				'</td>
+ 			</tr>
+ 			<tr>
+@@ -680,7 +680,7 @@
+ 	<table>
+ 		<tr>
+ 			<td class="title-cell">' .
+-				$this->msg( 'ga-file-instructions' )->escaped() . $this->msg( 'ga-choosefile' )->plain() . '<br />
++				$this->msg( 'ga-file-instructions' )->escaped() . $this->msg( 'ga-choosefile' )->escaped() . '<br />
+ 				<input tabindex="1" type="file" name="wpUploadFile" id="wpUploadFile" />
+ 			</td>
+ 		</tr>
+diff --git a/SystemGifts/includes/specials/SpecialViewSystemGift.php b/SystemGifts/includes/specials/SpecialViewSystemGift.php
+index 5297fbb..dbc599d 100644
+--- a/SystemGifts/includes/specials/SpecialViewSystemGift.php
++++ b/SystemGifts/includes/specials/SpecialViewSystemGift.php
+@@ -36,8 +36,8 @@
+ 		// numeric, display an error message
+ 		$giftId = $this->getRequest()->getInt( 'gift_id' );
+ 		if ( !$giftId || !is_numeric( $giftId ) ) {
+-			$out->setPageTitle( $this->msg( 'ga-error-title' )->plain() );
+-			$out->addHTML( $this->msg( 'ga-error-message-invalid-link' )->plain() );
++			$out->setPageTitle( $this->msg( 'ga-error-title' ) );
++			$out->addHTML( $this->msg( 'ga-error-message-invalid-link' )->escaped() );
+ 			return;
+ 		}
+ 
+@@ -73,7 +73,7 @@
+ 				[ 'actor' => [ 'JOIN', 'actor_id = sg_actor' ] ]
+ 			);
+ 
+-			$out->setPageTitle( $this->msg( 'ga-gift-title', $gift['user_name'], $gift['name'] )->parse() );
++			$out->setPageTitle( $this->msg( 'ga-gift-title', $gift['user_name'], $gift['name'] ) );
+ 
+ 			$output .= '<div class="back-links">' .
+ 				$this->msg( 'ga-back-link', $gift['user_name'] )->escaped() .
+@@ -84,11 +84,14 @@
+ 
+ 			$systemGiftIcon = new SystemGiftIcon( $gift['gift_id'], 'l' );
+ 			$icon = $systemGiftIcon->getIconHTML();
++			$lang = $this->getLanguage();
++			// because "23:25, 18 July 2020" is more readable than "2020-07-18 23:25:37" (thanks legoktm!)
++			$humanFriendlyTimestamp = $lang->userTimeAndDate( $gift['timestamp'], $user );
+ 
+ 			$output .= "<div class=\"ga-description\">
+ 					{$icon}
+-					<div class=\"ga-name\">{$gift['name']}</div>
+-					<div class=\"ga-timestamp\">({$gift['timestamp']})</div>
++					<div class=\"ga-name\">" . htmlspecialchars( $gift['name'], ENT_QUOTES ) . "</div>
++					<div class=\"ga-timestamp\">(" . htmlspecialchars( $humanFriendlyTimestamp, ENT_QUOTES ) . ")</div>
+ 					<div class=\"ga-description-message\">\"{$message}\"</div>";
+ 			$output .= '<div class="visualClear"></div>
+ 				</div>';
+@@ -99,7 +102,7 @@
+ 			if ( $gift['gift_count'] > 1 ) {
+ 				$output .= '<div class="ga-recent">
+ 					<div class="ga-recent-title">' .
+-						$this->msg( 'ga-recent-recipients-award' )->plain() .
++						$this->msg( 'ga-recent-recipients-award' )->escaped() .
+ 					'</div>
+ 					<div class="ga-gift-count">' .
+ 						$this->msg(
+@@ -127,8 +130,8 @@
+ 
+ 			$out->addHTML( $output );
+ 		} else {
+-			$out->setPageTitle( $this->msg( 'ga-error-title' )->plain() );
+-			$out->addHTML( $this->msg( 'ga-error-message-invalid-link' )->plain() );
++			$out->setPageTitle( $this->msg( 'ga-error-title' ) );
++			$out->addHTML( $this->msg( 'ga-error-message-invalid-link' )->escaped() );
+ 		}
+ 	}
+ }
+diff --git a/SystemGifts/includes/specials/SpecialViewSystemGifts.php b/SystemGifts/includes/specials/SpecialViewSystemGifts.php
+index d52e1d9..d53907e 100644
+--- a/SystemGifts/includes/specials/SpecialViewSystemGifts.php
++++ b/SystemGifts/includes/specials/SpecialViewSystemGifts.php
+@@ -50,8 +50,8 @@
+ 		 * Redirect Non-logged in users to Login Page
+ 		 * It will automatically return them to the ViewSystemGifts page
+ 		 */
+-		if ( !$currentUser->isLoggedIn() && $user_name == '' ) {
+-			$out->setPageTitle( $this->msg( 'ga-error-title' )->plain() );
++		if ( !$currentUser->isRegistered() && $user_name == '' ) {
++			$out->setPageTitle( $this->msg( 'ga-error-title' ) );
+ 			$login = SpecialPage::getTitleFor( 'Userlogin' );
+ 			$out->redirect( htmlspecialchars( $login->getFullURL( 'returnto=Special:ViewSystemGifts' ) ) );
+ 			return;
+@@ -69,8 +69,8 @@
+ 		 * Error message for username that does not exist (from URL)
+ 		 */
+ 		if ( $targetUser->getId() == 0 ) {
+-			$out->setPageTitle( $this->msg( 'ga-error-title' )->plain() );
+-			$out->addHTML( $this->msg( 'ga-error-message-no-user' )->plain() );
++			$out->setPageTitle( $this->msg( 'ga-error-title' ) );
++			$out->addHTML( $this->msg( 'ga-error-message-no-user' )->escaped() );
+ 			return;
+ 		}
+ 
+@@ -92,7 +92,7 @@
+ 		/**
+ 		 * Show gift count for user
+ 		 */
+-		$out->setPageTitle( $this->msg( 'ga-title', $rel->user_name )->parse() );
++		$out->setPageTitle( $this->msg( 'ga-title', $rel->user_name ) );
+ 
+ 		$output .= '<div class="back-links">' .
+ 			$this->msg(
+@@ -120,14 +120,14 @@
+ 					{$icon}
+ 					<a href=\"" .
+ 						htmlspecialchars( $view_system_gift_link->getFullURL( 'gift_id=' . $gift['id'] ) ) .
+-						"\">{$gift['gift_name']}</a>";
++						'">' . htmlspecialchars( $gift['gift_name'], ENT_QUOTES ) . '</a>';
+ 
+ 				if ( $gift['status'] == 1 ) {
+ 					if ( $user_name == $currentUser->getName() ) {
+ 						$rel->clearUserGiftStatus( $gift['id'] );
+ 					}
+ 					$output .= '<span class="ga-new">' .
+-						$this->msg( 'ga-new' )->plain() . '</span>';
++						$this->msg( 'ga-new' )->escaped() . '</span>';
+ 				}
+ 
+ 				$output .= '<div class="visualClear"></div>
+@@ -153,13 +153,13 @@
+ 			if ( $page > 1 ) {
+ 				$output .= $linkRenderer->makeLink(
+ 					$page_link,
+-					$this->msg( 'last' )->plain(),
++					$this->msg( 'last' )->text(),
+ 					[],
+ 					[
+ 						'user' => $user_name,
+ 						'page' => ( $page - 1 )
+ 					]
+-				) . $this->msg( 'word-separator' )->plain();
++				) . $this->msg( 'word-separator' )->escaped();
+ 			}
+ 
+ 			if ( ( $total % $per_page ) != 0 ) {
+@@ -184,15 +184,15 @@
+ 							'user' => $user_name,
+ 							'page' => $i
+ 						]
+-					) . $this->msg( 'word-separator' )->plain();
++					) . $this->msg( 'word-separator' )->escaped();
+ 				}
+ 			}
+ 
+ 			if ( ( $total - ( $per_page * $page ) ) > 0 ) {
+-				$output .= $this->msg( 'word-separator' )->plain() .
++				$output .= $this->msg( 'word-separator' )->escaped() .
+ 					$linkRenderer->makeLink(
+ 						$page_link,
+-						$this->msg( 'next' )->plain(),
++						$this->msg( 'next' )->text(),
+ 						[],
+ 						[
+ 							'user' => $user_name,
+diff --git a/SystemGifts/includes/specials/TopAwards.php b/SystemGifts/includes/specials/TopAwards.php
+index b4c43bc..14d47a6 100644
+--- a/SystemGifts/includes/specials/TopAwards.php
++++ b/SystemGifts/includes/specials/TopAwards.php
+@@ -122,14 +122,14 @@
+ 		// topawards-comment-title, topawards-recruit-title,
+ 		// topawards-friend-title
+ 		$out->setPageTitle(
+-			$this->msg( 'topawards-' . strtolower( $page_category ) . '-title' )->plain()
++			$this->msg( 'topawards-' . strtolower( $page_category ) . '-title' )
+ 		);
+ 
+ 		// Add CSS
+ 		$out->addModuleStyles( 'ext.socialprofile.special.topawards.css' );
+ 
+ 		$output = '<div class="top-awards-navigation">
+-			<h1>' . $this->msg( 'topawards-award-categories' )->plain() . '</h1>';
++			<h1>' . $this->msg( 'topawards-award-categories' )->escaped() . '</h1>';
+ 
+ 		$nav_x = 0;
+ 
+@@ -140,7 +140,7 @@
+ 			$msg = $this->msg(
+ 				'topawards-' .
+ 				strtolower( $awardType['category_name'] ) . 's'
+-			)->plain();
++			)->escaped();
+ 			if ( $nav_x == $category_number ) {
+ 				$output .= "<p><b>{$msg}</b></p>";
+ 			} else {
+@@ -156,7 +156,7 @@
+ 		// Display a "no results" message if we got no results -- because it's
+ 		// a lot nicer to display something rather than a half-empty page
+ 		if ( $dbr->numRows( $res ) <= 0 ) {
+-			$output .= $this->msg( 'topawards-empty' )->plain();
++			$output .= $this->msg( 'topawards-empty' )->escaped();
+ 		} else {
+ 			$linkRenderer = $this->getLinkRenderer();
+ 			foreach ( $res as $row ) {
+diff --git a/UserGifts/includes/specials/SpecialGiftManager.php b/UserGifts/includes/specials/SpecialGiftManager.php
+index a154699..ac10d1b 100644
+--- a/UserGifts/includes/specials/SpecialGiftManager.php
++++ b/UserGifts/includes/specials/SpecialGiftManager.php
+@@ -68,7 +68,7 @@
+ 				);
+ 				$out->addHTML(
+ 					'<span class="view-status">' .
+-					htmlspecialchars( $this->msg( 'giftmanager-giftcreated' )->plain() ) .
++					$this->msg( 'giftmanager-giftcreated' )->escaped() .
+ 					'</span><br /><br />'
+ 				);
+ 			} else {
+@@ -81,7 +81,7 @@
+ 				);
+ 				$out->addHTML(
+ 					'<span class="view-status">' .
+-					htmlspecialchars( $this->msg( 'giftmanager-giftsaved' )->plain() ) .
++					$this->msg( 'giftmanager-giftsaved' )->escaped() .
+ 					'</span><br /><br />'
+ 				);
+ 			}
+@@ -98,7 +98,7 @@
+ 					$out->addHTML(
+ 						'<div><b><a href="' .
+ 						htmlspecialchars( $this->getPageTitle()->getFullURL( 'method=edit' ) ) .
+-						'">' . htmlspecialchars( $this->msg( 'giftmanager-addgift' )->plain() ) .
++						'">' . $this->msg( 'giftmanager-addgift' )->escaped() .
+ 						'</a></b></div>'
+ 					);
+ 				}
+@@ -207,7 +207,7 @@
+ 					$deleteLink = '<a href="' .
+ 						htmlspecialchars( SpecialPage::getTitleFor( 'RemoveMasterGift' )->getFullURL( "gift_id={$gift['id']}" ) ) .
+ 						'" style="font-size:10px; color:red;">' .
+-						htmlspecialchars( $this->msg( 'delete' )->plain() ) . '</a>';
++						$this->msg( 'delete' )->escaped() . '</a>';
+ 				}
+ 
+ 				$output .= '<div class="Item">
+@@ -227,7 +227,7 @@
+ 		}
+ 
+ 		$form = '<div><b><a href="' . htmlspecialchars( $this->getPageTitle()->getFullURL() ) .
+-			'">' . htmlspecialchars( $this->msg( 'giftmanager-view' )->plain() ) . '</a></b></div>';
++			'">' . $this->msg( 'giftmanager-view' )->escaped() . '</a></b></div>';
+ 
+ 		if ( $gift_id ) {
+ 			$gift = Gifts::getGift( $gift_id );
+@@ -245,12 +245,12 @@
+ 		$form .= '<form action="" method="post" enctype="multipart/form-data" name="gift">';
+ 		$form .= '<table border="0" cellpadding="5" cellspacing="0" width="500">';
+ 		$form .= '<tr>
+-		<td width="200" class="view-form">' . htmlspecialchars( $this->msg( 'g-gift-name' )->plain() ) . '</td>
++		<td width="200" class="view-form">' . $this->msg( 'g-gift-name' )->escaped() . '</td>
+ 		<td width="695"><input type="text" size="45" class="createbox" name="gift_name" value="' .
+ 			( isset( $gift['gift_name'] ) ? htmlspecialchars( $gift['gift_name'] ) : '' ) . '"/></td>
+ 		</tr>
+ 		<tr>
+-		<td width="200" class="view-form" valign="top">' . htmlspecialchars( $this->msg( 'giftmanager-description' )->plain() ) . '</td>
++		<td width="200" class="view-form" valign="top">' . $this->msg( 'giftmanager-description' )->escaped() . '</td>
+ 		<td width="695"><textarea class="createbox" name="gift_description" rows="2" cols="30">' .
+ 			( isset( $gift['gift_description'] ) ? htmlspecialchars( $gift['gift_description'] ) : '' ) . '</textarea></td>
+ 		</tr>';
+@@ -278,14 +278,14 @@
+ 				$privateSelected = ' selected="selected"';
+ 			}
+ 			$form .= '<tr>
+-				<td class="view-form">' . htmlspecialchars( $this->msg( 'giftmanager-access' )->plain() ) . '</td>
++				<td class="view-form">' . $this->msg( 'giftmanager-access' )->escaped() . '</td>
+ 				<td>
+ 				<select name="access">
+ 					<option value="0"' . $publicSelected . '>' .
+-						htmlspecialchars( $this->msg( 'giftmanager-public' )->plain() ) .
++						$this->msg( 'giftmanager-public' )->escaped() .
+ 					'</option>
+ 					<option value="1"' . $privateSelected . '>' .
+-						htmlspecialchars( $this->msg( 'giftmanager-private' )->plain() ) .
++						$this->msg( 'giftmanager-private' )->escaped() .
+ 					'</option>
+ 				</select>
+ 				</td>
+@@ -298,27 +298,27 @@
+ 			$icon = $userGiftIcon->getIconHTML();
+ 
+ 			$form .= '<tr>
+-			<td width="200" class="view-form" valign="top">' . htmlspecialchars( $this->msg( 'giftmanager-giftimage' )->plain() ) . '</td>
++			<td width="200" class="view-form" valign="top">' . $this->msg( 'giftmanager-giftimage' )->escaped() . '</td>
+ 			<td width="695">' . $icon .
+ 			'<p>
+ 			<a href="' . htmlspecialchars( $gml->getFullURL( 'gift_id=' . $gift_id ) ) . '">' .
+-				htmlspecialchars( $this->msg( 'giftmanager-image' )->plain() ) . '</a>
++				$this->msg( 'giftmanager-image' )->escaped() . '</a>
+ 			</td>
+ 			</tr>';
+ 		}
+ 
+ 		if ( isset( $gift['gift_id'] ) ) {
+-			$button = $this->msg( 'edit' )->plain();
++			$button = $this->msg( 'edit' )->escaped();
+ 		} else {
+-			$button = $this->msg( 'g-create-gift' )->plain();
++			$button = $this->msg( 'g-create-gift' )->escaped();
+ 		}
+ 
+ 		$form .= '<tr>
+ 			<td colspan="2">
+-				<input type="hidden" name="id" value="' . ( $gift['gift_id'] ?? '' ) . '" />
++				<input type="hidden" name="id" value="' . ( isset( $gift['gift_id'] ) && $gift['gift_id'] ? (int)$gift['gift_id'] : '' ) . '" />
+ 				<input type="hidden" name="wpEditToken" value="' . htmlspecialchars( $user->getEditToken(), ENT_QUOTES ) . '" />
+-				<input type="button" class="createbox" value="' . htmlspecialchars( $button ) . '" size="20" onclick="document.gift.submit()" />
+-				<input type="button" class="createbox" value="' . htmlspecialchars( $this->msg( 'cancel' )->plain() ) . '" size="20" onclick="history.go(-1)" />
++				<input type="button" class="createbox" value="' . $button . '" size="20" onclick="document.gift.submit()" />
++				<input type="button" class="createbox" value="' . $this->msg( 'cancel' )->escaped() . '" size="20" onclick="history.go(-1)" />
+ 			</td>
+ 		</tr>
+ 		</table>
+diff --git a/UserGifts/includes/specials/SpecialGiftManagerLogo.php b/UserGifts/includes/specials/SpecialGiftManagerLogo.php
+index dafa924..4f891d1 100644
+--- a/UserGifts/includes/specials/SpecialGiftManagerLogo.php
++++ b/UserGifts/includes/specials/SpecialGiftManagerLogo.php
+@@ -257,7 +257,7 @@
+ 			}
+ 
+ 			if ( $this->mUploadSize == 0 ) {
+-				$warning .= '<li>' . htmlspecialchars( $this->msg( 'emptyfile' )->plain() ) . '</li>';
++				$warning .= '<li>' . $this->msg( 'emptyfile' )->escaped() . '</li>';
+ 			}
+ 
+ 			if ( $warning != '' ) {
+@@ -537,8 +537,8 @@
+ 
+ 		$ext = 'jpg';
+ 
+-		$output = '<h2>' . htmlspecialchars( $this->msg( 'g-uploadsuccess' )->plain() ) . '</h2>';
+-		$output .= '<h5>' . htmlspecialchars( $this->msg( 'g-imagesbelow' )->plain() ) . '</h5>';
++		$output = '<h2>' . $this->msg( 'g-uploadsuccess' )->escaped() . '</h2>';
++		$output .= '<h5>' . $this->msg( 'g-imagesbelow' )->escaped() . '</h5>';
+ 		if ( $status == 1 ) {
+ 			$ext = 'gif';
+ 		}
+@@ -551,22 +551,22 @@
+ 		$ts = rand();
+ 
+ 		$output .= '<table cellspacing="0" cellpadding="5">';
+-		$output .= '<tr><td valign="top" style="color:#666666;font-weight:800">' . htmlspecialchars( $this->msg( 'g-large' )->plain() ) . '</td>
++		$output .= '<tr><td valign="top" style="color:#666666;font-weight:800">' . $this->msg( 'g-large' )->escaped() . '</td>
+ 		<td><img src="' . $uploadPath . '/awards/' . $this->gift_id . '_l.' . $ext . '?ts=' . $ts . '"></td></tr>';
+-		$output .= '<tr><td valign="top" style="color:#666666;font-weight:800">' . htmlspecialchars( $this->msg( 'g-mediumlarge' )->plain() ) . '</td>
++		$output .= '<tr><td valign="top" style="color:#666666;font-weight:800">' . $this->msg( 'g-mediumlarge' )->escaped() . '</td>
+ 		<td><img src="' . $uploadPath . '/awards/' . $this->gift_id . '_ml.' . $ext . '?ts=' . $ts . '"></td></tr>';
+-		$output .= '<tr><td valign="top" style="color:#666666;font-weight:800">' . htmlspecialchars( $this->msg( 'g-medium' )->plain() ) . '</td>
++		$output .= '<tr><td valign="top" style="color:#666666;font-weight:800">' . $this->msg( 'g-medium' )->escaped() . '</td>
+ 		<td><img src="' . $uploadPath . '/awards/' . $this->gift_id . '_m.' . $ext . '?ts=' . $ts . '"></td></tr>';
+-		$output .= '<tr><td valign="top" style="color:#666666;font-weight:800">' . htmlspecialchars( $this->msg( 'g-small' )->plain() ) . '</td>
++		$output .= '<tr><td valign="top" style="color:#666666;font-weight:800">' . $this->msg( 'g-small' )->escaped() . '</td>
+ 		<td><img src="' . $uploadPath . '/awards/' . $this->gift_id . '_s.' . $ext . '?ts=' . $ts . '"></td></tr>';
+-		$output .= '<tr><td><input type="button" onclick="javascript:history.go(-1)" value="' . htmlspecialchars( $this->msg( 'g-go-back' )->plain() ) . '"></td></tr>';
++		$output .= '<tr><td><input type="button" onclick="javascript:history.go(-1)" value="' . $this->msg( 'g-go-back' )->escaped() . '"></td></tr>';
+ 
+ 		$giftManager = SpecialPage::getTitleFor( 'GiftManager' );
+ 		$output .= $this->getLanguage()->pipeList( [
+ 			'<tr><td><a href="' . htmlspecialchars( $giftManager->getFullURL() ) . '">' .
+-				htmlspecialchars( $this->msg( 'g-back-gift-list' )->plain() ) . '</a>&#160;',
++				$this->msg( 'g-back-gift-list' )->escaped() . '</a>&#160;',
+ 			'&#160;<a href="' . htmlspecialchars( $giftManager->getFullURL( 'id=' . $this->gift_id ) ) .
+-				'">' . htmlspecialchars( $this->msg( 'g-back-edit-gift' )->plain() ) . '</a></td></tr>'
++				'">' . $this->msg( 'g-back-edit-gift' )->escaped() . '</a></td></tr>'
+ 		] );
+ 		$output .= '</table>';
+ 		$this->getOutput()->addHTML( $output );
+@@ -577,10 +577,10 @@
+ 	 */
+ 	function uploadError( $error ) {
+ 		$out = $this->getOutput();
+-		$sub = htmlspecialchars( $this->msg( 'uploadwarning' )->plain() );
++		$sub = $this->msg( 'uploadwarning' )->escaped();
+ 		$out->addHTML( "<h2>{$sub}</h2>\n" );
+ 		$out->addHTML( "<h4 class='error'>{$error}</h4>\n" );
+-		$out->addHTML( '<br /><input type="button" onclick="javascript:history.go(-1)" value="' . htmlspecialchars( $this->msg( 'g-go-back' )->plain() ) . '">' );
++		$out->addHTML( '<br /><input type="button" onclick="javascript:history.go(-1)" value="' . $this->msg( 'g-go-back' )->escaped() . '">' );
+ 	}
+ 
+ 	/**
+@@ -601,7 +601,7 @@
+ 			return;
+ 		}
+ 
+-		$sub = $this->msg( 'uploadwarning' )->plain();
++		$sub = $this->msg( 'uploadwarning' )->escaped();
+ 		$out->addHTML( "<h2>{$sub}</h2>\n" );
+ 		$out->addHTML( "<ul class='warning'>{$warning}</ul><br />\n" );
+ 
+@@ -624,14 +624,14 @@
+ 		<input type='hidden' name='wpSessionKey' value=\"" . htmlspecialchars( $this->mSessionKey ) . "\" />
+ 		<input type='hidden' name='wpUploadDescription' value=\"" . htmlspecialchars( $this->mUploadDescription ) . "\" />
+ 		<input type='hidden' name='wpDestFile' value=\"" . htmlspecialchars( $this->mDestFile ) . "\" />
+-		<input type='hidden' name='wpWatchthis' value=\"" . htmlspecialchars( intval( $this->mWatchthis ) ) . "\" />
++		<input type='hidden' name='wpWatchthis' value=\"" . intval( $this->mWatchthis ) . "\" />
+ 	{$copyright}
+ 	<table border='0'>
+ 		<tr>
+ 
+ 			<tr>
+ 				<td align='right'>
+-					<input tabindex='2' type='button' onclick=javascript:history.go(-1) value='" . htmlspecialchars( $this->msg( 'back' )->plain() ) . "' />
++					<input tabindex='2' type='button' onclick=javascript:history.go(-1) value='" . $this->msg( 'back' )->escaped() . "' />
+ 				</td>
+ 
+ 			</tr>
+diff --git a/UserGifts/includes/specials/SpecialGiveGift.php b/UserGifts/includes/specials/SpecialGiveGift.php
+index 1b18918..8596675 100644
+--- a/UserGifts/includes/specials/SpecialGiveGift.php
++++ b/UserGifts/includes/specials/SpecialGiveGift.php
+@@ -277,6 +277,10 @@
+ 			<div class="visualClear"></div>
+ 			<div class="g-add-message">' . $this->msg( 'g-add-message' )->escaped() . '</div>
+ 			<textarea name="message" id="message" rows="4" cols="50"></textarea>
++			<div class="g-characters-left-message">' . $this->msg(
++				'g-characters-left',
++				'<span class="countdown" value="255">255</span>'
++			)->parse() . '</div>
+ 			<div class="g-buttons">
+ 				<input type="hidden" name="gift_id" value="' . $giftId . '" />
+ 				<input type="hidden" name="wpEditToken" value="' . htmlspecialchars( $this->getUser()->getEditToken(), ENT_QUOTES ) . '" />
+@@ -407,7 +411,7 @@
+ 					'class' => 'g-give-checkbox',
+ 					'id' => "nojs-gift-{$gift['id']}"
+ 				] );
+-				$output .= Html::label( $this->msg( 'g-give-this-gift' )->escaped(), "nojs-gift-{$gift['id']}" );
++				$output .= Html::label( $this->msg( 'g-give-this-gift' )->text(), "nojs-gift-{$gift['id']}" );
+ 				$output .= '<div class="visualClear"></div>
+ 				</div>';
+ 				if ( $x == count( $gifts ) || $x != 1 && $x % $per_row == 0 ) {
+@@ -429,13 +433,13 @@
+ 				if ( $page > 1 ) {
+ 					$output .= $linkRenderer->makeLink(
+ 						$giveGiftLink,
+-						$this->msg( 'g-previous' )->plain(),
++						$this->msg( 'g-previous' )->text(),
+ 						[],
+ 						[
+ 							'user' => $user_name,
+ 							'page' => ( $page - 1 )
+ 						]
+-					) . htmlspecialchars( $this->msg( 'word-separator' )->plain() );
++					) . $this->msg( 'word-separator' )->escaped();
+ 				}
+ 
+ 				if ( ( $total % $per_page ) != 0 ) {
+@@ -456,15 +460,15 @@
+ 								'user' => $user_name,
+ 								'page' => $i
+ 							]
+-						) . htmlspecialchars( $this->msg( 'word-separator' )->plain() );
++						) . $this->msg( 'word-separator' )->escaped();
+ 					}
+ 				}
+ 
+ 				if ( ( $total - ( $per_page * $page ) ) > 0 ) {
+-					$output .= $this->msg( 'word-separator' )->plain() .
++					$output .= $this->msg( 'word-separator' )->escaped() .
+ 						$linkRenderer->makeLink(
+ 							$giveGiftLink,
+-							$this->msg( 'g-next' )->plain(),
++							$this->msg( 'g-next' )->text(),
+ 							[],
+ 							[
+ 								'user' => $user_name,
+diff --git a/UserGifts/includes/specials/SpecialViewGift.php b/UserGifts/includes/specials/SpecialViewGift.php
+index 36d3e25..aa86af9 100644
+--- a/UserGifts/includes/specials/SpecialViewGift.php
++++ b/UserGifts/includes/specials/SpecialViewGift.php
+@@ -36,7 +36,7 @@
+ 		$giftId = $this->getRequest()->getInt( 'gift_id' );
+ 		if ( !$giftId || !is_numeric( $giftId ) ) {
+ 			$out->setPageTitle( $this->msg( 'g-error-title' )->plain() );
+-			$out->addHTML( htmlspecialchars( $this->msg( 'g-error-message-invalid-link' )->plain() ) );
++			$out->addHTML( $this->msg( 'g-error-message-invalid-link' )->escaped() );
+ 			return;
+ 		}
+ 
+@@ -87,37 +87,39 @@
+ 
+ 			$userGiftIcon = new UserGiftIcon( $gift['gift_id'], 'l' );
+ 			$icon = $userGiftIcon->getIconHTML();
+-
+-			$message = $out->parseAsContent( trim( $gift['message'] ), false );
++			$lang = $this->getLanguage();
++			// because "23:25, 18 July 2020" is more readable than "2020-07-18 23:25:37" (thanks legoktm!)
++			$humanFriendlyTimestamp = $lang->userTimeAndDate( $gift['timestamp'], $user );
+ 
+ 			$output .= '<div class="g-description-container">';
+ 			$output .= '<div class="g-description">' .
+ 					$icon .
+ 					'<div class="g-name">' . htmlspecialchars( $gift['name'] ) . '</div>
+-					<div class="g-timestamp">(' . $gift['timestamp'] . ')</div>
++					<div class="g-timestamp">(' . htmlspecialchars( $humanFriendlyTimestamp, ENT_QUOTES ) . ')</div>
+ 					<div class="g-from">' . $this->msg(
+ 						'g-from',
+ 						$sender->getName()
+ 					)->parse() . '</div>';
+-			if ( $message ) {
++			if ( isset( $gift['message'] ) && $gift['message'] ) {
++				$message = $out->parseAsContent( trim( $gift['message'] ), false );
+ 				$output .= '<div class="g-user-message">' . $message . '</div>';
+ 			}
+ 			$output .= '<div class="visualClear"></div>
+ 					<div class="g-describe">' . htmlspecialchars( $gift['description'] ) . '</div>
+ 					<div class="g-actions">
+ 						<a href="' . htmlspecialchars( $giveGiftLink->getFullURL( 'gift_id=' . $gift['gift_id'] ) ) . '">' .
+-							htmlspecialchars( $this->msg( 'g-to-another' )->plain() ) . '</a>';
++							$this->msg( 'g-to-another' )->escaped() . '</a>';
+ 			if ( $gift['actor_to'] == $user->getActorId() ) {
+ 				$output .= $this->msg( 'pipe-separator' )->escaped();
+ 				$output .= '<a href="' . htmlspecialchars( $removeGiftLink->getFullURL( 'gift_id=' . $gift['id'] ) ) . '">' .
+-					htmlspecialchars( $this->msg( 'g-remove-gift' )->plain() ) . '</a>';
++					$this->msg( 'g-remove-gift' )->escaped() . '</a>';
+ 			}
+ 			$output .= '</div>
+ 				</div>';
+ 
+ 			$output .= '<div class="g-recent">
+ 					<div class="g-recent-title">' .
+-						htmlspecialchars( $this->msg( 'g-recent-recipients' )->plain() ) .
++						$this->msg( 'g-recent-recipients' )->escaped() .
+ 					'</div>
+ 					<div class="g-gift-count">' .
+ 						$this->msg( 'g-given', $gift['gift_count'] )->parse() .
+@@ -139,7 +141,7 @@
+ 			$out->addHTML( $output );
+ 		} else {
+ 			$out->setPageTitle( $this->msg( 'g-error-title' )->plain() );
+-			$out->addHTML( htmlspecialchars( $this->msg( 'g-error-message-invalid-link' )->plain() ) );
++			$out->addHTML( $this->msg( 'g-error-message-invalid-link' )->escaped() );
+ 		}
+ 	}
+ }
+diff --git a/UserGifts/includes/specials/SpecialViewGifts.php b/UserGifts/includes/specials/SpecialViewGifts.php
+index 1b7ef03..f5972dd 100644
+--- a/UserGifts/includes/specials/SpecialViewGifts.php
++++ b/UserGifts/includes/specials/SpecialViewGifts.php
+@@ -78,7 +78,7 @@
+ 		 */
+ 		if ( $user_id == 0 ) {
+ 			$out->setPageTitle( $this->msg( 'g-error-title' )->plain() );
+-			$out->addHTML( htmlspecialchars( $this->msg( 'g-error-message-no-user' )->plain() ) );
++			$out->addHTML( $this->msg( 'g-error-message-no-user' )->escaped() );
+ 			return;
+ 		}
+ 
+@@ -146,7 +146,7 @@
+ 						$rel->clearUserGiftStatus( $gift['id'] );
+ 					}
+ 					$output .= '<span class="g-new">' .
+-						htmlspecialchars( $this->msg( 'g-new' )->plain() ) .
++						$this->msg( 'g-new' )->escaped() .
+ 					'</span>';
+ 				}
+ 				$output .= '</div>';
+@@ -159,14 +159,14 @@
+ 				'</div>
+ 					<div class="g-actions">
+ 						<a href="' . htmlspecialchars( $giveGiftLink->getFullURL( 'gift_id=' . $gift['gift_id'] ) ) . '">' .
+-							htmlspecialchars( $this->msg( 'g-to-another' )->plain() ) .
++							$this->msg( 'g-to-another' )->escaped() .
+ 						'</a>';
+ 				if ( $rel->user_name == $currentUser->getName() ) {
+ 					$output .= '&#160;';
+ 					$output .= $this->msg( 'pipe-separator' )->escaped();
+ 					$output .= '&#160;';
+ 					$output .= '<a href="' . htmlspecialchars( $removeGiftLink->getFullURL( 'gift_id=' . $gift['id'] ) ) . '">' .
+-						htmlspecialchars( $this->msg( 'g-remove-gift' )->plain() ) . '</a>';
++						$this->msg( 'g-remove-gift' )->escaped() . '</a>';
+ 				}
+ 				$output .= '</div>
+ 					<div class="visualClear"></div>';
+@@ -191,13 +191,13 @@
+ 			if ( $page > 1 ) {
+ 				$output .= $linkRenderer->makeLink(
+ 					$pageLink,
+-					$this->msg( 'g-previous' )->plain(),
++					$this->msg( 'g-previous' )->text(),
+ 					[],
+ 					[
+ 						'user' => $user_name,
+ 						'page' => ( $page - 1 )
+ 					]
+-				) . htmlspecialchars( $this->msg( 'word-separator' )->plain() );
++				) . $this->msg( 'word-separator' )->escaped();
+ 			}
+ 
+ 			if ( ( $total % $per_page ) != 0 ) {
+@@ -222,15 +222,15 @@
+ 							'user' => $user_name,
+ 							'page' => $i
+ 						]
+-					) . $this->msg( 'word-separator' )->plain();
++					) . $this->msg( 'word-separator' )->escaped();
+ 				}
+ 			}
+ 
+ 			if ( ( $total - ( $per_page * $page ) ) > 0 ) {
+-				$output .= htmlspecialchars( $this->msg( 'word-separator' )->plain() ) .
++				$output .= $this->msg( 'word-separator' )->escaped() .
+ 					$linkRenderer->makeLink(
+ 						$pageLink,
+-						$this->msg( 'g-next' )->plain(),
++						$this->msg( 'g-next' )->text(),
+ 						[],
+ 						[
+ 							'user' => $user_name,

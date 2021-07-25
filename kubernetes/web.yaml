@@ -1,0 +1,168 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f ../docker-compose.yml
+    kompose.version: 1.23.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: web
+  name: web
+spec:
+  ports:
+    - name: "80"
+      port: 8081
+      targetPort: 80
+  selector:
+    io.kompose.service: web
+status:
+  loadBalancer: { }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f ../docker-compose.yml
+    kompose.version: 1.23.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: web
+  name: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: web
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f ../docker-compose.yml
+        kompose.version: 1.23.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: web
+    spec:
+      containers:
+        - env:
+            - name: MW_SITE_SERVER
+              value: http://localhost
+            - name: PHP_POST_MAX_SIZE
+              value: 10M
+            - name: PHP_UPLOAD_MAX_FILESIZE
+              value: 10M
+          image: ghcr.io/wikiworks/canasta:latest
+          imagePullPolicy: Always
+          name: web
+          ports:
+            - containerPort: 80
+          resources: { }
+          volumeMounts:
+            - mountPath: "/var/www/mediawiki/w/extensions"
+              name: extensions
+            - mountPath: "/var/www/mediawiki/w/skins"
+              name: skins
+            - mountPath: "/mediawiki/config"
+              name: config
+            - mountPath: "/mediawiki/images"
+              name: images
+            - mountPath: "/mediawiki/sitemap"
+              name: sitemap
+      restartPolicy: Always
+      volumes:
+        - name: extensions
+          hostPath:
+            path: "/tmp/mediawiki/extensions"
+            type: DirectoryOrCreate
+        - name: skins
+          hostPath:
+            path: "/tmp/mediawiki/skins"
+            type: DirectoryOrCreate
+        - name: config
+          hostPath:
+            path: "/tmp/mediawiki/config"
+            type: DirectoryOrCreate
+        - name: images
+          hostPath:
+            path: "/tmp/mediawiki/images"
+            type: DirectoryOrCreate
+        - name: sitemap
+          persistentVolumeClaim:
+            claimName: sitemap
+status: { }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: extensions
+  name: extensions
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: { }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: skins
+  name: skins
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: { }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: config
+  name: config
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: { }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: images
+  name: images
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: { }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: sitemap
+  name: sitemap
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 300Mi
+status: { }

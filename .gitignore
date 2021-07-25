@@ -1,0 +1,16 @@
+# Editors
+*.kate-swp
+*~
+\#*#
+.#*
+.*.swp
+.project
+cscope.files
+cscope.out
+*.orig
+.desktop
+.directory
+
+# Contains private data
+/.env
+/docker-compose.override.yml

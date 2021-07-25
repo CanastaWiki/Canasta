@@ -1,0 +1,118 @@
+From 5685e10ffe6d5c6c7bd3f3181faaa14e505c31e3 Mon Sep 17 00:00:00 2001
+From: Yaron Koren <yaron57@gmail.com>
+Date: Wed, 20 Jan 2021 16:40:33 +0000
+Subject: [PATCH] Improve HTML-escaping in combobox and tokens inputs
+
+Bug: T259433
+Change-Id: I20b63bd38779d2ccbe2d86f9879df85ca3b685f6
+---
+ libs/ext.pf.select2.base.js     | 47 +++++++++++++++++++++++++++++----
+ libs/ext.pf.select2.combobox.js |  5 +++-
+ libs/ext.pf.select2.tokens.js   |  4 ++-
+ 3 files changed, 49 insertions(+), 7 deletions(-)
+
+diff --git a/libs/ext.pf.select2.base.js b/libs/ext.pf.select2.base.js
+index 8867a8b3..dfcd6edb 100644
+--- a/libs/ext.pf.select2.base.js
++++ b/libs/ext.pf.select2.base.js
+@@ -225,6 +225,43 @@
+ 			autocomplete_opts.autocompletesettings = $(input_id).attr( "autocompletesettings" );
+ 			return autocomplete_opts;
+ 		},
++
++		/**
++		 * Escape out any HTML, and then add our own HTML to display
++		 * the correct bolding.
++		 * The first part of this function is directly copied from
++		 * Utils::escapeMarkup() in the Select2 code. @TODO: figure out
++		 * how to just call that code directly.
++		 */
++		escapeMarkupAndAddHTML: function( markup ) {
++			var replaceMap = {
++				'\\': '&#92;',
++				'&': '&amp;',
++				'<': '&lt;',
++				'>': '&gt;',
++				'"': '&quot;',
++				'\'': '&#39;',
++				'/': '&#47;'
++			};
++
++			// Do not try to escape the markup if it's not a string
++			if (typeof markup !== 'string') {
++				return markup;
++			}
++
++			var escapedMarkup = String(markup).replace(/[&<>"'\/\\]/g, function (match) {
++				return replaceMap[match];
++			})
++
++			var boldStart = String.fromCharCode(1);
++			var boldEnd = String.fromCharCode(2);
++			return '<span class="select2-match-entire">' +
++				escapedMarkup
++				.replace(boldStart, '<span class="select2-match"><b>')
++				.replace(boldEnd, '</b></span>') +
++				'</span>';
++		},
++
+ 		/*
+ 		 * Refreshes the field if there is a change
+ 		 * in the autocomplete vlaues
+@@ -271,11 +308,11 @@
+ 			}
+ 
+ 			if ( start !== -1 ) {
+-				markup = (text.substr(0, start) +
+-				'<span class="select2-match-entire"><span class="select2-match"><b>' +
+-				text.substr(start,term.length) +
+-				'</b></span>' +
+-				text.substr(start + term.length, text.length)+'</span>');
++				var boldStart = String.fromCharCode(1);
++				var boldEnd = String.fromCharCode(2);
++				markup = text.substr(0, start) + boldStart +
++					text.substr(start,term.length) + boldEnd +
++					text.substr(start + term.length, text.length);
+ 			} else {
+ 				markup = (text);
+ 			}
+diff --git a/libs/ext.pf.select2.combobox.js b/libs/ext.pf.select2.combobox.js
+index 0508c844..cbc0608d 100644
+--- a/libs/ext.pf.select2.combobox.js
++++ b/libs/ext.pf.select2.combobox.js
+@@ -39,13 +39,16 @@
+ 	 *
+ 	 */
+ 	combobox_proto.setOptions = function() {
++		var self = this;
+ 		var input_id = this.id;
+ 		var opts = {};
+ 		opts.language = {};
+ 		input_id = "#" + input_id;
+ 		var input_tagname = $(input_id).prop( "tagName" );
+ 		var autocomplete_opts = this.getAutocompleteOpts();
+-		opts.escapeMarkup = function (m) { return m; };
++		opts.escapeMarkup = function (m) {
++			return self.escapeMarkupAndAddHTML(m);
++		};
+ 		if ( autocomplete_opts.autocompletedatatype !== undefined ) {
+ 			opts.ajax = this.getAjaxOpts();
+ 			opts.minimumInputLength = 1;
+diff --git a/libs/ext.pf.select2.tokens.js b/libs/ext.pf.select2.tokens.js
+index c7182b51..feda3ea7 100644
+--- a/libs/ext.pf.select2.tokens.js
++++ b/libs/ext.pf.select2.tokens.js
+@@ -171,7 +171,9 @@
+ 		input_id = "#" + input_id;
+ 		var input_tagname = $(input_id).prop( "tagName" );
+ 		var autocomplete_opts = this.getAutocompleteOpts();
+-		opts.escapeMarkup = function (m) { return m; };
++		opts.escapeMarkup = function (m) {
++			return self.escapeMarkupAndAddHTML(m);
++		};
+ 		if ( autocomplete_opts.autocompletedatatype !== undefined ) {
+ 			opts.ajax = this.getAjaxOpts();
+ 			opts.minimumInputLength = 1;
+-- 
+2.30.1 (Apple Git-130)
+

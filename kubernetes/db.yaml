@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f ../docker-compose.yml
+    kompose.version: 1.23.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: db
+  name: db
+spec:
+  ports:
+    - name: "3306"
+      port: 3306
+      targetPort: 3306
+  selector:
+    io.kompose.service: db
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f ../docker-compose.yml
+    kompose.version: 1.23.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: db
+  name: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f ../docker-compose.yml
+        kompose.version: 1.23.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: db
+    spec:
+      containers:
+        - args:
+            - --default-authentication-plugin=mysql_native_password
+            - --expire_logs_days=3
+            - --secure-file-priv=
+          env:
+            - name: MYSQL_DATABASE
+              value: mediawiki
+            - name: MYSQL_ROOT_HOST
+              value: '%'
+            - name: MYSQL_ROOT_PASSWORD
+              value: mediawiki
+          image: mysql:8.0
+          name: db
+          ports:
+            - containerPort: 3306
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+                - SYS_NICE
+          volumeMounts:
+            - mountPath: /docker-entrypoint-initdb.d
+              name: initdb
+            - mountPath: /var/lib/mysql
+              name: mysql-data-volume
+      restartPolicy: Always
+      volumes:
+        - name: initdb
+          hostPath:
+            path: "/tmp/mediawiki/_initdb"
+            type: DirectoryOrCreate
+        - name: mysql-data-volume
+          persistentVolumeClaim:
+            claimName: mysql-data-volume
+status: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mysql-data-volume
+  name: mysql-data-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+status: {}

@@ -1,0 +1,12 @@
+--- src/SetupCheck.php.20210404	2021-03-29 22:40:46.000000000 +0000
++++ src/SetupCheck.php	2021-04-04 11:55:33.314354724 +0000
+@@ -343,6 +343,9 @@
+ 			$this->header( 'Content-Length: ' . strlen( $content ) );
+ 			$this->header( 'Cache-control: none' );
+ 			$this->header( 'Pragma: no-cache' );
++			$this->header( 'HTTP/1.1 503 Service Temporarily Unavailable' );
++			$this->header( 'Status: 503 Service Temporarily Unavailable' );
++			$this->header( 'Retry-After: 10' ); // 10 seconds
+ 		} else {
+ 			$content = $error['title'] . "\n\n" . $error['content'];
+ 			$content = str_replace(
