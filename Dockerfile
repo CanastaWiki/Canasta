@@ -44,18 +44,18 @@ RUN set x; \
     && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list \
     && aptitude update \
     && aptitude install -y \
-    php7.4=7.4.21-1+0~20210702.48+debian10~1.gbp9b7c1f \
-    php7.4-mysql=7.4.21-1+0~20210702.48+debian10~1.gbp9b7c1f \
-    php7.4-cli=7.4.21-1+0~20210702.48+debian10~1.gbp9b7c1f \
-    php7.4-gd=7.4.21-1+0~20210702.48+debian10~1.gbp9b7c1f \
-    php7.4-mbstring=7.4.21-1+0~20210702.48+debian10~1.gbp9b7c1f \
-    php7.4-xml=7.4.21-1+0~20210702.48+debian10~1.gbp9b7c1f \
-    php7.4-mysql=7.4.21-1+0~20210702.48+debian10~1.gbp9b7c1f \
-    php7.4-intl=7.4.21-1+0~20210702.48+debian10~1.gbp9b7c1f \
-    php7.4-opcache=7.4.21-1+0~20210702.48+debian10~1.gbp9b7c1f \
-    php7.4-apcu=5.1.20+4.0.11-1+0~20210304.24+debian10~1.gbp1c3d4d \
-    php7.4-redis=5.3.4+4.3.0-1+0~20210329.35+debian10~1.gbpdc7ead \
-    php7.4-curl=7.4.21-1+0~20210702.48+debian10~1.gbp9b7c1f \
+    php7.4 \
+    php7.4-mysql \
+    php7.4-cli \
+    php7.4-gd \
+    php7.4-mbstring \
+    php7.4-xml \
+    php7.4-mysql \
+    php7.4-intl \
+    php7.4-opcache \
+    php7.4-apcu \
+    php7.4-redis \
+    php7.4-curl \
     && aptitude clean
 
 # Post install configuration
