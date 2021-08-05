@@ -187,8 +187,10 @@ service (web, db, elasticsearch). The simplest way to run it is as below (make s
 have a node configured or `minikube` for development environment):
 
 ```bash
+minikube start
 cd ~/path/to/canasta
 kubectl apply -f kubernetes
+minikube service web
 ```
 
 The mount-bind directories are created at `/tmp/mediawiki` root ( you can change this by
@@ -197,3 +199,6 @@ modifying the conf files).
 Note, the kubernetes stack provided (same as the compose stack) does not include any
 front-end load balancer or proxy web server, so it's up to you to route the requests to the
 wiki pod/container.
+
+Note, the kubernetes stack provided relies on hostPath volume binds hence not intented to
+be used as a scalable solution (>1 pod per deployment).

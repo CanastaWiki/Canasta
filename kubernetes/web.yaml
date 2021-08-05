@@ -1,10 +1,6 @@
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    kompose.cmd: kompose convert -f ../docker-compose.yml
-    kompose.version: 1.23.0 (HEAD)
-  creationTimestamp: null
   labels:
     io.kompose.service: web
   name: web
@@ -21,10 +17,6 @@ status:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert -f ../docker-compose.yml
-    kompose.version: 1.23.0 (HEAD)
-  creationTimestamp: null
   labels:
     io.kompose.service: web
   name: web
@@ -37,10 +29,6 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert -f ../docker-compose.yml
-        kompose.version: 1.23.0 (HEAD)
-      creationTimestamp: null
       labels:
         io.kompose.service: web
     spec:
@@ -52,7 +40,7 @@ spec:
               value: 10M
             - name: PHP_UPLOAD_MAX_FILESIZE
               value: 10M
-          image: ghcr.io/wikiworks/canasta:latest
+          image: ghcr.io/wikiteq/canasta:latest
           imagePullPolicy: Always
           name: web
           ports:
