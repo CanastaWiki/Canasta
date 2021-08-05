@@ -66,32 +66,12 @@ spec:
               add:
                 - SYS_NICE
           volumeMounts:
-            - mountPath: /docker-entrypoint-initdb.d
-              name: initdb
             - mountPath: /var/lib/mysql
               name: mysql-data-volume
       restartPolicy: Always
       volumes:
-        - name: initdb
-          hostPath:
-            path: "/tmp/mediawiki/_initdb"
-            type: DirectoryOrCreate
         - name: mysql-data-volume
-          persistentVolumeClaim:
-            claimName: mysql-data-volume
-status: {}
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  creationTimestamp: null
-  labels:
-    io.kompose.service: mysql-data-volume
-  name: mysql-data-volume
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
+          hostPath:
+            path: "/tmp/mediawiki/mysql-data-volume"
+            type: DirectoryOrCreate
 status: {}

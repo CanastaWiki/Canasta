@@ -63,21 +63,7 @@ spec:
       restartPolicy: Always
       volumes:
         - name: elasticsearch
-          persistentVolumeClaim:
-            claimName: elasticsearch
-status: {}
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  creationTimestamp: null
-  labels:
-    io.kompose.service: elasticsearch
-  name: elasticsearch
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
+          hostPath:
+            path: "/tmp/mediawiki/elasticsearch"
+            type: DirectoryOrCreate
 status: {}
