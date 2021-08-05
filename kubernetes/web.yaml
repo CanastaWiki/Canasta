@@ -61,22 +61,22 @@ spec:
       volumes:
         - name: extensions
           hostPath:
-            path: "/tmp/mediawiki/extensions"
+            path: "/opt/mediawiki/extensions"
             type: DirectoryOrCreate
         - name: skins
           hostPath:
-            path: "/tmp/mediawiki/skins"
+            path: "/opt/mediawiki/skins"
             type: DirectoryOrCreate
         - name: config
           hostPath:
-            path: "/tmp/mediawiki/config"
+            path: "/opt/mediawiki/config"
             type: DirectoryOrCreate
         - name: images
           hostPath:
-            path: "/tmp/mediawiki/images"
+            path: "/opt/mediawiki/images"
             type: DirectoryOrCreate
         - name: sitemap
           hostPath:
-            path: "/tmp/mediawiki/sitemap"
+            path: "/opt/mediawiki/sitemap"
             type: DirectoryOrCreate
 status: { }

@@ -64,6 +64,6 @@ spec:
       volumes:
         - name: mysql-data-volume
           hostPath:
-            path: "/tmp/mediawiki/mysql-data-volume"
+            path: "/opt/mediawiki/mysql-data-volume"
             type: DirectoryOrCreate
 status: {}

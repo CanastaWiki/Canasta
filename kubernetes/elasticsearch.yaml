@@ -49,6 +49,6 @@ spec:
       volumes:
         - name: elasticsearch
           hostPath:
-            path: "/tmp/mediawiki/elasticsearch"
+            path: "/opt/mediawiki/elasticsearch"
             type: DirectoryOrCreate
 status: {}

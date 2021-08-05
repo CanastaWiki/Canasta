@@ -193,7 +193,7 @@ kubectl apply -f kubernetes
 minikube service web
 ```
 
-The mount-bind directories are created at `/tmp/mediawiki` root ( you can change this by
+The mount-bind directories are created at `/opt/mediawiki` root ( you can change this by
 modifying the conf files).
 
 Note, the kubernetes stack provided (same as the compose stack) does not include any
