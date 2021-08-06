@@ -514,7 +514,87 @@ RUN set -x; \
     # SemanticExternalQueryLookup (WikiTeq's fork)
     && git clone --single-branch -b master https://github.com/WikiTeq/SemanticExternalQueryLookup.git $MW_HOME/extensions/SemanticExternalQueryLookup \
     && cd $MW_HOME/extensions/SemanticExternalQueryLookup \
-    && git checkout -q dd7810061f2f1a9eef7be5ee09da999cbf9ecd8a
+    && git checkout -q dd7810061f2f1a9eef7be5ee09da999cbf9ecd8a \
+    # AdminLinks
+    && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/AdminLinks $MW_HOME/extensions/AdminLinks \
+    && cd $MW_HOME/extensions/AdminLinks \
+    && git checkout -q ea76d25167320f5a0d8a63254bd38ff5582e4ff4 \
+    # ContributionScores
+    && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ContributionScores $MW_HOME/extensions/ContributionScores \
+    && cd $MW_HOME/extensions/ContributionScores \
+    && git checkout -q de75d9f6904e9b41f7148417cc9fd491164da722 \
+    # ExternalData
+    && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ExternalData $MW_HOME/extensions/ExternalData \
+    && cd $MW_HOME/extensions/ExternalData \
+    && git checkout -q 70116a96a53c78d1466219d5ddde384677e97c8a \
+    # DismissableSiteNotice
+    && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/DismissableSiteNotice $MW_HOME/extensions/DismissableSiteNotice \
+    && cd $MW_HOME/extensions/DismissableSiteNotice \
+    && git checkout -q ad3a7802f78498e748833886613e28b4f7cb91b8 \
+    # MobileFrontend
+    && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/MobileFrontend $MW_HOME/extensions/MobileFrontend \
+    && cd $MW_HOME/extensions/MobileFrontend \
+    && git checkout -q db7c7843189a9009dde59503e3e3d4cbcab8eaef \
+    # RevisionSlider
+    && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/RevisionSlider $MW_HOME/extensions/RevisionSlider \
+    && cd $MW_HOME/extensions/RevisionSlider \
+    && git checkout -q d1a6af207e26e220d93d16381a58055259575d3b \
+    # SandboxLink
+    && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SandboxLink $MW_HOME/extensions/SandboxLink \
+    && cd $MW_HOME/extensions/SandboxLink \
+    && git checkout -q 2d7123c29b5e61f2c7d6e81168dc6d261ff93cbd \
+    # OpenIDConnect
+    && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/OpenIDConnect $MW_HOME/extensions/OpenIDConnect \
+    && cd $MW_HOME/extensions/OpenIDConnect \
+    && git checkout -q 19f422146969691ac2e3c9b5b33cf07116c7ee79 \
+    # PluggableAuth
+    && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/PluggableAuth $MW_HOME/extensions/PluggableAuth \
+    && cd $MW_HOME/extensions/PluggableAuth \
+    && git checkout -q d036ae0bf509ce160c4f6a1965c795d4fdae82b4 \
+    # WhoIsWatching
+    && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/WhoIsWatching $MW_HOME/extensions/WhoIsWatching \
+    && cd $MW_HOME/extensions/WhoIsWatching \
+    && git checkout -q 510e95a76fe140890ea83abf75be64ce97f7fd30 \
+    # LabeledSectionTransclusion
+    && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/LabeledSectionTransclusion $MW_HOME/extensions/LabeledSectionTransclusion \
+    && cd $MW_HOME/extensions/LabeledSectionTransclusion \
+    && git checkout -q 8b0ba6952488763201a0defef0499c743ef933f7 \
+    # GlobalNotice
+    && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/GlobalNotice $MW_HOME/extensions/GlobalNotice \
+    && cd $MW_HOME/extensions/GlobalNotice \
+    && git checkout -q f86637d27e6be7c60ec12bb8859f4b76cceb1be2 \
+    # FixedHeaderTable
+    && git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/FixedHeaderTable $MW_HOME/extensions/FixedHeaderTable \
+    && cd $MW_HOME/extensions/FixedHeaderTable \
+    && git checkout -q 5096d0f2cfc2409612484774541cd485494ee7ea \
+    # Lingo
+    && git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/Lingo $MW_HOME/extensions/Lingo \
+    && cd $MW_HOME/extensions/Lingo \
+    && git checkout -q d59cdaf9afbb98a0a8b507afdb102a2755dd85a1 \
+    # OpenGraphMeta
+    && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/OpenGraphMeta $MW_HOME/extensions/OpenGraphMeta \
+    && cd $MW_HOME/extensions/OpenGraphMeta \
+    && git checkout -q 5bbb2754497515a08562ad6cf62ed51ab9e588bd \
+    # NumerAlpha
+    && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/NumerAlpha $MW_HOME/extensions/NumerAlpha \
+    && cd $MW_HOME/extensions/NumerAlpha \
+    && git checkout -q ab24279b72af1c199651d4630aa198d39344785f \
+    # SimpleMathJax
+    && git clone --single-branch https://github.com/jmnote/SimpleMathJax.git $MW_HOME/extensions/SimpleMathJax \
+    && cd $MW_HOME/extensions/SimpleMathJax \
+    && git checkout -q ddcac9ac1616aed794576f2914ee426879194f0f \
+    # Wiretap
+    && git clone https://github.com/enterprisemediawiki/Wiretap.git $MW_HOME/extensions/Wiretap \
+    && cd $MW_HOME/extensions/Wiretap \
+    && git checkout -q a97b708c3093ea66e7cf625859b1b38178526bab \
+    # HeaderFooter
+    && git clone https://github.com/enterprisemediawiki/HeaderFooter.git $MW_HOME/extensions/HeaderFooter \
+    && cd $MW_HOME/extensions/HeaderFooter \
+    && git checkout eee7d2c1a3373c7d6b326fd460e5d4859dd22c40 \
+    # TalkRight
+    && git clone https://github.com/enterprisemediawiki/TalkRight.git $MW_HOME/extensions/TalkRight \
+    && cd $MW_HOME/extensions/TalkRight \
+    && git checkout cc966969e11bd0d72e118d326ebff216d623e06b
 
 # GTag1
 COPY _sources/extensions/GTag1.2.0.tar.gz /tmp/
@@ -583,7 +663,6 @@ COPY _sources/patches/social-profile-REL1_35.44b4f89.diff /tmp/social-profile-RE
 RUN set -x; \
     cd $MW_HOME/extensions/SocialProfile \
     && git apply /tmp/social-profile-REL1_35.44b4f89.diff
-
 
 # WikiTeq's patch allowing to manage fields visibility site-wide
 COPY _sources/patches/SocialProfile-disable-fields.patch /tmp/SocialProfile-disable-fields.patch
