@@ -194,7 +194,9 @@ minikube service web
 ```
 
 The mount-bind directories are created at `/opt/mediawiki` root ( you can change this by
-modifying the conf files).
+modifying the conf files). If nothing exists at the given path, an empty directory will be created there as needed with
+permission set to 0755, having the same group and ownership with Kubelet . Make sure the `/opt/mediawiki/elasticsearch` 
+and `/opt/mediawiki/images`, `/opt/mediawiki/sitemap` are writable.
 
 Note, the kubernetes stack provided (same as the compose stack) does not include any
 front-end load balancer or proxy web server, so it's up to you to route the requests to the
