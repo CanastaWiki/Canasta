@@ -659,7 +659,7 @@ RUN set -x; \
 	&& patch -u -b includes/RefreshedTemplate.php -i /tmp/skin-refreshed.patch
 
 # Allow to modify headelement in the Vector skin, see https://wikiteq.atlassian.net/browse/FAM-7
-COPY patches/skin-vector-addVectorGeneratedSkinDataHook.patch /tmp/skin-vector-addVectorGeneratedSkinDataHook.patch
+COPY _sources/patches/skin-vector-addVectorGeneratedSkinDataHook.patch /tmp/skin-vector-addVectorGeneratedSkinDataHook.patch
 RUN set -x; \
 	cd $MW_HOME/skins/Vector \
 	&& git apply /tmp/skin-vector-addVectorGeneratedSkinDataHook.patch
