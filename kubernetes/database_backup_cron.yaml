@@ -30,4 +30,4 @@ spec:
             - name: mysql-backup-scripts
               hostPath:
                 path: "/opt/mediawiki/backup_scripts"
-                type: DirectoryOrCreate
+                type: Directory
