@@ -15,7 +15,7 @@ echo Sitemap generator started.
 while true; do
     php $SCRIPT \
       --fspath=$MW_HOME/sitemap/ \
-      --urlpath=w/sitemap/ \
+      --urlpath=$MW_SCRIPT_PATH/sitemap/ \
       --compress yes \
       --server=$MW_SITE_SERVER \
       --skip-redirects \
