@@ -219,9 +219,7 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/Flow \
 	&& git checkout -q d37f94241d8cb94ac96c7946f83c1038844cf7e6 \
 	# ApprovedRevs
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ApprovedRevs $MW_HOME/extensions/ApprovedRevs \
-	&& cd $MW_HOME/extensions/ApprovedRevs \
-	&& git checkout -q 99fadf2d9e030b8305e53e6557d32dc67ffbbc68 \
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ApprovedRevs $MW_HOME/extensions/ApprovedRevs \
 	# Collection
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Collection $MW_HOME/extensions/Collection \
 	&& cd $MW_HOME/extensions/Collection \
