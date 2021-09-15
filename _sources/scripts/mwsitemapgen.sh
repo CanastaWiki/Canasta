@@ -14,12 +14,12 @@ sleep 30
 echo Sitemap generator started.
 while true; do
     php $SCRIPT \
-      --fspath=$MW_HOME/sitemap/ \
-      --urlpath=$MW_SCRIPT_PATH/sitemap/ \
+      --fspath=$MW_HOME/sitemap/$MW_SITEMAP_SUBDIR \
+      --urlpath=$MW_SCRIPT_PATH/sitemap/$MW_SITEMAP_SUBDIR \
       --compress yes \
       --server=$MW_SITE_SERVER \
       --skip-redirects \
-      --identifier=mediawiki
+      --identifier=$MW_SITEMAP_IDENTIFIER
 
     # Wait some seconds to let the CPU do other things, like handling web requests, etc
     echo mwsitemapgen waits for "$SLEEPDAYS" seconds...

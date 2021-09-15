@@ -31,6 +31,8 @@ services:
       - MW_SITE_SERVER=${MW_SITE_SERVER:-http://localhost}
       - PHP_UPLOAD_MAX_FILESIZE=${PHP_UPLOAD_MAX_FILESIZE:-10M}
       - PHP_POST_MAX_SIZE=${PHP_UPLOAD_MAX_FILESIZE:-10M}
+      - MW_SITEMAP_SUBDIR
+      - MW_SITEMAP_IDENTIFIER
     volumes:
       - ./extensions:/var/www/mediawiki/w/extensions
       - ./skins:/var/www/mediawiki/w/skins
