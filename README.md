@@ -170,6 +170,10 @@ until you'll make necessary configurations in `LocalSettings.php`, eg:
 cfLoadExtension( 'Elastica' );
 cfLoadExtension( 'CirrusSearch' );
 $wgCirrusSearchServers = [ 'elasticsearch' ];
+// or:
+$wgCirrusSearchClusters = [
+        'default' => [ 'elasticsearch' ],
+];
 ```
 
 and follow initialization instructions, see https://github.com/wikimedia/mediawiki-extensions-CirrusSearch/blob/master/README and
