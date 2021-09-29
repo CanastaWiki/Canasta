@@ -1,7 +1,7 @@
 {
 	"require": {
 		"elasticsearch/elasticsearch": "6.7.2",
-		"mediawiki/bootstrap": "4.5.0",
+		"mediawiki/chameleon-skin": "^3.3.0",
 		"mediawiki/maps": "8.0.0",
 		"mediawiki/semantic-media-wiki": "3.2.3",
 		"mediawiki/semantic-result-formats": "3.2.0",
