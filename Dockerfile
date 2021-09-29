@@ -542,9 +542,9 @@ RUN set -x; \
     && cd $MW_HOME/extensions/SandboxLink \
     && git checkout -q 2d7123c29b5e61f2c7d6e81168dc6d261ff93cbd \
     # OpenIDConnect
-    && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/OpenIDConnect $MW_HOME/extensions/OpenIDConnect \
+    && git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/OpenIDConnect $MW_HOME/extensions/OpenIDConnect \
     && cd $MW_HOME/extensions/OpenIDConnect \
-    && git checkout -q 19f422146969691ac2e3c9b5b33cf07116c7ee79 \
+    && git checkout -q b44189a2fb29ee45330c64bcf57d6537f63b18df \
     # PluggableAuth
     && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/PluggableAuth $MW_HOME/extensions/PluggableAuth \
     && cd $MW_HOME/extensions/PluggableAuth \
