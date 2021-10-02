@@ -17,9 +17,9 @@ ENV MW_VERSION=REL1_35 \
 RUN set x; \
 	apt-get clean \
 	&& apt-get update \
-	&& apt-get install --no-install-recommends -y aptitude \
+	&& apt-get install -y aptitude \
     && aptitude -y upgrade \
-    && aptitude install --no-install-recommends -y \
+    && aptitude install -y \
     git=1:2.20.1-2+deb10u3 \
     apache2=2.4.38-3+deb10u5 \
     software-properties-common=0.96.20.2-2 \
