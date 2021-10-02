@@ -17,9 +17,9 @@ ENV MW_VERSION=REL1_35 \
 RUN set x; \
 	apt-get clean \
 	&& apt-get update \
-	&& apt-get install -y aptitude \
+	&& apt-get install --no-install-recommends -y aptitude \
     && aptitude -y upgrade \
-    && aptitude install -y \
+    && aptitude install --no-install-recommends -y \
     git=1:2.20.1-2+deb10u3 \
     apache2=2.4.38-3+deb10u5 \
     software-properties-common=0.96.20.2-2 \
@@ -56,7 +56,8 @@ RUN set x; \
     php7.4-apcu \
     php7.4-redis \
     php7.4-curl \
-    && aptitude clean
+    && aptitude clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Post install configuration
 RUN set -x; \
