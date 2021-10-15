@@ -752,5 +752,8 @@ RUN set -x; \
 EXPOSE 80
 WORKDIR $MW_HOME
 
+HEALTHCHECK --interval=1m --timeout=10s \
+	CMD wget -q --method=HEAD localhost/w/api.php
+
 CMD ["/run-apache.sh"]
 
