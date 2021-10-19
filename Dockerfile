@@ -119,9 +119,9 @@ RUN set -x; \
 RUN set -x; \
 	cd $MW_HOME/extensions \
 	# DataTransfer
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/DataTransfer $MW_HOME/extensions/DataTransfer \
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/DataTransfer $MW_HOME/extensions/DataTransfer \
 	&& cd $MW_HOME/extensions/DataTransfer \
-	&& git checkout -q d14a8f9acdcc42887dc3da3560300d60f1ecee8b \
+	&& git checkout -q 138d06f75f3cbe4097f85b203d760da277c419b8 \
 	# Variables
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Variables $MW_HOME/extensions/Variables \
 	&& cd $MW_HOME/extensions/Variables \
@@ -220,6 +220,8 @@ RUN set -x; \
 	&& git checkout -q d37f94241d8cb94ac96c7946f83c1038844cf7e6 \
 	# ApprovedRevs
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ApprovedRevs $MW_HOME/extensions/ApprovedRevs \
+	&& cd $MW_HOME/extensions/ApprovedRevs \
+	&& git checkout -q 5daa77e6d4c1983c2beedb172eb6a0441f6f9c41 \
 	# Collection
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Collection $MW_HOME/extensions/Collection \
 	&& cd $MW_HOME/extensions/Collection \
@@ -389,9 +391,9 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/VEForAll \
 	&& git checkout -q 8f83eb6e607b89f6e1a44966e8637cadd7942bd7 \
 	# HeaderTabs
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/HeaderTabs $MW_HOME/extensions/HeaderTabs \
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/HeaderTabs $MW_HOME/extensions/HeaderTabs \
 	&& cd $MW_HOME/extensions/HeaderTabs \
-	&& git checkout -q 6c0787d956ba993027aae80f8f7cba0c4437ada7 \
+	&& git checkout -q 5f18c955d04d2c7810d51ae2a641d62b969aba31 \
 	# UrlGetParameters
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/UrlGetParameters $MW_HOME/extensions/UrlGetParameters \
 	&& cd $MW_HOME/extensions/UrlGetParameters \
@@ -435,7 +437,7 @@ RUN set -x; \
     # PageForms
     && git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms $MW_HOME/extensions/PageForms \
     && cd $MW_HOME/extensions/PageForms \
-    && git checkout -q d2e48e51eef1 \
+    && git checkout -q 01a2363f7520668c1cde7d4568cb8b00da0b394b \
     # NCBITaxonomyLookup
     && git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/NCBITaxonomyLookup $MW_HOME/extensions/NCBITaxonomyLookup \
     && cd $MW_HOME/extensions/NCBITaxonomyLookup \
@@ -514,17 +516,17 @@ RUN set -x; \
     && cd $MW_HOME/extensions/SemanticExternalQueryLookup \
     && git checkout -q dd7810061f2f1a9eef7be5ee09da999cbf9ecd8a \
     # AdminLinks
-    && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/AdminLinks $MW_HOME/extensions/AdminLinks \
+    && git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/AdminLinks $MW_HOME/extensions/AdminLinks \
     && cd $MW_HOME/extensions/AdminLinks \
-    && git checkout -q ea76d25167320f5a0d8a63254bd38ff5582e4ff4 \
+    && git checkout -q 28009e814c91d67f4287bcc180d626308adb2b52 \
     # ContributionScores
     && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ContributionScores $MW_HOME/extensions/ContributionScores \
     && cd $MW_HOME/extensions/ContributionScores \
     && git checkout -q de75d9f6904e9b41f7148417cc9fd491164da722 \
     # ExternalData
-    && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ExternalData $MW_HOME/extensions/ExternalData \
+    && git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ExternalData $MW_HOME/extensions/ExternalData \
     && cd $MW_HOME/extensions/ExternalData \
-    && git checkout -q 70116a96a53c78d1466219d5ddde384677e97c8a \
+    && git checkout -q 6cb6d70c1ff3104c4337847a54a6980798d63299 \
     # DismissableSiteNotice
     && git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/DismissableSiteNotice $MW_HOME/extensions/DismissableSiteNotice \
     && cd $MW_HOME/extensions/DismissableSiteNotice \
@@ -588,11 +590,15 @@ RUN set -x; \
     # HeaderFooter
     && git clone https://github.com/enterprisemediawiki/HeaderFooter.git $MW_HOME/extensions/HeaderFooter \
     && cd $MW_HOME/extensions/HeaderFooter \
-    && git checkout eee7d2c1a3373c7d6b326fd460e5d4859dd22c40 \
+    && git checkout -q eee7d2c1a3373c7d6b326fd460e5d4859dd22c40 \
     # TalkRight
     && git clone https://github.com/enterprisemediawiki/TalkRight.git $MW_HOME/extensions/TalkRight \
     && cd $MW_HOME/extensions/TalkRight \
-    && git checkout cc966969e11bd0d72e118d326ebff216d623e06b
+    && git checkout -q cc966969e11bd0d72e118d326ebff216d623e06b \
+	# Cargo
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/Cargo $MW_HOME/extensions/Cargo \
+	&& cd $MW_HOME/extensions/Cargo \
+	&& git checkout -q 479026a912fc2529d1f367fc4a85f79f5da24f93
 
 # GTag1
 COPY _sources/extensions/GTag1.2.0.tar.gz /tmp/
@@ -626,10 +632,10 @@ RUN set -x; \
 # Patches
 
 # PageForms
-COPY _sources/patches/pageforms-xss-cherry-picked.patch /tmp/pageforms-xss-cherry-picked.patch
-RUN set -x; \
-	cd $MW_HOME/extensions/PageForms \
-    && git apply /tmp/pageforms-xss-cherry-picked.patch
+#COPY _sources/patches/pageforms-xss-cherry-picked.patch /tmp/pageforms-xss-cherry-picked.patch
+#RUN set -x; \
+#	cd $MW_HOME/extensions/PageForms \
+#    && git apply /tmp/pageforms-xss-cherry-picked.patch
 
 # SemanticResultFormats, see https://github.com/WikiTeq/SemanticResultFormats/compare/master...WikiTeq:fix1_35
 COPY _sources/patches/semantic-result-formats.patch /tmp/semantic-result-formats.patch
@@ -756,4 +762,3 @@ HEALTHCHECK --interval=1m --timeout=10s \
 	CMD wget -q --method=HEAD localhost/w/api.php
 
 CMD ["/run-apache.sh"]
-
