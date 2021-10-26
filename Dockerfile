@@ -139,9 +139,9 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/Arrays \
 	&& git checkout -q e09d74379c191f3e83560d7bb35d39fb4162f0fc \
 	# DisplayTitle
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/DisplayTitle $MW_HOME/extensions/DisplayTitle \
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/DisplayTitle $MW_HOME/extensions/DisplayTitle \
 	&& cd $MW_HOME/extensions/DisplayTitle \
-	&& git checkout -q 1bbe37df7b769f4b42884fef7347ab4ec8db16aa \
+	&& git checkout -q 4f3f66c524465b26b3ee66029a4500966ba29ab2 \
 	# ConfirmAccount
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ConfirmAccount $MW_HOME/extensions/ConfirmAccount \
 	&& cd $MW_HOME/extensions/ConfirmAccount \
