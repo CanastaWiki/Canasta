@@ -600,6 +600,11 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/Cargo \
 	&& git checkout -q 479026a912fc2529d1f367fc4a85f79f5da24f93
 
+# ReplaceText (switch to more recent commit due to bug on submodule HEAD)
+RUN set -x; \
+	cd $MW_HOME/extensions/ReplaceText \
+	&& git checkout -q 109d24b690b9096863513bdea642f88c062a3b0b
+
 # GTag1
 COPY _sources/extensions/GTag1.2.0.tar.gz /tmp/
 RUN set -x; \
