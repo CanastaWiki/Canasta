@@ -56,7 +56,8 @@ RUN set x; \
     php7.4-apcu \
     php7.4-redis \
     php7.4-curl \
-    && aptitude clean
+    && aptitude clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Post install configuration
 RUN set -x; \
