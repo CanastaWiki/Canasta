@@ -67,7 +67,7 @@ In order to install a 3rd party extension simply place it under the `./extension
 directory and add `cfLoadExtension` call to the bottom of `./config/LocalSettings.php`, eg:
 
 ```php
-cfLoadExtension('MyCustomExtension');
+wfLoadExtension('MyCustomExtension');
 ```
 
 # Installing 3rd party skins
@@ -76,7 +76,7 @@ In order to install a 3rd party skin simply place it under the `./skins`
 directory and add `cfLoadSkin` call to the bottom of `./config/LocalSettings.php`, eg:
 
 ```php
-cfLoadSkin('MyCustomSkin');
+wfLoadSkin('MyCustomSkin');
 ```
 
 # Database
