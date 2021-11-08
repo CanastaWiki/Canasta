@@ -564,7 +564,7 @@ RUN set -x; \
 	# Variables
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Variables $MW_HOME/extensions/Variables \
 	&& cd $MW_HOME/extensions/Variables \
-	&& git checkout -q e20f4c7469bdc724ccc71767ed86deec3d1c3325 \
+	&& git checkout -q e20f4c7469bdc724ccc71767ed86deec3d1c3325 \	
 	# VEForAll TODO (version 0.3, master), switch back to REL_x for 1.36
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/VEForAll $MW_HOME/extensions/VEForAll \
 	&& cd $MW_HOME/extensions/VEForAll \
@@ -588,7 +588,7 @@ RUN set -x; \
 	# WikiSEO
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/WikiSEO $MW_HOME/extensions/WikiSEO \
 	&& cd $MW_HOME/extensions/WikiSEO \
-	&& git checkout -q 30bb8c323e8cd44df52c7537f97f8518de2557df \
+	&& git checkout -q 2c0a40267e9e1abd087cf3fd378cc508b8562f9f \
 	# Wiretap
 	&& git clone https://github.com/enterprisemediawiki/Wiretap.git $MW_HOME/extensions/Wiretap \
 	&& cd $MW_HOME/extensions/Wiretap \
