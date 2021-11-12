@@ -119,7 +119,6 @@ RUN set -x; \
 # Extensions
 RUN set -x; \
 	cd $MW_HOME/extensions \
-
 	# AdminLinks
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/AdminLinks $MW_HOME/extensions/AdminLinks \
 	&& cd $MW_HOME/extensions/AdminLinks \
@@ -139,7 +138,7 @@ RUN set -x; \
 	# ApprovedRevs
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ApprovedRevs $MW_HOME/extensions/ApprovedRevs \
 	&& cd $MW_HOME/extensions/ApprovedRevs \
-	&& git checkout -q 5daa77e6d4c1983c2beedb172eb6a0441f6f9c41 \
+	&& git checkout -q fb54b5f5cf4d9495877c622fd0f197ece6a15545 \
 	# Arrays
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Arrays $MW_HOME/extensions/Arrays \
 	&& cd $MW_HOME/extensions/Arrays \
@@ -400,7 +399,7 @@ RUN set -x; \
 	# PageExchange
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/PageExchange $MW_HOME/extensions/PageExchange \
 	&& cd $MW_HOME/extensions/PageExchange \
-	&& git checkout -q 339056ffba8db1a98ff166aa11f639e5bc1ac665 \
+	&& git checkout -q 59d6d64fce6cbe40de6ebe07a0f3d65635aea30e \
 	# PageForms
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms $MW_HOME/extensions/PageForms \
 	&& cd $MW_HOME/extensions/PageForms \
