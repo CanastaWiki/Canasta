@@ -224,10 +224,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Echo $MW_HOME/extensions/Echo \
 	&& cd $MW_HOME/extensions/Echo \
 	&& git checkout -q a3dedc0d64380d74d2e153aad9a8d54cee1b85bd \
-	# EditUser
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/EditUser $MW_HOME/extensions/EditUser \
-	&& cd $MW_HOME/extensions/EditUser \
-	&& git checkout -q 5a5f12d73f4f48cfb9198b7c0143e5e6e57d32f6 \
 	# Elastica
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Elastica $MW_HOME/extensions/Elastica \
 	&& cd $MW_HOME/extensions/Elastica \
@@ -268,10 +264,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/GlobalNotice $MW_HOME/extensions/GlobalNotice \
 	&& cd $MW_HOME/extensions/GlobalNotice \
 	&& git checkout -q f86637d27e6be7c60ec12bb8859f4b76cceb1be2 \
-	# googleAnalytics
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/googleAnalytics $MW_HOME/extensions/googleAnalytics \
-	&& cd $MW_HOME/extensions/googleAnalytics \
-	&& git checkout -q ad1906e59ff4d460962d91c4865c47cbec77a5d4 \
 	# GoogleAnalyticsMetrics
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/GoogleAnalyticsMetrics $MW_HOME/extensions/GoogleAnalyticsMetrics \
 	&& cd $MW_HOME/extensions/GoogleAnalyticsMetrics \
@@ -324,10 +316,6 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/LinkTarget $MW_HOME/extensions/LinkTarget \
 	&& cd $MW_HOME/extensions/LinkTarget \
 	&& git checkout -q ab1aba0a4a138f80c4cd9c86cc53259ca0fe4545 \
-	# LiquidThreads
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/LiquidThreads $MW_HOME/extensions/LiquidThreads \
-	&& cd $MW_HOME/extensions/LiquidThreads \
-	&& git checkout -q 21ebc92586f75b9551822eb2f6f0ee0235856ad8 \
 	# LockAuthor
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/LockAuthor $MW_HOME/extensions/LockAuthor \
 	&& cd $MW_HOME/extensions/LockAuthor \
@@ -360,10 +348,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Math $MW_HOME/extensions/Math \
 	&& cd $MW_HOME/extensions/Math \
 	&& git checkout -q ce438004cb7366860d3bff1f60839ef3c304aa1e \
-	# MathJax
-	&& git clone --single-branch -b master https://github.com/xeyownt/mediawiki-mathjax.git $MW_HOME/extensions/MathJax \
-	&& cd $MW_HOME/extensions/MathJax \
-	&& git checkout -q 4afdc226f08f9c2b1471a523d3c64df716b25c6c \
 	# MobileDetect
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/MobileDetect $MW_HOME/extensions/MobileDetect \
 	&& cd $MW_HOME/extensions/MobileDetect \
@@ -416,10 +400,6 @@ RUN set -x; \
 	&& git clone --single-branch -b main https://github.com/bovender/PubmedParser.git $MW_HOME/extensions/PubmedParser \
 	&& cd $MW_HOME/extensions/PubmedParser \
 	&& git checkout -q 9cd01d828b23853e3e790dc7bf49cdd230847272 \
-	# RandomInCategory
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/RandomInCategory $MW_HOME/extensions/RandomInCategory \
-	&& cd $MW_HOME/extensions/RandomInCategory \
-	&& git checkout -q 6281429fc91d96cd5c25952984eebd08c1182260 \
 	# RevisionSlider
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/RevisionSlider $MW_HOME/extensions/RevisionSlider \
 	&& cd $MW_HOME/extensions/RevisionSlider \
@@ -476,14 +456,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ShowMe $MW_HOME/extensions/ShowMe \
 	&& cd $MW_HOME/extensions/ShowMe \
 	&& git checkout -q 368f7a9cdd151a9fb198c83ca9a48efacf6b2b1f \
-	# Skinny
-	&& git clone --single-branch -b master https://github.com/tinymighty/skinny.git $MW_HOME/extensions/Skinny \
-	&& cd $MW_HOME/extensions/Skinny \
-	&& git checkout -q 41ba4e90522f6fa971a136fab072c3911750e35c \
-	# SkinPerNamespace
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SkinPerNamespace $MW_HOME/extensions/SkinPerNamespace \
-	&& cd $MW_HOME/extensions/SkinPerNamespace \
-	&& git checkout -q e17cff49d8dda42b8118375188ca0f7847e10b3f \
 	# SkinPerPage
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SkinPerPage $MW_HOME/extensions/SkinPerPage \
 	&& cd $MW_HOME/extensions/SkinPerPage \
@@ -492,18 +464,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SocialProfile $MW_HOME/extensions/SocialProfile \
 	&& cd $MW_HOME/extensions/SocialProfile \
 	&& git checkout -q d34f32174c23818dbf057a5482dc6ed4781a3a25 \
-	# SoundManager2Button
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SoundManager2Button $MW_HOME/extensions/SoundManager2Button \
-	&& cd $MW_HOME/extensions/SoundManager2Button \
-	&& git checkout -q 5264bf3eaad7b9ed6cc794bbb3c8622d4d164e8d \
 	# SRFEventCalendarMod
 	&& git clone --single-branch -b master https://github.com/vedmaka/mediawiki-extension-SRFEventCalendarMod.git $MW_HOME/extensions/SRFEventCalendarMod \
 	&& cd $MW_HOME/extensions/SRFEventCalendarMod \
 	&& git checkout -q e0dfa797af0709c90f9c9295d217bbb6d564a7a8 \
-	# Survey
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Survey $MW_HOME/extensions/Survey \
-	&& cd $MW_HOME/extensions/Survey \
-	&& git checkout -q eab540c594d630c6672cc0920951a45f4e272f81 \
 	# Sync
 	&& git clone --single-branch -b master https://github.com/nischayn22/Sync.git $MW_HOME/extensions/Sync \
 	&& cd $MW_HOME/extensions/Sync \
