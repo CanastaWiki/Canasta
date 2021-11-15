@@ -95,26 +95,26 @@ RUN set -x; \
 	&& git clone https://github.com/ProfessionalWiki/chameleon.git $MW_HOME/skins/chameleon \
 	&& cd $MW_HOME/skins/chameleon \
 	&& git checkout -q -b $MW_VERSION c817e3a89193ecb8e2ec37800d4534b4747e6903 \
-    # CologneBlue, Modern, Refreshed skins
-    && git clone -b $MW_VERSION --single-branch https://gerrit.wikimedia.org/r/mediawiki/skins/CologneBlue $MW_HOME/skins/CologneBlue \
-    && cd $MW_HOME/skins/CologneBlue \
-    && git checkout -q 515a545dfee9f534f74a42057b7a4509076716b4 \
-    # Modern
-    && git clone -b $MW_VERSION --single-branch https://gerrit.wikimedia.org/r/mediawiki/skins/Modern $MW_HOME/skins/Modern \
-    && cd $MW_HOME/skins/Modern \
-    && git checkout -q d0a04c91132105f712df4de44a99d3643e7afbba \
-    # Refreshed
-    && git clone -b $MW_VERSION --single-branch https://gerrit.wikimedia.org/r/mediawiki/skins/Refreshed $MW_HOME/skins/Refreshed \
-    && cd $MW_HOME/skins/Refreshed \
-    && git checkout -q 3fad8765c3ec8082bb899239f502199f651818cb \
+	# CologneBlue
+	&& git clone -b $MW_VERSION --single-branch https://gerrit.wikimedia.org/r/mediawiki/skins/CologneBlue $MW_HOME/skins/CologneBlue \
+	&& cd $MW_HOME/skins/CologneBlue \
+	&& git checkout -q 515a545dfee9f534f74a42057b7a4509076716b4 \
+	# MinervaNeue
+	&& git clone -b $MW_VERSION --single-branch https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue $MW_HOME/skins/MinervaNeue \
+	&& cd $MW_HOME/skins/MinervaNeue \
+	&& git checkout -q 6c99418af845a7761c246ee5a50fbb82715f4003 \
+	# Modern
+	&& git clone -b $MW_VERSION --single-branch https://gerrit.wikimedia.org/r/mediawiki/skins/Modern $MW_HOME/skins/Modern \
+	&& cd $MW_HOME/skins/Modern \
+	&& git checkout -q d0a04c91132105f712df4de44a99d3643e7afbba \
 	# Pivot
 	&& git clone -b v2.3.0 https://github.com/Hutchy68/pivot.git $MW_HOME/skins/pivot \
-    && cd $MW_HOME/skins/pivot \
-    && git checkout -q -b $MW_VERSION 0d3d6b03a83afd7e1cb170aa41bdf23c0ce3e93b \
-    # MinervaNeue
-    && git clone -b $MW_VERSION --single-branch https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue $MW_HOME/skins/MinervaNeue \
-    && cd $MW_HOME/skins/MinervaNeue \
-    && git checkout -q 6c99418af845a7761c246ee5a50fbb82715f4003
+	&& cd $MW_HOME/skins/pivot \
+	&& git checkout -q -b $MW_VERSION 0d3d6b03a83afd7e1cb170aa41bdf23c0ce3e93b \
+	# Refreshed
+	&& git clone -b $MW_VERSION --single-branch https://gerrit.wikimedia.org/r/mediawiki/skins/Refreshed $MW_HOME/skins/Refreshed \
+	&& cd $MW_HOME/skins/Refreshed \
+	&& git checkout -q 3fad8765c3ec8082bb899239f502199f651818cb
 
 # Extensions
 RUN set -x; \
