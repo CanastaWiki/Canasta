@@ -527,7 +527,7 @@ RUN set -x; \
 	# Variables
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Variables $MW_HOME/extensions/Variables \
 	&& cd $MW_HOME/extensions/Variables \
-	&& git checkout -q e20f4c7469bdc724ccc71767ed86deec3d1c3325 \	
+	&& git checkout -q e20f4c7469bdc724ccc71767ed86deec3d1c3325 \
 	# VEForAll TODO (version 0.3, master), switch back to REL_x for 1.36
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/VEForAll $MW_HOME/extensions/VEForAll \
 	&& cd $MW_HOME/extensions/VEForAll \
@@ -598,10 +598,10 @@ RUN set -x; \
 # Patches
 
 # PageForms
-#COPY _sources/patches/pageforms-xss-cherry-picked.patch /tmp/pageforms-xss-cherry-picked.patch
-#RUN set -x; \
-#	cd $MW_HOME/extensions/PageForms \
-#    && git apply /tmp/pageforms-xss-cherry-picked.patch
+COPY _sources/patches/PageForms.01a2363f7520668c1cde7d4568cb8b00da0b394b.VeForAll.patch /tmp/PageForms.01a2363f7520668c1cde7d4568cb8b00da0b394b.VeForAll.patch
+RUN set -x; \
+	cd $MW_HOME/extensions/PageForms \
+    && git apply /tmp/PageForms.01a2363f7520668c1cde7d4568cb8b00da0b394b.VeForAll.patch
 
 # SemanticResultFormats, see https://github.com/WikiTeq/SemanticResultFormats/compare/master...WikiTeq:fix1_35
 COPY _sources/patches/semantic-result-formats.patch /tmp/semantic-result-formats.patch
