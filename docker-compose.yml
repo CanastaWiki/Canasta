@@ -15,9 +15,7 @@ services:
       - mysql-data-volume:/var/lib/mysql
 
   web:
-    build:
-      dockerfile: Dockerfile
-      context: .
+    image: ghcr.io/wikiworks/canasta:latest
     restart: unless-stopped
     ports:
       - "${PORT:-80}:80"
