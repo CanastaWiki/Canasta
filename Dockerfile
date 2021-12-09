@@ -619,7 +619,7 @@ RUN set -x; \
 	&& git checkout d37f94241d8cb94ac96c7946f83c1038844cf7e6 \
 	&& git apply /tmp/flow-conversion-utils.patch
 
-# SWM maintenance page returns 503 (Service Unavailable) status code, PR: https://github.com/SemanticMediaWiki/SemanticMediaWiki/pull/4967
+# SMW maintenance page returns 503 (Service Unavailable) status code, PR: https://github.com/SemanticMediaWiki/SemanticMediaWiki/pull/4967
 COPY _sources/patches/smw-maintenance-503.patch /tmp/smw-maintenance-503.patch
 RUN set -x; \
 	cd $MW_HOME/extensions/SemanticMediaWiki \
@@ -703,6 +703,7 @@ ENV MW_ENABLE_JOB_RUNNER=true \
 	LOG_FILES_REMOVE_OLDER_THAN_DAYS=10
 
 COPY _sources/configs/.msmtprc /etc/
+COPY _sources/configs/ports.conf /etc/apache2/ports.conf
 COPY _sources/configs/mediawiki.conf /etc/apache2/sites-enabled/
 COPY _sources/configs/status.conf /etc/apache2/mods-available/
 COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/7.4/cli/conf.d/

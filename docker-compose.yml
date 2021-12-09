@@ -13,14 +13,12 @@ services:
     volumes:
       - ./_initdb:/docker-entrypoint-initdb.d
       - mysql-data-volume:/var/lib/mysql
-
+  
   web:
     build:
       dockerfile: Dockerfile
       context: .
     restart: unless-stopped
-    ports:
-      - "${PORT:-80}:80"
     depends_on:
       - db
       - elasticsearch
@@ -54,6 +52,16 @@ services:
         hard: -1
     volumes:
       - elasticsearch:/usr/share/elasticsearch/data
+
+  caddy:
+    image: caddy:2.4.6-alpine
+    restart: unless-stopped
+    entrypoint: caddy reverse-proxy --from ${MW_SITE_FQDN:-localhost} --to web:8080
+    ports:
+      - "${PORT:-80}:80"
+      - "443:443"
+    volumes:
+      - ./_caddy_data/:/data
 
 volumes:
   mysql-data-volume:
