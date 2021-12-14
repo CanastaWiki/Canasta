@@ -273,10 +273,6 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://github.com/nischayn22/GoogleDocCreator.git $MW_HOME/extensions/GoogleDocCreator \
 	&& cd $MW_HOME/extensions/GoogleDocCreator \
 	&& git checkout -q 63aecabb4292ad9d4e8336a93aec25f977ee633e \
-	# GoogleDocTag
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/GoogleDocTag $MW_HOME/extensions/GoogleDocTag \
-	&& cd $MW_HOME/extensions/GoogleDocTag \
-	&& git checkout -q f9fdb27250112fd02d9ff8eeb2a54ecd8c49b08d \
 	# HeaderFooter
 	&& git clone https://github.com/enterprisemediawiki/HeaderFooter.git $MW_HOME/extensions/HeaderFooter \
 	&& cd $MW_HOME/extensions/HeaderFooter \
@@ -293,10 +289,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/HTMLTags $MW_HOME/extensions/HTMLTags \
 	&& cd $MW_HOME/extensions/HTMLTags \
 	&& git checkout -q 3476196e1e46b3cb56035d2151d98797c088bc90 \
-	# IframePage
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/IframePage $MW_HOME/extensions/IframePage \
-	&& cd $MW_HOME/extensions/IframePage \
-	&& git checkout -q abbff3dd72194ae7ec07415ff6816170198d1f01 \
 	# LabeledSectionTransclusion
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/LabeledSectionTransclusion $MW_HOME/extensions/LabeledSectionTransclusion \
 	&& cd $MW_HOME/extensions/LabeledSectionTransclusion \
@@ -489,10 +481,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/TinyMCE $MW_HOME/extensions/TinyMCE \
 	&& cd $MW_HOME/extensions/TinyMCE \
 	&& git checkout -q 587bbb0b98044ae4904cf67f104d0cf27bd6972d \
-	# TwitterTag
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/TwitterTag $MW_HOME/extensions/TwitterTag \
-	&& cd $MW_HOME/extensions/TwitterTag \
-	&& git checkout -q 6758d15d8e4f0553bbcbc7af026ba245f1ff9282 \
 	# UniversalLanguageSelector
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/UniversalLanguageSelector $MW_HOME/extensions/UniversalLanguageSelector \
 	&& cd $MW_HOME/extensions/UniversalLanguageSelector \
@@ -544,11 +532,7 @@ RUN set -x; \
 	# Wiretap
 	&& git clone https://github.com/enterprisemediawiki/Wiretap.git $MW_HOME/extensions/Wiretap \
 	&& cd $MW_HOME/extensions/Wiretap \
-	&& git checkout -q a97b708c3093ea66e7cf625859b1b38178526bab \
-	# YouTube
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/YouTube $MW_HOME/extensions/YouTube \
-	&& cd $MW_HOME/extensions/YouTube \
-	&& git checkout -q bd736585dca8412d5eb9dde8f68a54b3c69df9cf
+	&& git checkout -q a97b708c3093ea66e7cf625859b1b38178526bab
 
 # ReplaceText (switch to more recent commit due to bug on submodule HEAD)
 RUN set -x; \
