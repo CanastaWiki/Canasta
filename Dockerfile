@@ -365,10 +365,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/MyVariables $MW_HOME/extensions/MyVariables \
 	&& cd $MW_HOME/extensions/MyVariables \
 	&& git checkout -q cde2562ffde8a1b648be10b78b86386a9c7d3151 \
-	# NCBITaxonomyLookup
-	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/NCBITaxonomyLookup $MW_HOME/extensions/NCBITaxonomyLookup \
-	&& cd $MW_HOME/extensions/NCBITaxonomyLookup \
-	&& git checkout -q 512a390a62fbe6f3a7480641f6582126678e5a7c \
 	# NumerAlpha
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/NumerAlpha $MW_HOME/extensions/NumerAlpha \
 	&& cd $MW_HOME/extensions/NumerAlpha \
@@ -397,10 +393,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Popups $MW_HOME/extensions/Popups \
 	&& cd $MW_HOME/extensions/Popups \
 	&& git checkout -q dccd60752353eac1063a79f81a8059b3b06b9353 \
-	# PubmedParser
-	&& git clone --single-branch -b main https://github.com/bovender/PubmedParser.git $MW_HOME/extensions/PubmedParser \
-	&& cd $MW_HOME/extensions/PubmedParser \
-	&& git checkout -q 9cd01d828b23853e3e790dc7bf49cdd230847272 \
 	# RevisionSlider
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/RevisionSlider $MW_HOME/extensions/RevisionSlider \
 	&& cd $MW_HOME/extensions/RevisionSlider \
@@ -417,10 +409,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SaveSpinner $MW_HOME/extensions/SaveSpinner \
 	&& cd $MW_HOME/extensions/SaveSpinner \
 	&& git checkout -q 2f19bdd7c6cc48729faa4b8e9afc8953dbeaeae1 \
-	# Scopus
-	&& git clone --single-branch -b master https://github.com/nischayn22/Scopus.git $MW_HOME/extensions/Scopus \
-	&& cd $MW_HOME/extensions/Scopus \
-	&& git checkout -q 4fe8048459d9189626d82d9d93a0d5f906c43746 \
 	# SelectCategory
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SelectCategory $MW_HOME/extensions/SelectCategory \
 	&& cd $MW_HOME/extensions/SelectCategory \
