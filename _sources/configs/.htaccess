@@ -7,7 +7,10 @@ RedirectMatch 404 /\.git
 Options -Indexes
 
 # VisualEditor support
-RewriteRule ^/?w/rest.php/ - [L,NC]
+RewriteRule ^/?w/rest.php/ - [L]
+
+# Image authorization support
+RewriteRule ^/?w/img_auth.php/ - [L]
 
 # Redirect / to Main Page
 RewriteRule ^/*$ %{DOCUMENT_ROOT}/w/index.php [L]
@@ -16,3 +19,27 @@ RewriteRule ^/*$ %{DOCUMENT_ROOT}/w/index.php [L]
 RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
 RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-d
 RewriteRule ^(.*)$ %{DOCUMENT_ROOT}/w/index.php [L]
+
+<IfModule mod_expires.c>
+    ExpiresActive on
+
+    # Images
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+
+    # Video
+    ExpiresByType video/mp4 "access plus 1 year"
+    ExpiresByType video/mpeg "access plus 1 year"
+
+    # Fonts
+    ExpiresByType application/vnd.ms-fontobject "access plus 1 year"
+    ExpiresByType application/x-font-ttf "access plus 1 year"
+    ExpiresByType font/ttf "access plus 1 year"
+    ExpiresByType font/otf "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>

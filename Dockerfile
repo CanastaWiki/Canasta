@@ -40,6 +40,7 @@ RUN set x; \
 	gnupg=2.2.12-1+deb10u1 \
 	default-mysql-client=1.0.5 \
 	rsync=3.1.3-6 \
+    lynx \
     && wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \
     && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list \
     && aptitude update \
@@ -272,10 +273,6 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://github.com/nischayn22/GoogleDocCreator.git $MW_HOME/extensions/GoogleDocCreator \
 	&& cd $MW_HOME/extensions/GoogleDocCreator \
 	&& git checkout -q 63aecabb4292ad9d4e8336a93aec25f977ee633e \
-	# GoogleDocTag
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/GoogleDocTag $MW_HOME/extensions/GoogleDocTag \
-	&& cd $MW_HOME/extensions/GoogleDocTag \
-	&& git checkout -q f9fdb27250112fd02d9ff8eeb2a54ecd8c49b08d \
 	# HeaderFooter
 	&& git clone https://github.com/enterprisemediawiki/HeaderFooter.git $MW_HOME/extensions/HeaderFooter \
 	&& cd $MW_HOME/extensions/HeaderFooter \
@@ -292,10 +289,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/HTMLTags $MW_HOME/extensions/HTMLTags \
 	&& cd $MW_HOME/extensions/HTMLTags \
 	&& git checkout -q 3476196e1e46b3cb56035d2151d98797c088bc90 \
-	# IframePage
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/IframePage $MW_HOME/extensions/IframePage \
-	&& cd $MW_HOME/extensions/IframePage \
-	&& git checkout -q abbff3dd72194ae7ec07415ff6816170198d1f01 \
 	# LabeledSectionTransclusion
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/LabeledSectionTransclusion $MW_HOME/extensions/LabeledSectionTransclusion \
 	&& cd $MW_HOME/extensions/LabeledSectionTransclusion \
@@ -364,10 +357,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/MyVariables $MW_HOME/extensions/MyVariables \
 	&& cd $MW_HOME/extensions/MyVariables \
 	&& git checkout -q cde2562ffde8a1b648be10b78b86386a9c7d3151 \
-	# NCBITaxonomyLookup
-	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/NCBITaxonomyLookup $MW_HOME/extensions/NCBITaxonomyLookup \
-	&& cd $MW_HOME/extensions/NCBITaxonomyLookup \
-	&& git checkout -q 512a390a62fbe6f3a7480641f6582126678e5a7c \
 	# NumerAlpha
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/NumerAlpha $MW_HOME/extensions/NumerAlpha \
 	&& cd $MW_HOME/extensions/NumerAlpha \
@@ -396,10 +385,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Popups $MW_HOME/extensions/Popups \
 	&& cd $MW_HOME/extensions/Popups \
 	&& git checkout -q dccd60752353eac1063a79f81a8059b3b06b9353 \
-	# PubmedParser
-	&& git clone --single-branch -b main https://github.com/bovender/PubmedParser.git $MW_HOME/extensions/PubmedParser \
-	&& cd $MW_HOME/extensions/PubmedParser \
-	&& git checkout -q 9cd01d828b23853e3e790dc7bf49cdd230847272 \
 	# RevisionSlider
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/RevisionSlider $MW_HOME/extensions/RevisionSlider \
 	&& cd $MW_HOME/extensions/RevisionSlider \
@@ -416,10 +401,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SaveSpinner $MW_HOME/extensions/SaveSpinner \
 	&& cd $MW_HOME/extensions/SaveSpinner \
 	&& git checkout -q 2f19bdd7c6cc48729faa4b8e9afc8953dbeaeae1 \
-	# Scopus
-	&& git clone --single-branch -b master https://github.com/nischayn22/Scopus.git $MW_HOME/extensions/Scopus \
-	&& cd $MW_HOME/extensions/Scopus \
-	&& git checkout -q 4fe8048459d9189626d82d9d93a0d5f906c43746 \
 	# SelectCategory
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SelectCategory $MW_HOME/extensions/SelectCategory \
 	&& cd $MW_HOME/extensions/SelectCategory \
@@ -500,10 +481,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/TinyMCE $MW_HOME/extensions/TinyMCE \
 	&& cd $MW_HOME/extensions/TinyMCE \
 	&& git checkout -q 587bbb0b98044ae4904cf67f104d0cf27bd6972d \
-	# TwitterTag
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/TwitterTag $MW_HOME/extensions/TwitterTag \
-	&& cd $MW_HOME/extensions/TwitterTag \
-	&& git checkout -q 6758d15d8e4f0553bbcbc7af026ba245f1ff9282 \
 	# UniversalLanguageSelector
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/UniversalLanguageSelector $MW_HOME/extensions/UniversalLanguageSelector \
 	&& cd $MW_HOME/extensions/UniversalLanguageSelector \
@@ -555,11 +532,7 @@ RUN set -x; \
 	# Wiretap
 	&& git clone https://github.com/enterprisemediawiki/Wiretap.git $MW_HOME/extensions/Wiretap \
 	&& cd $MW_HOME/extensions/Wiretap \
-	&& git checkout -q a97b708c3093ea66e7cf625859b1b38178526bab \
-	# YouTube
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/YouTube $MW_HOME/extensions/YouTube \
-	&& cd $MW_HOME/extensions/YouTube \
-	&& git checkout -q bd736585dca8412d5eb9dde8f68a54b3c69df9cf
+	&& git checkout -q a97b708c3093ea66e7cf625859b1b38178526bab
 
 # ReplaceText (switch to more recent commit due to bug on submodule HEAD)
 RUN set -x; \
@@ -598,6 +571,8 @@ RUN set -x; \
 # Patches
 
 # PageForms
+# TODO: patches incorrect button ids for VeForAll, https://gerrit.wikimedia.org/r/c/mediawiki/extensions/PageForms/+/739566
+# Remove once merged and update PageForms to related commit
 COPY _sources/patches/PageForms.01a2363f7520668c1cde7d4568cb8b00da0b394b.VeForAll.patch /tmp/PageForms.01a2363f7520668c1cde7d4568cb8b00da0b394b.VeForAll.patch
 RUN set -x; \
 	cd $MW_HOME/extensions/PageForms \
@@ -701,6 +676,7 @@ ENV MW_ENABLE_JOB_RUNNER=true \
 
 COPY _sources/configs/.msmtprc /etc/
 COPY _sources/configs/mediawiki.conf /etc/apache2/sites-enabled/
+COPY _sources/configs/status.conf /etc/apache2/mods-available/
 COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/7.4/cli/conf.d/
 COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/7.4/apache2/conf.d/
 COPY _sources/configs/php_max_input_vars.ini _sources/configs/php_max_input_vars.ini /etc/php/7.4/apache2/conf.d/
@@ -719,7 +695,8 @@ RUN set -x; \
 	&& sed -i 's/^\(\s*ErrorLog .*\)/# \1/g' /etc/apache2/apache2.conf \
 	&& sed -i 's/^\(\s*CustomLog .*\)/# \1/g' /etc/apache2/apache2.conf \
     # Modify config
-    && sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
+    && sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf \
+    && a2enmod expires
 
 EXPOSE 80
 WORKDIR $MW_HOME
