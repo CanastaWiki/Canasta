@@ -293,10 +293,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/LabeledSectionTransclusion $MW_HOME/extensions/LabeledSectionTransclusion \
 	&& cd $MW_HOME/extensions/LabeledSectionTransclusion \
 	&& git checkout -q 8b0ba6952488763201a0defef0499c743ef933f7 \
-	# Lazyload
-	&& git clone --single-branch -b master https://github.com/WikiTeq/mediawiki-lazyload.git $MW_HOME/extensions/Lazyload \
-	&& cd $MW_HOME/extensions/Lazyload \
-	&& git checkout -q 92172c30ee5ac764627e397b19eddd536155394e \
 	# Lingo
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/Lingo $MW_HOME/extensions/Lingo \
 	&& cd $MW_HOME/extensions/Lingo \
@@ -401,10 +397,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SaveSpinner $MW_HOME/extensions/SaveSpinner \
 	&& cd $MW_HOME/extensions/SaveSpinner \
 	&& git checkout -q 2f19bdd7c6cc48729faa4b8e9afc8953dbeaeae1 \
-	# SelectCategory
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SelectCategory $MW_HOME/extensions/SelectCategory \
-	&& cd $MW_HOME/extensions/SelectCategory \
-	&& git checkout -q 4c28f553dcec7534e0d403fb3e1b45bbfafb21ad \
 	# SemanticDrilldown
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SemanticDrilldown $MW_HOME/extensions/SemanticDrilldown \
 	&& cd $MW_HOME/extensions/SemanticDrilldown \
@@ -445,10 +437,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SocialProfile $MW_HOME/extensions/SocialProfile \
 	&& cd $MW_HOME/extensions/SocialProfile \
 	&& git checkout -q d34f32174c23818dbf057a5482dc6ed4781a3a25 \
-	# SRFEventCalendarMod
-	&& git clone --single-branch -b master https://github.com/vedmaka/mediawiki-extension-SRFEventCalendarMod.git $MW_HOME/extensions/SRFEventCalendarMod \
-	&& cd $MW_HOME/extensions/SRFEventCalendarMod \
-	&& git checkout -q e0dfa797af0709c90f9c9295d217bbb6d564a7a8 \
 	# Sync
 	&& git clone --single-branch -b master https://github.com/nischayn22/Sync.git $MW_HOME/extensions/Sync \
 	&& cd $MW_HOME/extensions/Sync \
@@ -461,10 +449,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Tabs $MW_HOME/extensions/Tabs \
 	&& cd $MW_HOME/extensions/Tabs \
 	&& git checkout -q 1d669869c746183f9972ab7201e7e4981a248311 \
-	# TalkRight
-	&& git clone https://github.com/enterprisemediawiki/TalkRight.git $MW_HOME/extensions/TalkRight \
-	&& cd $MW_HOME/extensions/TalkRight \
-	&& git checkout -q cc966969e11bd0d72e118d326ebff216d623e06b \
 	# TemplateStyles
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/TemplateStyles $MW_HOME/extensions/TemplateStyles \
 	&& cd $MW_HOME/extensions/TemplateStyles \
@@ -489,10 +473,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/UploadWizard $MW_HOME/extensions/UploadWizard \
 	&& cd $MW_HOME/extensions/UploadWizard \
 	&& git checkout -q c54e588bac935db78fad297602f61d47ed2162d5 \
-	# UploadWizardExtraButtons
-	&& git clone --single-branch -b master https://github.com/vedmaka/mediawiki-extension-UploadWizardExtraButtons.git $MW_HOME/extensions/UploadWizardExtraButtons \
-	&& cd $MW_HOME/extensions/UploadWizardExtraButtons \
-	&& git checkout -q accba1b9b6f50e67d709bd727c9f4ad6de78c0c0 \
 	# UrlGetParameters
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/UrlGetParameters $MW_HOME/extensions/UrlGetParameters \
 	&& cd $MW_HOME/extensions/UrlGetParameters \
