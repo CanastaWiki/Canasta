@@ -560,13 +560,6 @@ RUN set -x; \
 	cd $MW_HOME/extensions/SemanticResultFormats \
 	&& patch < /tmp/semantic-result-formats.patch
 
-# Fixes PHP parsoid errors when user replies on a flow message, see https://phabricator.wikimedia.org/T260648#6645078
-COPY _sources/patches/flow-conversion-utils.patch /tmp/flow-conversion-utils.patch
-RUN set -x; \
-	cd $MW_HOME/extensions/Flow \
-	&& git checkout d37f94241d8cb94ac96c7946f83c1038844cf7e6 \
-	&& git apply /tmp/flow-conversion-utils.patch
-
 # SWM maintenance page returns 503 (Service Unavailable) status code, PR: https://github.com/SemanticMediaWiki/SemanticMediaWiki/pull/4967
 COPY _sources/patches/smw-maintenance-503.patch /tmp/smw-maintenance-503.patch
 RUN set -x; \
