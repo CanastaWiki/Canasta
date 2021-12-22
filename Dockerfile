@@ -257,10 +257,6 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/FixedHeaderTable $MW_HOME/extensions/FixedHeaderTable \
 	&& cd $MW_HOME/extensions/FixedHeaderTable \
 	&& git checkout -q 5096d0f2cfc2409612484774541cd485494ee7ea \
-	# Flow
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Flow $MW_HOME/extensions/Flow \
-	&& cd $MW_HOME/extensions/Flow \
-	&& git checkout -q d37f94241d8cb94ac96c7946f83c1038844cf7e6 \
 	# GlobalNotice
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/GlobalNotice $MW_HOME/extensions/GlobalNotice \
 	&& cd $MW_HOME/extensions/GlobalNotice \
