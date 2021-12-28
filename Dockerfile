@@ -253,10 +253,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Favorites $MW_HOME/extensions/Favorites \
 	&& cd $MW_HOME/extensions/Favorites \
 	&& git checkout -q 782afc856a35c37b1a508ce37f7402954cc32efb \
-	# FixedHeaderTable
-	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/FixedHeaderTable $MW_HOME/extensions/FixedHeaderTable \
-	&& cd $MW_HOME/extensions/FixedHeaderTable \
-	&& git checkout -q 5096d0f2cfc2409612484774541cd485494ee7ea \
 	# GlobalNotice
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/GlobalNotice $MW_HOME/extensions/GlobalNotice \
 	&& cd $MW_HOME/extensions/GlobalNotice \
@@ -325,10 +321,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/MassMessageEmail $MW_HOME/extensions/MassMessageEmail \
 	&& cd $MW_HOME/extensions/MassMessageEmail \
 	&& git checkout -q 2424d03ac7b53844d49379cba3cceb5d9f4b578e \
-	# MassPasswordReset
-	&& git clone --single-branch -b master https://github.com/nischayn22/MassPasswordReset.git $MW_HOME/extensions/MassPasswordReset \
-	&& cd $MW_HOME/extensions/MassPasswordReset \
-	&& git checkout -q affaeee6620f9a70b9dc80c53879a35c9aed92c6 \
 	# Math
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Math $MW_HOME/extensions/Math \
 	&& cd $MW_HOME/extensions/Math \
