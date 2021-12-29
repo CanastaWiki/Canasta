@@ -139,7 +139,7 @@ RUN set -x; \
 	# ApprovedRevs
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ApprovedRevs $MW_HOME/extensions/ApprovedRevs \
 	&& cd $MW_HOME/extensions/ApprovedRevs \
-	&& git checkout -q fb54b5f5cf4d9495877c622fd0f197ece6a15545 \
+	&& git checkout -q c69e829f36ac06690dec1bfc7e5669d141c95749 \ # v. 1.7.2
 	# Arrays
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Arrays $MW_HOME/extensions/Arrays \
 	&& cd $MW_HOME/extensions/Arrays \
@@ -156,7 +156,7 @@ RUN set -x; \
 	# Cargo
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/Cargo $MW_HOME/extensions/Cargo \
 	&& cd $MW_HOME/extensions/Cargo \
-	&& git checkout -q 479026a912fc2529d1f367fc4a85f79f5da24f93 \
+	&& git checkout -q 479026a912fc2529d1f367fc4a85f79f5da24f93 \ # v. 3.0
 	# ChangeAuthor
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ChangeAuthor $MW_HOME/extensions/ChangeAuthor \
 	&& cd $MW_HOME/extensions/ChangeAuthor \
@@ -204,7 +204,7 @@ RUN set -x; \
 	# DataTransfer
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/DataTransfer $MW_HOME/extensions/DataTransfer \
 	&& cd $MW_HOME/extensions/DataTransfer \
-	&& git checkout -q 138d06f75f3cbe4097f85b203d760da277c419b8 \
+	&& git checkout -q fae71f1fff129e1e14860c63fd362ad808f3694d \ # v. 1.3
 	# Description2
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Description2 $MW_HOME/extensions/Description2 \
 	&& cd $MW_HOME/extensions/Description2 \
@@ -248,7 +248,7 @@ RUN set -x; \
 	# ExternalData
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ExternalData $MW_HOME/extensions/ExternalData \
 	&& cd $MW_HOME/extensions/ExternalData \
-	&& git checkout -q 6cb6d70c1ff3104c4337847a54a6980798d63299 \
+	&& git checkout -q 73d76e0631f78df42a557b72a8d34e6c53a15b51 \ # v. 3.0
 	# Favorites
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Favorites $MW_HOME/extensions/Favorites \
 	&& cd $MW_HOME/extensions/Favorites \
@@ -360,7 +360,7 @@ RUN set -x; \
 	# PageForms
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms $MW_HOME/extensions/PageForms \
 	&& cd $MW_HOME/extensions/PageForms \
-	&& git checkout -q 01a2363f7520668c1cde7d4568cb8b00da0b394b \
+	&& git checkout -q fc76251f85fa14248b91ebcb5fc0f8845c392640 \ # v. 5.3.2
 	# PluggableAuth
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/PluggableAuth $MW_HOME/extensions/PluggableAuth \
 	&& cd $MW_HOME/extensions/PluggableAuth \
