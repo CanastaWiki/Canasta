@@ -538,14 +538,6 @@ RUN set -x; \
 
 # Patches
 
-# PageForms
-# TODO: patches incorrect button ids for VeForAll, https://gerrit.wikimedia.org/r/c/mediawiki/extensions/PageForms/+/739566
-# Remove once merged and update PageForms to related commit
-COPY _sources/patches/PageForms.01a2363f7520668c1cde7d4568cb8b00da0b394b.VeForAll.patch /tmp/PageForms.01a2363f7520668c1cde7d4568cb8b00da0b394b.VeForAll.patch
-RUN set -x; \
-	cd $MW_HOME/extensions/PageForms \
-    && git apply /tmp/PageForms.01a2363f7520668c1cde7d4568cb8b00da0b394b.VeForAll.patch
-
 # SemanticResultFormats, see https://github.com/WikiTeq/SemanticResultFormats/compare/master...WikiTeq:fix1_35
 COPY _sources/patches/semantic-result-formats.patch /tmp/semantic-result-formats.patch
 RUN set -x; \
