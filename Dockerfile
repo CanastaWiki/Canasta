@@ -136,10 +136,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/AntiSpoof $MW_HOME/extensions/AntiSpoof \
 	&& cd $MW_HOME/extensions/AntiSpoof \
 	&& git checkout -q 1c82ce797d2eefa7f82fb88f82d550c2c73ff3b6 \
-	# ApprovedRevs
+	# ApprovedRevs (v. 1.7.2)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ApprovedRevs $MW_HOME/extensions/ApprovedRevs \
 	&& cd $MW_HOME/extensions/ApprovedRevs \
-	&& git checkout -q c69e829f36ac06690dec1bfc7e5669d141c95749 \ # v. 1.7.2
+	&& git checkout -q c69e829f36ac06690dec1bfc7e5669d141c95749 \
 	# Arrays
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Arrays $MW_HOME/extensions/Arrays \
 	&& cd $MW_HOME/extensions/Arrays \
@@ -153,10 +153,10 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/BreadCrumbs2 \
 	&& git fetch "https://gerrit.wikimedia.org/r/mediawiki/extensions/BreadCrumbs2" refs/changes/03/701603/1 \
 	&& git checkout FETCH_HEAD \
-	# Cargo
+	# Cargo (v. 3.0)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/Cargo $MW_HOME/extensions/Cargo \
 	&& cd $MW_HOME/extensions/Cargo \
-	&& git checkout -q 479026a912fc2529d1f367fc4a85f79f5da24f93 \ # v. 3.0
+	&& git checkout -q 479026a912fc2529d1f367fc4a85f79f5da24f93 \
 	# ChangeAuthor
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ChangeAuthor $MW_HOME/extensions/ChangeAuthor \
 	&& cd $MW_HOME/extensions/ChangeAuthor \
@@ -201,10 +201,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ContributionScores $MW_HOME/extensions/ContributionScores \
 	&& cd $MW_HOME/extensions/ContributionScores \
 	&& git checkout -q de75d9f6904e9b41f7148417cc9fd491164da722 \
-	# DataTransfer
+	# DataTransfer (v. 1.3)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/DataTransfer $MW_HOME/extensions/DataTransfer \
 	&& cd $MW_HOME/extensions/DataTransfer \
-	&& git checkout -q fae71f1fff129e1e14860c63fd362ad808f3694d \ # v. 1.3
+	&& git checkout -q fae71f1fff129e1e14860c63fd362ad808f3694d \
 	# Description2
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Description2 $MW_HOME/extensions/Description2 \
 	&& cd $MW_HOME/extensions/Description2 \
@@ -245,10 +245,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/EventStreamConfig $MW_HOME/extensions/EventStreamConfig \
 	&& cd $MW_HOME/extensions/EventStreamConfig \
 	&& git checkout -q bce5bc385b2919cf294a074b64bc330ac48f78db \
-	# ExternalData
+	# ExternalData (v. 3.0)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ExternalData $MW_HOME/extensions/ExternalData \
 	&& cd $MW_HOME/extensions/ExternalData \
-	&& git checkout -q 73d76e0631f78df42a557b72a8d34e6c53a15b51 \ # v. 3.0
+	&& git checkout -q 73d76e0631f78df42a557b72a8d34e6c53a15b51 \
 	# Favorites
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Favorites $MW_HOME/extensions/Favorites \
 	&& cd $MW_HOME/extensions/Favorites \
@@ -357,10 +357,10 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/PageExchange $MW_HOME/extensions/PageExchange \
 	&& cd $MW_HOME/extensions/PageExchange \
 	&& git checkout -q 59d6d64fce6cbe40de6ebe07a0f3d65635aea30e \
-	# PageForms
+	# PageForms (v. 5.3.2)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms $MW_HOME/extensions/PageForms \
 	&& cd $MW_HOME/extensions/PageForms \
-	&& git checkout -q fc76251f85fa14248b91ebcb5fc0f8845c392640 \ # v. 5.3.2
+	&& git checkout -q fc76251f85fa14248b91ebcb5fc0f8845c392640 \
 	# PluggableAuth
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/PluggableAuth $MW_HOME/extensions/PluggableAuth \
 	&& cd $MW_HOME/extensions/PluggableAuth \
