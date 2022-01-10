@@ -90,6 +90,7 @@ RUN set -x; \
     && git submodule update --init
 
 # Skins
+# The MonoBook, Timeless and Vector skins are bundled into MediaWiki and do not need to be separately installed.
 RUN set -x; \
 	cd $MW_HOME/skins \
 	# Chameleon
@@ -118,6 +119,11 @@ RUN set -x; \
 	&& git checkout -q 3fad8765c3ec8082bb899239f502199f651818cb
 
 # Extensions
+# The following extensions are bundled into MediaWiki and do not need to be separately installed (though in some cases
+# they are modified): CategoryTree, Cite, CiteThisPage, CodeEditor, ConfirmEdit, Gadgets, ImageMap, InputBox, Interwiki,
+# LocalisationUpdate, MultimediaViewer, Nuke, OATHAuth, PageImages, ParserFunctions, PdfHandler, Poem, Renameuser,
+# Replace Text, Scribunto, SecureLinkFixer, SpamBlacklist, SyntaxHighlight, TemplateData, TextExtracts, TitleBlacklist,
+# VisualEditor, WikiEditor.
 RUN set -x; \
 	cd $MW_HOME/extensions \
 	# AdminLinks
