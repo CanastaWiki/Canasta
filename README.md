@@ -21,13 +21,24 @@ Canasta supports two orchestrators for managing the stack: Docker Compose and Ku
 # Setup
 
 ## Quick setup
+### Import existing wiki
+* Clone the stack repository
+* Drop your database dump (in either a `.sql` or `.sql.gz` file) into the `_initdb/` directory
+* Place your existing `LocalSettings.php` in the `config/` directory and change your database configuration to be the following
+  * Database host: `db`
+  * Database user: `root`
+  * Database password: `mediawiki` (by default; see `Configuration` section)
+* Navigate to the repo directory and run `docker-compose up -d`
+* Visit your wiki at `http://localhost`
+
+### Create new wiki
 * Clone the stack repository
 * Navigate to the repo directory and run `docker-compose up -d`
 * Navigate to `http://localhost` and run wiki setup wizard:
   * Database host: `db`
   * Database user: `root`
   * Database password: `mediawiki` (by default; see `Configuration` section)
-* Place your new `LocalSettings.php` in the `config` directory
+* Place your new `LocalSettings.php` in the `config/` directory
 * Visit your wiki at `http://localhost`
 
 ## Configuration
