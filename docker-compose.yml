@@ -59,9 +59,10 @@ services:
       - "${PORT:-80}:80"
       - "443:443"
     volumes:
-      - ./_caddy_data/:/data
+      - caddy-data:/data
 
 volumes:
   mysql-data-volume:
   elasticsearch:
+  caddy-data:
   sitemap:
