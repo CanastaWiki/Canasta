@@ -163,10 +163,6 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/Cargo $MW_HOME/extensions/Cargo \
 	&& cd $MW_HOME/extensions/Cargo \
 	&& git checkout -q 479026a912fc2529d1f367fc4a85f79f5da24f93 \
-	# ChangeAuthor
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ChangeAuthor $MW_HOME/extensions/ChangeAuthor \
-	&& cd $MW_HOME/extensions/ChangeAuthor \
-	&& git checkout -q 2afac6dcc34264de8f952ab89c4c0332ddb67051 \
 	# CharInsert
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/CharInsert $MW_HOME/extensions/CharInsert \
 	&& cd $MW_HOME/extensions/CharInsert \
@@ -239,10 +235,6 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gitlab.com/hydrawiki/extensions/EmbedVideo.git $MW_HOME/extensions/EmbedVideo \
 	&& cd $MW_HOME/extensions/EmbedVideo \
 	&& git checkout -q 85c5219593cc86367ffb17bfb650f73ca3eb9b11 \
-	# EncryptedUploads
-	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/EncryptedUploads $MW_HOME/extensions/EncryptedUploads \
-	&& cd $MW_HOME/extensions/EncryptedUploads \
-	&& git checkout -q 51e3482462f1852e289d5863849b164e1b1a7ea9 \
 	# EventLogging
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/EventLogging $MW_HOME/extensions/EventLogging \
 	&& cd $MW_HOME/extensions/EventLogging \
@@ -431,10 +423,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SocialProfile $MW_HOME/extensions/SocialProfile \
 	&& cd $MW_HOME/extensions/SocialProfile \
 	&& git checkout -q d34f32174c23818dbf057a5482dc6ed4781a3a25 \
-	# Sync
-	&& git clone --single-branch -b master https://github.com/nischayn22/Sync.git $MW_HOME/extensions/Sync \
-	&& cd $MW_HOME/extensions/Sync \
-	&& git checkout -q f56b956521f383221737261ad68aef2367466b76 \
 	# Tabber
 	&& git clone --single-branch -b master https://gitlab.com/hydrawiki/extensions/Tabber.git $MW_HOME/extensions/Tabber \
 	&& cd $MW_HOME/extensions/Tabber \
