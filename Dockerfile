@@ -162,7 +162,7 @@ RUN set -x; \
 	# Cargo (v. 3.0)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/Cargo $MW_HOME/extensions/Cargo \
 	&& cd $MW_HOME/extensions/Cargo \
-	&& git checkout -q 479026a912fc2529d1f367fc4a85f79f5da24f93 \
+	&& git checkout -q c9435c2c95098979a8002cb02a937d83ed40e073 \
 	# CharInsert
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/CharInsert $MW_HOME/extensions/CharInsert \
 	&& cd $MW_HOME/extensions/CharInsert \
@@ -270,7 +270,7 @@ RUN set -x; \
 	# HeaderTabs
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/HeaderTabs $MW_HOME/extensions/HeaderTabs \
 	&& cd $MW_HOME/extensions/HeaderTabs \
-	&& git checkout -q 5f18c955d04d2c7810d51ae2a641d62b969aba31 \
+	&& git checkout -q 37679158f93e4ba5a292744b30e2a64d50fb818c \
 	# HeadScript
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/HeadScript $MW_HOME/extensions/HeadScript \
 	&& cd $MW_HOME/extensions/HeadScript \
@@ -355,10 +355,10 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/PageExchange $MW_HOME/extensions/PageExchange \
 	&& cd $MW_HOME/extensions/PageExchange \
 	&& git checkout -q 59d6d64fce6cbe40de6ebe07a0f3d65635aea30e \
-	# PageForms (v. 5.3.2)
+	# PageForms (v. 5.3.4)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms $MW_HOME/extensions/PageForms \
 	&& cd $MW_HOME/extensions/PageForms \
-	&& git checkout -q fc76251f85fa14248b91ebcb5fc0f8845c392640 \
+	&& git checkout -q b9a4c1d8b8151611bc04bd7331d8b686e55e04af \
 	# PluggableAuth
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/PluggableAuth $MW_HOME/extensions/PluggableAuth \
 	&& cd $MW_HOME/extensions/PluggableAuth \
