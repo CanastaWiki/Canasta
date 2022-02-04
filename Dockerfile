@@ -124,6 +124,9 @@ RUN set -x; \
 # LocalisationUpdate, MultimediaViewer, Nuke, OATHAuth, PageImages, ParserFunctions, PdfHandler, Poem, Renameuser,
 # Replace Text, Scribunto, SecureLinkFixer, SpamBlacklist, SyntaxHighlight, TemplateData, TextExtracts, TitleBlacklist,
 # VisualEditor, WikiEditor.
+# The following extensions are downloaded via Composer and also do not need to be downloaded here: Bootstrap,
+# BootstrapComponents, Maps, Semantic Compound Queries, Semantic Extra Special Properties, Semantic MediaWiki (along
+# with all its helper library extensions, like DataValues), Semantic Result Formats, Semantic Scribunto, SubPageList.
 RUN set -x; \
 	cd $MW_HOME/extensions \
 	# AdminLinks
