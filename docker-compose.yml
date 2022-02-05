@@ -13,7 +13,7 @@ services:
     volumes:
       - ./_initdb:/docker-entrypoint-initdb.d
       - mysql-data-volume:/var/lib/mysql
-  
+
   web:
     image: ghcr.io/wikiworks/canasta:latest
     restart: unless-stopped
