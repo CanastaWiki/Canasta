@@ -23,6 +23,7 @@ Canasta supports two orchestrators for managing the stack: Docker Compose and Ku
 ## Quick setup
 ### Import existing wiki
 * Clone the stack repository
+* Copy `.env.example` to `.env` and customize as needed
 * Drop your database dump (in either a `.sql` or `.sql.gz` file) into the `_initdb/` directory
 * Place your existing `LocalSettings.php` in the `config/` directory and change your database configuration to be the following
   * Database host: `db`
@@ -33,18 +34,22 @@ Canasta supports two orchestrators for managing the stack: Docker Compose and Ku
 
 ### Create new wiki
 * Clone the stack repository
+* Copy `.env.example` to `.env` and customize as needed
 * Navigate to the repo directory and run `docker-compose up -d`
 * Navigate to `http://localhost` and run wiki setup wizard:
   * Database host: `db`
   * Database user: `root`
   * Database password: `mediawiki` (by default; see `Configuration` section)
 * Place your new `LocalSettings.php` in the `config/` directory
+* Run `docker-compose down`, then `docker-compose up -d` (this is important because it initializes your `LocalSettings.php` for Canasta)
+* (Temporary workaround) Within the `skins/` folder, make a symlink for Vector exactly in the way stated here: `ln -s ../canasta-skins/Vector`
+* Uncomment `cfLoadSkin('Vector');` in `LocalSettings.php`
 * Visit your wiki at `http://localhost`
 
 ## Configuration
 Canasta relies on setting environment variables in the Docker container for controlling aspects of the system that are outside the purview of LocalSettings.php. You can change these options by editing the `.env` file; see `.env.example` for details:
 
-* `PORT` - modify the apache port, default is `80`
+* `PORT` - modify the publicly-accessible HTTP port, default is `80`
 * `MYSQL_PASSWORD` - modify MySQL container `root` user password, default is `mediawiki`
 (use it when installing the wiki via wizard)
 * `PHP_UPLOAD_MAX_FILESIZE` - php.ini upload max file size
