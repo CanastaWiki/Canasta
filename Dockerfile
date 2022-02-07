@@ -462,10 +462,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/UrlGetParameters $MW_HOME/extensions/UrlGetParameters \
 	&& cd $MW_HOME/extensions/UrlGetParameters \
 	&& git checkout -q 163df22a566c34e0717ed8a7154f40dfb71cef4f \
-	# UserFunctions
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/UserFunctions $MW_HOME/extensions/UserFunctions \
+	# UserFunctions (v. 2.8.0 - needs to use master because the REL1_35 version does not include extension.json)
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/UserFunctions $MW_HOME/extensions/UserFunctions \
 	&& cd $MW_HOME/extensions/UserFunctions \
-	&& git checkout -q d61dd3d1beeef48f70b27e11f967f88b43ddddca \
+	&& git checkout -q b6ac1ddfc3742cd88d71fa9039b06161cbc11b27 \
 	# UserMerge
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/UserMerge $MW_HOME/extensions/UserMerge \
 	&& cd $MW_HOME/extensions/UserMerge \
