@@ -386,10 +386,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SaveSpinner $MW_HOME/extensions/SaveSpinner \
 	&& cd $MW_HOME/extensions/SaveSpinner \
 	&& git checkout -q 2f19bdd7c6cc48729faa4b8e9afc8953dbeaeae1 \
-	# SemanticDrilldown
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SemanticDrilldown $MW_HOME/extensions/SemanticDrilldown \
+	# SemanticDrilldown (needs to use master because it did not include extension.json until REL1_38)
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/SemanticDrilldown $MW_HOME/extensions/SemanticDrilldown \
 	&& cd $MW_HOME/extensions/SemanticDrilldown \
-	&& git checkout -q 8e03672100457ebfcd65f4b94fd60af80c2eaf4a \
+	&& git checkout -q 873780260cf7d7999cb8434d3cf87aca4bd7368a \
 	# SemanticExternalQueryLookup (WikiTeq's fork)
 	&& git clone --single-branch -b master https://github.com/WikiTeq/SemanticExternalQueryLookup.git $MW_HOME/extensions/SemanticExternalQueryLookup \
 	&& cd $MW_HOME/extensions/SemanticExternalQueryLookup \
