@@ -42,7 +42,6 @@ Canasta supports two orchestrators for managing the stack: Docker Compose and Ku
   * Database password: `mediawiki` (by default; see `Configuration` section)
 * Place your new `LocalSettings.php` in the `config/` directory
 * Run `docker-compose down`, then `docker-compose up -d` (this is important because it initializes your `LocalSettings.php` for Canasta)
-* (Temporary workaround) Within the `skins/` folder, make a symlink for Vector exactly in the way stated here: `ln -s ../canasta-skins/Vector`
 * Uncomment `cfLoadSkin('Vector');` in `LocalSettings.php`
 * Visit your wiki at `http://localhost`
 
