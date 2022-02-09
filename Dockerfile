@@ -575,6 +575,16 @@ RUN set -x; \
     cd $MW_HOME/extensions/SocialProfile \
     && git apply /tmp/SocialProfile-disable-fields.patch
 
+COPY _sources/patches/bootstrap-path.patch /tmp/bootstrap-path.patch
+RUN set -x; \
+    cd $MW_HOME/extensions/Bootstrap \
+    && git apply /tmp/bootstrap-path.patch
+
+COPY _sources/patches/chameleon-path.patch /tmp/chameleon-path.patch
+RUN set -x; \
+    cd $MW_HOME/skins/chameleon \
+    && git apply /tmp/chameleon-path.patch
+
 # Cleanup all .git leftovers
 RUN set -x; \
     cd $MW_HOME \
