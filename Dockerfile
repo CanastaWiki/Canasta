@@ -394,14 +394,6 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://github.com/WikiTeq/SemanticExternalQueryLookup.git $MW_HOME/extensions/SemanticExternalQueryLookup \
 	&& cd $MW_HOME/extensions/SemanticExternalQueryLookup \
 	&& git checkout -q dd7810061f2f1a9eef7be5ee09da999cbf9ecd8a \
-	# SemanticQueryInterface
-	&& git clone --single-branch -b master https://github.com/vedmaka/SemanticQueryInterface.git $MW_HOME/extensions/SemanticQueryInterface \
-	&& cd $MW_HOME/extensions/SemanticQueryInterface \
-	&& git checkout -q 0016305a95ecbb6ed4709bfa3fc6d9995d51336f \
-	&& mv $MW_HOME/extensions/SemanticQueryInterface/SemanticQueryInterface/* $MW_HOME/extensions/SemanticQueryInterface/ \
-	&& rmdir $MW_HOME/extensions/SemanticQueryInterface/SemanticQueryInterface \
-	&& ln -s $MW_HOME/extensions/SemanticQueryInterface/SQI.php $MW_HOME/extensions/SemanticQueryInterface/SemanticQueryInterface.php \
-	&& rm -fr $MW_HOME/extensions/SemanticQueryInterface/.git \
 	# SimpleChanges
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SimpleChanges $MW_HOME/extensions/SimpleChanges \
 	&& cd $MW_HOME/extensions/SimpleChanges \
