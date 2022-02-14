@@ -640,7 +640,6 @@ ENV MW_ENABLE_JOB_RUNNER=true \
 	LOG_FILES_REMOVE_OLDER_THAN_DAYS=10
 
 COPY _sources/configs/.msmtprc /etc/
-COPY _sources/configs/ports.conf /etc/apache2/ports.conf
 COPY _sources/configs/mediawiki.conf /etc/apache2/sites-enabled/
 COPY _sources/configs/status.conf /etc/apache2/mods-available/
 COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/7.4/cli/conf.d/
