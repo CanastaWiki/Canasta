@@ -13,7 +13,11 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 $wgScriptPath = "/w";
 $wgScriptExtension = ".php";
 $wgArticlePath = '/wiki/$1';
+<<<<<<< HEAD
 $wgStylePath = $wgScriptPath . '/skins';
+=======
+$wgStylePath = $wgScriptPath . '/canasta-skins';
+>>>>>>> 1eebcd2e646a571155521ac1ff6cc4ed13f32f2b
 
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
