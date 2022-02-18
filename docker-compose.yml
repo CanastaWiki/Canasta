@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.7'
 services:
   db:
     image: mysql:8.0
@@ -17,8 +17,6 @@ services:
   web:
     image: ghcr.io/wikiworks/canasta:latest
     restart: unless-stopped
-    ports:
-      - "${PORT:-80}:80"
     depends_on:
       - db
       - elasticsearch
@@ -53,7 +51,26 @@ services:
     volumes:
       - elasticsearch:/usr/share/elasticsearch/data
 
+  caddy:
+    image: caddy:2.4.6-alpine
+    restart: unless-stopped
+    entrypoint: caddy reverse-proxy --from ${MW_SITE_FQDN:-localhost} --to varnish:80
+    ports:
+      - "${PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    volumes:
+      - caddy-data:/data
+
+  varnish:
+    image: varnish:7.0.2-alpine
+    restart: unless-stopped
+    volumes:
+      - ./_sources/configs/default.vcl:/etc/varnish/default.vcl:ro
+    tmpfs:
+      - /var/lib/varnish:exec
+
 volumes:
   mysql-data-volume:
   elasticsearch:
+  caddy-data:
   sitemap:
