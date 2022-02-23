@@ -406,10 +406,6 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://github.com/Fannon/SimpleTooltip.git $MW_HOME/extensions/SimpleTooltip \
 	&& cd $MW_HOME/extensions/SimpleTooltip \
 	&& git checkout -q 2476bff8f4555f86795c26ca5fdb7db99bfe58d1 \
-	# ShowMe
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ShowMe $MW_HOME/extensions/ShowMe \
-	&& cd $MW_HOME/extensions/ShowMe \
-	&& git checkout -q 368f7a9cdd151a9fb198c83ca9a48efacf6b2b1f \
 	# SkinPerPage
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SkinPerPage $MW_HOME/extensions/SkinPerPage \
 	&& cd $MW_HOME/extensions/SkinPerPage \
@@ -418,14 +414,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SocialProfile $MW_HOME/extensions/SocialProfile \
 	&& cd $MW_HOME/extensions/SocialProfile \
 	&& git checkout -q d34f32174c23818dbf057a5482dc6ed4781a3a25 \
-	# Tabber
-	&& git clone --single-branch -b master https://gitlab.com/hydrawiki/extensions/Tabber.git $MW_HOME/extensions/Tabber \
-	&& cd $MW_HOME/extensions/Tabber \
-	&& git checkout -q 6c67baf4d18518fa78e07add4c032d62dd384b06 \
-	# Tabs
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Tabs $MW_HOME/extensions/Tabs \
-	&& cd $MW_HOME/extensions/Tabs \
-	&& git checkout -q 1d669869c746183f9972ab7201e7e4981a248311 \
 	# TemplateStyles
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/TemplateStyles $MW_HOME/extensions/TemplateStyles \
 	&& cd $MW_HOME/extensions/TemplateStyles \
