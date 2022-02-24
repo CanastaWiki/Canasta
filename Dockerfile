@@ -370,6 +370,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Popups $MW_HOME/extensions/Popups \
 	&& cd $MW_HOME/extensions/Popups \
 	&& git checkout -q dccd60752353eac1063a79f81a8059b3b06b9353 \
+	# RegularTooltips (needs to use master because it has no REL1_35 branch)
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/RegularTooltips $MW_HOME/extensions/RegularTooltips \
+	&& cd $MW_HOME/extensions/RegularTooltips \
+	&& git checkout -q bc42efd6a9e7ee7571678d2f8b39c21d0d3ba1a4 \
 	# RevisionSlider
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/RevisionSlider $MW_HOME/extensions/RevisionSlider \
 	&& cd $MW_HOME/extensions/RevisionSlider \
@@ -402,10 +406,6 @@ RUN set -x; \
 	&& git clone --single-branch https://github.com/jmnote/SimpleMathJax.git $MW_HOME/extensions/SimpleMathJax \
 	&& cd $MW_HOME/extensions/SimpleMathJax \
 	&& git checkout -q ddcac9ac1616aed794576f2914ee426879194f0f \
-	# SimpleTooltip
-	&& git clone --single-branch -b master https://github.com/Fannon/SimpleTooltip.git $MW_HOME/extensions/SimpleTooltip \
-	&& cd $MW_HOME/extensions/SimpleTooltip \
-	&& git checkout -q 2476bff8f4555f86795c26ca5fdb7db99bfe58d1 \
 	# SkinPerPage
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SkinPerPage $MW_HOME/extensions/SkinPerPage \
 	&& cd $MW_HOME/extensions/SkinPerPage \
