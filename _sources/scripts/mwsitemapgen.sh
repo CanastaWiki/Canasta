@@ -22,7 +22,7 @@ while true; do
       --identifier=$MW_SITEMAP_IDENTIFIER
 
     # sending the sitemap to google
-    echo sending to Google -> https://www.google.com/ping?sitemap=$MW_SITE_SERVER/$MW_SCRIPT_PATH/sitemap/$MW_SITEMAP_SUBDIR/sitemap-index-$MW_SITEMAP_IDENTIFIER.xml
+    echo "sending to Google -> https://www.google.com/ping?sitemap=$MW_SITE_SERVER/$MW_SCRIPT_PATH/sitemap/$MW_SITEMAP_SUBDIR/sitemap-index-$MW_SITEMAP_IDENTIFIER.xml"
     curl --silent "https://www.google.com/ping?sitemap=$MW_SITE_SERVER/$MW_SCRIPT_PATH/sitemap/$MW_SITEMAP_SUBDIR/sitemap-index-$MW_SITEMAP_IDENTIFIER.xml" > /dev/null
 
     # Wait some seconds to let the CPU do other things, like handling web requests, etc
