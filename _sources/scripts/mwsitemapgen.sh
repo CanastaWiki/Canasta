@@ -21,6 +21,10 @@ while true; do
       --skip-redirects \
       --identifier=$MW_SITEMAP_IDENTIFIER
 
+    # sending the sitemap to google
+    echo "sending to Google -> https://www.google.com/ping?sitemap=$MW_SITE_SERVER/$MW_SCRIPT_PATH/sitemap/sitemap-index-mediawiki.xml"
+    curl --silent "https://www.google.com/ping?sitemap=$MW_SITE_SERVER/$MW_SCRIPT_PATH/sitemap/sitemap-index-mediawiki.xml" > /dev/null
+
     # Wait some seconds to let the CPU do other things, like handling web requests, etc
     echo mwsitemapgen waits for "$SLEEPDAYS" seconds...
     sleep "$SLEEPDAYS"
