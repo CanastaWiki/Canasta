@@ -151,7 +151,7 @@ sitemapgen() {
         fi
         export MW_SCRIPT_PATH
         echo >&2 Run sitemap generator
-        MW_SCRIPT_PATH=MW_SCRIPT_PATH nice -n 20 runuser -c /mwsitemapgen.sh -s /bin/bash "$WWW_USER"
+        MW_SCRIPT_PATH=$MW_SCRIPT_PATH nice -n 20 runuser -c /mwsitemapgen.sh -s /bin/bash "$WWW_USER"
     else
         echo >&2 Sitemap generator is disabled
     fi
