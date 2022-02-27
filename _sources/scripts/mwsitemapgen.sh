@@ -14,6 +14,12 @@ if [[ $SITE_SERVER == "//"* ]]; then
     SITE_SERVER="https:$SITE_SERVER"
 fi
 
+# Adds slash to sitemap dir if it's not empty and has no starting slash
+SITEMAP_DIR=$MW_SITEMAP_SUBDIR
+if [[ -n "$SITEMAP_DIR" && "$SITEMAP_DIR" != "/"* ]]; then
+  SITEMAP_DIR="/$SITEMAP_DIR"
+fi
+
 echo Starting sitemap generator...
 # Wait three minutes after the server starts up to give other processes time to get started
 sleep 30
@@ -28,8 +34,8 @@ while true; do
       --identifier=$MW_SITEMAP_IDENTIFIER
 
     # sending the sitemap to google
-    echo "sending to Google -> https://www.google.com/ping?sitemap=$SITE_SERVER$MW_SCRIPT_PATH/sitemap/$MW_SITEMAP_SUBDIR/sitemap-index-$MW_SITEMAP_IDENTIFIER.xml"
-    curl --silent "https://www.google.com/ping?sitemap=$SITE_SERVER$MW_SCRIPT_PATH/sitemap/$MW_SITEMAP_SUBDIR/sitemap-index-$MW_SITEMAP_IDENTIFIER.xml" > /dev/null
+    echo "sending to Google -> https://www.google.com/ping?sitemap=${SITE_SERVER}${MW_SCRIPT_PATH}/sitemap${SITEMAP_DIR}/sitemap-index-${MW_SITEMAP_IDENTIFIER}.xml"
+    curl --silent "https://www.google.com/ping?sitemap=${SITE_SERVER}${MW_SCRIPT_PATH}/sitemap${SITEMAP_DIR}/sitemap-index-${MW_SITEMAP_IDENTIFIER}.xml" > /dev/null
 
     # Wait some seconds to let the CPU do other things, like handling web requests, etc
     echo mwsitemapgen waits for "$SLEEPDAYS" seconds...
