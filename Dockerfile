@@ -129,10 +129,10 @@ RUN set -x; \
 # with all its helper library extensions, like DataValues), Semantic Result Formats, Semantic Scribunto, SubPageList.
 RUN set -x; \
 	cd $MW_HOME/extensions \
-	# AdminLinks
+	# AdminLinks (v. 0.5)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/AdminLinks $MW_HOME/extensions/AdminLinks \
 	&& cd $MW_HOME/extensions/AdminLinks \
-	&& git checkout -q 28009e814c91d67f4287bcc180d626308adb2b52 \
+	&& git checkout -q 303a8a40d0a3db3356174cd2cef1857be9bda5a2 \
 	# AdvancedSearch
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/AdvancedSearch $MW_HOME/extensions/AdvancedSearch \
 	&& cd $MW_HOME/extensions/AdvancedSearch \
@@ -145,10 +145,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/AntiSpoof $MW_HOME/extensions/AntiSpoof \
 	&& cd $MW_HOME/extensions/AntiSpoof \
 	&& git checkout -q 1c82ce797d2eefa7f82fb88f82d550c2c73ff3b6 \
-	# ApprovedRevs (v. 1.7.2)
+	# ApprovedRevs (v. 1.7.3)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ApprovedRevs $MW_HOME/extensions/ApprovedRevs \
 	&& cd $MW_HOME/extensions/ApprovedRevs \
-	&& git checkout -q c69e829f36ac06690dec1bfc7e5669d141c95749 \
+	&& git checkout -q e476fc0121f90aafae01d9da2d12f0cd3afbda1e \
 	# Arrays
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Arrays $MW_HOME/extensions/Arrays \
 	&& cd $MW_HOME/extensions/Arrays \
@@ -206,10 +206,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ContributionScores $MW_HOME/extensions/ContributionScores \
 	&& cd $MW_HOME/extensions/ContributionScores \
 	&& git checkout -q de75d9f6904e9b41f7148417cc9fd491164da722 \
-	# DataTransfer (v. 1.3)
+	# DataTransfer (v. 1.4)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/DataTransfer $MW_HOME/extensions/DataTransfer \
 	&& cd $MW_HOME/extensions/DataTransfer \
-	&& git checkout -q fae71f1fff129e1e14860c63fd362ad808f3694d \
+	&& git checkout -q 6000d27db2da7cbb2a7d674891acd5c36a202306 \
 	# Description2
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Description2 $MW_HOME/extensions/Description2 \
 	&& cd $MW_HOME/extensions/Description2 \
@@ -270,7 +270,7 @@ RUN set -x; \
 	&& git clone https://github.com/enterprisemediawiki/HeaderFooter.git $MW_HOME/extensions/HeaderFooter \
 	&& cd $MW_HOME/extensions/HeaderFooter \
 	&& git checkout -q eee7d2c1a3373c7d6b326fd460e5d4859dd22c40 \
-	# HeaderTabs
+	# HeaderTabs (v. 2.2)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/HeaderTabs $MW_HOME/extensions/HeaderTabs \
 	&& cd $MW_HOME/extensions/HeaderTabs \
 	&& git checkout -q 37679158f93e4ba5a292744b30e2a64d50fb818c \
