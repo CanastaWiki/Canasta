@@ -1,4 +1,4 @@
-FROM debian:10 as base
+FROM debian:bullseye as base
 
 LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/WikiWorks/Canasta
