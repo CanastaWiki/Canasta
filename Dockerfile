@@ -298,10 +298,14 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/LabeledSectionTransclusion $MW_HOME/extensions/LabeledSectionTransclusion \
 	&& cd $MW_HOME/extensions/LabeledSectionTransclusion \
 	&& git checkout -q 8b0ba6952488763201a0defef0499c743ef933f7 \
+	# LDAPAuthentication2
+	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/LDAPAuthentication2 $MW_HOME/extensions/LDAPAuthentication2 \
+	&& cd $MW_HOME/extensions/LDAPAuthentication2 \
+	&& git checkout -q dabdf2292b272316a2caed901dd7aecf574f8682 \
 	# LDAPAuthorization
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/LDAPAuthorization $MW_HOME/extensions/LDAPAuthorization \
 	&& cd $MW_HOME/extensions/LDAPAuthorization \
-	&& git checkout -q 76b174e556f902261983c8895aacacc88fb664db \
+	&& git checkout -q 149b7c0591795c8c3fae0068f2e7a602b1944453 \
 	# LDAPProvider
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/LDAPProvider $MW_HOME/extensions/LDAPProvider \
 	&& cd $MW_HOME/extensions/LDAPProvider \
