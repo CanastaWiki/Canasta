@@ -298,10 +298,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/LabeledSectionTransclusion $MW_HOME/extensions/LabeledSectionTransclusion \
 	&& cd $MW_HOME/extensions/LabeledSectionTransclusion \
 	&& git checkout -q 8b0ba6952488763201a0defef0499c743ef933f7 \
-	# LDAPAuthorization
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/LDAPAuthorization $MW_HOME/extensions/LDAPAuthorization \
-	&& cd $MW_HOME/extensions/LDAPAuthorization \
-	&& git checkout -q 76b174e556f902261983c8895aacacc88fb664db \
 	# LDAPProvider
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/LDAPProvider $MW_HOME/extensions/LDAPProvider \
 	&& cd $MW_HOME/extensions/LDAPProvider \
