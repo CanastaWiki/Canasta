@@ -230,18 +230,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Echo $MW_HOME/extensions/Echo \
 	&& cd $MW_HOME/extensions/Echo \
 	&& git checkout -q a3dedc0d64380d74d2e153aad9a8d54cee1b85bd \
-	# Editcount
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Editcount $MW_HOME/extensions/Editcount \
-	&& cd $MW_HOME/extensions/Editcount \
-	&& git checkout -q 978929f63f47ea88764f66ad7903eca65c64df4f \
 	# Elastica
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Elastica $MW_HOME/extensions/Elastica \
 	&& cd $MW_HOME/extensions/Elastica \
 	&& git checkout -q 8af6b458adf628a98af4ba8e407f9c676bf4a4fb \
-	# EmailAuthorization
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/EmailAuthorization $MW_HOME/extensions/EmailAuthorization \
-	&& cd $MW_HOME/extensions/EmailAuthorization \
-	&& git checkout -q 5d1594a762427e37f243220578a393e6134aa020 \
 	# EmbedVideo
 	&& git clone --single-branch -b master https://gitlab.com/hydrawiki/extensions/EmbedVideo.git $MW_HOME/extensions/EmbedVideo \
 	&& cd $MW_HOME/extensions/EmbedVideo \
@@ -274,10 +266,6 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/GoogleDocCreator $MW_HOME/extensions/GoogleDocCreator \
 	&& cd $MW_HOME/extensions/GoogleDocCreator \
 	&& git checkout -q a606f4390e4265de227a79a353fee902e6703bd5 \
-	# Graph
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Graph $MW_HOME/extensions/Graph \
-	&& cd $MW_HOME/extensions/Graph \
-	&& git checkout -q ae2cc41b751a9763792ae861fa3699b9217c5ef9 \
 	# HeaderFooter
 	&& git clone https://github.com/enterprisemediawiki/HeaderFooter.git $MW_HOME/extensions/HeaderFooter \
 	&& cd $MW_HOME/extensions/HeaderFooter \
@@ -298,18 +286,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/LabeledSectionTransclusion $MW_HOME/extensions/LabeledSectionTransclusion \
 	&& cd $MW_HOME/extensions/LabeledSectionTransclusion \
 	&& git checkout -q 8b0ba6952488763201a0defef0499c743ef933f7 \
-	# LDAPAuthentication2
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/LDAPAuthentication2 $MW_HOME/extensions/LDAPAuthentication2 \
-	&& cd $MW_HOME/extensions/LDAPAuthentication2 \
-	&& git checkout -q dabdf2292b272316a2caed901dd7aecf574f8682 \
-	# LDAPAuthorization
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/LDAPAuthorization $MW_HOME/extensions/LDAPAuthorization \
-	&& cd $MW_HOME/extensions/LDAPAuthorization \
-	&& git checkout -q 76b174e556f902261983c8895aacacc88fb664db \
-	# LDAPProvider
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/LDAPProvider $MW_HOME/extensions/LDAPProvider \
-	&& cd $MW_HOME/extensions/LDAPProvider \
-	&& git checkout -q 8fe016315311619321767809dfef54f0ad28aa1a \
 	# Lingo
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/Lingo $MW_HOME/extensions/Lingo \
 	&& cd $MW_HOME/extensions/Lingo \
