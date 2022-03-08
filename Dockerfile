@@ -322,10 +322,6 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/LinkTarget $MW_HOME/extensions/LinkTarget \
 	&& cd $MW_HOME/extensions/LinkTarget \
 	&& git checkout -q ab1aba0a4a138f80c4cd9c86cc53259ca0fe4545 \
-	# Linter
-	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/Linter $MW_HOME/extensions/Linter \
-	&& cd $MW_HOME/extensions/Linter \
-	&& git checkout -q be6d67fa2318139445d104209f4d68169ef6fbb5 \
 	# LockAuthor
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/LockAuthor $MW_HOME/extensions/LockAuthor \
 	&& cd $MW_HOME/extensions/LockAuthor \
@@ -342,10 +338,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Loops $MW_HOME/extensions/Loops \
 	&& cd $MW_HOME/extensions/Loops \
 	&& git checkout -q f0f1191f56e6b31b063f59ee2710a6f62890a336 \
-	# MagicNoCache
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/MagicNoCache $MW_HOME/extensions/MagicNoCache \
-	&& cd $MW_HOME/extensions/MagicNoCache \
-	&& git checkout -q c0c85db103dce74005cc8e2c1ef877a69b27f0d7 \
 	# MassMessage
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/MassMessage $MW_HOME/extensions/MassMessage \
 	&& cd $MW_HOME/extensions/MassMessage \
@@ -358,10 +350,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Math $MW_HOME/extensions/Math \
 	&& cd $MW_HOME/extensions/Math \
 	&& git checkout -q ce438004cb7366860d3bff1f60839ef3c304aa1e \
-	# MintyDocs (v. 0.9)
-	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/MintyDocs $MW_HOME/extensions/MintyDocs \
-	&& cd $MW_HOME/extensions/MintyDocs \
-	&& git checkout -q 574a593e59951eb2b81c17d69f4252d3ebadc347 \
 	# MobileDetect
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/MobileDetect $MW_HOME/extensions/MobileDetect \
 	&& cd $MW_HOME/extensions/MobileDetect \
@@ -378,10 +366,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/MyVariables $MW_HOME/extensions/MyVariables \
 	&& cd $MW_HOME/extensions/MyVariables \
 	&& git checkout -q cde2562ffde8a1b648be10b78b86386a9c7d3151 \
-	# NewUserMessage
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/NewUserMessage $MW_HOME/extensions/NewUserMessage \
-	&& cd $MW_HOME/extensions/NewUserMessage \
-	&& git checkout -q 0927afeedfe697984ed640ef55474aeccfffbbbb \
 	# NumerAlpha
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/NumerAlpha $MW_HOME/extensions/NumerAlpha \
 	&& cd $MW_HOME/extensions/NumerAlpha \
@@ -450,10 +434,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SkinPerPage $MW_HOME/extensions/SkinPerPage \
 	&& cd $MW_HOME/extensions/SkinPerPage \
 	&& git checkout -q b929bc6e56b51a8356c04b3761c262b6a9a423e3 \
-	# SmiteSpam
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SmiteSpam $MW_HOME/extensions/SmiteSpam \
-	&& cd $MW_HOME/extensions/SmiteSpam \
-	&& git checkout -q 537809392961af21436341aaa0fb1615887dd401 \
 	# SocialProfile
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SocialProfile $MW_HOME/extensions/SocialProfile \
 	&& cd $MW_HOME/extensions/SocialProfile \
