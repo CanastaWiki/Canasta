@@ -219,6 +219,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Disambiguator $MW_HOME/extensions/Disambiguator \
 	&& cd $MW_HOME/extensions/Disambiguator \
 	&& git checkout -q 06cae54808417caa72c6fe6702af23da5f4c45c5 \
+	# DiscussionTools
+	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/DiscussionTools $MW_HOME/extensions/DiscussionTools \
+	&& cd $MW_HOME/extensions/DiscussionTools \
+	&& git checkout -q 9292f0a6abe8759eb3b44d57b3ea6da05ef8aa95 \
 	# DismissableSiteNotice
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/DismissableSiteNotice $MW_HOME/extensions/DismissableSiteNotice \
 	&& cd $MW_HOME/extensions/DismissableSiteNotice \
@@ -324,9 +328,9 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/LinkTarget \
 	&& git checkout -q ab1aba0a4a138f80c4cd9c86cc53259ca0fe4545 \
 	# Linter
-	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/Linter $MW_HOME/extensions/Linter \
+	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Linter $MW_HOME/extensions/Linter \
 	&& cd $MW_HOME/extensions/Linter \
-	&& git checkout -q be6d67fa2318139445d104209f4d68169ef6fbb5 \
+	&& git checkout -q 5c1e56974035e59434970ef8ebe7ea2c9cdd6bf8 \
 	# LockAuthor
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/LockAuthor $MW_HOME/extensions/LockAuthor \
 	&& cd $MW_HOME/extensions/LockAuthor \
