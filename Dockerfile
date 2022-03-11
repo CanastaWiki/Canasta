@@ -643,9 +643,7 @@ RUN set -x; \
     && chmod g+w -R $MW_HOME/canasta-skins \
     # Create symlinks from $MW_VOLUME to the wiki root for images and cache directories
     && ln -s $MW_VOLUME/images $MW_HOME/images \
-    && ln -s $MW_VOLUME/cache $MW_HOME/cache \
-    # Create placeholder symlink for the LocalSettings file
-    && ln -s $MW_VOLUME/config/LocalSettings.php $MW_HOME/LocalSettings.php
+    && ln -s $MW_VOLUME/cache $MW_HOME/cache
 
 FROM base as final
 
@@ -679,7 +677,7 @@ COPY _sources/configs/php_timeouts.ini /etc/php/7.4/apache2/conf.d/
 COPY _sources/scripts/*.sh /
 COPY _sources/configs/robots.txt $WWW_ROOT/
 COPY _sources/configs/.htaccess $WWW_ROOT/
-COPY _sources/canasta/CanastaUtils.php $MW_HOME/
+COPY _sources/canasta/LocalSettings.php _sources/canasta/CanastaUtils.php _sources/canasta/CanastaDefaultSettings.php $MW_HOME/
 COPY _sources/canasta/getMediawikiSettings.php /
 COPY _sources/configs/mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
 
