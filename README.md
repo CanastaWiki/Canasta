@@ -46,7 +46,9 @@ Canasta supports two orchestrators for managing the stack: Docker Compose and Ku
 * Visit your wiki at `http://localhost`
 
 ## Configuration
-Canasta relies on setting environment variables in the Docker container for controlling aspects of the system that are outside the purview of LocalSettings.php. You can change these options by editing the `.env` file; see `.env.example` for details:
+Canasta relies on setting environment variables in the Docker container for controlling
+aspects of the system that are outside the purview of LocalSettings.php. You can change
+these options by editing the `.env` file; see `.env.example` for details:
 
 * `PORT` - modify the publicly-accessible HTTP port, default is `80`
 * `MYSQL_PASSWORD` - modify MySQL container `root` user password, default is `mediawiki`
@@ -69,8 +71,8 @@ with a mysql dump. You can place `.sql` or `.gz` database dump there. This is op
 intended to be used for migrations only.
 
 ## Enabling extensions
-On the `LocalSettings.php` you'll find a full list of extensions bundled with the image,
-remove the `#` comment symbol near the extension to enable it, eg:
+In `LocalSettings.php` you will find a full list of extensions bundled with the image;
+remove the `#` comment symbol near the extension to enable it, e.g.:
 
 ```php
 #cfLoadExtension('Cite');
@@ -81,8 +83,8 @@ cfLoadExtension('Cite');
 ```
 
 ## Enabling skins
-On the `LocalSettings.php` you'll find a full list of skins bundled with the image,
-remove the `#` comment symbol near the skin to enable it, eg:
+In `LocalSettings.php` you will find a full list of skins bundled with the image;
+remove the `#` comment symbol near the skin to enable it, e.g.:
 
 ```php
 #cfLoadSkin('Vector');
@@ -93,32 +95,35 @@ cfLoadSkin('Vector');
 ```
 
 ## Installing 3rd party extensions
-In order to install a 3rd party extension simply place it under the `./extensions`
-directory and add `cfLoadExtension` call to the bottom of `./config/LocalSettings.php`, eg:
+In order to install a 3rd party extension, simply place it in the `./extensions`
+directory and add a `wfLoadExtension` call to `./config/LocalSettings.php`, e.g.:
 
 ```php
 wfLoadExtension('MyCustomExtension');
 ```
 
 ## Installing 3rd party skins
-In order to install a 3rd party skin simply place it under the `./skins`
-directory and add `cfLoadSkin` call to the bottom of `./config/LocalSettings.php`, eg:
+In order to install a 3rd party skin, simply place it in the `./skins`
+directory and add `wfLoadSkin` call to `./config/LocalSettings.php`, e.g.:
 
 ```php
 wfLoadSkin('MyCustomSkin');
 ```
 
 # Components
-Supporting components of Canasta are not located in the Canasta MediaWiki image, but are part of the Canasta stack. (They are invoked on the `docker-compose.yml` file for Docker Compose installations or the Kubernetes deployment manifest for Kubernetes installations.)
+Supporting components of Canasta are not located directly in the Canasta image, but are part of the Canasta stack.
+They are invoked on the `docker-compose.yml` file for Docker Compose installations
+or the Kubernetes deployment manifest for Kubernetes installations.
 
-Instructions below on handling the components are for Docker Compose only. For Kubernetes information, please see the Kubernetes section below.
+Instructions below on handling the components are for Docker Compose only.
+For Kubernetes information, please see the Kubernetes section below.
 
 ## Database
-By default, the stack uses `mysql:8.0` container for database and stores MySQL
-files under `mysql-data-volume` to make the database persist across container
+By default, the stack uses the `mysql:8.0` container for the database and stores MySQL
+files in `mysql-data-volume` to make the database persist across container
 restarts.
 
-It's not necessary to use the volume and the database container. You can switch
+It is not necessary to use the volume and the database container. You can switch
 to any external database server you wish by simply modifying the following values
 under your `./config/LocalSettings.php` file (or by specifying your DB server during setup wizard):
 
@@ -172,18 +177,18 @@ This will stop all the services and remove all the linked persistent volumes.
 
 ## Executing maintenance scripts
 
-The image is bundled with automatic job-runner, transcoder and log-rotator, but
-if you need to run any other maintenance script you can do it using this command:
+The image is bundled with automatic job-runner, transcoder and log-rotator scripts, but
+if you need to run any other maintenance script you can do so using this command:
 
 ```bash
 cd ~/path/to/canasta
 docker-compose exec web php maintenance/rebuildall.php
 ```
 
-The image also configured to automatically run the `update.php` script on
-start, so if you enable some schema affecting extensions like `SemanticMediawiki` you
-may need to restart the stack via `docker-compose restart` or, alternatively run the
-`update.php` script by yourself via:
+The image is also configured to automatically run the `update.php` script on
+start, so if you enable some extension that adds its own database tables (like `Semantic Mediawiki`),
+you can add the DB tables by either restarting the stack via `docker-compose restart, or just running the
+`update.php` script like so:
 
 ```bash
 cd ~/path/to/canasta
@@ -192,12 +197,12 @@ docker-compose exec web php maintenance/update.php --quick
 
 ## Elasticsearch
 
-By default, the stack uses `elasticsearch/elasticsearch:6.8.13` container and stores
-indexes under `elasticsearch` volume to make the data persist across container
+By default, the stack uses the `elasticsearch/elasticsearch:6.8.13` container and stores
+indexes in the `elasticsearch` volume, to make the data persist across container
 restarts.
 
-Despite the ElasticSearch container is active by default the wiki won't use it
-until you'll make necessary configurations in `LocalSettings.php`, eg:
+Despite the fact that the Elasticsearch container is active by default, the wiki won't use it
+until you make the necessary configuration changes in `LocalSettings.php`, e.g.:
 
 ```php
 cfLoadExtension( 'Elastica' );
@@ -209,16 +214,17 @@ $wgCirrusSearchClusters = [
 ];
 ```
 
-and follow initialization instructions, see https://github.com/wikimedia/mediawiki-extensions-CirrusSearch/blob/master/README and
-see more details at https://www.mediawiki.org/wiki/Extension:CirrusSearch
+Then, follow the initialization instructions; see https://github.com/wikimedia/mediawiki-extensions-CirrusSearch/blob/master/README and
+https://www.mediawiki.org/wiki/Extension:CirrusSearch.
 
 ## Sitemap
 
-The image in bundled with sitemap auto-generation script which stores the resulting
-sitemap to volume `sitemap` and symlinks into `/var/www/mediawiki/w/sitemap`
+The image includes a sitemap auto-generation script, which stores the resulting
+sitemap to the volume `sitemap`, which is symlinked to `/var/www/mediawiki/w/sitemap`.
 
 # Kubernetes
-Canasta offers Kubernetes support for heavy-duty wikis needing the power provided by Kubernetes. However, it is not for the faint of heart. We recommend smaller wikis use Docker Compose to manage their stack.
+Canasta offers Kubernetes support for heavy-duty wikis needing the power provided by Kubernetes.
+However, it is not for the faint of heart. We recommend smaller wikis use Docker Compose to manage their stack.
 
 Configs are located in the `kubernetes` directory, organized with each file representing a
 service (`web`, `db`, `elasticsearch`). The simplest way to run it is as below (make sure you
@@ -234,27 +240,28 @@ minikube service web
 You will want to use `kubeadm` or other Kubernetes implementations for your production environment.
 We aim to provide documentation on how to do this in the future.
 
-The mount-bind directories are created at `/opt/mediawiki` root ( you can change this by
+The mount-bind directories are created at `/opt/mediawiki` root (you can change this by
 modifying the conf files). If nothing exists at the given path, an empty directory will 
 be created there as needed with permission set to 0755, having the same group and ownership 
-with Kubelet. Make sure the `/opt/mediawiki/elasticsearch` and `/opt/mediawiki/images`,
-`/opt/mediawiki/sitemap` are writable.
+as Kubelet. Make sure the `/opt/mediawiki/elasticsearch`, `/opt/mediawiki/images` and
+`/opt/mediawiki/sitemap` directories are writable.
 
-Note, the Kubernetes stack provided (same as the Docker Compose stack) does not include any
+Note that the Kubernetes stack provided (same as the Docker Compose stack) does not include any
 front-end load balancer or proxy web server, so it's up to you to route the requests to the
 wiki pod/container.
 
-Note, the Kubernetes stack provided relies on the [hostPath](https://kubernetes.io/docs/concepts/storage/volumes/#hostpath)
+Note that the Kubernetes stack provided relies on the [hostPath](https://kubernetes.io/docs/concepts/storage/volumes/#hostpath)
 volume binding, so it's not intended to be used as a scalable solution (>1 pod per deployment) and
 for some in-cloud Kubernetes deployments.
 
-It's recommended to replace `hostPath` mounts with [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)s
+It is recommended to replace `hostPath` mounts with [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)s
  using [StorageClass](https://kubernetes.io/docs/concepts/storage/persistent-volumes/).
  
  
 # More info
 ## History
-Project Canasta was launched by Yaron Koren, head of WikiWorks. Project Canasta is intended to make Enterprise MediaWiki administration easier, while bringing the full power of MediaWiki and its extensions to the table.
+Project Canasta was launched by Yaron Koren, head of WikiWorks. Project Canasta is intended to make
+Enterprise MediaWiki administration easier, while bringing the full power of MediaWiki and its extensions to the table.
 
 ## What's behind the name?
 Canasta means "basket" in Spanish, alluding to Canasta's full-featured stack being like a single basket, complete with all of the tools needed.
