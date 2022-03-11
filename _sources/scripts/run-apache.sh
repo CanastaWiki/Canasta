@@ -149,7 +149,6 @@ sitemapgen() {
         if [ -z "$MW_SCRIPT_PATH" ]; then
           MW_SCRIPT_PATH="/w"
         fi
-        export MW_SCRIPT_PATH
         echo >&2 Run sitemap generator
         MW_SCRIPT_PATH=$MW_SCRIPT_PATH nice -n 20 runuser -c /mwsitemapgen.sh -s /bin/bash "$WWW_USER"
     else
