@@ -13,7 +13,12 @@ if ( defined( 'MW_CONFIG_CALLBACK' ) ) {
 	// Called from WebInstaller or similar entry point
 
 	if ( !file_exists( getCanastaLocalSettingsFilePath() ) ) {
-		// We don't define any variables and WebInstaller should decide that "$IP/LocalSettings.php" does not exist.
+		// Remove all variables, WebInstaller should decide that "$IP/LocalSettings.php" does not exist.
+		$vars = array_keys( get_defined_vars() );
+		foreach( $vars as $v => $k ) {
+			unset( $$k );
+		}
+		unset( $vars, $v, $k );
 		return;
 	}
 }
@@ -24,11 +29,11 @@ $canastaLocalSettingsFilePath = getCanastaLocalSettingsFilePath();
 if ( !is_readable( $canastaLocalSettingsFilePath ) ) {
 	// Emulate that "$IP/LocalSettings.php" does not exist
 
-	// Set MW_CONFIG_FILE for NoLocalSettings template work correctly
-	define( "MW_CONFIG_FILE", $canastaLocalSettingsFilePath );
+	// Set CANASTA_CONFIG_FILE for NoLocalSettings template work correctly in includes/CanastaNoLocalSettings.php
+	define( "CANASTA_CONFIG_FILE", $canastaLocalSettingsFilePath );
 
 	// Do the same what function wfWebStartNoLocalSettings() does
-	require_once "$IP/includes/NoLocalSettings.php";
+	require_once "$IP/includes/CanastaNoLocalSettings.php";
 	die();
 }
 

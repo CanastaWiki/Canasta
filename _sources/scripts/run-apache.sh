@@ -79,6 +79,15 @@ else
   chmod -R g=rwX $APACHE_LOG_DIR
 fi
 
+remove_autoinclude() {
+    if [ -e "$MW_VOLUME/config/LocalSettings.php"  ]; then
+        if grep -q "@include(\"CanastaUtils.php\");" "$MW_VOLUME/config/LocalSettings.php"; then
+            echo "Old Auto-include found, remove it."
+            sed -i '/^@include(\"CanastaUtils.php\");$/d' "$MW_VOLUME/config/LocalSettings.php"
+        fi
+    fi
+}
+
 #autoinclude() {
 #  echo "Auto-include started.."
 #  while true; do
@@ -174,9 +183,10 @@ run_autoupdate () {
 # Wait db
 waitdatabase
 
+remove_autoinclude &
 #autoinclude &
 ## Let it cycle at least once
-#sleep 1
+sleep 1
 
 cd "$MW_HOME" || exit
 
