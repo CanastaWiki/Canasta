@@ -220,7 +220,7 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/Disambiguator \
 	&& git checkout -q 06cae54808417caa72c6fe6702af23da5f4c45c5 \
 	# DiscussionTools
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/DiscussionTools $MW_HOME/extensions/DiscussionTools \
+	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-DiscussionTools $MW_HOME/extensions/DiscussionTools \
 	&& cd $MW_HOME/extensions/DiscussionTools \
 	&& git checkout -q 9292f0a6abe8759eb3b44d57b3ea6da05ef8aa95 \
 	# DismissableSiteNotice
