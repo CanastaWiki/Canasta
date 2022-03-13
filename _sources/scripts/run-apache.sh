@@ -79,6 +79,10 @@ else
   chmod -R g=rwX $APACHE_LOG_DIR
 fi
 
+replace_env_var_in_composer_json_file() {
+    sed -i 's#%MW_VOLUME%#'"$MW_VOLUME"'#g' "$MW_HOME/composer.local.json"
+}
+
 remove_autoinclude() {
     if [ -e "$MW_VOLUME/config/LocalSettings.php"  ]; then
         if grep -q "@include(\"CanastaUtils.php\");" "$MW_VOLUME/config/LocalSettings.php"; then
@@ -182,6 +186,8 @@ run_autoupdate () {
 
 # Wait db
 waitdatabase
+
+replace_env_var_in_composer_json_file
 
 remove_autoinclude &
 #autoinclude &
