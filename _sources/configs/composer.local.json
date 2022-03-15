@@ -24,7 +24,6 @@
 				"extensions/TemplateStyles/composer.json",
 				"extensions/Widgets/composer.json",
 				"extensions/GoogleAnalyticsMetrics/composer.json",
-				"extensions/SemanticExternalQueryLookup/composer.json",
 				"extensions/OpenIDConnect/composer.json"
 			]
 		}
