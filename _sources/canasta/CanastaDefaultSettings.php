@@ -67,7 +67,7 @@ $wgCdnServersNoPurge[] = '172.16.0.0/12';
 # Include user defined LocalSettings.php file
 require_once "$canastaLocalSettingsFilePath";
 
-# Include all files in LocalSettings.php.d directory
-foreach (glob(getenv( 'MW_VOLUME' ) . '/config/LocalSettings.php.d/*.php') as $filename) {
+# Include all php files in config/settings directory
+foreach (glob(getenv( 'MW_VOLUME' ) . '/config/settings/*.php') as $filename) {
 	require_once $filename;
 }
