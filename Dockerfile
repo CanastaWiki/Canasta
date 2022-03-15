@@ -439,10 +439,6 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/SemanticDrilldown $MW_HOME/extensions/SemanticDrilldown \
 	&& cd $MW_HOME/extensions/SemanticDrilldown \
 	&& git checkout -q 873780260cf7d7999cb8434d3cf87aca4bd7368a \
-	# SemanticExternalQueryLookup (WikiTeq's fork)
-	&& git clone --single-branch -b master https://github.com/WikiTeq/SemanticExternalQueryLookup.git $MW_HOME/extensions/SemanticExternalQueryLookup \
-	&& cd $MW_HOME/extensions/SemanticExternalQueryLookup \
-	&& git checkout -q dd7810061f2f1a9eef7be5ee09da999cbf9ecd8a \
 	# SimpleChanges
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SimpleChanges $MW_HOME/extensions/SimpleChanges \
 	&& cd $MW_HOME/extensions/SimpleChanges \
