@@ -91,12 +91,9 @@ RUN set -x; \
 
 # Skins
 # The MonoBook, Timeless and Vector skins are bundled into MediaWiki and do not need to be separately installed.
+# The Chameleon skin is downloaded via Composer and also does not need to be installed.
 RUN set -x; \
 	cd $MW_HOME/skins \
-	# Chameleon
-	&& git clone https://github.com/ProfessionalWiki/chameleon.git $MW_HOME/skins/chameleon \
-	&& cd $MW_HOME/skins/chameleon \
-	&& git checkout -q -b $MW_VERSION c817e3a89193ecb8e2ec37800d4534b4747e6903 \
 	# CologneBlue
 	&& git clone -b $MW_VERSION --single-branch https://gerrit.wikimedia.org/r/mediawiki/skins/CologneBlue $MW_HOME/skins/CologneBlue \
 	&& cd $MW_HOME/skins/CologneBlue \
