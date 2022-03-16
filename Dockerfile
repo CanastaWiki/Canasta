@@ -519,11 +519,7 @@ RUN set -x; \
 	# WikiSEO
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/WikiSEO $MW_HOME/extensions/WikiSEO \
 	&& cd $MW_HOME/extensions/WikiSEO \
-	&& git checkout -q 2c0a40267e9e1abd087cf3fd378cc508b8562f9f \
-	# Wiretap
-	&& git clone https://github.com/enterprisemediawiki/Wiretap.git $MW_HOME/extensions/Wiretap \
-	&& cd $MW_HOME/extensions/Wiretap \
-	&& git checkout -q a97b708c3093ea66e7cf625859b1b38178526bab
+	&& git checkout -q 2c0a40267e9e1abd087cf3fd378cc508b8562f9f
 
 # ReplaceText (switch to more recent commit due to bug on submodule HEAD)
 RUN set -x; \
