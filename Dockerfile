@@ -127,6 +127,10 @@ RUN set -x; \
 # Scribunto, SimpleBatchUpload, SubPageList.
 RUN set -x; \
 	cd $MW_HOME/extensions \
+	# AbuseFilter
+	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/AbuseFilter $MW_HOME/extensions/AbuseFilter \
+	&& cd $MW_HOME/extensions/AbuseFilter \
+	&& git checkout -q 188389ce51055b59f338a6784ecb51b30973e81f \
 	# AdminLinks (v. 0.5)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/AdminLinks $MW_HOME/extensions/AdminLinks \
 	&& cd $MW_HOME/extensions/AdminLinks \
@@ -264,6 +268,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Favorites $MW_HOME/extensions/Favorites \
 	&& cd $MW_HOME/extensions/Favorites \
 	&& git checkout -q 782afc856a35c37b1a508ce37f7402954cc32efb \
+	# FlexDiagrams (v. 0.3)
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/FlexDiagrams $MW_HOME/extensions/FlexDiagrams \
+	&& cd $MW_HOME/extensions/FlexDiagrams \
+	&& git checkout -q 9f9888a26041e18f4374ba375aad40b419b0b27a \
 	# GlobalNotice
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/GlobalNotice $MW_HOME/extensions/GlobalNotice \
 	&& cd $MW_HOME/extensions/GlobalNotice \
@@ -519,7 +527,11 @@ RUN set -x; \
 	# WikiSEO
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/WikiSEO $MW_HOME/extensions/WikiSEO \
 	&& cd $MW_HOME/extensions/WikiSEO \
-	&& git checkout -q 2c0a40267e9e1abd087cf3fd378cc508b8562f9f
+	&& git checkout -q 2c0a40267e9e1abd087cf3fd378cc508b8562f9f \
+	# WSOAuth (v. 5.0)
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/WSOAuth $MW_HOME/extensions/WSOAuth \
+	&& cd $MW_HOME/extensions/WSOAuth \
+	&& git checkout -q 4a08a825b0a667f0a6834f58844af5fd250ceae8
 
 # ReplaceText (switch to more recent commit due to bug on submodule HEAD)
 RUN set -x; \
