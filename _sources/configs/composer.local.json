@@ -16,6 +16,7 @@
 	"extra": {
 		"merge-plugin": {
 			"include": [
+				"extensions/AbuseFilter/composer.json",
 				"extensions/CirrusSearch/composer.json",
 				"extensions/Elastica/composer.json",
 				"extensions/OATHAuth/composer.json",
@@ -24,7 +25,8 @@
 				"extensions/TemplateStyles/composer.json",
 				"extensions/Widgets/composer.json",
 				"extensions/GoogleAnalyticsMetrics/composer.json",
-				"extensions/OpenIDConnect/composer.json"
+				"extensions/OpenIDConnect/composer.json",
+				"extensions/WSOAuth/composer.json"
 			]
 		}
 	}
