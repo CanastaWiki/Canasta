@@ -147,11 +147,10 @@ sitemapgen() {
         fi
         # Fall back to default value if can't fetch the variable
         if [ -z "$MW_SCRIPT_PATH" ]; then
-          MW_SCRIPT_PATH="w"
+          MW_SCRIPT_PATH="/w"
         fi
-        export MW_SCRIPT_PATH
         echo >&2 Run sitemap generator
-        nice -n 20 runuser -c /mwsitemapgen.sh -s /bin/bash "$WWW_USER"
+        MW_SCRIPT_PATH=$MW_SCRIPT_PATH nice -n 20 runuser -c /mwsitemapgen.sh -s /bin/bash "$WWW_USER"
     else
         echo >&2 Sitemap generator is disabled
     fi
