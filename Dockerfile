@@ -260,18 +260,18 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/EventStreamConfig $MW_HOME/extensions/EventStreamConfig \
 	&& cd $MW_HOME/extensions/EventStreamConfig \
 	&& git checkout -q bce5bc385b2919cf294a074b64bc330ac48f78db \
-	# ExternalData (v. 3.0)
+	# ExternalData (v. 3.1)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ExternalData $MW_HOME/extensions/ExternalData \
 	&& cd $MW_HOME/extensions/ExternalData \
-	&& git checkout -q 73d76e0631f78df42a557b72a8d34e6c53a15b51 \
+	&& git checkout -q 64785b7e2134121d84a77edde9daab5db040e97a \
 	# Favorites
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Favorites $MW_HOME/extensions/Favorites \
 	&& cd $MW_HOME/extensions/Favorites \
 	&& git checkout -q 782afc856a35c37b1a508ce37f7402954cc32efb \
-	# FlexDiagrams (v. 0.3)
+	# FlexDiagrams (v. 0.4)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/FlexDiagrams $MW_HOME/extensions/FlexDiagrams \
 	&& cd $MW_HOME/extensions/FlexDiagrams \
-	&& git checkout -q 9f9888a26041e18f4374ba375aad40b419b0b27a \
+	&& git checkout -q a05d7a450141504cb4df23ef4d077c97d1491228 \
 	# GlobalNotice
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/GlobalNotice $MW_HOME/extensions/GlobalNotice \
 	&& cd $MW_HOME/extensions/GlobalNotice \
@@ -504,10 +504,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Variables $MW_HOME/extensions/Variables \
 	&& cd $MW_HOME/extensions/Variables \
 	&& git checkout -q e20f4c7469bdc724ccc71767ed86deec3d1c3325 \
-	# VEForAll TODO (version 0.3, master), switch back to REL_x for 1.36
+	# VEForAll (v. 0.4)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/VEForAll $MW_HOME/extensions/VEForAll \
 	&& cd $MW_HOME/extensions/VEForAll \
-	&& git checkout -q 8f83eb6e607b89f6e1a44966e8637cadd7942bd7 \
+	&& git checkout -q d0aec153e80b6604739aeffb60381f52d921db51 \
 	# VoteNY
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/VoteNY $MW_HOME/extensions/VoteNY \
 	&& cd $MW_HOME/extensions/VoteNY \
@@ -533,10 +533,10 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/WSOAuth \
 	&& git checkout -q 4a08a825b0a667f0a6834f58844af5fd250ceae8
 
-# ReplaceText (switch to more recent commit due to bug on submodule HEAD)
+# ReplaceText (switch to more recent commit (v. 1.7) due to bug on submodule HEAD)
 RUN set -x; \
 	cd $MW_HOME/extensions/ReplaceText \
-	&& git checkout -q 109d24b690b9096863513bdea642f88c062a3b0b
+	&& git checkout -q d70cd160b9bfdc8a12539624ae5b173045f1fb89
 
 # GTag1
 COPY _sources/extensions/GTag1.2.0.tar.gz /tmp/
