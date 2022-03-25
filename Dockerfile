@@ -147,10 +147,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/AntiSpoof $MW_HOME/extensions/AntiSpoof \
 	&& cd $MW_HOME/extensions/AntiSpoof \
 	&& git checkout -q 1c82ce797d2eefa7f82fb88f82d550c2c73ff3b6 \
-	# ApprovedRevs (v. 1.7.3)
+	# ApprovedRevs (v. 1.7.3) + Fix for ParserGetVariableValueSwitch hook, it should never return false
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ApprovedRevs $MW_HOME/extensions/ApprovedRevs \
 	&& cd $MW_HOME/extensions/ApprovedRevs \
-	&& git checkout -q e476fc0121f90aafae01d9da2d12f0cd3afbda1e \
+	&& git checkout -q 82d0da854f1f2279482fe56d01d49468b91d0b7f \
 	# Arrays
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Arrays $MW_HOME/extensions/Arrays \
 	&& cd $MW_HOME/extensions/Arrays \
@@ -387,7 +387,7 @@ RUN set -x; \
 	# MyVariables
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/MyVariables $MW_HOME/extensions/MyVariables \
 	&& cd $MW_HOME/extensions/MyVariables \
-	&& git checkout -q cde2562ffde8a1b648be10b78b86386a9c7d3151 \
+	&& git checkout -q b03ca9bb5d83bbfe2db6c89cd2bdd7fc6a5e09bf \
 	# NewUserMessage
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/NewUserMessage $MW_HOME/extensions/NewUserMessage \
 	&& cd $MW_HOME/extensions/NewUserMessage \
@@ -630,7 +630,7 @@ RUN set -x; \
     && for i in $(ls -d */); do echo "#cfLoadSkin('${i%%/}');"; done > $MW_ORIGIN_FILES/installedSkins.txt \
     #Loads Vector skin by default in the LocalSettings.php
     && sed -i "s/#cfLoadSkin('Vector');/cfLoadSkin('Vector');/" $MW_ORIGIN_FILES/installedSkins.txt
-	
+
 # Move files around
 RUN set -x; \
 	# Move files to $MW_ORIGIN_FILES directory
