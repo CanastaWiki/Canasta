@@ -533,10 +533,10 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/WSOAuth \
 	&& git checkout -q 4a08a825b0a667f0a6834f58844af5fd250ceae8
 
-# ReplaceText (switch to more recent commit (v. 1.7) due to bug on submodule HEAD)
+# ReplaceText (switch to more recent commit due to bug on submodule HEAD)
 RUN set -x; \
 	cd $MW_HOME/extensions/ReplaceText \
-	&& git checkout -q d70cd160b9bfdc8a12539624ae5b173045f1fb89
+	&& git checkout -q 109d24b690b9096863513bdea642f88c062a3b0b
 
 # GTag1
 COPY _sources/extensions/GTag1.2.0.tar.gz /tmp/
