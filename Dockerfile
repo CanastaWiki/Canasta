@@ -204,10 +204,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ContactPage $MW_HOME/extensions/ContactPage \
 	&& cd $MW_HOME/extensions/ContactPage \
 	&& git checkout -q 0466489a8c2ad8f5c045b145cb8b65bb8b164c48 \
-	# ContributionScores
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ContributionScores $MW_HOME/extensions/ContributionScores \
+	# ContributionScores (v. 1.26.1 - REL1_35 branch does not work with MW 1.35)
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ContributionScores $MW_HOME/extensions/ContributionScores \
 	&& cd $MW_HOME/extensions/ContributionScores \
-	&& git checkout -q de75d9f6904e9b41f7148417cc9fd491164da722 \
+	&& git checkout -q 46ebf438283913f103ba5dd03a3e4730bb9f87dc \
 	# DataTransfer (v. 1.4)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/DataTransfer $MW_HOME/extensions/DataTransfer \
 	&& cd $MW_HOME/extensions/DataTransfer \
