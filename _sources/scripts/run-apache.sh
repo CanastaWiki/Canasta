@@ -92,45 +92,6 @@ remove_autoinclude() {
     fi
 }
 
-#autoinclude() {
-#  echo "Auto-include started.."
-#  while true; do
-#    # Look for LocalSettings presence
-#    if [ -e "$MW_VOLUME/config/LocalSettings.php"  ]; then
-#      # Automatically include CanastaUtils.php
-#      if ! grep -q "CanastaUtils.php" "$MW_VOLUME/config/LocalSettings.php"; then
-#        echo "Adding CanastaUtils.."
-#        # Add include
-#        sed -i 's/# End of automatically generated settings./@include("CanastaUtils.php");/g' "$MW_VOLUME/config/LocalSettings.php"
-#        # Replace possible load calls, though we don't expect any because the initial state of the
-#        # ./extensions folder should be empty so the wizard won't allow to select any skins or extensions
-#        # to be enabled during LocalSettings generation
-#        sed -i 's/wfLoadExtension/cfLoadExtension/g' "$MW_VOLUME/config/LocalSettings.php"
-#        sed -i 's/wfLoadSkin/cfLoadSkin/g' "$MW_VOLUME/config/LocalSettings.php"
-#        # Add list of bundled extensions
-#        echo "# List of bundled extensions" >> "$MW_VOLUME/config/LocalSettings.php"
-#        echo "" >> "$MW_VOLUME/config/LocalSettings.php"
-#        cat "$MW_VOLUME/installedExtensions.txt" >> "$MW_VOLUME/config/LocalSettings.php"
-#        echo "" >> "$MW_VOLUME/config/LocalSettings.php"
-#        # Add list of bundled skins
-#        echo "# List of bundled skins" >> "$MW_VOLUME/config/LocalSettings.php"
-#        echo "" >> "$MW_VOLUME/config/LocalSettings.php"
-#        cat "$MW_VOLUME/installedSkins.txt" >> "$MW_VOLUME/config/LocalSettings.php"
-#        # Done
-#        echo "Auto-include DONE"
-#        # Run auto-update to avoid the need to retart the stack
-#        run_autoupdate
-#        break
-#      else
-#        # Inclusion is already in place
-#        echo "Auto-include not needed"
-#        break
-#      fi
-#    fi
-#    sleep 1
-#  done
-#}
-
 jobrunner() {
     sleep 3
     if [ "$MW_ENABLE_JOB_RUNNER" = true ]; then
@@ -189,7 +150,6 @@ waitdatabase
 replace_env_var_in_composer_json_file
 
 remove_autoinclude &
-#autoinclude &
 ## Let it cycle at least once
 sleep 1
 
