@@ -83,15 +83,6 @@ replace_env_var_in_composer_json_file() {
     sed -i 's#%MW_VOLUME%#'"$MW_VOLUME"'#g' "$MW_HOME/composer.local.json"
 }
 
-remove_autoinclude() {
-    if [ -e "$MW_VOLUME/config/LocalSettings.php"  ]; then
-        if grep -q "@include(\"CanastaUtils.php\");" "$MW_VOLUME/config/LocalSettings.php"; then
-            echo "Old Auto-include found, remove it."
-            sed -i '/^@include(\"CanastaUtils.php\");$/d' "$MW_VOLUME/config/LocalSettings.php"
-        fi
-    fi
-}
-
 jobrunner() {
     sleep 3
     if [ "$MW_ENABLE_JOB_RUNNER" = true ]; then
@@ -149,10 +140,7 @@ waitdatabase
 
 replace_env_var_in_composer_json_file
 
-remove_autoinclude &
-## Let it cycle at least once
 sleep 1
-
 cd "$MW_HOME" || exit
 
 ########## Run maintenance scripts ##########
