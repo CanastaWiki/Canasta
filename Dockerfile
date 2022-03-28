@@ -91,12 +91,9 @@ RUN set -x; \
 
 # Skins
 # The MonoBook, Timeless and Vector skins are bundled into MediaWiki and do not need to be separately installed.
+# The Chameleon skin is downloaded via Composer and also does not need to be installed.
 RUN set -x; \
 	cd $MW_HOME/skins \
-	# Chameleon
-	&& git clone https://github.com/ProfessionalWiki/chameleon.git $MW_HOME/skins/chameleon \
-	&& cd $MW_HOME/skins/chameleon \
-	&& git checkout -q -b $MW_VERSION c817e3a89193ecb8e2ec37800d4534b4747e6903 \
 	# CologneBlue
 	&& git clone -b $MW_VERSION --single-branch https://gerrit.wikimedia.org/r/mediawiki/skins/CologneBlue $MW_HOME/skins/CologneBlue \
 	&& cd $MW_HOME/skins/CologneBlue \
@@ -130,6 +127,10 @@ RUN set -x; \
 # Scribunto, SimpleBatchUpload, SubPageList.
 RUN set -x; \
 	cd $MW_HOME/extensions \
+	# AbuseFilter
+	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/AbuseFilter $MW_HOME/extensions/AbuseFilter \
+	&& cd $MW_HOME/extensions/AbuseFilter \
+	&& git checkout -q 188389ce51055b59f338a6784ecb51b30973e81f \
 	# AdminLinks (v. 0.5)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/AdminLinks $MW_HOME/extensions/AdminLinks \
 	&& cd $MW_HOME/extensions/AdminLinks \
@@ -146,10 +147,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/AntiSpoof $MW_HOME/extensions/AntiSpoof \
 	&& cd $MW_HOME/extensions/AntiSpoof \
 	&& git checkout -q 1c82ce797d2eefa7f82fb88f82d550c2c73ff3b6 \
-	# ApprovedRevs (v. 1.7.3)
+	# ApprovedRevs (v. 1.7.3) + Fix for ParserGetVariableValueSwitch hook, it should never return false
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ApprovedRevs $MW_HOME/extensions/ApprovedRevs \
 	&& cd $MW_HOME/extensions/ApprovedRevs \
-	&& git checkout -q e476fc0121f90aafae01d9da2d12f0cd3afbda1e \
+	&& git checkout -q 82d0da854f1f2279482fe56d01d49468b91d0b7f \
 	# Arrays
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Arrays $MW_HOME/extensions/Arrays \
 	&& cd $MW_HOME/extensions/Arrays \
@@ -203,10 +204,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ContactPage $MW_HOME/extensions/ContactPage \
 	&& cd $MW_HOME/extensions/ContactPage \
 	&& git checkout -q 0466489a8c2ad8f5c045b145cb8b65bb8b164c48 \
-	# ContributionScores
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ContributionScores $MW_HOME/extensions/ContributionScores \
+	# ContributionScores (v. 1.26.1 - REL1_35 branch does not work with MW 1.35)
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ContributionScores $MW_HOME/extensions/ContributionScores \
 	&& cd $MW_HOME/extensions/ContributionScores \
-	&& git checkout -q de75d9f6904e9b41f7148417cc9fd491164da722 \
+	&& git checkout -q 46ebf438283913f103ba5dd03a3e4730bb9f87dc \
 	# DataTransfer (v. 1.4)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/DataTransfer $MW_HOME/extensions/DataTransfer \
 	&& cd $MW_HOME/extensions/DataTransfer \
@@ -259,14 +260,18 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/EventStreamConfig $MW_HOME/extensions/EventStreamConfig \
 	&& cd $MW_HOME/extensions/EventStreamConfig \
 	&& git checkout -q bce5bc385b2919cf294a074b64bc330ac48f78db \
-	# ExternalData (v. 3.0)
+	# ExternalData (v. 3.1)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ExternalData $MW_HOME/extensions/ExternalData \
 	&& cd $MW_HOME/extensions/ExternalData \
-	&& git checkout -q 73d76e0631f78df42a557b72a8d34e6c53a15b51 \
+	&& git checkout -q 64785b7e2134121d84a77edde9daab5db040e97a \
 	# Favorites
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Favorites $MW_HOME/extensions/Favorites \
 	&& cd $MW_HOME/extensions/Favorites \
 	&& git checkout -q 782afc856a35c37b1a508ce37f7402954cc32efb \
+	# FlexDiagrams (v. 0.4)
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/FlexDiagrams $MW_HOME/extensions/FlexDiagrams \
+	&& cd $MW_HOME/extensions/FlexDiagrams \
+	&& git checkout -q a05d7a450141504cb4df23ef4d077c97d1491228 \
 	# GlobalNotice
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/GlobalNotice $MW_HOME/extensions/GlobalNotice \
 	&& cd $MW_HOME/extensions/GlobalNotice \
@@ -382,7 +387,7 @@ RUN set -x; \
 	# MyVariables
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/MyVariables $MW_HOME/extensions/MyVariables \
 	&& cd $MW_HOME/extensions/MyVariables \
-	&& git checkout -q cde2562ffde8a1b648be10b78b86386a9c7d3151 \
+	&& git checkout -q b03ca9bb5d83bbfe2db6c89cd2bdd7fc6a5e09bf \
 	# NewUserMessage
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/NewUserMessage $MW_HOME/extensions/NewUserMessage \
 	&& cd $MW_HOME/extensions/NewUserMessage \
@@ -439,10 +444,6 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/SemanticDrilldown $MW_HOME/extensions/SemanticDrilldown \
 	&& cd $MW_HOME/extensions/SemanticDrilldown \
 	&& git checkout -q 873780260cf7d7999cb8434d3cf87aca4bd7368a \
-	# SemanticExternalQueryLookup (WikiTeq's fork)
-	&& git clone --single-branch -b master https://github.com/WikiTeq/SemanticExternalQueryLookup.git $MW_HOME/extensions/SemanticExternalQueryLookup \
-	&& cd $MW_HOME/extensions/SemanticExternalQueryLookup \
-	&& git checkout -q dd7810061f2f1a9eef7be5ee09da999cbf9ecd8a \
 	# SimpleChanges
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SimpleChanges $MW_HOME/extensions/SimpleChanges \
 	&& cd $MW_HOME/extensions/SimpleChanges \
@@ -503,10 +504,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Variables $MW_HOME/extensions/Variables \
 	&& cd $MW_HOME/extensions/Variables \
 	&& git checkout -q e20f4c7469bdc724ccc71767ed86deec3d1c3325 \
-	# VEForAll TODO (version 0.3, master), switch back to REL_x for 1.36
+	# VEForAll (v. 0.4)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/VEForAll $MW_HOME/extensions/VEForAll \
 	&& cd $MW_HOME/extensions/VEForAll \
-	&& git checkout -q 8f83eb6e607b89f6e1a44966e8637cadd7942bd7 \
+	&& git checkout -q d0aec153e80b6604739aeffb60381f52d921db51 \
 	# VoteNY
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/VoteNY $MW_HOME/extensions/VoteNY \
 	&& cd $MW_HOME/extensions/VoteNY \
@@ -527,10 +528,10 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/WikiSEO $MW_HOME/extensions/WikiSEO \
 	&& cd $MW_HOME/extensions/WikiSEO \
 	&& git checkout -q 2c0a40267e9e1abd087cf3fd378cc508b8562f9f \
-	# Wiretap
-	&& git clone https://github.com/enterprisemediawiki/Wiretap.git $MW_HOME/extensions/Wiretap \
-	&& cd $MW_HOME/extensions/Wiretap \
-	&& git checkout -q a97b708c3093ea66e7cf625859b1b38178526bab
+	# WSOAuth (v. 5.0)
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/WSOAuth $MW_HOME/extensions/WSOAuth \
+	&& cd $MW_HOME/extensions/WSOAuth \
+	&& git checkout -q 4a08a825b0a667f0a6834f58844af5fd250ceae8
 
 # ReplaceText (switch to more recent commit due to bug on submodule HEAD)
 RUN set -x; \
@@ -626,7 +627,9 @@ RUN set -x; \
     # Dirty hack for SemanticMediawiki
     && sed -i "s/#cfLoadExtension('SemanticMediaWiki');/#enableSemantics('localhost');/g" $MW_ORIGIN_FILES/installedExtensions.txt \
     && cd $MW_HOME/skins \
-    && for i in $(ls -d */); do echo "#cfLoadSkin('${i%%/}');"; done > $MW_ORIGIN_FILES/installedSkins.txt
+    && for i in $(ls -d */); do echo "#cfLoadSkin('${i%%/}');"; done > $MW_ORIGIN_FILES/installedSkins.txt \
+    #Loads Vector skin by default in the LocalSettings.php
+    && sed -i "s/#cfLoadSkin('Vector');/cfLoadSkin('Vector');/" $MW_ORIGIN_FILES/installedSkins.txt
 
 # Move files around
 RUN set -x; \

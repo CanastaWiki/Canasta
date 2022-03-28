@@ -42,7 +42,6 @@ Canasta supports two orchestrators for managing the stack: Docker Compose and Ku
   * Database password: `mediawiki` (by default; see `Configuration` section)
 * Place your new `LocalSettings.php` in the `config/` directory
 * Run `docker-compose down`, then `docker-compose up -d` (this is important because it initializes your `LocalSettings.php` for Canasta)
-* Uncomment `cfLoadSkin('Vector');` in `LocalSettings.php`
 * Visit your wiki at `http://localhost`
 
 ## Configuration
@@ -72,26 +71,26 @@ intended to be used for migrations only.
 
 ## Enabling extensions
 In `LocalSettings.php` you will find a full list of extensions bundled with the image;
-remove the `#` comment symbol near the extension to enable it, e.g.:
+remove the `#` comment symbol near an extension to enable it, e.g.:
 
 ```php
-#cfLoadExtension('Cite');
+#cfLoadExtension( 'Cite' );
 ```
 
 ```php
-cfLoadExtension('Cite');
+cfLoadExtension( 'Cite' );
 ```
 
 ## Enabling skins
 In `LocalSettings.php` you will find a full list of skins bundled with the image;
-remove the `#` comment symbol near the skin to enable it, e.g.:
+remove the `#` comment symbol near a skin to enable it, e.g.:
 
 ```php
-#cfLoadSkin('Vector');
+#cfLoadSkin( 'Timeless' );
 ```
 
 ```php
-cfLoadSkin('Vector');
+cfLoadSkin( 'Timeless' );
 ```
 
 ## Installing 3rd party extensions
@@ -99,15 +98,15 @@ In order to install a 3rd party extension, simply place it in the `./extensions`
 directory and add a `wfLoadExtension` call to `./config/LocalSettings.php`, e.g.:
 
 ```php
-wfLoadExtension('MyCustomExtension');
+wfLoadExtension( 'MyCustomExtension' );
 ```
 
 ## Installing 3rd party skins
 In order to install a 3rd party skin, simply place it in the `./skins`
-directory and add `wfLoadSkin` call to `./config/LocalSettings.php`, e.g.:
+directory and add a `wfLoadSkin` call to `./config/LocalSettings.php`, e.g.:
 
 ```php
-wfLoadSkin('MyCustomSkin');
+wfLoadSkin( 'MyCustomSkin' );
 ```
 
 # Components
