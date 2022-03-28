@@ -5,14 +5,11 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
 
-function getCanastaLocalSettingsFilePath() {
-	return getenv( 'MW_VOLUME' ) . '/config/LocalSettings.php';
-}
-
+$canastaLocalSettingsFilePath = getenv( 'MW_VOLUME' ) . '/config/LocalSettings.php';
 if ( defined( 'MW_CONFIG_CALLBACK' ) ) {
 	// Called from WebInstaller or similar entry point
 
-	if ( !file_exists( getCanastaLocalSettingsFilePath() ) ) {
+	if ( !file_exists( $canastaLocalSettingsFilePath ) ) {
 		// Remove all variables, WebInstaller should decide that "$IP/LocalSettings.php" does not exist.
 		$vars = array_keys( get_defined_vars() );
 		foreach( $vars as $v => $k ) {
@@ -25,7 +22,6 @@ if ( defined( 'MW_CONFIG_CALLBACK' ) ) {
 // WebStart entry point
 
 // Check that user's LocalSettings.php exists
-$canastaLocalSettingsFilePath = getCanastaLocalSettingsFilePath();
 if ( !is_readable( $canastaLocalSettingsFilePath ) ) {
 	// Emulate that "$IP/LocalSettings.php" does not exist
 
