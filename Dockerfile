@@ -1,4 +1,4 @@
-FROM debian:10 as base
+FROM debian:bullseye as base
 
 LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/WikiWorks/Canasta
@@ -20,29 +20,27 @@ RUN set x; \
 	&& apt-get install -y aptitude \
     && aptitude -y upgrade \
     && aptitude install -y \
-    git=1:2.20.1-2+deb10u3 \
-    apache2=2.4.38-3+deb10u5 \
-    software-properties-common=0.96.20.2-2 \
-	gpg=2.2.12-1+deb10u1 \
-	apt-transport-https=1.8.2.3 \
-	ca-certificates=20200601~deb10u2 \
-	wget=1.20.1-1.1 \
-	imagemagick=8:6.9.10.23+dfsg-2.1+deb10u1  \
-	python-pygments=2.3.1+dfsg-1+deb10u2 \
-	msmtp=1.8.3-1 \
-	msmtp-mta=1.8.3-1 \
-	patch=2.7.6-3+deb10u1 \
-	vim=2:8.1.0875-5 \
-	mc=3:4.8.22-1 \
-	ffmpeg=7:4.1.6-1~deb10u1 \
-	curl=7.64.0-4+deb10u2 \
-	unzip=6.0-23+deb10u2 \
-	gnupg=2.2.12-1+deb10u1 \
-	default-mysql-client=1.0.5 \
-	rsync=3.1.3-6 \
+    git=1:2.30.2-1 \
+    apache2=2.4.53-1~deb11u1 \
+    software-properties-common=0.96.20.2-2.1 \
+	gpg=2.2.27-2+deb11u1 \
+	apt-transport-https=2.2.4 \
+	ca-certificates=20210119 \
+	wget=1.21-1+deb11u1 \
+	imagemagick=8:6.9.11.60+dfsg-1.3  \
+	python3-pygments=2.7.1+dfsg-2.1 \
+	msmtp=1.8.11-2.1 \
+	msmtp-mta=1.8.11-2.1 \
+	patch=2.7.6-7 \
+	vim=2:8.2.2434-3+deb11u1 \
+	mc=3:4.8.26-1.1 \
+	ffmpeg=7:4.3.3-0+deb11u1 \
+	curl=7.74.0-1.3+deb11u1 \
+	unzip=6.0-26 \
+	gnupg=2.2.27-2+deb11u1 \
+	default-mysql-client=1.0.7 \
+	rsync=3.2.3-4+deb11u1 \
     lynx \
-    && wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \
-    && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list \
     && aptitude update \
     && aptitude install -y \
     php7.4 \
