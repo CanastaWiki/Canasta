@@ -21,7 +21,7 @@ RUN set x; \
     && aptitude -y upgrade \
     && aptitude install -y \
     git=1:2.30.2-1 \
-    apache2=2.4.51-1~deb11u1 \
+    apache2=2.4.53-1~deb11u \
     software-properties-common=0.96.20.2-2.1 \
 	gpg=2.2.27-2 \
 	apt-transport-https=2.2.4 \
