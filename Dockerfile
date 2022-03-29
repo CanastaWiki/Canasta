@@ -41,7 +41,6 @@ RUN set x; \
 	default-mysql-client=1.0.7 \
 	rsync=3.2.3-4+deb11u1 \
     lynx \
-    && wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \
     && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list \
     && aptitude update \
     && aptitude install -y \
