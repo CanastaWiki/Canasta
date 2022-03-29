@@ -21,7 +21,7 @@ RUN set x; \
     && aptitude -y upgrade \
     && aptitude install -y \
     git=1:2.30.2-1 \
-    apache2=2.4.53-1~deb11u \
+    apache2=2.4.53-1~deb11u1 \
     software-properties-common=0.96.20.2-2.1 \
 	gpg=2.2.27-2 \
 	apt-transport-https=2.2.4 \
@@ -41,7 +41,6 @@ RUN set x; \
 	default-mysql-client=1.0.7 \
 	rsync=3.2.3-4+deb11u1 \
     lynx \
-    && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list \
     && aptitude update \
     && aptitude install -y \
     php7.4 \
