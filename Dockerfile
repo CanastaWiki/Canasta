@@ -23,7 +23,7 @@ RUN set x; \
     git=1:2.30.2-1 \
     apache2=2.4.53-1~deb11u1 \
     software-properties-common=0.96.20.2-2.1 \
-	gpg=2.2.27-2 \
+	gpg=2.2.27-2+deb11u1 \
 	apt-transport-https=2.2.4 \
 	ca-certificates=20210119 \
 	wget=1.21-1+deb11u1 \
@@ -37,7 +37,7 @@ RUN set x; \
 	ffmpeg=7:4.3.3-0+deb11u1 \
 	curl=7.74.0-1.3+deb11u1 \
 	unzip=6.0-26 \
-	gnupg=2.2.27-2 \
+	gnupg=2.2.27-2+deb11u1 \
 	default-mysql-client=1.0.7 \
 	rsync=3.2.3-4+deb11u1 \
     lynx \
