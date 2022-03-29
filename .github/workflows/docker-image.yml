@@ -52,7 +52,7 @@ jobs:
         run: |
 
           # Image ID
-          IMAGE_ID=ghcr.io/wikiworks/canasta
+          IMAGE_ID=ghcr.io/canastawiki/canasta
 
           # Date
           BDATE=$(date +%Y%m%d)
