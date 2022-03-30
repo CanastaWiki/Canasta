@@ -31,8 +31,8 @@ services:
       - MW_SITEMAP_SUBDIR
       - MW_SITEMAP_IDENTIFIER
     volumes:
-      - ./extensions:/var/www/mediawiki/w/extensions
-      - ./skins:/var/www/mediawiki/w/skins
+      - ./extensions:/var/www/mediawiki/w/user-extensions
+      - ./skins:/var/www/mediawiki/w/user-skins
       - ./config:/mediawiki/config
       - ./images:/mediawiki/images
       - sitemap:/mediawiki/sitemap
