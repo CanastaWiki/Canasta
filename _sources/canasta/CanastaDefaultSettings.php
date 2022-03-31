@@ -35,10 +35,6 @@ if ( !is_readable( $canastaLocalSettingsFilePath ) ) {
 
 // Canasta default settings below
 
-# Use custom "user-" prefixed path for extensions and skins
-$wgExtensionDirectory = "$IP/user-extensions";
-$wgStyleDirectory = "$IP/user-skins";
-
 ## The URL base path to the directory containing the wiki;
 ## defaults for all runtime URL paths are based off of this.
 ## For more information on customizing the URLs
@@ -47,7 +43,13 @@ $wgStyleDirectory = "$IP/user-skins";
 $wgScriptPath = "/w";
 $wgScriptExtension = ".php";
 $wgArticlePath = '/wiki/$1';
-$wgStylePath = $wgScriptPath . '/canasta-skins';
+
+# Use custom "user-" prefixed path for extensions
+$wgExtensionDirectory = "$IP/user-extensions";
+$wgExtensionAssetsPath = $wgScriptPath . '/user-extensions';
+# ..and for skins
+$wgStyleDirectory = "$IP/user-skins";
+$wgStylePath = $wgScriptPath . '/user-skins';
 
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
