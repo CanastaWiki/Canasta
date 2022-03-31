@@ -549,7 +549,7 @@ RUN set -x; \
 	&& git apply /tmp/core-fix-composer-for-GoogleAnalyticsMetrics.diff
 
 # Composer dependencies
-COPY _sources/configs/composer.local.json $MW_HOME/composer.local.json
+COPY _sources/configs/composer.canasta.json $MW_HOME/composer.local.json
 RUN set -x; \
 	cd $MW_HOME \
 	&& composer update --no-dev \

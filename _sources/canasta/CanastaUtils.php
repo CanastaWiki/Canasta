@@ -9,12 +9,12 @@ if ( !defined( 'MEDIAWIKI' ) ) {
  * @param $extName
  */
 function cfLoadExtension( $extName ) {
-	global $wgExtensionDirectory, $wgExtensionAssetsPath;
+	global $wgExtensionDirectory, $wgExtensionAssetsPath, $IP, $wgScriptPath;
 
 	$realExtDirectory = $wgExtensionDirectory;
 	$realExtAssetsPath = $wgExtensionAssetsPath;
-	$wgExtensionDirectory .= '/../canasta-extensions';
-	$wgExtensionAssetsPath .= '/../canasta-extensions';
+	$wgExtensionDirectory = $IP . '/canasta-extensions';
+	$wgExtensionAssetsPath = $wgScriptPath . '/canasta-extensions';
 	wfLoadExtension( $extName );
 	$wgExtensionDirectory = $realExtDirectory;
 	$wgExtensionAssetsPath = $realExtAssetsPath;
@@ -24,12 +24,12 @@ function cfLoadExtension( $extName ) {
  * @param $skinName
  */
 function cfLoadSkin( $skinName ) {
-	global $wgStyleDirectory, $wgStylePath;
+	global $wgStyleDirectory, $wgStylePath, $IP, $wgScriptPath;
 
 	$realStyleDirectory = $wgStyleDirectory;
 	$realStylePath = $wgStylePath;
-	$wgStyleDirectory .= '/../canasta-skins';
-	$wgStylePath .= '/../canasta-skins';
+	$wgStyleDirectory = $IP . '/canasta-skins';
+	$wgStylePath = $wgScriptPath . '/canasta-skins';
 	wfLoadSkin( $skinName );
 	$wgStyleDirectory = $realStyleDirectory;
 	$wgStylePath = $realStylePath;
