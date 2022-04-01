@@ -62,9 +62,9 @@ volumed in as `mediawiki/config/LocalSettings.php -> /var/www/mediawiki/w/LocalS
 * `./images` - persistent bind-mount which stores the wiki images,
 volumed in as `mediawiki/images -> /var/www/mediawiki/w/images`
 * `./skins` - persistent bind-mount which stores 3rd party skins,
-volumed in as `/var/www/mediawiki/w/skins`
+volumed in as `/var/www/mediawiki/w/user-skins`
 * `./extensions` - persistent bind-mount which stores 3rd party extensions,
-volumed in as `/var/www/mediawiki/w/extensions`
+volumed in as `/var/www/mediawiki/w/user-extensions`
 * `./_initdb` - persistent bind-mount which can be used to initialize the database container
 with a mysql dump. You can place `.sql` or `.gz` database dump there. This is optional and
 intended to be used for migrations only.
@@ -100,6 +100,25 @@ directory and add a `wfLoadExtension` call to `./config/LocalSettings.php`, e.g.
 ```php
 wfLoadExtension( 'MyCustomExtension' );
 ```
+
+### Composer packages
+If 3rd party extension requires some Composer packages to be installed just add
+a `config/composer.local.json` file with `merge-plugin` syntax and include extension `composer.json` there, eg:
+
+```json
+{
+	"extra": {
+		"merge-plugin": {
+			"include": [
+                "user-extensions/SomeExtension/composer.json"
+			]
+		}
+	}
+}
+```
+
+Note: the `require` section of the `config/composer.local.json` is ignored, thus you won't be able to install new
+extensions via Composer, only dependencies
 
 ## Installing 3rd party skins
 In order to install a 3rd party skin, simply place it in the `./skins`
