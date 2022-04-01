@@ -102,23 +102,24 @@ wfLoadExtension( 'MyCustomExtension' );
 ```
 
 ### Composer packages
-If 3rd party extension requires some Composer packages to be installed just add
-a `config/composer.local.json` file with `merge-plugin` syntax and include extension `composer.json` there, eg:
+If a 3rd party extension requires some Composer packages to be installed, just create
+a `config/composer.local.json` file (if one is not there already) and add to it
+`merge-plugin` syntax that includes the extension's `composer.json` file, e.g.:
 
 ```json
 {
 	"extra": {
 		"merge-plugin": {
 			"include": [
-                "user-extensions/SomeExtension/composer.json"
+				"user-extensions/SomeExtension/composer.json"
 			]
 		}
 	}
 }
 ```
 
-Note: the `require` section of the `config/composer.local.json` is ignored, thus you won't be able to install new
-extensions via Composer, only dependencies
+Note: the `require` section of `config/composer.local.json` is ignored; thus
+you won't be able to install new extensions via Composer, only dependencies.
 
 ## Installing 3rd party skins
 In order to install a 3rd party skin, simply place it in the `./skins`
