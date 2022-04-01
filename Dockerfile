@@ -4,7 +4,7 @@ LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
 
 ENV MW_VERSION=REL1_35 \
-	MW_CORE_VERSION=1.35.5 \
+	MW_CORE_VERSION=1.35.6 \
 	WWW_ROOT=/var/www/mediawiki \
 	MW_HOME=/var/www/mediawiki/w \
 	MW_ORIGIN_FILES=/mw_origin_files \
@@ -82,6 +82,7 @@ FROM base as source
 RUN set -x; \
 	git clone --depth 1 -b $MW_CORE_VERSION https://gerrit.wikimedia.org/r/mediawiki/core.git $MW_HOME \
 	&& cd $MW_HOME \
+	&& git checkout -q ee3376f345e5c329e21ebd5d82a92db2cc50fb8e \
 	&& git submodule update --init --recursive \
     # VisualEditor
     && cd extensions/VisualEditor \
