@@ -28,6 +28,7 @@ RUN set x; \
 	ca-certificates=20210119 \
 	wget=1.21-1+deb11u1 \
 	imagemagick=8:6.9.11.60+dfsg-1.3  \
+	librsvg2-bin=2.50.3+dfsg-1 \
 	python3-pygments=2.7.1+dfsg-2.1 \
 	msmtp=1.8.11-2.1 \
 	msmtp-mta=1.8.11-2.1 \
