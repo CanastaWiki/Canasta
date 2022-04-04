@@ -402,10 +402,10 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/OpenIDConnect $MW_HOME/extensions/OpenIDConnect \
 	&& cd $MW_HOME/extensions/OpenIDConnect \
 	&& git checkout -q b44189a2fb29ee45330c64bcf57d6537f63b18df \
-	# PageExchange
+	# PageExchange (v. 0.4.1)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/PageExchange $MW_HOME/extensions/PageExchange \
 	&& cd $MW_HOME/extensions/PageExchange \
-	&& git checkout -q 59d6d64fce6cbe40de6ebe07a0f3d65635aea30e \
+	&& git checkout -q d55d5e91963fa72c6b1f6bf4304493bfe7500bd5 \
 	# PageForms (v. 5.3.4)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms $MW_HOME/extensions/PageForms \
 	&& cd $MW_HOME/extensions/PageForms \
