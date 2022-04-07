@@ -82,7 +82,6 @@ FROM base as source
 RUN set -x; \
 	git clone --depth 1 -b $MW_CORE_VERSION https://gerrit.wikimedia.org/r/mediawiki/core.git $MW_HOME \
 	&& cd $MW_HOME \
-	&& git checkout -q ee3376f345e5c329e21ebd5d82a92db2cc50fb8e \
 	&& git submodule update --init --recursive \
     # VisualEditor
     && cd extensions/VisualEditor \
