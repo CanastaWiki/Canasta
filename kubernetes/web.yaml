@@ -40,7 +40,7 @@ spec:
               value: 10M
             - name: PHP_UPLOAD_MAX_FILESIZE
               value: 10M
-          image: ghcr.io/wikiworks/canasta:latest
+          image: ghcr.io/canastawiki/canasta:latest
           imagePullPolicy: Always
           name: web
           ports:
