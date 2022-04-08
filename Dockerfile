@@ -696,6 +696,8 @@ RUN set -x; \
     && sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf \
     && a2enmod expires
 
+COPY _sources/images/Powered-by-Canasta.png /var/www/mediawiki/w/resources/assets/
+
 EXPOSE 80
 WORKDIR $MW_HOME
 
