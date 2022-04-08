@@ -1,7 +1,7 @@
 FROM debian:bullseye as base
 
 LABEL maintainers=""
-LABEL org.opencontainers.image.source=https://github.com/WikiWorks/Canasta
+LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
 
 ENV MW_VERSION=REL1_35 \
 	MW_CORE_VERSION=1.35.5 \
