@@ -606,7 +606,7 @@ RUN set -x; \
 COPY _sources/patches/bootstrap-path.patch /tmp/bootstrap-path.patch
 RUN set -x; \
     cd $MW_HOME/extensions/Bootstrap \
-    && git apply /tmp/bootstrap-path.patch
+    && patch -p1 < /tmp/bootstrap-path.patch
 
 COPY _sources/patches/chameleon-path.patch /tmp/chameleon-path.patch
 RUN set -x; \
