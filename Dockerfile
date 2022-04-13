@@ -678,6 +678,7 @@ COPY _sources/configs/php_timeouts.ini /etc/php/7.4/apache2/conf.d/
 COPY _sources/scripts/*.sh /
 COPY _sources/configs/robots.txt $WWW_ROOT/
 COPY _sources/configs/.htaccess $WWW_ROOT/
+COPY _sources/images/favicon.ico $WWW_ROOT/
 COPY _sources/canasta/LocalSettings.php _sources/canasta/CanastaUtils.php _sources/canasta/CanastaDefaultSettings.php $MW_HOME/
 COPY _sources/canasta/getMediawikiSettings.php /
 COPY _sources/configs/mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
