@@ -19,6 +19,7 @@
 				"%MW_VOLUME%/config/composer.local.json",
 				"extensions/AbuseFilter/composer.json",
 				"extensions/CirrusSearch/composer.json",
+				"extensions/DataTransfer/composer.json",
 				"extensions/Elastica/composer.json",
 				"extensions/OATHAuth/composer.json",
 				"extensions/TimedMediaHandler/composer.json",
