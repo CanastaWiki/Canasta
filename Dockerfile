@@ -15,7 +15,7 @@ ENV MW_VERSION=REL1_35 \
 
 # System setup
 RUN set x; \
-	apt-get clean \
+	&& apt-get clean \
 	&& apt-get update \
 	&& apt-get install -y aptitude xsltproc fop \
     && aptitude -y upgrade \
