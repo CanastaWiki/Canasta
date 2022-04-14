@@ -209,7 +209,7 @@ RUN set -x; \
 	# DataTransfer (v. 1.4)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/DataTransfer $MW_HOME/extensions/DataTransfer \
 	&& cd $MW_HOME/extensions/DataTransfer \
-	&& git checkout -q 6000d27db2da7cbb2a7d674891acd5c36a202306 \
+	&& git checkout -q 70b1911e695b3f01d0f3d059308888bc8fec361c \
 	# Description2
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Description2 $MW_HOME/extensions/Description2 \
 	&& cd $MW_HOME/extensions/Description2 \
