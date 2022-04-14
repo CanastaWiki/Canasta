@@ -542,6 +542,12 @@ RUN set -x; \
     tar -xvf /tmp/GTag*.tar.gz -C $MW_HOME/extensions \
     && rm /tmp/GTag*.tar.gz
 
+# GoogleAnalyticsMetrics: Resolve composer conflicts, so placed before the composer install statement!
+COPY _sources/patches/core-fix-composer-for-GoogleAnalyticsMetrics.diff /tmp/core-fix-composer-for-GoogleAnalyticsMetrics.diff
+RUN set -x; \
+	cd $MW_HOME \
+	&& git apply /tmp/core-fix-composer-for-GoogleAnalyticsMetrics.diff
+
 # Composer dependencies
 COPY _sources/configs/composer.canasta.json $MW_HOME/composer.local.json
 RUN set -x; \
