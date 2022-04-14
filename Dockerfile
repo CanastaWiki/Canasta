@@ -55,6 +55,7 @@ RUN set x; \
     php7.4-apcu \
     php7.4-redis \
     php7.4-curl \
+    php7.4-zip \
     && aptitude clean \
     && rm -rf /var/lib/apt/lists/*
 
