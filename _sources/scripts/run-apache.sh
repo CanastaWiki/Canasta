@@ -176,19 +176,19 @@ run_composer () {
 }
 
 check_mount_points () {
-  # Check for $MW_HOME/extensions presence and bow out if it's in place
-  if [ -d "$MW_HOME/extensions" ]; then
+  # Check for $MW_HOME/user-extensions presence and bow out if it's in place
+  if [ -d "$MW_HOME/user-extensions" ]; then
     # Do no composer updates if the directory is in place because this means that
     # the directory is probably mounted from host and the mount point was not updated to user-extensions
-    echo "WARNING! $MW_HOME/extensions is an incorrect mount point, please re-mount to $MW_HOME/user-extensions"
+    echo "WARNING! As of Canasta 1.1.0, $MW_HOME/user-extensions is an incorrect mount point! Please update your Docker Compose stack to 1.1.0 and re-mount to $MW_HOME/extensions."
     exit 1
   fi
 
-  # Check for $MW_HOME/extensions presence and bow out if it's in place
-  if [ -d "$MW_HOME/skins" ]; then
+  # Check for $MW_HOME/user-skins presence and bow out if it's in place
+  if [ -d "$MW_HOME/user-skins" ]; then
     # Do no composer updates if the directory is in place because this means that
     # the directory is probably mounted from host and the mount point was not updated to user-extensions
-    echo "WARNING! $MW_HOME/skins is an incorrect mount point, please re-mount to $MW_HOME/user-skins"
+    echo "WARNING! As of Canasta 1.1.0, $MW_HOME/user-skins is an incorrect mount point! Please update your Docker Compose stack to 1.1.0 and re-mount to $MW_HOME/skins."
     exit 1
   fi
 }
