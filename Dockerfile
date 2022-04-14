@@ -17,7 +17,7 @@ ENV MW_VERSION=REL1_35 \
 RUN set x; \
 	apt-get clean \
 	&& apt-get update \
-	&& apt-get install -y aptitude \
+	&& apt-get install -y aptitude xsltproc fop \
     && aptitude -y upgrade \
     && aptitude install -y \
     git=1:2.30.2-1 \
@@ -55,6 +55,7 @@ RUN set x; \
     php7.4-apcu \
     php7.4-redis \
     php7.4-curl \
+	php7.4-zip \
     && aptitude clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -230,6 +231,10 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/DisplayTitle $MW_HOME/extensions/DisplayTitle \
 	&& cd $MW_HOME/extensions/DisplayTitle \
 	&& git checkout -q 4f3f66c524465b26b3ee66029a4500966ba29ab2 \
+	# DocBookExport
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/DocBookExport $MW_HOME/extensions/DocBookExport \
+	&& cd $MW_HOME/extensions/DocBookExport \
+	&& git checkout -q 1009abc84ed7b5b56b6a3d3054b0be4cfe0c4862 \
 	# Echo
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Echo $MW_HOME/extensions/Echo \
 	&& cd $MW_HOME/extensions/Echo \
@@ -535,6 +540,13 @@ RUN set -x; \
 RUN set -x; \
 	cd $MW_HOME/extensions/ReplaceText \
 	&& git checkout -q 109d24b690b9096863513bdea642f88c062a3b0b
+
+# Dependencies for DocBookExport extension
+RUN set -x; \
+	wget github.com/jgm/pandoc/releases/download/2.16.2/pandoc-2.16.2-1-amd64.deb \
+	&& dpkg -i pandoc-2.16.2-1-amd64.deb \
+	&& git clone https://github.com/nischayn22/html_to_docbook.git \
+	&& mv html_to_docbook /var/www/html
 
 # GTag1
 COPY _sources/extensions/GTag1.2.0.tar.gz /tmp/
