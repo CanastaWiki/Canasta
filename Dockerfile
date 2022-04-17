@@ -4,7 +4,7 @@ LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
 
 ENV MW_VERSION=REL1_35 \
-	MW_CORE_VERSION=1.35.5 \
+	MW_CORE_VERSION=1.35.6 \
 	WWW_ROOT=/var/www/mediawiki \
 	MW_HOME=/var/www/mediawiki/w \
 	MW_ORIGIN_FILES=/mw_origin_files \
@@ -55,7 +55,7 @@ RUN set x; \
     php7.4-apcu \
     php7.4-redis \
     php7.4-curl \
-	php7.4-zip \
+    php7.4-zip \
     && aptitude clean \
     && rm -rf /var/lib/apt/lists/*
 
