@@ -45,13 +45,7 @@ if ( !is_readable( $canastaLocalSettingsFilePath ) ) {
 $wgScriptPath = "/w";
 $wgScriptExtension = ".php";
 $wgArticlePath = '/wiki/$1';
-
-# Use custom "user-" prefixed path for extensions
-$wgExtensionDirectory = "$IP/user-extensions";
-$wgExtensionAssetsPath = $wgScriptPath . '/user-extensions';
-# ..and for skins
-$wgStyleDirectory = "$IP/user-skins";
-$wgStylePath = $wgScriptPath . '/user-skins';
+$wgStylePath = $wgScriptPath . '/skins';
 
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
