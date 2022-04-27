@@ -131,64 +131,16 @@ run_autoupdate () {
     echo "Auto-update completed"
 }
 
-replace_env_var_in_composer_json_file() {
-    sed -i 's#%MW_VOLUME%#'"$MW_VOLUME"'#g' "$MW_HOME/composer.local.json"
-}
-
-run_composer () {
-  echo "Running Composer updates.."
-  # The below command will do the following things:
-  # 1. Install everything listed on $MW_HOME/composer.local.json both "require" and "merge-plugin" sections
-  # 2. Install everything listed on $MW_VOLUME/config/composer.local.json "merge-plugin" section
-  # 3. Wipe $MW_HOME/vendor/autoload_.. files and generate new ones
-  # 4. All the extensions listed on the composer files above will land to $MW_HOME/extensions (not needed)
-  # 4. All the skins listed on the composer files above will land to $MW_HOME/skins (not needed)
-
-  # Due to "check_mount_points" method being called before this one we assume that
-  # neither extensions nor skins directory does not exist, so we can
-  # create temporary symlinks to match the original state for when the packages were installed during build stage
-  cp -ar "$MW_HOME/canasta-extensions" "$MW_HOME/canasta-extensions-snapshot"
-  cp -ar "$MW_HOME/canasta-skins" "$MW_HOME/canasta-skins-snapshot"
-  # Symlink from snapshots to default paths used by composer/installers
-  ln -s "$MW_HOME/canasta-extensions-snapshot" "$MW_HOME/extensions"
-  ln -s "$MW_HOME/canasta-skins-snapshot" "$MW_HOME/skins"
-
-  composer update --no-dev
-  echo "Fixing up composer autoload files.."
-  # Fix up future use of canasta-extensions directory for composer autoload
-  sed -i 's/extensions/canasta-extensions/g' "$MW_HOME/vendor/composer/autoload_static.php" \
-  && sed -i 's/extensions/canasta-extensions/g' "$MW_HOME/vendor/composer/autoload_files.php" \
-  && sed -i 's/extensions/canasta-extensions/g' "$MW_HOME/vendor/composer/autoload_classmap.php" \
-  && sed -i 's/extensions/canasta-extensions/g' "$MW_HOME/vendor/composer/autoload_psr4.php" \
-  && sed -i 's/skins/canasta-skins/g' "$MW_HOME/vendor/composer/autoload_static.php" \
-  && sed -i 's/skins/canasta-skins/g' "$MW_HOME/vendor/composer/autoload_files.php" \
-  && sed -i 's/skins/canasta-skins/g' "$MW_HOME/vendor/composer/autoload_classmap.php" \
-  && sed -i 's/skins/canasta-skins/g' "$MW_HOME/vendor/composer/autoload_psr4.php"
-  # Wipe symlinks and snapshot directories
-  rm "$MW_HOME/extensions"
-  rm "$MW_HOME/skins"
-  rm -rf "$MW_HOME/canasta-extensions-snapshot"
-  rm -rf "$MW_HOME/canasta-skins-snapshot"
-  # Fix permissions
-  #! chown -R "$WWW_GROUP":"$WWW_GROUP" "$MW_HOME"
-  # Done
-  echo "Composer updates completed"
-}
-
 check_mount_points () {
   # Check for $MW_HOME/user-extensions presence and bow out if it's in place
   if [ -d "$MW_HOME/user-extensions" ]; then
-    # Do no composer updates if the directory is in place because this means that
-    # the directory is probably mounted from host and the mount point was not updated to user-extensions
-    echo "WARNING! As of Canasta 1.1.0, $MW_HOME/user-extensions is an incorrect mount point! Please update your Docker Compose stack to 1.1.0 and re-mount to $MW_HOME/extensions."
+    echo "WARNING! As of Canasta 1.0.1, $MW_HOME/user-extensions is an incorrect mount point! Please update your Docker Compose stack to 1.0.1 and re-mount to $MW_HOME/extensions."
     exit 1
   fi
 
   # Check for $MW_HOME/user-skins presence and bow out if it's in place
   if [ -d "$MW_HOME/user-skins" ]; then
-    # Do no composer updates if the directory is in place because this means that
-    # the directory is probably mounted from host and the mount point was not updated to user-extensions
-    echo "WARNING! As of Canasta 1.1.0, $MW_HOME/user-skins is an incorrect mount point! Please update your Docker Compose stack to 1.1.0 and re-mount to $MW_HOME/skins."
+    echo "WARNING! As of Canasta 1.0.1, $MW_HOME/user-skins is an incorrect mount point! Please update your Docker Compose stack to 1.0.1 and re-mount to $MW_HOME/skins."
     exit 1
   fi
 }
@@ -196,20 +148,11 @@ check_mount_points () {
 # Wait db
 waitdatabase
 
-replace_env_var_in_composer_json_file
-
-# Warning! This is a breaking change, this check will prevent the container from starting on
-# outdated extensions and skins directories mounting scheme
+# Check for `user-` prefixed mounts and bow out if found
 check_mount_points
 
 sleep 1
 cd "$MW_HOME" || exit
-
-########## Run Composer updates #############
-echo "Checking for custom composer.local.json file.."
-if [ -e "$MW_VOLUME/config/composer.local.json" ]; then
-  run_composer
-fi
 
 ########## Run maintenance scripts ##########
 echo "Checking for LocalSettings.."
