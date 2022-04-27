@@ -134,13 +134,13 @@ run_autoupdate () {
 check_mount_points () {
   # Check for $MW_HOME/user-extensions presence and bow out if it's in place
   if [ -d "$MW_HOME/user-extensions" ]; then
-    echo "WARNING! As of Canasta 1.0.1, $MW_HOME/user-extensions is an incorrect mount point! Please update your Docker Compose stack to 1.0.1 and re-mount to $MW_HOME/extensions."
+    echo "WARNING! As of Canasta 1.1.0, $MW_HOME/user-extensions is an incorrect mount point! Please update your Docker Compose stack to 1.1.0 and re-mount to $MW_HOME/extensions."
     exit 1
   fi
 
   # Check for $MW_HOME/user-skins presence and bow out if it's in place
   if [ -d "$MW_HOME/user-skins" ]; then
-    echo "WARNING! As of Canasta 1.0.1, $MW_HOME/user-skins is an incorrect mount point! Please update your Docker Compose stack to 1.0.1 and re-mount to $MW_HOME/skins."
+    echo "WARNING! As of Canasta 1.1.0, $MW_HOME/user-skins is an incorrect mount point! Please update your Docker Compose stack to 1.1.0 and re-mount to $MW_HOME/skins."
     exit 1
   fi
 }
