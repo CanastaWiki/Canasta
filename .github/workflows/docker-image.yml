@@ -56,6 +56,9 @@ jobs:
 
           # Date
           BDATE=$(date +%Y%m%d)
+          
+          # Extract release version from ./VERSION file
+          RELEASE_VERSION=$(cat VERSION)
 
           # Extract MW version from Dockerfile
           MEDIAWIKI_VERSION=$(sed -nr 's/MW_CORE_VERSION\=([0-9\.]+)/\1/p' Dockerfile | sed "s/ \\\//" | sed "s/\t//")
@@ -96,6 +99,8 @@ jobs:
 
           echo "Final image tag to be pushed:"
           echo $REGISTRY_TAGS
+          echo "Debug RELEASE_VERSION:"
+          echo "Release version is '$RELEASE_VERSION'"
           echo "::set-output name=REGISTRY_TAGS::$REGISTRY_TAGS"
       -
         name: Set up QEMU
