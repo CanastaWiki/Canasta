@@ -7,6 +7,17 @@ get_mediawiki_variable () {
     php /getMediawikiSettings.php --variable="$1" --format="${2:-string}"
 }
 
+isTrue() {
+    case $1 in
+        "True" | "TRUE" | "true" | 1)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
 dir_is_writable() {
   # Use -L to get information about the target of a symlink,
   # not the link itself, as pointed out in the comments
@@ -101,7 +112,7 @@ transcoder() {
 
 sitemapgen() {
     sleep 3
-    if [ "$MW_ENABLE_SITEMAP_GENERATOR" = true ]; then
+    if isTrue "$MW_ENABLE_SITEMAP_GENERATOR"; then
         # Fetch & export script path for sitemap generator
         if [ -z "$MW_SCRIPT_PATH" ]; then
           MW_SCRIPT_PATH=$(get_mediawiki_variable wgScriptPath)
