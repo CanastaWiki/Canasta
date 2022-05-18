@@ -614,7 +614,7 @@ RUN set -x; \
     cd $MW_HOME/skins/chameleon \
     && git apply /tmp/chameleon-path.patch
 
-COPY _sources/patches/CommentStreams.REL1_35.showSearchHitTitle.diff /tmp/CommentStreams.REL1_35.showSearchHitTitle.diff
+COPY _sources/patches/CommentStreams.REL1_35.showSearchHitTitle.diff /tmp/patches/CommentStreams.REL1_35.showSearchHitTitle.diff
 RUN set -x; \
     cd $MW_HOME/extensions/CommentStreams \
     && git apply /tmp/patches/CommentStreams.REL1_35.showSearchHitTitle.diff
