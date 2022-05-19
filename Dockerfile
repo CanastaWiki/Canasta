@@ -1,10 +1,10 @@
 FROM debian:bullseye as base
 
 LABEL maintainers=""
-LABEL org.opencontainers.image.source=https://github.com/WikiWorks/Canasta
+LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
 
 ENV MW_VERSION=REL1_35 \
-	MW_CORE_VERSION=1.35.5 \
+	MW_CORE_VERSION=1.35.6 \
 	WWW_ROOT=/var/www/mediawiki \
 	MW_HOME=/var/www/mediawiki/w \
 	MW_ORIGIN_FILES=/mw_origin_files \
@@ -55,6 +55,7 @@ RUN set x; \
     php7.4-apcu \
     php7.4-redis \
     php7.4-curl \
+    php7.4-zip \
     && aptitude clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -209,7 +210,7 @@ RUN set -x; \
 	# DataTransfer (v. 1.4)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/DataTransfer $MW_HOME/extensions/DataTransfer \
 	&& cd $MW_HOME/extensions/DataTransfer \
-	&& git checkout -q 6000d27db2da7cbb2a7d674891acd5c36a202306 \
+	&& git checkout -q 70b1911e695b3f01d0f3d059308888bc8fec361c \
 	# Description2
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Description2 $MW_HOME/extensions/Description2 \
 	&& cd $MW_HOME/extensions/Description2 \
@@ -402,10 +403,10 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/OpenIDConnect $MW_HOME/extensions/OpenIDConnect \
 	&& cd $MW_HOME/extensions/OpenIDConnect \
 	&& git checkout -q b44189a2fb29ee45330c64bcf57d6537f63b18df \
-	# PageExchange
+	# PageExchange (v. 0.4.1)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/PageExchange $MW_HOME/extensions/PageExchange \
 	&& cd $MW_HOME/extensions/PageExchange \
-	&& git checkout -q 59d6d64fce6cbe40de6ebe07a0f3d65635aea30e \
+	&& git checkout -q d55d5e91963fa72c6b1f6bf4304493bfe7500bd5 \
 	# PageForms (v. 5.3.4)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms $MW_HOME/extensions/PageForms \
 	&& cd $MW_HOME/extensions/PageForms \
@@ -606,7 +607,7 @@ RUN set -x; \
 COPY _sources/patches/bootstrap-path.patch /tmp/bootstrap-path.patch
 RUN set -x; \
     cd $MW_HOME/extensions/Bootstrap \
-    && git apply /tmp/bootstrap-path.patch
+    && patch -p1 < /tmp/bootstrap-path.patch
 
 COPY _sources/patches/chameleon-path.patch /tmp/chameleon-path.patch
 RUN set -x; \
@@ -656,7 +657,7 @@ ENV MW_ENABLE_JOB_RUNNER=true \
 	MW_JOB_RUNNER_PAUSE=2 \
 	MW_ENABLE_TRANSCODER=true \
 	MW_JOB_TRANSCODER_PAUSE=60 \
-	MW_ENABLE_SITEMAP_GENERATOR=true \
+	MW_ENABLE_SITEMAP_GENERATOR=false \
 	MW_SITEMAP_PAUSE_DAYS=1 \
 	MW_SITEMAP_SUBDIR="" \
 	MW_SITEMAP_IDENTIFIER="mediawiki" \
@@ -678,6 +679,7 @@ COPY _sources/configs/php_timeouts.ini /etc/php/7.4/apache2/conf.d/
 COPY _sources/scripts/*.sh /
 COPY _sources/configs/robots.txt $WWW_ROOT/
 COPY _sources/configs/.htaccess $WWW_ROOT/
+COPY _sources/images/favicon.ico $WWW_ROOT/
 COPY _sources/canasta/LocalSettings.php _sources/canasta/CanastaUtils.php _sources/canasta/CanastaDefaultSettings.php $MW_HOME/
 COPY _sources/canasta/getMediawikiSettings.php /
 COPY _sources/configs/mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
@@ -695,6 +697,8 @@ RUN set -x; \
     # Modify config
     && sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf \
     && a2enmod expires
+
+COPY _sources/images/Powered-by-Canasta.png /var/www/mediawiki/w/resources/assets/
 
 EXPOSE 80
 WORKDIR $MW_HOME

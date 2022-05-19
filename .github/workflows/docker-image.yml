@@ -67,6 +67,9 @@ jobs:
 
           # Strip git ref prefix from version and use it as suffix for version
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          
+          # Get the Canasta version from the "VERSION" file
+          CANASTA_VERSION=$(cat VERSION)
 
           # For pull requests just extract the PR number
           [ "${{ github.event_name }}" == "pull_request" ] && VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\)/merge,\1,')
@@ -84,7 +87,7 @@ jobs:
           REGISTRY_TAGS=$IMAGE_ID:$VERSION
 
           # For master branch also supply an extra tag: <MW_VERSION>-latest,<MW_VERSION>-<DATE>-<SHA>
-          [ "$VERSION" == "latest" ] && REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:$MEDIAWIKI_MAJOR_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-$BDATE-$(git rev-parse --short HEAD)
+          [ "$VERSION" == "latest" ] && REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:$CANASTA_VERSION,$IMAGE_ID:$MEDIAWIKI_MAJOR_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-$BDATE-$(git rev-parse --short HEAD)
 
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
