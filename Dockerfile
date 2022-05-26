@@ -263,10 +263,6 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ExternalData $MW_HOME/extensions/ExternalData \
 	&& cd $MW_HOME/extensions/ExternalData \
 	&& git checkout -q 64785b7e2134121d84a77edde9daab5db040e97a \
-	# Favorites
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Favorites $MW_HOME/extensions/Favorites \
-	&& cd $MW_HOME/extensions/Favorites \
-	&& git checkout -q 782afc856a35c37b1a508ce37f7402954cc32efb \
 	# FlexDiagrams (v. 0.4)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/FlexDiagrams $MW_HOME/extensions/FlexDiagrams \
 	&& cd $MW_HOME/extensions/FlexDiagrams \
