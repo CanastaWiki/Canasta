@@ -102,7 +102,7 @@ jobrunner() {
 
 transcoder() {
     sleep 3
-    if istrue "$MW_ENABLE_TRANSCODER" = true; then
+    if istrue "$MW_ENABLE_TRANSCODER"; then
         echo >&2 Run transcoder
         nice -n 20 runuser -c /mwtranscoder.sh -s /bin/bash "$WWW_USER"
     else
