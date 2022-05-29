@@ -92,7 +92,7 @@ fi
 
 jobrunner() {
     sleep 3
-    if [ "$MW_ENABLE_JOB_RUNNER" = true ]; then
+    if istrue "$MW_ENABLE_JOB_RUNNER"; then
         echo >&2 Run Jobs
         nice -n 20 runuser -c /mwjobrunner.sh -s /bin/bash "$WWW_USER"
     else
@@ -102,7 +102,7 @@ jobrunner() {
 
 transcoder() {
     sleep 3
-    if [ "$MW_ENABLE_TRANSCODER" = true ]; then
+    if istrue "$MW_ENABLE_TRANSCODER" = true; then
         echo >&2 Run transcoder
         nice -n 20 runuser -c /mwtranscoder.sh -s /bin/bash "$WWW_USER"
     else
