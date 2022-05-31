@@ -190,7 +190,7 @@ RUN set -x; \
 	# CommentStreams
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/CommentStreams $MW_HOME/extensions/CommentStreams \
 	&& cd $MW_HOME/extensions/CommentStreams \
-	&& git checkout -q 91161ea4cf31df54229b5881a7f96bcbd6fa48ff \
+	&& git checkout -q 87522c23e95665c6e2aca11799f7852561fbbe9b \
 	# CommonsMetadata
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/CommonsMetadata $MW_HOME/extensions/CommonsMetadata \
 	&& cd $MW_HOME/extensions/CommonsMetadata \
@@ -267,10 +267,6 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ExternalData $MW_HOME/extensions/ExternalData \
 	&& cd $MW_HOME/extensions/ExternalData \
 	&& git checkout -q 64785b7e2134121d84a77edde9daab5db040e97a \
-	# Favorites
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Favorites $MW_HOME/extensions/Favorites \
-	&& cd $MW_HOME/extensions/Favorites \
-	&& git checkout -q 782afc856a35c37b1a508ce37f7402954cc32efb \
 	# FlexDiagrams (v. 0.4)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/FlexDiagrams $MW_HOME/extensions/FlexDiagrams \
 	&& cd $MW_HOME/extensions/FlexDiagrams \
@@ -375,10 +371,6 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/MintyDocs $MW_HOME/extensions/MintyDocs \
 	&& cd $MW_HOME/extensions/MintyDocs \
 	&& git checkout -q 574a593e59951eb2b81c17d69f4252d3ebadc347 \
-	# MobileDetect
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/MobileDetect $MW_HOME/extensions/MobileDetect \
-	&& cd $MW_HOME/extensions/MobileDetect \
-	&& git checkout -q 017464a0f56fa34fd03118d6502f15c9952f9d9a \
 	# MobileFrontend
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/MobileFrontend $MW_HOME/extensions/MobileFrontend \
 	&& cd $MW_HOME/extensions/MobileFrontend \
@@ -668,7 +660,7 @@ ENV MW_ENABLE_JOB_RUNNER=true \
 	MW_JOB_RUNNER_PAUSE=2 \
 	MW_ENABLE_TRANSCODER=true \
 	MW_JOB_TRANSCODER_PAUSE=60 \
-	MW_ENABLE_SITEMAP_GENERATOR=true \
+	MW_ENABLE_SITEMAP_GENERATOR=false \
 	MW_SITEMAP_PAUSE_DAYS=1 \
 	MW_SITEMAP_SUBDIR="" \
 	MW_SITEMAP_IDENTIFIER="mediawiki" \

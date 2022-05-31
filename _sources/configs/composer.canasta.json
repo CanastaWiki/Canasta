@@ -16,7 +16,6 @@
 	"extra": {
 		"merge-plugin": {
 			"include": [
-				"%MW_VOLUME%/config/composer.local.json",
 				"extensions/AbuseFilter/composer.json",
 				"extensions/CirrusSearch/composer.json",
 				"extensions/DataTransfer/composer.json",
