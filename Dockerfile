@@ -36,6 +36,7 @@ RUN set x; \
 	mc=3:4.8.26-1.1 \
 	ffmpeg=7:4.3.3-0+deb11u1 \
 	curl=7.74.0-1.3+deb11u1 \
+	iputils-ping=3:20210202-1 \
 	unzip=6.0-26 \
 	gnupg=2.2.27-2+deb11u1 \
 	default-mysql-client=1.0.7 \
