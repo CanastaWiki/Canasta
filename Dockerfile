@@ -42,6 +42,7 @@ RUN set x; \
 	default-mysql-client=1.0.7 \
 	rsync=3.2.3-4+deb11u1 \
     lynx \
+    poppler-utils \
     && aptitude update \
     && aptitude install -y \
     php7.4 \
