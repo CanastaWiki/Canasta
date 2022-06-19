@@ -607,6 +607,12 @@ RUN set -x; \
     cd $MW_HOME/skins/chameleon \
     && git apply /tmp/chameleon-path.patch
 
+COPY _sources/patches/CommentStreams.REL1_35.core.hook.37a9e60.diff /tmp/CommentStreams.REL1_35.core.hook.37a9e60.diff
+# TODO: the Hooks is added in REL1_38, remove the patch once the core is updated to 1.38
+RUN set -x; \
+    cd $MW_HOME \
+    && git apply /tmp/CommentStreams.REL1_35.core.hook.37a9e60.diff
+
 # Cleanup all .git leftovers
 RUN set -x; \
     cd $MW_HOME \
