@@ -58,6 +58,9 @@ $wgPygmentizePath = '/usr/bin/pygmentize';
 # We use job runner instead
 $wgJobRunRate = 0;
 
+# SVG Converters
+$wgSVGConverter = 'rsvg';
+
 # Docker specific setup
 # see https://www.mediawiki.org/wiki/Manual:$wgCdnServersNoPurge
 $wgUseCdn = true;
