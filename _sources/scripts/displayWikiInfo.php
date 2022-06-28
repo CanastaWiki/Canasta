@@ -26,11 +26,7 @@
  * @ingroup Maintenance
  */
 
-if ( getenv( 'MW_INSTALL_PATH' ) ) {
-	require_once getenv( 'MW_INSTALL_PATH' ) . '/maintenance/Maintenance.php';
-} else {
-	require_once __DIR__ . '/../../../maintenance/Maintenance.php';
-}
+require_once __DIR__ . '/Maintenance.php';
 
 $maintClass = DisplayWikiInfo::class;
 
