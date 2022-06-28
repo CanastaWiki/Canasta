@@ -677,6 +677,7 @@ COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_fi
 COPY _sources/configs/php_max_input_vars.ini _sources/configs/php_max_input_vars.ini /etc/php/7.4/apache2/conf.d/
 COPY _sources/configs/php_timeouts.ini /etc/php/7.4/apache2/conf.d/
 COPY _sources/scripts/*.sh /
+COPY _sources/scripts/*.php /
 COPY _sources/configs/robots.txt $WWW_ROOT/
 COPY _sources/configs/.htaccess $WWW_ROOT/
 COPY _sources/images/favicon.ico $WWW_ROOT/
