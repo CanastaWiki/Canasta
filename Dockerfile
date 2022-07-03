@@ -252,7 +252,7 @@ RUN set -x; \
 	# EmbedVideo
 	&& git clone --single-branch -b master https://gitlab.com/hydrawiki/extensions/EmbedVideo.git $MW_HOME/extensions/EmbedVideo \
 	&& cd $MW_HOME/extensions/EmbedVideo \
-	&& git checkout -q 954af96d3744d8adc7ff6458a05e579784f2d991 \
+	&& git checkout -q 1c2f745b16beb3ee5a176bb8a1d0d03d301a9385 \
 	# EventLogging
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/EventLogging $MW_HOME/extensions/EventLogging \
 	&& cd $MW_HOME/extensions/EventLogging \
