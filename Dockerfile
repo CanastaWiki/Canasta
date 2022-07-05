@@ -43,6 +43,7 @@ RUN set x; \
 	default-mysql-client=1.0.7 \
 	rsync=3.2.3-4+deb11u1 \
     lynx \
+    poppler-utils \
     && aptitude update \
     && aptitude install -y \
     php7.4 \
@@ -603,6 +604,12 @@ COPY _sources/patches/chameleon-path.patch /tmp/chameleon-path.patch
 RUN set -x; \
     cd $MW_HOME/skins/chameleon \
     && git apply /tmp/chameleon-path.patch
+
+COPY _sources/patches/CommentStreams.REL1_35.core.hook.37a9e60.diff /tmp/CommentStreams.REL1_35.core.hook.37a9e60.diff
+# TODO: the Hooks is added in REL1_38, remove the patch once the core is updated to 1.38
+RUN set -x; \
+    cd $MW_HOME \
+    && git apply /tmp/CommentStreams.REL1_35.core.hook.37a9e60.diff
 
 # Cleanup all .git leftovers
 RUN set -x; \
