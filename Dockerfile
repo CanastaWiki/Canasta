@@ -212,7 +212,7 @@ RUN set -x; \
 	# CookieWarning
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/CookieWarning $MW_HOME/extensions/CookieWarning \
 	&& cd $MW_HOME/extensions/CookieWarning \
-	&& git checkout -q cca62129085d50da90d503823848560ebc8058b4
+	&& git checkout -q cca62129085d50da90d503823848560ebc8058b4 \
 	# DataTransfer (v. 1.4)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/DataTransfer $MW_HOME/extensions/DataTransfer \
 	&& cd $MW_HOME/extensions/DataTransfer \
