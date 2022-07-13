@@ -39,7 +39,7 @@ RUN set x; \
 	curl=7.74.0-1.3+deb11u1 \
 	iputils-ping=3:20210202-1 \
 	unzip=6.0-26 \
-	gnupg=2.2.27-2+deb11u1 \
+	gnupg=2.2.27-2+deb11u2 \
 	default-mysql-client=1.0.7 \
 	rsync=3.2.3-4+deb11u1 \
     lynx \
