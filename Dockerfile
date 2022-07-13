@@ -34,7 +34,7 @@ RUN set x; \
 	patch=2.7.6-7 \
 	vim=2:8.2.2434-3+deb11u1 \
 	mc=3:4.8.26-1.1 \
-	ffmpeg=7:4.3.3-0+deb11u1 \
+	ffmpeg=7:4.3.4-0+deb11u1 \
 	curl=7.74.0-1.3+deb11u1 \
 	iputils-ping=3:20210202-1 \
 	unzip=6.0-26 \
