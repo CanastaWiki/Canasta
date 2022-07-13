@@ -23,7 +23,7 @@ RUN set x; \
     git=1:2.30.2-1 \
     apache2=2.4.54-1~deb11u1 \
     software-properties-common=0.96.20.2-2.1 \
-	gpg=2.2.27-2+deb11u1 \
+	gpg=2.2.27-2+deb11u2 \
 	apt-transport-https=2.2.4 \
 	ca-certificates=20210119 \
 	wget=1.21-1+deb11u1 \
