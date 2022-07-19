@@ -21,9 +21,9 @@ RUN set x; \
     && aptitude -y upgrade \
     && aptitude install -y \
     git=1:2.30.2-1 \
-    apache2=2.4.53-1~deb11u1 \
+    apache2=2.4.54-1~deb11u1 \
     software-properties-common=0.96.20.2-2.1 \
-	gpg=2.2.27-2+deb11u1 \
+	gpg=2.2.27-2+deb11u2 \
 	apt-transport-https=2.2.4 \
 	ca-certificates=20210119 \
 	wget=1.21-1+deb11u1 \
@@ -35,11 +35,11 @@ RUN set x; \
 	patch=2.7.6-7 \
 	vim=2:8.2.2434-3+deb11u1 \
 	mc=3:4.8.26-1.1 \
-	ffmpeg=7:4.3.3-0+deb11u1 \
+	ffmpeg=7:4.3.4-0+deb11u1 \
 	curl=7.74.0-1.3+deb11u1 \
 	iputils-ping=3:20210202-1 \
 	unzip=6.0-26 \
-	gnupg=2.2.27-2+deb11u1 \
+	gnupg=2.2.27-2+deb11u2 \
 	default-mysql-client=1.0.7 \
 	rsync=3.2.3-4+deb11u1 \
     lynx \
