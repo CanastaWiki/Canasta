@@ -14,7 +14,7 @@ if ( defined( 'MW_CONFIG_CALLBACK' ) ) {
 	if ( !file_exists( $canastaLocalSettingsFilePath ) ) {
 		// Remove all variables, WebInstaller should decide that "$IP/LocalSettings.php" does not exist.
 		$vars = array_keys( get_defined_vars() );
-		foreach( $vars as $v => $k ) {
+		foreach ( $vars as $v => $k ) {
 			unset( $$k );
 		}
 		unset( $vars, $v, $k );
@@ -37,7 +37,7 @@ if ( !is_readable( $canastaLocalSettingsFilePath ) ) {
 
 // Canasta default settings below
 
-$wgServer = getenv( 'MW_SITE_SERVER' ) ?? 'https://localhost';
+$wgServer = getenv( 'MW_SITE_SERVER' ) ?? 'http://localhost';
 
 ## The URL base path to the directory containing the wiki;
 ## defaults for all runtime URL paths are based off of this.
