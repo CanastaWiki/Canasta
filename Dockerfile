@@ -4,7 +4,7 @@ LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
 
 ENV MW_VERSION=REL1_35 \
-	MW_CORE_VERSION=1.35.6 \
+	MW_CORE_VERSION=1.35.7 \
 	WWW_ROOT=/var/www/mediawiki \
 	MW_HOME=/var/www/mediawiki/w \
 	MW_ORIGIN_FILES=/mw_origin_files \
@@ -21,24 +21,25 @@ RUN set x; \
     && aptitude -y upgrade \
     && aptitude install -y \
     git=1:2.30.2-1 \
-    apache2=2.4.53-1~deb11u1 \
+    apache2=2.4.54-1~deb11u1 \
     software-properties-common=0.96.20.2-2.1 \
-	gpg=2.2.27-2+deb11u1 \
+	gpg=2.2.27-2+deb11u2 \
 	apt-transport-https=2.2.4 \
 	ca-certificates=20210119 \
 	wget=1.21-1+deb11u1 \
 	imagemagick=8:6.9.11.60+dfsg-1.3  \
+	librsvg2-bin=2.50.3+dfsg-1 \
 	python3-pygments=2.7.1+dfsg-2.1 \
 	msmtp=1.8.11-2.1 \
 	msmtp-mta=1.8.11-2.1 \
 	patch=2.7.6-7 \
 	vim=2:8.2.2434-3+deb11u1 \
 	mc=3:4.8.26-1.1 \
-	ffmpeg=7:4.3.3-0+deb11u1 \
+	ffmpeg=7:4.3.4-0+deb11u1 \
 	curl=7.74.0-1.3+deb11u1 \
 	iputils-ping=3:20210202-1 \
 	unzip=6.0-26 \
-	gnupg=2.2.27-2+deb11u1 \
+	gnupg=2.2.27-2+deb11u2 \
 	default-mysql-client=1.0.7 \
 	rsync=3.2.3-4+deb11u1 \
     lynx \
@@ -236,7 +237,7 @@ RUN set -x; \
 	# Echo
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Echo $MW_HOME/extensions/Echo \
 	&& cd $MW_HOME/extensions/Echo \
-	&& git checkout -q a3dedc0d64380d74d2e153aad9a8d54cee1b85bd \
+	&& git checkout -q 55c1b2a6de7b9e2d9bc720d7794b097fcd2ef901 \
 	# Editcount
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Editcount $MW_HOME/extensions/Editcount \
 	&& cd $MW_HOME/extensions/Editcount \
@@ -252,7 +253,7 @@ RUN set -x; \
 	# EmbedVideo
 	&& git clone --single-branch -b master https://gitlab.com/hydrawiki/extensions/EmbedVideo.git $MW_HOME/extensions/EmbedVideo \
 	&& cd $MW_HOME/extensions/EmbedVideo \
-	&& git checkout -q 85c5219593cc86367ffb17bfb650f73ca3eb9b11 \
+	&& git checkout -q 1c2f745b16beb3ee5a176bb8a1d0d03d301a9385 \
 	# EventLogging
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/EventLogging $MW_HOME/extensions/EventLogging \
 	&& cd $MW_HOME/extensions/EventLogging \
@@ -293,10 +294,6 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/HeaderTabs $MW_HOME/extensions/HeaderTabs \
 	&& cd $MW_HOME/extensions/HeaderTabs \
 	&& git checkout -q 37679158f93e4ba5a292744b30e2a64d50fb818c \
-	# HeadScript
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/HeadScript $MW_HOME/extensions/HeadScript \
-	&& cd $MW_HOME/extensions/HeadScript \
-	&& git checkout -q f8245e350d6e3452a20d871240ebb193f69f384d \
 	# HTMLTags
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/HTMLTags $MW_HOME/extensions/HTMLTags \
 	&& cd $MW_HOME/extensions/HTMLTags \
