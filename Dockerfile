@@ -210,6 +210,10 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ContributionScores $MW_HOME/extensions/ContributionScores \
 	&& cd $MW_HOME/extensions/ContributionScores \
 	&& git checkout -q 46ebf438283913f103ba5dd03a3e4730bb9f87dc \
+	# CookieWarning
+	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/CookieWarning $MW_HOME/extensions/CookieWarning \
+	&& cd $MW_HOME/extensions/CookieWarning \
+	&& git checkout -q cca62129085d50da90d503823848560ebc8058b4 \
 	# DataTransfer (v. 1.4)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/DataTransfer $MW_HOME/extensions/DataTransfer \
 	&& cd $MW_HOME/extensions/DataTransfer \
