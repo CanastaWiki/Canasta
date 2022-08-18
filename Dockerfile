@@ -18,49 +18,49 @@ RUN set x; \
 	apt-get clean \
 	&& apt-get update \
 	&& apt-get install -y aptitude \
-    && aptitude -y upgrade \
-    && aptitude install -y \
-    git=1:2.30.2-1 \
-    apache2=2.4.54-1~deb11u1 \
-    software-properties-common=0.96.20.2-2.1 \
-	gpg=2.2.27-2+deb11u2 \
-	apt-transport-https=2.2.4 \
-	ca-certificates=20210119 \
-	wget=1.21-1+deb11u1 \
-	imagemagick=8:6.9.11.60+dfsg-1.3  \
-	librsvg2-bin=2.50.3+dfsg-1 \
-	python3-pygments=2.7.1+dfsg-2.1 \
-	msmtp=1.8.11-2.1 \
-	msmtp-mta=1.8.11-2.1 \
-	patch=2.7.6-7 \
-	vim=2:8.2.2434-3+deb11u1 \
-	mc=3:4.8.26-1.1 \
-	ffmpeg=7:4.3.4-0+deb11u1 \
-	curl=7.74.0-1.3+deb11u1 \
-	iputils-ping=3:20210202-1 \
-	unzip=6.0-26 \
-	gnupg=2.2.27-2+deb11u2 \
-	default-mysql-client=1.0.7 \
-	rsync=3.2.3-4+deb11u1 \
-    lynx \
-    poppler-utils \
-    && aptitude update \
-    && aptitude install -y \
-    php7.4 \
-    php7.4-mysql \
-    php7.4-cli \
-    php7.4-gd \
-    php7.4-mbstring \
-    php7.4-xml \
-    php7.4-mysql \
-    php7.4-intl \
-    php7.4-opcache \
-    php7.4-apcu \
-    php7.4-redis \
-    php7.4-curl \
-    php7.4-zip \
-    && aptitude clean \
-    && rm -rf /var/lib/apt/lists/*
+	&& aptitude -y upgrade \
+	&& aptitude install -y \
+	git \
+	apache2 \
+	software-properties-common \
+	gpg \
+	apt-transport-https \
+	ca-certificates \
+	wget \
+	imagemagick  \
+	librsvg2-bin \
+	python3-pygments \
+	msmtp \
+	msmtp-mta \
+	patch \
+	vim \
+	mc \
+	ffmpeg \
+	curl \
+	iputils-ping \
+	unzip \
+	gnupg \
+	default-mysql-client \
+	rsync \
+	lynx \
+	poppler-utils \
+	&& aptitude update \
+	&& aptitude install -y \
+	php7.4 \
+	php7.4-mysql \
+	php7.4-cli \
+	php7.4-gd \
+	php7.4-mbstring \
+	php7.4-xml \
+	php7.4-mysql \
+	php7.4-intl \
+	php7.4-opcache \
+	php7.4-apcu \
+	php7.4-redis \
+	php7.4-curl \
+	php7.4-zip \
+	&& aptitude clean \
+	&& rm -rf /var/lib/apt/lists/*
 
 # Post install configuration
 RUN set -x; \
