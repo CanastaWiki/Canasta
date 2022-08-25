@@ -66,6 +66,8 @@ $wgSVGConverter = 'rsvg';
 $wgUseCdn = true;
 $wgCdnServersNoPurge = [];
 $wgCdnServersNoPurge[] = '172.16.0.0/12';
+$wgCdnServersNoPurge[] = '192.168.0.0/16';
+$wgCdnServersNoPurge[] = '10.0.0.0/8';
 
 # Include user defined LocalSettings.php file
 require_once "$canastaLocalSettingsFilePath";
