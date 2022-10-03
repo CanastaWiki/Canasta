@@ -648,6 +648,11 @@ RUN set -x; \
     && ln -s $MW_VOLUME/images $MW_HOME/images \
     && ln -s $MW_VOLUME/cache $MW_HOME/cache
 
+# Create place where extensions and skins symlinks will live
+RUN set -x; \
+    mkdir $MW_HOME/extensions/ \
+    && mkdir $MW_HOME/skins/
+
 FROM base as final
 
 COPY --from=source $MW_HOME $MW_HOME
