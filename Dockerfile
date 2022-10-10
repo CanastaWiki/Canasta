@@ -4,7 +4,7 @@ LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
 
 ENV MW_VERSION=REL1_35 \
-	MW_CORE_VERSION=1.35.7 \
+	MW_CORE_VERSION=1.35.8 \
 	WWW_ROOT=/var/www/mediawiki \
 	MW_HOME=/var/www/mediawiki/w \
 	MW_ORIGIN_FILES=/mw_origin_files \
@@ -647,6 +647,11 @@ RUN set -x; \
     # Create symlinks from $MW_VOLUME to the wiki root for images and cache directories
     && ln -s $MW_VOLUME/images $MW_HOME/images \
     && ln -s $MW_VOLUME/cache $MW_HOME/cache
+
+# Create place where extensions and skins symlinks will live
+RUN set -x; \
+    mkdir $MW_HOME/extensions/ \
+    && mkdir $MW_HOME/skins/
 
 FROM base as final
 

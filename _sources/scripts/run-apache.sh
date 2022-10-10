@@ -53,7 +53,7 @@ dir_is_writable() {
 # by the image to bind-mount points on host which are bind to
 # $MW_VOLUME (./extensions, ./skins, ./config, ./images),
 # note that this command will also set all the necessary permissions
-echo "Syncing files.."
+echo "Syncing files..."
 rsync -ah --inplace --ignore-existing --remove-source-files \
   -og --chown=$WWW_GROUP:$WWW_USER --chmod=Fg=rw,Dg=rwx \
   "$MW_ORIGIN_FILES"/ "$MW_VOLUME"/
@@ -89,7 +89,7 @@ sed -i "s/DOCKER_GATEWAY/$DOCKER_GATEWAY/" /etc/msmtprc
 # hence it does not perform any recursive checks and may lead to files
 # or directories down the tree having incorrect permissions left untouched
 
-echo "Checking permissions of $MW_VOLUME.."
+echo "Checking permissions of $MW_VOLUME..."
 if dir_is_writable $MW_VOLUME; then
   echo "Permissions are OK!"
 else
@@ -97,7 +97,7 @@ else
   chmod -R g=rwX "$MW_VOLUME"
 fi
 
-echo "Checking permissions of $APACHE_LOG_DIR.."
+echo "Checking permissions of $APACHE_LOG_DIR..."
 if dir_is_writable $APACHE_LOG_DIR; then
   echo "Permissions are OK!"
 else
@@ -152,42 +152,82 @@ waitdatabase() {
 #}
 
 run_autoupdate () {
-    echo "Running Auto-update.."
+    echo "Running auto-update..."
     runuser -c "php maintenance/update.php --quick" -s /bin/bash "$WWW_USER"
     echo "Auto-update completed"
 }
 
 check_mount_points () {
-  # Check for $MW_HOME/user-extensions presence and bow out if it's in place
-  if [ -d "$MW_HOME/user-extensions" ]; then
-    echo "WARNING! As of Canasta 1.1.0, $MW_HOME/user-extensions is an incorrect mount point! Please update your Docker Compose stack to 1.1.0 and re-mount to $MW_HOME/extensions."
+  # Check for $MW_HOME/user-extensions presence and bow out if it's not in place
+  if [ ! -d "$MW_HOME/user-extensions" ]; then
+    echo "WARNING! As of Canasta 1.2.0, $MW_HOME/user-extensions is the correct mount point! Please update your Docker Compose stack to 1.2.0, which will re-mount to $MW_HOME/user-extensions."
     exit 1
   fi
 
-  # Check for $MW_HOME/user-skins presence and bow out if it's in place
-  if [ -d "$MW_HOME/user-skins" ]; then
-    echo "WARNING! As of Canasta 1.1.0, $MW_HOME/user-skins is an incorrect mount point! Please update your Docker Compose stack to 1.1.0 and re-mount to $MW_HOME/skins."
+  # Check for $MW_HOME/user-skins presence and bow out if it's not in place
+  if [ ! -d "$MW_HOME/user-skins" ]; then
+    echo "WARNING! As of Canasta 1.2.0, $MW_HOME/user-skins is the correct mount point! Please update your Docker Compose stack to 1.2.0, which will re-mount to $MW_HOME/user-skins."
     exit 1
   fi
+}
+
+prepare_extensions_skins_symlinks() {
+  echo "Symlinking bundled extensions..."
+  for bundled_extension_path in $(find $MW_HOME/canasta-extensions/ -maxdepth 1 -mindepth 1 -type d)
+  do
+      bundled_extension_id=$(basename $bundled_extension_path)
+      ln -s $MW_HOME/canasta-extensions/$bundled_extension_id/ $MW_HOME/extensions/$bundled_extension_id
+  done
+  echo "Symlinking bundled skins..."
+  for bundled_skin_path in $(find $MW_HOME/canasta-skins/ -maxdepth 1 -mindepth 1 -type d)
+  do
+      bundled_skin_id=$(basename $bundled_skin_path)
+      ln -s $MW_HOME/canasta-skins/$bundled_skin_id/ $MW_HOME/skins/$bundled_skin_id
+  done
+  echo "Symlinking user extensions and overwriting any redundant bundled extensions..."
+  for user_extension_path in $(find $MW_HOME/user-extensions/ -maxdepth 1 -mindepth 1 -type d)
+  do
+    user_extension_id=$(basename $user_extension_path)
+    extension_symlink_path="$MW_HOME/extensions/$user_extension_id"
+    if [[ -e "$extension_symlink_path" ]]
+    then
+      rm "$extension_symlink_path"
+    fi
+    ln -s $MW_HOME/user-extensions/$user_extension_id/ $MW_HOME/extensions/$user_extension_id
+  done
+  echo "Symlinking user skins and overwriting any redundant bundled skins..."
+  for user_skin_path in $(find $MW_HOME/user-skins/ -maxdepth 1 -mindepth 1 -type d)
+  do
+    user_skin_id=$(basename $user_skin_path)
+    skin_symlink_path="$MW_HOME/skins/$user_skin_id"
+    if [[ -e "$skin_symlink_path" ]]
+    then
+      rm "$skin_symlink_path"
+    fi
+    ln -s $MW_HOME/user-skins/$user_skin_id/ $MW_HOME/skins/$user_skin_id
+  done
 }
 
 # Wait db
 waitdatabase
 
-# Check for `user-` prefixed mounts and bow out if found
+# Check for `user-` prefixed mounts and bow out if not found
 check_mount_points
+
+# Symlink all extensions and skins (both bundled and user)
+prepare_extensions_skins_symlinks
 
 sleep 1
 cd "$MW_HOME" || exit
 
 ########## Run maintenance scripts ##########
-echo "Checking for LocalSettings.."
+echo "Checking for LocalSettings..."
 if [ -e "$MW_VOLUME/config/LocalSettings.php"  ]; then
   # Run auto-update
   run_autoupdate
 fi
 
-echo "Starting services.."
+echo "Starting services..."
 jobrunner &
 transcoder &
 sitemapgen &

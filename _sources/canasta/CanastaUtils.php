@@ -9,28 +9,14 @@ if ( !defined( 'MEDIAWIKI' ) ) {
  * @param $extName
  */
 function cfLoadExtension( $extName ) {
-	global $wgExtensionDirectory, $wgExtensionAssetsPath, $IP, $wgScriptPath;
-
-	$realExtDirectory = $wgExtensionDirectory;
-	$realExtAssetsPath = $wgExtensionAssetsPath;
-	$wgExtensionDirectory = $IP . '/canasta-extensions';
-	$wgExtensionAssetsPath = $wgScriptPath . '/canasta-extensions';
+	echo "Warning: As of Canasta 1.2.0, this function is deprecated. Use wfLoadExtension instead.";
 	wfLoadExtension( $extName );
-	$wgExtensionDirectory = $realExtDirectory;
-	$wgExtensionAssetsPath = $realExtAssetsPath;
 }
 
 /**
  * @param $skinName
  */
 function cfLoadSkin( $skinName ) {
-	global $wgStyleDirectory, $wgStylePath, $IP, $wgScriptPath;
-
-	$realStyleDirectory = $wgStyleDirectory;
-	$realStylePath = $wgStylePath;
-	$wgStyleDirectory = $IP . '/canasta-skins';
-	$wgStylePath = $wgScriptPath . '/canasta-skins';
+	echo "Warning: As of Canasta 1.2.0, this function is deprecated. Use wfLoadSkin instead.";
 	wfLoadSkin( $skinName );
-	$wgStyleDirectory = $realStyleDirectory;
-	$wgStylePath = $realStylePath;
 }
