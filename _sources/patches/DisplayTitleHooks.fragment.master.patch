@@ -1,0 +1,13 @@
+diff --git a/includes/DisplayTitleHooks.php b/includes/DisplayTitleHooks.php
+index 7d5308a..b864c2a 100644
+--- a/includes/DisplayTitleHooks.php
++++ b/includes/DisplayTitleHooks.php
+@@ -138,7 +138,7 @@ class DisplayTitleHooks {
+ 			// handle named Semantic MediaWiki subobjects (see T275984)
+ 			// by removing trailing fragment
+ 			$fragment = $target->getFragment();
+-			if ( $fragment != '' && $target->getNamespace() != NS_CATEGORY ) {
++			if ( $fragment != '' && substr( $fragment, 0, 3 ) !== 'mw-' && $target->getNamespace() != NS_CATEGORY ) {
+ 				$fragment = '#' . $fragment;
+ 				$fraglen = strlen( $fragment );
+ 				if ( strrpos( $text, $fragment ) === strlen( $text ) - $fraglen ) {

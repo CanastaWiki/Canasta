@@ -1,0 +1,16 @@
+diff --git a/src/ContributionScores.php b/src/ContributionScores.php
+index e5ccc8d..2a9d7a5 100644
+--- a/src/ContributionScores.php
++++ b/src/ContributionScores.php
+@@ -407,6 +407,11 @@ class ContributionScores extends IncludableSpecialPage {
+ 		}
+ 	}
+ 
++	public function maxIncludeCacheTime() {
++		global $wgContribScoreDisableCache, $wgContribScoreCacheTTL;
++		return $wgContribScoreDisableCache ? 0 : $wgContribScoreCacheTTL;
++	}
++
+ 	/**
+ 	 * @inheritDoc
+ 	 */

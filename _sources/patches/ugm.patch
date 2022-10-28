@@ -1,0 +1,24 @@
+diff --git a/includes/user/UserGroupManager.php b/includes/user/UserGroupManager.php
+index f5cf251..b409bd9 100644
+--- a/includes/user/UserGroupManager.php
++++ b/includes/user/UserGroupManager.php
+@@ -264,6 +264,9 @@ class UserGroupManager implements IDBAccessObject {
+ 				$this->clearUserCacheForKind( $user, self::CACHE_EFFECTIVE );
+ 			}
+ 		}
++		if( !isset($this->userGroupCache[$userKey][self::CACHE_IMPLICIT]) ) {
++			$this->userGroupCache[$userKey][self::CACHE_IMPLICIT] = [];
++		}
+ 		return $this->userGroupCache[$userKey][self::CACHE_IMPLICIT];
+ 	}
+
+@@ -306,6 +309,9 @@ class UserGroupManager implements IDBAccessObject {
+ 			$effectiveGroups = array_values( array_unique( $groups ) );
+ 			$this->setCache( $user, self::CACHE_EFFECTIVE, $effectiveGroups, $queryFlags );
+ 		}
++		if( !isset($this->userGroupCache[$userKey][self::CACHE_EFFECTIVE]) ) {
++			$this->userGroupCache[$userKey][self::CACHE_EFFECTIVE] = [];
++		}
+ 		return $this->userGroupCache[$userKey][self::CACHE_EFFECTIVE];
+ 	}
+

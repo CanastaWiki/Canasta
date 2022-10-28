@@ -5,7 +5,7 @@ use MediaWiki\MediaWikiServices;
 $mwHome = getenv( 'MW_HOME' );
 
 if ( !defined( 'MW_CONFIG_FILE' ) && !file_exists( "$mwHome/LocalSettings.php" ) ) {
-	return;
+	define( 'MW_CONFIG_FILE', "$mwHome/DockerSettings.php" );
 }
 
 require_once "$mwHome/maintenance/Maintenance.php";

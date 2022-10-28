@@ -1,0 +1,15 @@
+diff --git a/Mendeley.hooks.php b/Mendeley.hooks.php
+index 79336c4..8712d77 100644
+--- a/Mendeley.hooks.php
++++ b/Mendeley.hooks.php
+@@ -29,6 +29,10 @@ class MendeleyHooks {
+ 	public static function mendeley( Parser &$parser ) {
+ 		$options = self::extractOptions( array_slice( func_get_args(), 1 ) );
+
++		if ( empty( $options ) || ( !isset( $options['id'] ) && !isset( $options['doi'] ) ) ) {
++			return '';
++		}
++
+ 		$parameter = $options['parameter'];
+
+ 		$mendeley = Mendeley::getInstance();

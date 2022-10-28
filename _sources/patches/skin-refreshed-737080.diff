@@ -1,0 +1,35 @@
+From 6b482998ed78eadb93c929f5db8618e47b9befcb Mon Sep 17 00:00:00 2001
+From: Pavel Astakhov <pastakhov@yandex.ru>
+Date: Sun, 07 Nov 2021 22:11:09 +0600
+Subject: [PATCH] Fix PHP Warning in RefreshedTemplate::makeElementWithIconHelper()
+
+The error message: PHP Warning:  DOMDocument::loadHTML(): Empty string
+is thrown when $mode is unexpected or $iconName is empty string.
+In the first case it returns empty string (always),
+                                in the second value of $outputUnedited
+
+Change-Id: I44c26a800daea5a011596038f8016932e10fbda2
+---
+
+diff --git a/includes/RefreshedTemplate.php b/includes/RefreshedTemplate.php
+index 449a041..9bcabc4 100644
+--- a/includes/RefreshedTemplate.php
++++ b/includes/RefreshedTemplate.php
+@@ -301,7 +301,7 @@
+ 		} elseif ( $mode === 'link' ) {
+ 			$outputUnedited = $this->makeLink( $key, $item, $options );
+ 		} else {
+-			$outputUnedited = '';
++			return '';
+ 		}
+ 
+ 		// Get the HTML of the icon we want to add (returns empty string if no icon)
+@@ -309,7 +309,7 @@
+ 
+ 		// if there is no icon to add, don't bother doing more processing; just
+ 		// return the list item/link without the icon
+-		if ( $icon === false ) {
++		if ( !$icon ) {
+ 			return $outputUnedited;
+ 		}
+ 

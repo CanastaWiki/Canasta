@@ -2,51 +2,15 @@
 
 set -x
 
-# read variables from LocalSettings.php
-get_mediawiki_variable () {
-    php /getMediawikiSettings.php --variable="$1" --format="${2:-string}"
-}
+. /functions.sh
 
-get_docker_gateway () {
-  getent hosts "gateway.docker.internal" | awk '{ print $1 }'
-}
-
-isTrue() {
-    case $1 in
-        "True" | "TRUE" | "true" | 1)
-            return 0
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-}
-
-dir_is_writable() {
-  # Use -L to get information about the target of a symlink,
-  # not the link itself, as pointed out in the comments
-  INFO=( $(stat -L -c "0%a %G %U" "$1") )
-  PERM=${INFO[0]}
-  GROUP=${INFO[1]}
-  OWNER=${INFO[2]}
-
-  if (( ($PERM & 0002) != 0 )); then
-      # Everyone has write access
-      return 0
-  elif (( ($PERM & 0020) != 0 )); then
-      # Some group has write access.
-      # Is user in that group?
-      if [[ $GROUP == $WWW_GROUP ]]; then
-          return 0
-      fi
-  elif (( ($PERM & 0200) != 0 )); then
-      # The owner has write access.
-      # Does the user own the file?
-      [[ $WWW_USER == $OWNER ]] && return 0
-  fi
-
-  return 1
-}
+if ! mountpoint -q -- "$MW_VOLUME"; then
+    echo "Folder $MW_VOLUME contains important data and must be mounted to persistent storage!"
+    if ! isTrue "$MW_ALLOW_UNMOUNTED_VOLUME"; then
+        exit 1
+    fi
+    echo "You allowed to continue because MW_ALLOW_UNMOUNTED_VOLUME is set as true"
+fi
 
 # Soft sync contents from $MW_ORIGIN_FILES directory to $MW_VOLUME
 # The goal of this operation is to copy over all the files generated
@@ -54,188 +18,64 @@ dir_is_writable() {
 # $MW_VOLUME (./extensions, ./skins, ./config, ./images),
 # note that this command will also set all the necessary permissions
 echo "Syncing files..."
-rsync -ah --inplace --ignore-existing --remove-source-files \
-  -og --chown=$WWW_GROUP:$WWW_USER --chmod=Fg=rw,Dg=rwx \
+rsync -ah --inplace --ignore-existing \
+  -og --chown="$WWW_GROUP:$WWW_USER" --chmod=Fg=rw,Dg=rwx \
   "$MW_ORIGIN_FILES"/ "$MW_VOLUME"/
 
-# We don't need it anymore
-rm -rf "$MW_ORIGIN_FILES"
+# Create needed directories
+#TODO check below command need
+mkdir -p "$MW_VOLUME"/extensions/SemanticMediaWiki/config
 
-# Try to fetch gateway IP from extra host
-DOCKER_GATEWAY=$(get_docker_gateway)
+/update-docker-gateway.sh
 
-# Fall back to default 172.x network if unable to fetch gateway
-if [ -z "$DOCKER_GATEWAY" ]; then
-  DOCKER_GATEWAY="172.17.0.1"
-fi
-
-# Map host for VisualEditor
-if [ -e "$MW_VOLUME/config/LocalSettings.php"  ]; then
-  MW_SITE_SERVER=$(get_mediawiki_variable wgServer)
-  if [[ ! $MW_SITE_SERVER =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    DOMAIN=$(echo "$MW_SITE_SERVER" | sed -e 's|^[^/]*//||' -e 's|[:/].*$||')
-    echo "$DOCKER_GATEWAY $DOMAIN" >> /etc/hosts
-  fi
-fi
-
-# Update /etc/ssmtp/ssmtp.conf to use DOCKER_GATEWAY
-sed -i "s/DOCKER_GATEWAY/$DOCKER_GATEWAY/" /etc/msmtprc
-
-# Permissions
-# Note: this part if checking for root directories permissions
-# assuming that if the root directory has correct permissions set
-# it's in result of previous success run of this code or this code
-# was executed by another container (in case mount points are shared)
-# hence it does not perform any recursive checks and may lead to files
-# or directories down the tree having incorrect permissions left untouched
-
-echo "Checking permissions of $MW_VOLUME..."
-if dir_is_writable $MW_VOLUME; then
-  echo "Permissions are OK!"
+# Write log files to $MW_VOLUME/log directory if target folders are not mounted
+echo "Checking permissions of Apache log dir $APACHE_LOG_DIR..."
+if ! mountpoint -q -- "$APACHE_LOG_DIR/"; then
+    mkdir -p "$MW_VOLUME/log/httpd"
+    rsync -avh --ignore-existing "$APACHE_LOG_DIR/" "$MW_VOLUME/log/httpd/"
+    mv "$APACHE_LOG_DIR" "${APACHE_LOG_DIR}_old"
+    ln -s "$MW_VOLUME/log/httpd" "$APACHE_LOG_DIR"
 else
-  chown -R "$WWW_GROUP":"$WWW_GROUP" "$MW_VOLUME"
-  chmod -R g=rwX "$MW_VOLUME"
+    chgrp -R "$WWW_GROUP" "$APACHE_LOG_DIR"
+    chmod -R g=rwX "$APACHE_LOG_DIR"
 fi
 
-echo "Checking permissions of $APACHE_LOG_DIR..."
-if dir_is_writable $APACHE_LOG_DIR; then
-  echo "Permissions are OK!"
+echo "Checking permissions of Mediawiki log dir $MW_LOG..."
+if ! mountpoint -q -- "$MW_LOG"; then
+    mkdir -p "$MW_VOLUME/log/mediawiki"
+    rsync -avh --ignore-existing "$MW_LOG/" "$MW_VOLUME/log/mediawiki/"
+    mv "$MW_LOG" "${MW_LOG}_old"
+    ln -s "$MW_VOLUME/log/mediawiki" "$MW_LOG"
+    chmod -R o=rwX "$MW_VOLUME/log/mediawiki"
 else
-  chown -R "$WWW_GROUP":"$WWW_GROUP" $APACHE_LOG_DIR
-  chmod -R g=rwX $APACHE_LOG_DIR
+    chgrp -R "$WWW_GROUP" "$MW_LOG"
+    chmod -R go=rwX "$MW_LOG"
 fi
 
-jobrunner() {
-    sleep 3
-    if isTrue "$MW_ENABLE_JOB_RUNNER"; then
-        echo >&2 Run Jobs
-        nice -n 20 runuser -c /mwjobrunner.sh -s /bin/bash "$WWW_USER"
-    else
-        echo >&2 Job runner is disabled
-    fi
-}
-
-transcoder() {
-    sleep 3
-    if isTrue "$MW_ENABLE_TRANSCODER"; then
-        echo >&2 Run transcoder
-        nice -n 20 runuser -c /mwtranscoder.sh -s /bin/bash "$WWW_USER"
-    else
-        echo >&2 Transcoder disabled
-    fi
-}
-
-sitemapgen() {
-    sleep 3
-    if isTrue "$MW_ENABLE_SITEMAP_GENERATOR"; then
-        # Fetch & export script path for sitemap generator
-        if [ -z "$MW_SCRIPT_PATH" ]; then
-          MW_SCRIPT_PATH=$(get_mediawiki_variable wgScriptPath)
-        fi
-        # Fall back to default value if can't fetch the variable
-        if [ -z "$MW_SCRIPT_PATH" ]; then
-          MW_SCRIPT_PATH="/w"
-        fi
-        echo >&2 Run sitemap generator
-        MW_SCRIPT_PATH=$MW_SCRIPT_PATH nice -n 20 runuser -c /mwsitemapgen.sh -s /bin/bash "$WWW_USER"
-    else
-        echo >&2 Sitemap generator is disabled
-    fi
-}
-
-waitdatabase() {
-  /wait-for-it.sh -t 60 db:3306
-}
-
-#waitelastic() {
-#  ./wait-for-it.sh -t 60 elasticsearch:9200
-#}
-
-run_autoupdate () {
-    echo "Running auto-update..."
-    runuser -c "php maintenance/update.php --quick" -s /bin/bash "$WWW_USER"
-    echo "Auto-update completed"
-}
-
-check_mount_points () {
-  # Check for $MW_HOME/user-extensions presence and bow out if it's not in place
-  if [ ! -d "$MW_HOME/user-extensions" ]; then
-    echo "WARNING! As of Canasta 1.2.0, $MW_HOME/user-extensions is the correct mount point! Please update your Docker Compose stack to 1.2.0, which will re-mount to $MW_HOME/user-extensions."
-    exit 1
-  fi
-
-  # Check for $MW_HOME/user-skins presence and bow out if it's not in place
-  if [ ! -d "$MW_HOME/user-skins" ]; then
-    echo "WARNING! As of Canasta 1.2.0, $MW_HOME/user-skins is the correct mount point! Please update your Docker Compose stack to 1.2.0, which will re-mount to $MW_HOME/user-skins."
-    exit 1
-  fi
-}
-
-prepare_extensions_skins_symlinks() {
-  echo "Symlinking bundled extensions..."
-  for bundled_extension_path in $(find $MW_HOME/canasta-extensions/ -maxdepth 1 -mindepth 1 -type d)
-  do
-      bundled_extension_id=$(basename $bundled_extension_path)
-      ln -s $MW_HOME/canasta-extensions/$bundled_extension_id/ $MW_HOME/extensions/$bundled_extension_id
-  done
-  echo "Symlinking bundled skins..."
-  for bundled_skin_path in $(find $MW_HOME/canasta-skins/ -maxdepth 1 -mindepth 1 -type d)
-  do
-      bundled_skin_id=$(basename $bundled_skin_path)
-      ln -s $MW_HOME/canasta-skins/$bundled_skin_id/ $MW_HOME/skins/$bundled_skin_id
-  done
-  echo "Symlinking user extensions and overwriting any redundant bundled extensions..."
-  for user_extension_path in $(find $MW_HOME/user-extensions/ -maxdepth 1 -mindepth 1 -type d)
-  do
-    user_extension_id=$(basename $user_extension_path)
-    extension_symlink_path="$MW_HOME/extensions/$user_extension_id"
-    if [[ -e "$extension_symlink_path" ]]
-    then
-      rm "$extension_symlink_path"
-    fi
-    ln -s $MW_HOME/user-extensions/$user_extension_id/ $MW_HOME/extensions/$user_extension_id
-  done
-  echo "Symlinking user skins and overwriting any redundant bundled skins..."
-  for user_skin_path in $(find $MW_HOME/user-skins/ -maxdepth 1 -mindepth 1 -type d)
-  do
-    user_skin_id=$(basename $user_skin_path)
-    skin_symlink_path="$MW_HOME/skins/$user_skin_id"
-    if [[ -e "$skin_symlink_path" ]]
-    then
-      rm "$skin_symlink_path"
-    fi
-    ln -s $MW_HOME/user-skins/$user_skin_id/ $MW_HOME/skins/$user_skin_id
-  done
-}
-
-# Wait db
-waitdatabase
-
-# Check for `user-` prefixed mounts and bow out if not found
-check_mount_points
-
-# Symlink all extensions and skins (both bundled and user)
-prepare_extensions_skins_symlinks
-
-sleep 1
-cd "$MW_HOME" || exit
-
-########## Run maintenance scripts ##########
-echo "Checking for LocalSettings..."
-if [ -e "$MW_VOLUME/config/LocalSettings.php"  ]; then
-  # Run auto-update
-  run_autoupdate
+# Check permissions for sqlite database file in case if sqlite is used
+WG_DB_TYPE=$(get_mediawiki_variable wgDBtype)
+WG_SQLITE_DATA_DIR=$(get_mediawiki_variable wgSQLiteDataDir)
+if [ "$WG_DB_TYPE" = "sqlite" ]; then
+    echo "Checking permissions of sqlite database dir $WG_SQLITE_DATA_DIR..."
+    mkdir -p "$WG_SQLITE_DATA_DIR"
+    chgrp -R "$WWW_GROUP" "$WG_SQLITE_DATA_DIR"
+    chmod -R g=rwX "$WG_SQLITE_DATA_DIR"
 fi
 
-echo "Starting services..."
-jobrunner &
-transcoder &
-sitemapgen &
+# Check and update permissions of wiki images in background.
+# It can take a long time and should not block Apache from starting.
+/update-volume-permissions.sh &
+
+# Run maintenance scripts in background.
+touch "$WWW_ROOT/.maintenance"
+/run-maintenance-scripts.sh &
 
 ############### Run Apache ###############
-# Make sure we're not confused by old, incompletely-shutdown httpd
-# context after restarting the container.  httpd won't start correctly
+# Make sure we're not confused by old, incompletely-shutdown Apache
+# context after restarting the container.  Apache won't start correctly
 # if it thinks it is already running.
-rm -rf /run/httpd/* /tmp/httpd*
+rm -rf /run/apache2/* /tmp/apache2*
+
+printf "\n\n==================================================================================\n\n\n"
 
 exec /usr/sbin/apachectl -DFOREGROUND
