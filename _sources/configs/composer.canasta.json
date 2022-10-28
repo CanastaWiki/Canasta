@@ -21,11 +21,14 @@
 				"extensions/DataTransfer/composer.json",
 				"extensions/Elastica/composer.json",
 				"extensions/OATHAuth/composer.json",
+				"extensions/Flow/composer.json",
+				"extensions/MassPasswordReset/composer.json",
 				"extensions/TimedMediaHandler/composer.json",
 				"extensions/AntiSpoof/composer.json",
 				"extensions/TemplateStyles/composer.json",
 				"extensions/Widgets/composer.json",
 				"extensions/GoogleAnalyticsMetrics/composer.json",
+				"extensions/SemanticExternalQueryLookup/composer.json",
 				"extensions/OpenIDConnect/composer.json",
 				"extensions/WSOAuth/composer.json"
 			]

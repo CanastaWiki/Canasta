@@ -2,7 +2,7 @@ name: Docker build and push
 
 # limit concurrency
 # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#examples-using-concurrency-and-the-default-behavior
-concurrency: docker_canasta_main
+concurrency: docker_taqasta_main
 
 on:
   push:
@@ -17,7 +17,7 @@ on:
   pull_request:
 
 env:
-  IMAGE_NAME: canasta
+  IMAGE_NAME: taqasta
 
 jobs:
   # Test the image Dockerfile syntax using https://github.com/replicatedhq/dockerfilelint
@@ -52,7 +52,7 @@ jobs:
         run: |
 
           # Image ID
-          IMAGE_ID=ghcr.io/canastawiki/canasta
+          IMAGE_ID=ghcr.io/wikiteq/taqasta
 
           # Date
           BDATE=$(date +%Y%m%d)
@@ -68,8 +68,8 @@ jobs:
           # Strip git ref prefix from version and use it as suffix for version
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
           
-          # Get the Canasta version from the "VERSION" file
-          CANASTA_VERSION=$(cat VERSION)
+          # Get the Taqasta version from the "VERSION" file
+          TAQASTA_VERSION=$(cat VERSION)
 
           # For pull requests just extract the PR number
           [ "${{ github.event_name }}" == "pull_request" ] && VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\)/merge,\1,')
@@ -87,7 +87,7 @@ jobs:
           REGISTRY_TAGS=$IMAGE_ID:$VERSION
 
           # For master branch also supply an extra tag: <MW_VERSION>-latest,<MW_VERSION>-<DATE>-<SHA>
-          [ "$VERSION" == "latest" ] && REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:$CANASTA_VERSION,$IMAGE_ID:$MEDIAWIKI_MAJOR_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-$BDATE-$(git rev-parse --short HEAD)
+          [ "$VERSION" == "latest" ] && REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:$TAQASTA_VERSION,$IMAGE_ID:$MEDIAWIKI_MAJOR_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-$BDATE-$(git rev-parse --short HEAD)
 
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
