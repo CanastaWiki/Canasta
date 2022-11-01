@@ -93,7 +93,7 @@ run_script_if_needed () {
 if [ ! -e "$MW_VOLUME/LocalSettings.php" ] && [ ! -e "$MW_HOME/LocalSettings.php" ] && [ ! -e "$MW_CONFIG_DIR/LocalSettings.php" ]; then
     echo "There is no LocalSettings.php file"
 
-    if [ "$WG_DB_TYPE" != "sqlite" ] || [ -z "$WG_DB_SERVER" ]; then
+    if [ "$WG_DB_TYPE" != "sqlite" ] && [ -z "$WG_DB_SERVER" ]; then
         echo "Database server is not defined, skip installation of the wiki"
     else
         if [ "$WG_DB_TYPE" = "sqlite" ]; then
