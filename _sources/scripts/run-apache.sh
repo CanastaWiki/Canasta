@@ -62,9 +62,12 @@ if [ "$WG_DB_TYPE" = "sqlite" ]; then
     chmod -R g=rwX "$WG_SQLITE_DATA_DIR"
 fi
 
+echo "Checking permissions of Mediawiki volume dir $MW_VOLUME except $MW_VOLUME/images..."
+make_dir_writable "$MW_VOLUME" -not '(' -path "$MW_VOLUME/images" -prune ')'
+
 # Check and update permissions of wiki images in background.
 # It can take a long time and should not block Apache from starting.
-/update-volume-permissions.sh &
+/update-images-permissions.sh &
 
 # Run maintenance scripts in background.
 touch "$WWW_ROOT/.maintenance"

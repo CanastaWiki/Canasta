@@ -7,6 +7,12 @@ set -x
 
 . /functions.sh
 
+# Remove LocalSettings.php file in MW_VOLUME directory if is is a broken symbolic link
+# For backward compatibility, when LocalSettings.php is a broken link to /var/www/html/w/DockerSettings.php file
+if [ -L "$MW_VOLUME/LocalSettings.php" ] && [ ! -e "$MW_VOLUME/LocalSettings.php" ]; then
+    mv "$MW_VOLUME/LocalSettings.php" "$MW_VOLUME/ToBeDeleted-$(date +%Y%m%d-%H%M%S)-LocalSettings.php"
+fi
+
 WG_DB_TYPE=$(get_mediawiki_variable wgDBtype)
 WG_DB_SERVER=$(get_mediawiki_variable wgDBserver)
 WG_DB_NAME=$(get_mediawiki_variable wgDBname)
@@ -18,6 +24,99 @@ WG_SITE_NAME=$(get_mediawiki_variable wgSitename)
 WG_SEARCH_TYPE=$(get_mediawiki_variable wgSearchType)
 WG_CIRRUS_SEARCH_SERVER=$(get_hostname_with_port "$(get_mediawiki_variable wgCirrusSearchServers first)" 9200)
 VERSION_HASH=$(php /getMediawikiSettings.php --versions --format=md5)
+
+waitdatabase() {
+    if [ -n "$db_started" ]; then
+        return 0; # already started
+    fi
+
+    if [ "$WG_DB_TYPE" = "sqlite" ]; then
+        echo >&2 "SQLite database used"
+        db_started="3"
+        return 0
+    fi
+
+    if [ "$WG_DB_TYPE" != "mysql" ]; then
+        echo >&2 "Unsupported database type ($WG_DB_TYPE)"
+        exit 123
+    fi
+
+    echo >&2 "Waiting for database to start"
+    /wait-for-it.sh -t 86400 "$WG_DB_SERVER:3306"
+
+    mysql=( mysql -h "$WG_DB_SERVER" -u"$WG_DB_USER" -p"$WG_DB_PASSWORD" )
+    mysql_install=( mysql -h "$WG_DB_SERVER" -u"${MW_DB_INSTALLDB_USER:-root}" -p"$MW_DB_INSTALLDB_PASS" )
+
+    for i in {60..0}; do
+        if echo 'SELECT 1' | "${mysql[@]}" &> /dev/null; then
+            db_started="1"
+            break
+        fi
+        sleep 1
+        if echo 'SELECT 1' | "${mysql_install[@]}" &> /dev/null; then
+            db_started="2"
+            break
+        fi
+        echo >&2 'Waiting for database to start...'
+        sleep 1
+    done
+    if [ "$i" = 0 ]; then
+        echo >&2 'Could not connect to the database.'
+        return 1
+    fi
+    echo >&2 'Successfully connected to the database.'
+    return 0
+}
+
+waitelastic() {
+    if [ -n "$es_started" ]; then
+        return 0; # already started
+    fi
+
+    echo >&2 'Waiting for elasticsearch to start'
+    ./wait-for-it.sh -t 60 "$WG_CIRRUS_SEARCH_SERVER"
+
+    for i in {300..0}; do
+        result=0
+        output=$(wget --timeout=1 -q -O - "http://$WG_CIRRUS_SEARCH_SERVER/_cat/health") || result=$?
+        if [[ "$result" = 0 && $(echo "$output"|awk '{ print $4 }') = "green" ]]; then
+            break
+        fi
+        if [ "$result" = 0 ]; then
+            echo >&2 "Waiting for elasticsearch health status changed from [$(echo "$output"|awk '{ print $4 }')] to [green]..."
+        else
+            echo >&2 'Waiting for elasticsearch to start...'
+        fi
+        sleep 1
+    done
+    if [ "$i" = 0 ]; then
+        echo >&2 'Elasticsearch is not ready for use'
+        echo "$output"
+        return 1
+    fi
+    echo >&2 'Elasticsearch started successfully'
+    es_started="1"
+    return 0
+}
+
+get_tables_count() {
+    waitdatabase || {
+        return $?
+    }
+
+    if [ "3" = "$db_started" ]; then
+        # sqlite
+        find "$WG_SQLITE_DATA_DIR" -type f | wc -l
+        return 0
+    elif [ "1" = "$db_started" ]; then
+        db_user="$WG_DB_USER"
+        db_password="$WG_DB_PASSWORD"
+    else
+        db_user="$MW_DB_INSTALLDB_USER"
+        db_password="$MW_DB_INSTALLDB_PASS"
+    fi
+    mysql -h "$WG_DB_SERVER" -u"$db_user" -p"$db_password" -e "SELECT count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$WG_DB_NAME'" | sed -n 2p
+}
 
 run_maintenance_script_if_needed () {
     if [ -f "$MW_VOLUME/$1.info" ]; then
@@ -93,7 +192,7 @@ run_script_if_needed () {
 if [ ! -e "$MW_VOLUME/LocalSettings.php" ] && [ ! -e "$MW_HOME/LocalSettings.php" ] && [ ! -e "$MW_CONFIG_DIR/LocalSettings.php" ]; then
     echo "There is no LocalSettings.php file"
 
-    if [ "$WG_DB_TYPE" != "sqlite" ] || [ -z "$WG_DB_SERVER" ]; then
+    if [ "$WG_DB_TYPE" != "sqlite" ] && [ -z "$WG_DB_SERVER" ]; then
         echo "Database server is not defined, skip installation of the wiki"
     else
         if [ "$WG_DB_TYPE" = "sqlite" ]; then
@@ -146,6 +245,19 @@ fi
 
 rm "$WWW_ROOT/.maintenance"
 
+# Reload the settings
+WG_DB_TYPE=$(get_mediawiki_variable wgDBtype)
+WG_DB_SERVER=$(get_mediawiki_variable wgDBserver)
+WG_DB_NAME=$(get_mediawiki_variable wgDBname)
+WG_DB_USER=$(get_mediawiki_variable wgDBuser)
+WG_DB_PASSWORD=$(get_mediawiki_variable wgDBpassword)
+WG_SQLITE_DATA_DIR=$(get_mediawiki_variable wgSQLiteDataDir)
+WG_LANG_CODE=$(get_mediawiki_variable wgLanguageCode)
+WG_SITE_NAME=$(get_mediawiki_variable wgSitename)
+WG_SEARCH_TYPE=$(get_mediawiki_variable wgSearchType)
+WG_CIRRUS_SEARCH_SERVER=$(get_hostname_with_port "$(get_mediawiki_variable wgCirrusSearchServers first)" 9200)
+VERSION_HASH=$(php /getMediawikiSettings.php --versions --format=md5)
+
 jobrunner() {
     sleep 1
     if isTrue "$MW_ENABLE_JOB_RUNNER"; then
@@ -174,99 +286,6 @@ sitemapgen() {
     else
         echo >&2 Sitemap generator is disabled
     fi
-}
-
-waitdatabase() {
-    if [ -n "$db_started" ]; then
-        return 0; # already started
-    fi
-
-    if [ "$WG_DB_TYPE" = "sqlite" ]; then
-        echo >&2 "SQLite database used"
-        db_started="3"
-        return 0
-    fi
-
-    if [ "$WG_DB_TYPE" != "mysql" ]; then
-        echo >&2 "Unsupported database type ($WG_DB_TYPE)"
-        exit 123
-    fi
-
-    echo >&2 "Waiting for database to start"
-    /wait-for-it.sh -t 86400 "$WG_DB_SERVER:3306"
-
-    mysql=( mysql -h "$WG_DB_SERVER" -u"$WG_DB_USER" -p"$WG_DB_PASSWORD" )
-    mysql_install=( mysql -h "$WG_DB_SERVER" -u"${MW_DB_INSTALLDB_USER:-root}" -p"$MW_DB_INSTALLDB_PASS" )
-
-    for i in {60..0}; do
-        if echo 'SELECT 1' | "${mysql[@]}" &> /dev/null; then
-            db_started="1"
-            break
-        fi
-        sleep 1
-        if echo 'SELECT 1' | "${mysql_install[@]}" &> /dev/null; then
-            db_started="2"
-            break
-        fi
-        echo >&2 'Waiting for database to start...'
-        sleep 1
-    done
-    if [ "$i" = 0 ]; then
-        echo >&2 'Could not connect to the database.'
-        return 1
-    fi
-    echo >&2 'Successfully connected to the database.'
-    return 0
-}
-
-get_tables_count() {
-    waitdatabase || {
-        return $?
-    }
-
-    if [ "3" = "$db_started" ]; then
-        # sqlite
-        find "$WG_SQLITE_DATA_DIR" -type f | wc -l
-        return 0
-    elif [ "1" = "$db_started" ]; then
-        db_user="$WG_DB_USER"
-        db_password="$WG_DB_PASSWORD"
-    else
-        db_user="$MW_DB_INSTALLDB_USER"
-        db_password="$MW_DB_INSTALLDB_PASS"
-    fi
-    mysql -h "$WG_DB_SERVER" -u"$db_user" -p"$db_password" -e "SELECT count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$WG_DB_NAME'" | sed -n 2p
-}
-
-waitelastic() {
-    if [ -n "$es_started" ]; then
-        return 0; # already started
-    fi
-
-    echo >&2 'Waiting for elasticsearch to start'
-    ./wait-for-it.sh -t 60 "$WG_CIRRUS_SEARCH_SERVER"
-
-    for i in {300..0}; do
-        result=0
-        output=$(wget --timeout=1 -q -O - "http://$WG_CIRRUS_SEARCH_SERVER/_cat/health") || result=$?
-        if [[ "$result" = 0 && $(echo "$output"|awk '{ print $4 }') = "green" ]]; then
-            break
-        fi
-        if [ "$result" = 0 ]; then
-            echo >&2 "Waiting for elasticsearch health status changed from [$(echo "$output"|awk '{ print $4 }')] to [green]..."
-        else
-            echo >&2 'Waiting for elasticsearch to start...'
-        fi
-        sleep 1
-    done
-    if [ "$i" = 0 ]; then
-        echo >&2 'Elasticsearch is not ready for use'
-        echo "$output"
-        return 1
-    fi
-    echo >&2 'Elasticsearch started successfully'
-    es_started="1"
-    return 0
 }
 
 run_autoupdate () {
