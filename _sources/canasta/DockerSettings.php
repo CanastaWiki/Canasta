@@ -154,6 +154,7 @@ const DOCKER_EXTENSIONS = [
 	'PubmedParser',
 	'RandomInCategory',
 	'RegularTooltips',
+	'RemoteWiki',
 	'Renameuser', # bundled
 	'ReplaceText', # bundled
 	'RevisionSlider',

@@ -12,7 +12,8 @@
 		"mediawiki/semantic-scribunto": "2.1.0",
 		"mediawiki/simple-batch-upload": "1.8.2",
 		"mediawiki/bootstrap-components": "4.0.1",
-		"mediawiki/sub-page-list": "1.6.1"
+		"mediawiki/sub-page-list": "1.6.1",
+		"mediawiki/remote-wiki": "dev-master#8e9f2a2"
 	},
 	"extra": {
 		"merge-plugin": {
@@ -34,5 +35,11 @@
 				"extensions/WSOAuth/composer.json"
 			]
 		}
-	}
+	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/WikiTeq/mediawiki-extension-RemoteWiki"
+		}
+	]
 }
