@@ -140,10 +140,6 @@ RUN set -x; \
 # Scribunto, SimpleBatchUpload, SubPageList.
 RUN set -x; \
 	cd $MW_HOME/extensions \
-	# AbuseFilter
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/AbuseFilter $MW_HOME/extensions/AbuseFilter \
-	&& cd $MW_HOME/extensions/AbuseFilter \
-	&& git checkout -q 188389ce51055b59f338a6784ecb51b30973e81f \
 	# AdminLinks (v. 0.5)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/AdminLinks $MW_HOME/extensions/AdminLinks \
 	&& cd $MW_HOME/extensions/AdminLinks \

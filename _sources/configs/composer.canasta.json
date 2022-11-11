@@ -2,6 +2,7 @@
 	"require": {
 		"elasticsearch/elasticsearch": "6.7.2",
 		"mediawiki/chameleon-skin": "^3.4.1",
+		"mediawiki/abuse-filter": "dev-master#188389ce51055b59f338a6784ecb51b30973e81f",
 		"mediawiki/maps": "8.0.0",
 		"mediawiki/semantic-media-wiki": "3.2.3",
 		"mediawiki/semantic-result-formats": "3.2.0",
