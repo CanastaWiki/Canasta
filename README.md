@@ -1,4 +1,4 @@
-# Canasta
+# Taqasta
 
 ![taqasta (1)-min](https://user-images.githubusercontent.com/592009/198849659-e778c37a-29fb-4f4b-a503-9fd1ee32410a.png)
 
