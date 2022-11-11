@@ -9,14 +9,16 @@ if ( !defined( 'MEDIAWIKI' ) ) {
  * @param $extName
  */
 function cfLoadExtension( $extName ) {
-	echo "Warning: As of Canasta 1.2.0, this function is deprecated. Use wfLoadExtension instead.";
-	wfLoadExtension( $extName );
+	echo "Error: As of Canasta 1.3.0, the cfLoadExtension function has been removed. Use wfLoadExtension instead.\r\n";
+	echo "The following extension was loaded with cfLoadExtension, but needs to be loaded with wfLoadExtension instead: $extName";
+	die();
 }
 
 /**
  * @param $skinName
  */
 function cfLoadSkin( $skinName ) {
-	echo "Warning: As of Canasta 1.2.0, this function is deprecated. Use wfLoadSkin instead.";
-	wfLoadSkin( $skinName );
+	echo "Error: As of Canasta 1.3.0, the cfLoadSkin function has been removed. Use wfLoadSkin instead.\r\n";
+	echo "The following skin was loaded with cfLoadSkin, but needs to be loaded with wfLoadSkin instead: $skinName";
+	die();
 }
