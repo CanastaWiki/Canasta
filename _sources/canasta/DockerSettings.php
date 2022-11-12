@@ -133,7 +133,6 @@ const DOCKER_EXTENSIONS = [
 	'MsUpload',
 	'MultimediaViewer', # bundled
 	'MyVariables',
-	'ethw',
 	'NCBITaxonomyLookup',
 	'NewUserMessage',
 	'Nuke', # bundled
