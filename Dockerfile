@@ -59,6 +59,7 @@ RUN set x; \
 	php7.4-apcu \
 	php7.4-redis \
 	php7.4-curl \
+	php7.4-tidy \
 	php7.4-zip \
 	monit \
 	zip \
