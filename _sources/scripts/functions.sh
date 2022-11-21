@@ -1,6 +1,6 @@
 # read variables from LocalSettings.php
 get_mediawiki_variable () {
-    php /getMediawikiSettings.php --variable="$1" --format="${2:-string}" 2>/dev/null
+    php /getMediawikiSettings.php --variable="$1" --format="${2:-string}"
 }
 
 isTrue() {
