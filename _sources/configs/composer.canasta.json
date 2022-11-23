@@ -13,7 +13,7 @@
 		"mediawiki/simple-batch-upload": "1.8.2",
 		"mediawiki/bootstrap-components": "4.0.1",
 		"mediawiki/sub-page-list": "1.6.1",
-		"mediawiki/remote-wiki": "dev-master#8e9f2a2"
+		"mediawiki/remote-wiki": "dev-master#07b89b5"
 	},
 	"extra": {
 		"merge-plugin": {
@@ -40,6 +40,10 @@
 		{
 			"type": "vcs",
 			"url": "https://github.com/WikiTeq/mediawiki-extension-RemoteWiki"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/WikiTeq/mediawiki-api-base.git"
 		}
 	]
 }
