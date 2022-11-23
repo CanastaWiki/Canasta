@@ -32,7 +32,8 @@
 				"extensions/GoogleAnalyticsMetrics/composer.json",
 				"extensions/SemanticExternalQueryLookup/composer.json",
 				"extensions/OpenIDConnect/composer.json",
-				"extensions/WSOAuth/composer.json"
+				"extensions/WSOAuth/composer.json",
+				"extensions/Mpdf/composer.json"
 			]
 		}
 	},

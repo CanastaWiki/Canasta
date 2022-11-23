@@ -729,7 +729,9 @@ RUN set -x; \
 	# YouTube
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/YouTube $MW_HOME/extensions/YouTube \
 	&& cd $MW_HOME/extensions/YouTube \
-	&& git checkout -q bd736585dca8412d5eb9dde8f68a54b3c69df9cf
+	&& git checkout -q bd736585dca8412d5eb9dde8f68a54b3c69df9cf \
+    # mPDF
+    && git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/Mpdf.git $MW_HOME/Mpdf
 
 # ReplaceText (switch to more recent commit due to bug on submodule HEAD)
 RUN set -x; \
