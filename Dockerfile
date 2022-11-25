@@ -273,6 +273,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/GlobalNotice $MW_HOME/extensions/GlobalNotice \
 	&& cd $MW_HOME/extensions/GlobalNotice \
 	&& git checkout -q 15a40bff4641f00a5a8dda3d36795b1c659c19a7 \
+	# GoogleAnalyticsMetrics
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/GoogleAnalyticsMetrics $MW_HOME/extensions/GoogleAnalyticsMetrics \
+	&& cd $MW_HOME/extensions/GoogleAnalyticsMetrics \
+	&& git checkout -q 82a08cc63ec58698f144be7c2fb1a6f861cb57bd \
 	# GoogleDocCreator
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/GoogleDocCreator $MW_HOME/extensions/GoogleDocCreator \
 	&& cd $MW_HOME/extensions/GoogleDocCreator \
