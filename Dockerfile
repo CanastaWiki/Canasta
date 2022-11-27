@@ -90,6 +90,9 @@ RUN set -x; \
     # VisualEditor
     && cd extensions/VisualEditor \
     && git submodule update --init
+    # EmailAuthorization
+    && cd ../EmailAuthorization \
+    && git submodule update --init
 
 # Skins
 # The MonoBook, Timeless and Vector skins are bundled into MediaWiki and do not need to be separately installed.
