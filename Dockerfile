@@ -89,7 +89,7 @@ RUN set -x; \
 	&& git submodule update --init --recursive \
     # VisualEditor
     && cd extensions/VisualEditor \
-    && git submodule update --init
+    && git submodule update --init \
     # EmailAuthorization
     && cd ../EmailAuthorization \
     && git submodule update --init
