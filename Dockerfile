@@ -769,7 +769,8 @@ RUN set -x; \
 	&& cat composer.json.bak | jq '. + {"prefer-stable": true}' > composer.json \
 	&& rm composer.json.bak \
 	&& composer clear-cache \
-	&& composer update --no-dev --with-dependencies --no-cache
+	&& composer update --no-dev --with-dependencies \
+	&& composer clear-cache
 
 ################# Patches #################
 
