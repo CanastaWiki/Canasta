@@ -1,0 +1,19 @@
+diff --git a/includes/FD_DisplayDiagram.php b/includes/FD_DisplayDiagram.php
+index 9dd5b0c..6d5edbf 100644
+--- a/includes/FD_DisplayDiagram.php
++++ b/includes/FD_DisplayDiagram.php
+@@ -35,14 +35,6 @@ class FDDisplayDiagram {
+ 			return '<div class="error">' . "Page [[$diagramPage]] does not exist." . '</div>';
+ 		}
+ 
+-		if ( $diagramPage->getNamespace() == FD_NS_BPMN || $diagramPage->getNamespace() == FD_NS_GANTT
+-		|| $diagramPage->getNamespace() == FD_NS_DRAWIO ) {
+-			if ( self::$numInstances++ > 0 ) {
+-				return '<div class="error">Due to current limitations, #display_diagram can only ' .
+-					'be called once per page on any BPMN or Gantt diagram.</div>';
+-			}
+-		}
+-
+ 		if ( $diagramPage->getNamespace() == FD_NS_BPMN ) {
+ 			global $wgOut;
+ 			$wgOut->addModules( 'ext.flexdiagrams.bpmn.viewer' );
