@@ -751,6 +751,11 @@ RUN set -x; \
 	cd $MW_HOME \
 	&& git apply /tmp/core-fix-composer-for-GoogleAnalyticsMetrics.diff
 
+COPY _sources/patches/FlexDiagrams.0.4.fix.diff /tmp/FlexDiagrams.0.4.fix.diff
+RUN set -x; \
+    cd $MW_HOME/extensions/FlexDiagrams \
+    && git apply /tmp/FlexDiagrams.0.4.fix.diff
+
 # Fix composer dependencies for MassPasswordReset extension
 # TODO: remove when PR merged https://github.com/nischayn22/MassPasswordReset/pull/1
 COPY _sources/patches/MassPasswordReset.patch /tmp/MassPasswordReset.patch
