@@ -538,12 +538,6 @@ RUN set -x; \
     tar -xvf /tmp/GTag*.tar.gz -C $MW_HOME/extensions \
     && rm /tmp/GTag*.tar.gz
 
-# GoogleAnalyticsMetrics: Resolve composer conflicts, so placed before the composer install statement!
-COPY _sources/patches/core-fix-composer-for-GoogleAnalyticsMetrics.diff /tmp/core-fix-composer-for-GoogleAnalyticsMetrics.diff
-RUN set -x; \
-	cd $MW_HOME \
-	&& git apply /tmp/core-fix-composer-for-GoogleAnalyticsMetrics.diff
-
 # Composer dependencies
 COPY _sources/configs/composer.canasta.json $MW_HOME/composer.local.json
 RUN set -x; \
@@ -562,18 +556,6 @@ RUN set -x; \
     && sed -i 's/skins/canasta-skins/g' $MW_HOME/vendor/composer/autoload_psr4.php
 
 # Patches
-
-# SemanticResultFormats, see https://github.com/WikiTeq/SemanticResultFormats/compare/master...WikiTeq:fix1_35
-COPY _sources/patches/semantic-result-formats.patch /tmp/semantic-result-formats.patch
-RUN set -x; \
-	cd $MW_HOME/extensions/SemanticResultFormats \
-	&& patch < /tmp/semantic-result-formats.patch
-
-# SWM maintenance page returns 503 (Service Unavailable) status code, PR: https://github.com/SemanticMediaWiki/SemanticMediaWiki/pull/4967
-COPY _sources/patches/smw-maintenance-503.patch /tmp/smw-maintenance-503.patch
-RUN set -x; \
-	cd $MW_HOME/extensions/SemanticMediaWiki \
-	&& patch -u -b src/SetupCheck.php -i /tmp/smw-maintenance-503.patch
 
 # TODO send to upstream, see https://wikiteq.atlassian.net/browse/MW-64 and https://wikiteq.atlassian.net/browse/MW-81
 COPY _sources/patches/skin-refreshed.patch /tmp/skin-refreshed.patch
@@ -608,12 +590,6 @@ COPY _sources/patches/chameleon-path.patch /tmp/chameleon-path.patch
 RUN set -x; \
     cd $MW_HOME/skins/chameleon \
     && git apply /tmp/chameleon-path.patch
-
-COPY _sources/patches/CommentStreams.REL1_35.core.hook.37a9e60.diff /tmp/CommentStreams.REL1_35.core.hook.37a9e60.diff
-# TODO: the Hooks is added in REL1_38, remove the patch once the core is updated to 1.38
-RUN set -x; \
-    cd $MW_HOME \
-    && git apply /tmp/CommentStreams.REL1_35.core.hook.37a9e60.diff
 
 # Cleanup all .git leftovers
 RUN set -x; \
