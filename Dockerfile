@@ -527,7 +527,7 @@ RUN set -x; \
 # Get all Git submodules
 RUN set -x; \
 	# VisualEditor
-	&& cd $MW_HOME/extensions/VisualEditor \
+	cd $MW_HOME/extensions/VisualEditor \
 	&& git submodule update --init \
 	# EmailAuthorization
 	&& cd $MW_HOME/extensions/EmailAuthorization \
