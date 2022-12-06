@@ -82,17 +82,17 @@ RUN set -x; \
 
 FROM base as source
 
-# MediaWiki Core
+# MediaWiki core, and Git submodules
 RUN set -x; \
 	git clone --depth 1 -b $MW_CORE_VERSION https://gerrit.wikimedia.org/r/mediawiki/core.git $MW_HOME \
 	&& cd $MW_HOME \
 	&& git submodule update --init --recursive \
-    # VisualEditor
-    && cd extensions/VisualEditor \
-    && git submodule update --init \
-    # EmailAuthorization
-    && cd ../EmailAuthorization \
-    && git submodule update --init
+	# VisualEditor
+	&& cd extensions/VisualEditor \
+	&& git submodule update --init \
+	# EmailAuthorization
+	&& cd ../EmailAuthorization \
+	&& git submodule update --init
 
 # Skins
 # The MonoBook, Timeless and Vector skins are bundled into MediaWiki and do not need to be separately installed.
