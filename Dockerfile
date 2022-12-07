@@ -145,10 +145,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/AntiSpoof $MW_HOME/extensions/AntiSpoof \
 	&& cd $MW_HOME/extensions/AntiSpoof \
 	&& git checkout -q 01cf89a678d5bab6610d24e07d3534356a5880cb \
-	# ApprovedRevs
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ApprovedRevs $MW_HOME/extensions/ApprovedRevs \
+	# ApprovedRevs (v. 1.8)
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ApprovedRevs $MW_HOME/extensions/ApprovedRevs \
 	&& cd $MW_HOME/extensions/ApprovedRevs \
-	&& git checkout -q 2b95898c52751071ecc6aa07cd99dd0119cdf61c \
+	&& git checkout -q 6e9c957f2f7951f19054ecae8745e55c0425941f \
 	# Arrays
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Arrays $MW_HOME/extensions/Arrays \
 	&& cd $MW_HOME/extensions/Arrays \
@@ -161,10 +161,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/BreadCrumbs2 $MW_HOME/extensions/BreadCrumbs2 \
 	&& cd $MW_HOME/extensions/BreadCrumbs2 \
 	&& git checkout -q d53357a6839e94800a617de4fc451b6c64d0a1c8 \
-	# Cargo (v. 3.3)
+	# Cargo (v. 3.3.1)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/Cargo $MW_HOME/extensions/Cargo \
 	&& cd $MW_HOME/extensions/Cargo \
-	&& git checkout -q 9e6ae1389f0997d4e670d92a1d6b9e4b828d17cb \
+	&& git checkout -q dac6b0da0e3cb5a4226601ebccf1689dbaa6bec7 \
 	# CharInsert
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/CharInsert $MW_HOME/extensions/CharInsert \
 	&& cd $MW_HOME/extensions/CharInsert \
@@ -397,10 +397,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/PageExchange $MW_HOME/extensions/PageExchange \
 	&& cd $MW_HOME/extensions/PageExchange \
 	&& git checkout -q 28482410564e38d2b97ab7321e99c4281c6e5877 \
-	# PageForms (v. 5.5)
+	# PageForms (v. 5.5.1)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms $MW_HOME/extensions/PageForms \
 	&& cd $MW_HOME/extensions/PageForms \
-	&& git checkout -q cb25138203eafe616d4497435bd097830d640569 \
+	&& git checkout -q 74ebc5de5d1b515aeb59c848c3a9e3425da13114 \
 	# PluggableAuth
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/PluggableAuth $MW_HOME/extensions/PluggableAuth \
 	&& cd $MW_HOME/extensions/PluggableAuth \
@@ -493,10 +493,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Variables $MW_HOME/extensions/Variables \
 	&& cd $MW_HOME/extensions/Variables \
 	&& git checkout -q b4a9063f16a928567e3b6788cda9246c2e94797f \
-	# VEForAll (v. 0.4)
+	# VEForAll (v. 0.4.1)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/VEForAll $MW_HOME/extensions/VEForAll \
 	&& cd $MW_HOME/extensions/VEForAll \
-	&& git checkout -q 425454062f17f38d3ae3bcee268dcad51236a93f \
+	&& git checkout -q 2f1f08eca7fbf61198e5f4ccf2d627a6c9ef7b64 \
 	# VoteNY
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/VoteNY $MW_HOME/extensions/VoteNY \
 	&& cd $MW_HOME/extensions/VoteNY \
