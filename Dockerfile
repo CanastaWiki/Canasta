@@ -144,7 +144,7 @@ RUN set -x; \
 	# AntiSpoof
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/AntiSpoof $MW_HOME/extensions/AntiSpoof \
 	&& cd $MW_HOME/extensions/AntiSpoof \
-	&& git checkout -q 01cf89a678d5bab6610d24e07d3534356a5880cb \\
+	&& git checkout -q 01cf89a678d5bab6610d24e07d3534356a5880cb \
 	# ApprovedRevs (v. 1.8)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ApprovedRevs $MW_HOME/extensions/ApprovedRevs \
 	&& cd $MW_HOME/extensions/ApprovedRevs \
