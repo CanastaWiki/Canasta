@@ -545,6 +545,11 @@ RUN set -x; \
 
 # Patches
 
+# Add Bootstrap to LocalSettings.php if the web installer added the Chameleon skin
+COPY _sources/patches/core-local-settings-generator.patch /tmp/core-local-settings-generator.patch
+RUN set -x; \
+	cd $MW_HOME \
+	&& git apply /tmp/core-local-settings-generator.patch
 
 # TODO send to upstream, see https://wikiteq.atlassian.net/browse/MW-64 and https://wikiteq.atlassian.net/browse/MW-81
 #COPY _sources/patches/skin-refreshed.patch /tmp/skin-refreshed.patch
