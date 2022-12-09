@@ -500,10 +500,10 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/PageExchange $MW_HOME/extensions/PageExchange \
 	&& cd $MW_HOME/extensions/PageExchange \
 	&& git checkout -q d55d5e91963fa72c6b1f6bf4304493bfe7500bd5 \
-	# PageForms (v. 5.3.4)
+	# PageForms (v. 5.4)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms $MW_HOME/extensions/PageForms \
 	&& cd $MW_HOME/extensions/PageForms \
-	&& git checkout -q b9a4c1d8b8151611bc04bd7331d8b686e55e04af \
+	&& git checkout -q 23d4f15192038d2c5431d2caeedb93d075e1ff7b \
 	# PDFEmbed
 	&& git clone https://github.com/WolfgangFahl/PDFEmbed.git $MW_HOME/extensions/PDFEmbed \
 	&& cd $MW_HOME/extensions/PDFEmbed \
