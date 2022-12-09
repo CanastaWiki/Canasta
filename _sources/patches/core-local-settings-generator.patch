@@ -13,6 +13,6 @@
 +			$this->extensions[] = 'Bootstrap';
 +		}
 +
-		$db = $installer->getDBInstaller( $installer->getVar( 'wgDBtype' ) );;
+		$db = $installer->getDBInstaller( $installer->getVar( 'wgDBtype' ) );
 
 		$confItems = array_merge(
