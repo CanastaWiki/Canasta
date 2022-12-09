@@ -13,7 +13,7 @@
 		"mediawiki/simple-batch-upload": "1.8.2",
 		"mediawiki/bootstrap-components": "4.0.1",
 		"mediawiki/sub-page-list": "1.6.1",
-		"mediawiki/remote-wiki": "dev-master#07b89b5"
+		"mediawiki/remote-wiki": "dev-master#cb31c362e0759c95b0b97f03ad3b2b08c2e77529"
 	},
 	"extra": {
 		"merge-plugin": {
