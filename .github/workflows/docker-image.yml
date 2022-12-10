@@ -73,6 +73,7 @@ jobs:
 
           # For pull requests just extract the PR number
           [ "${{ github.event_name }}" == "pull_request" ] && VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\)/merge,\1,')
+          [ "${{ github.event_name }}" == "pull_request" ] && PR_NUMBER=$VERSION
 
           # Append version
           [ "${{ github.event_name }}" == "pull_request" ] && VERSION=$MEDIAWIKI_VERSION-$BDATE-$VERSION
@@ -97,6 +98,10 @@ jobs:
           echo "Final image tag to be pushed:"
           echo $REGISTRY_TAGS
           echo "REGISTRY_TAGS=$REGISTRY_TAGS" >> $GITHUB_OUTPUT
+          echo "REGISTRY_TAGS_VERSION=$VERSION" >> $GITHUB_OUTPUT
+          [ "${{ github.event_name }}" == "pull_request" ] && SHA_SHORT=$(echo ${{ github.event.pull_request.head.sha }} | cut -c1-8)
+          [ "${{ github.event_name }}" == "pull_request" ] && echo "REGISTRY_TAGS_PR_NUMBER=$PR_NUMBER" >> $GITHUB_OUTPUT
+          [ "${{ github.event_name }}" == "pull_request" ] && echo "SHA_SHORT=$SHA_SHORT" >> $GITHUB_OUTPUT
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -146,10 +151,14 @@ jobs:
         run: echo ${{ steps.generate.outputs.REGISTRY_TAGS }}
 
       -
-        name: Comment on PR
+        name: Notify about image tag
         if: ${{ steps.docker_build.outputs.digest }} && ${{ github.event_name == 'pull_request' }}
-        uses: mshick/add-pr-comment@v1
-        id: comment
+        uses: hasura/comment-progress@v2.2.0
         with:
-          message: "Image is built and pushed to the repository as `${{ steps.generate.outputs.REGISTRY_TAGS }}`"
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          number: ${{ github.event.number }}
+          id: comment
+          message: ":whale: The image based on [${{ steps.generate.outputs.SHA_SHORT }}](https://github.com/WikiTeq/docker-wikiteq-canasta/pull/${{ steps.generate.outputs.REGISTRY_TAGS_PR_NUMBER }}/commits/${{ github.event.pull_request.head.sha }}) commit has been built with `${{ steps.generate.outputs.REGISTRY_TAGS_VERSION }}` tag as [${{ steps.generate.outputs.REGISTRY_TAGS }}](https://github.com/${{ github.repository }}/pkgs/container/${{ env.IMAGE_NAME }}/${{ steps.docker_build.outputs.imageid }}?tag=${{ steps.generate.outputs.REGISTRY_TAGS_VERSION }})"
+          recreate: true
+          fail: false
