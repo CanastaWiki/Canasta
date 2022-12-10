@@ -155,7 +155,7 @@ jobs:
 
       -
         name: Notify about image tag
-        if: ${{ steps.docker_build.outputs.digest }} && ${{ github.event_name == 'pull_request' }}
+        if: github.event_name == 'pull_request' && steps.docker_build.outputs.digest != ''
         uses: hasura/comment-progress@v2.2.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
