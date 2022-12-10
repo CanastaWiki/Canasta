@@ -105,8 +105,8 @@ jobs:
           echo $REGISTRY_TAGS
           echo "REGISTRY_TAGS=$REGISTRY_TAGS" >> $GITHUB_OUTPUT
           echo "REGISTRY_TAGS_VERSION=$VERSION" >> $GITHUB_OUTPUT
-          [ "${{ github.event_name }}" == "pull_request" ] && echo "REGISTRY_TAGS_PR_NUMBER=$PR_NUMBER" >> $GITHUB_OUTPUT
-          [ "${{ github.event_name }}" == "pull_request" ] && echo "SHA_SHORT=$SHA_SHORT" >> $GITHUB_OUTPUT
+          echo "REGISTRY_TAGS_PR_NUMBER=$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "SHA_SHORT=$SHA_SHORT" >> $GITHUB_OUTPUT
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
