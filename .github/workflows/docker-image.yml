@@ -72,6 +72,7 @@ jobs:
           CANASTA_VERSION=$(cat VERSION)
 
           # For pull requests just extract the PR number
+          PR_NUMBER=""
           [ "${{ github.event_name }}" == "pull_request" ] && VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\)/merge,\1,')
           [ "${{ github.event_name }}" == "pull_request" ] && PR_NUMBER=$VERSION
 
@@ -94,14 +95,16 @@ jobs:
           echo VERSION=$VERSION
           echo REGISTRY_TAGS=$REGISTRY_TAGS
           echo headref=${{ github.head_ref }}
-
+          
+          SHA_SHORT=${{ github.sha }}
+          [ "${{ github.event_name }}" == "pull_request" ] && SHA_SHORT=$(echo ${{ github.event.pull_request.head.sha }} | cut -c1-8)
+        
           echo "Final image tag to be pushed:"
           echo $REGISTRY_TAGS
           echo "REGISTRY_TAGS=$REGISTRY_TAGS" >> $GITHUB_OUTPUT
           echo "REGISTRY_TAGS_VERSION=$VERSION" >> $GITHUB_OUTPUT
-          [ "${{ github.event_name }}" == "pull_request" ] && SHA_SHORT=$(echo ${{ github.event.pull_request.head.sha }} | cut -c1-8)
-          [ "${{ github.event_name }}" == "pull_request" ] && echo "REGISTRY_TAGS_PR_NUMBER=$PR_NUMBER" >> $GITHUB_OUTPUT
-          [ "${{ github.event_name }}" == "pull_request" ] && echo "SHA_SHORT=$SHA_SHORT" >> $GITHUB_OUTPUT
+          echo "REGISTRY_TAGS_PR_NUMBER=$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "SHA_SHORT=$SHA_SHORT" >> $GITHUB_OUTPUT
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
