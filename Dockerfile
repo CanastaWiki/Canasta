@@ -552,13 +552,6 @@ RUN set -x; \
 #	cd $MW_HOME/skins/Refreshed \
 #	&& patch -u -b includes/RefreshedTemplate.php -i /tmp/skin-refreshed.patch
 
-# Allow to modify headelement in the Vector skin, see https://wikiteq.atlassian.net/browse/FAM-7
-#COPY _sources/patches/skin-vector-addVectorGeneratedSkinDataHook.patch /tmp/skin-vector-addVectorGeneratedSkinDataHook.patch
-#RUN set -x; \
-#	cd $MW_HOME/skins/Vector \
-#	&& git apply /tmp/skin-vector-addVectorGeneratedSkinDataHook.patch
-
-
 # WikiTeq's patch allowing to manage fields visibility site-wide
 #COPY _sources/patches/SocialProfile-disable-fields.patch /tmp/SocialProfile-disable-fields.patch
 #RUN set -x; \
