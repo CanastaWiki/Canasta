@@ -489,6 +489,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/UserMerge $MW_HOME/extensions/UserMerge \
 	&& cd $MW_HOME/extensions/UserMerge \
 	&& git checkout -q 183bb7a8f78cbe365bec0fbd4b3ecdd4fae1a359 \
+	# UserPageViewTracker (v. 0.7)
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/UserPageViewTracker $MW_HOME/extensions/UserPageViewTracker \
+	&& cd $MW_HOME/extensions/UserPageViewTracker \
+	&& git checkout -q f4b7c20c372165541164d449c12df1e74e98ed0b \
 	# Variables
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Variables $MW_HOME/extensions/Variables \
 	&& cd $MW_HOME/extensions/Variables \
