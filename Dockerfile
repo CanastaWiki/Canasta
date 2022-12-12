@@ -221,10 +221,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Disambiguator $MW_HOME/extensions/Disambiguator \
 	&& cd $MW_HOME/extensions/Disambiguator \
 	&& git checkout -q b7e7fad5f9f3dccfb902a3cbfd3bf2b16df91871 \
-	# DiscussionTools
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/DiscussionTools $MW_HOME/extensions/DiscussionTools \
-	&& cd $MW_HOME/extensions/DiscussionTools \
-	&& git checkout -q c6a73491a63e82e463b8e7e92f661cff83284b9a \
 	# DismissableSiteNotice
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/DismissableSiteNotice $MW_HOME/extensions/DismissableSiteNotice \
 	&& cd $MW_HOME/extensions/DismissableSiteNotice \
