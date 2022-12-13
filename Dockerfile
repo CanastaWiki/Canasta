@@ -563,6 +563,12 @@ RUN set -x; \
 
 # Patches
 
+# Add Bootstrap to LocalSettings.php if the web installer added the Chameleon skin
+COPY _sources/patches/core-local-settings-generator.patch /tmp/core-local-settings-generator.patch
+RUN set -x; \
+	cd $MW_HOME \
+	&& git apply /tmp/core-local-settings-generator.patch
+
 # SemanticResultFormats, see https://github.com/WikiTeq/SemanticResultFormats/compare/master...WikiTeq:fix1_35
 COPY _sources/patches/semantic-result-formats.patch /tmp/semantic-result-formats.patch
 RUN set -x; \
