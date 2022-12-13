@@ -82,14 +82,11 @@ RUN set -x; \
 
 FROM base as source
 
-# MediaWiki Core
+# MediaWiki core
 RUN set -x; \
 	git clone --depth 1 -b $MW_CORE_VERSION https://gerrit.wikimedia.org/r/mediawiki/core.git $MW_HOME \
 	&& cd $MW_HOME \
-	&& git submodule update --init --recursive \
-    # VisualEditor
-    && cd extensions/VisualEditor \
-    && git submodule update --init
+	&& git submodule update --init --recursive
 
 # Skins
 # The MonoBook, Timeless and Vector skins are bundled into MediaWiki and do not need to be separately installed.
@@ -526,6 +523,15 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/WSOAuth $MW_HOME/extensions/WSOAuth \
 	&& cd $MW_HOME/extensions/WSOAuth \
 	&& git checkout -q 4a08a825b0a667f0a6834f58844af5fd250ceae8
+
+# Get all Git submodules
+RUN set -x; \
+	# VisualEditor
+	cd $MW_HOME/extensions/VisualEditor \
+	&& git submodule update --init \
+	# EmailAuthorization
+	&& cd $MW_HOME/extensions/EmailAuthorization \
+	&& git submodule update --init
 
 # ReplaceText (switch to more recent commit due to bug on submodule HEAD)
 RUN set -x; \
