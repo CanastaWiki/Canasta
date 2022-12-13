@@ -1,0 +1,18 @@
+--- a/includes/installer/LocalSettingsGenerator.php
++++ b/includes/installer/LocalSettingsGenerator.php
+@@ -48,6 +48,15 @@ class LocalSettingsGenerator {
+ 		$this->skins = $installer->getVar( '_Skins' );
+ 		$this->IP = $installer->getVar( 'IP' );
+ 
++		// Patch for Canasta - if the user is enabling the Chameleon
++		// skin (likely, since all skins are selected by default), make
++		// sure the Bootstrap skin is enabled as well, to avoid a
++		// MediaWiki error.
++		if ( in_array( 'chameleon', $this->skins ) &&
++			!in_array( 'Bootstrap', $this->extensions ) ) {
++			$this->extensions[] = 'Bootstrap';
++		}
++
+ 		$db = $installer->getDBInstaller( $installer->getVar( 'wgDBtype' ) );
+ 
+ 		$confItems = array_merge(
