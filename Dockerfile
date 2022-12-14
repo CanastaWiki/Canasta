@@ -227,10 +227,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ContactPage $MW_HOME/extensions/ContactPage \
 	&& cd $MW_HOME/extensions/ContactPage \
 	&& git checkout -q 0466489a8c2ad8f5c045b145cb8b65bb8b164c48 \
-	# ContributionScores (v. 1.26.1 - REL1_35 branch does not work with MW 1.35)
+	# ContributionScores
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ContributionScores $MW_HOME/extensions/ContributionScores \
 	&& cd $MW_HOME/extensions/ContributionScores \
-	&& git checkout -q 46ebf438283913f103ba5dd03a3e4730bb9f87dc \
+	&& git checkout -q d4dae78b27ba5a4bdb2081abc6d6136125709fcb \
 	# CookieWarning
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/CookieWarning $MW_HOME/extensions/CookieWarning \
 	&& cd $MW_HOME/extensions/CookieWarning \
@@ -785,12 +785,6 @@ COPY _sources/patches/ugm.patch /tmp/ugm.patch
 RUN set -x; \
 	cd $MW_HOME \
 	&& git apply /tmp/ugm.patch
-
-# ContributionScores
-COPY _sources/patches/ContributionScoresCacheTTL.diff /tmp/ContributionScoresCacheTTL.diff
-RUN set -x; \
-	cd $MW_HOME/extensions/ContributionScores \
-	&& git apply /tmp/ContributionScoresCacheTTL.diff
 
 # Parsoid assertValidUTF8 back-port from 0.13.1
 COPY _sources/patches/parsoid.0.12.1.diff /tmp/parsoid.0.12.1.diff
