@@ -584,10 +584,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SimpleChanges $MW_HOME/extensions/SimpleChanges \
 	&& cd $MW_HOME/extensions/SimpleChanges \
 	&& git checkout -q c0991c9245dc8907e59f8e4c6fb89852f0c52dde \
-	# SimpleMathJax
+	# SimpleMathJax version 0.8.3
 	&& git clone --single-branch https://github.com/jmnote/SimpleMathJax.git $MW_HOME/extensions/SimpleMathJax \
 	&& cd $MW_HOME/extensions/SimpleMathJax \
-	&& git checkout -q ddcac9ac1616aed794576f2914ee426879194f0f \
+	&& git checkout -q 3757e9b1cf235b2e2c62e7d208d52206e185b28e \
 	# SimpleTooltip
 	&& cd $MW_HOME/extensions \
 	&& git clone https://github.com/Universal-Omega/SimpleTooltip.git \
