@@ -572,7 +572,7 @@ RUN set -x; \
 #RUN set -x; \
 #    cd $MW_HOME/skins/chameleon \
 #    && git apply /tmp/chameleon-path.patch
-
+  
 COPY _sources/patches/SMWErrorboxRemoval.patch /tmp/SMWErrorboxRemoval.patch
 RUN set -x; \
     cd $MW_HOME/extensions/SemanticMediaWiki \
