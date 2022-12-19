@@ -611,16 +611,6 @@ RUN set -x; \
     cd $MW_HOME/extensions/SocialProfile \
     && git apply /tmp/SocialProfile-disable-fields.patch
 
-COPY _sources/patches/bootstrap-path.patch /tmp/bootstrap-path.patch
-RUN set -x; \
-    cd $MW_HOME/extensions/Bootstrap \
-    && patch -p1 < /tmp/bootstrap-path.patch
-
-COPY _sources/patches/chameleon-path.patch /tmp/chameleon-path.patch
-RUN set -x; \
-    cd $MW_HOME/skins/chameleon \
-    && git apply /tmp/chameleon-path.patch
-
 COPY _sources/patches/CommentStreams.REL1_35.core.hook.37a9e60.diff /tmp/CommentStreams.REL1_35.core.hook.37a9e60.diff
 # TODO: the Hooks is added in REL1_38, remove the patch once the core is updated to 1.38
 RUN set -x; \
