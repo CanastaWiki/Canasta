@@ -587,12 +587,6 @@ RUN set -x; \
 	cd $MW_HOME/extensions/SemanticMediaWiki \
 	&& patch -u -b src/SetupCheck.php -i /tmp/smw-maintenance-503.patch
 
-# TODO send to upstream, see https://wikiteq.atlassian.net/browse/MW-64 and https://wikiteq.atlassian.net/browse/MW-81
-COPY _sources/patches/skin-refreshed.patch /tmp/skin-refreshed.patch
-RUN set -x; \
-	cd $MW_HOME/skins/Refreshed \
-	&& patch -u -b includes/RefreshedTemplate.php -i /tmp/skin-refreshed.patch
-
 # Allow to modify headelement in the Vector skin, see https://wikiteq.atlassian.net/browse/FAM-7
 COPY _sources/patches/skin-vector-addVectorGeneratedSkinDataHook.patch /tmp/skin-vector-addVectorGeneratedSkinDataHook.patch
 RUN set -x; \
