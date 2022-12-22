@@ -1,0 +1,156 @@
+From fb9511cd59845b9d2e5bbeb2964a5c4fca698c13 Mon Sep 17 00:00:00 2001
+From: Vedmaka <god.vedmaka@gmail.com>
+Date: Sun, 27 Nov 2022 19:18:20 +0400
+Subject: [PATCH] Adds semantic_query param for remote autocompletion based on SMW query
+
+The patch makes use of getAllPagesForQuery method to provide new
+'semantic_query' parameter that can be supplied with a substituted SMW
+query as a value with the following substitution rules:
+
+* [ = ( , ] = )
+* | = %
+* @ = will be replaced with current value of input
+
+The query will execute 'pfautocomplete' API endpoint on input supporting remote
+autocompletion and will return list of titles found and returned by the query
+
+Change-Id: Ie8c9f459198fea545aae0a3dd23b8147411f025c
+---
+
+diff --git a/includes/PF_AutocompleteAPI.php b/includes/PF_AutocompleteAPI.php
+index a7a89b0..9b73464 100644
+--- a/includes/PF_AutocompleteAPI.php
++++ b/includes/PF_AutocompleteAPI.php
+@@ -26,6 +26,7 @@
+ 		$category = $params['category'];
+ 		$wikidata = $params['wikidata'];
+ 		$concept = $params['concept'];
++		$query = $params['semantic_query'];
+ 		$cargo_table = $params['cargo_table'];
+ 		$cargo_field = $params['cargo_field'];
+ 		$cargo_where = $params['cargo_where'];
+@@ -62,6 +63,13 @@
+ 			if ( $map ) {
+ 				$data = PFValuesUtils::disambiguateLabels( $data );
+ 			}
++		} elseif ( $query !== null ) {
++			$query = $this->processSemanticQuery( $query, $substr );
++			$data = PFValuesUtils::getAllPagesForQuery( $query );
++			$map = $wgPageFormsUseDisplayTitle;
++			if ( $map ) {
++				$data = PFValuesUtils::disambiguateLabels( $data );
++			}
+ 		} elseif ( $cargo_table !== null && $cargo_field !== null ) {
+ 			$data = self::getAllValuesForCargoField( $cargo_table, $cargo_field, $cargo_where, $substr, $base_cargo_table, $base_cargo_field, $basevalue );
+ 		} elseif ( $namespace !== null ) {
+@@ -134,6 +142,7 @@
+ 			'category' => null,
+ 			'concept' => null,
+ 			'wikidata' => null,
++			'semantic_query' => null,
+ 			'cargo_table' => null,
+ 			'cargo_field' => null,
+ 			'cargo_where' => null,
+@@ -153,6 +162,7 @@
+ 			'category' => 'Category for which to search values',
+ 			'concept' => 'Concept for which to search values',
+ 			'wikidata' => 'Search string for getting values from wikidata',
++			'semantic_query' => 'Query for which to search values',
+ 			'namespace' => 'Namespace for which to search values',
+ 			'external_url' => 'Alias for external URL from which to get values',
+ 			'baseprop' => 'A previous property in the form to check against',
+@@ -170,9 +180,19 @@
+ 			'api.php?action=pfautocomplete&substr=te',
+ 			'api.php?action=pfautocomplete&substr=te&property=Has_author',
+ 			'api.php?action=pfautocomplete&substr=te&category=Authors',
++			'api.php?action=pfautocomplete&semantic_query=((Category:Test)) ((MyProperty::Something))',
+ 		];
+ 	}
+ 
++	private function processSemanticQuery( $query, $substr = '' ) {
++		$query = str_replace(
++			[ "&lt;", "&gt;", "(", ")", '%', '@' ],
++			[ "<", ">", "[", "]", '|', $substr ],
++			$query
++		);
++		return $query;
++	}
++
+ 	private function getAllValuesForProperty(
+ 		$property_name,
+ 		$substring,
+diff --git a/includes/PF_ValuesUtils.php b/includes/PF_ValuesUtils.php
+index 1f9b89c..cfeb74c 100644
+--- a/includes/PF_ValuesUtils.php
++++ b/includes/PF_ValuesUtils.php
+@@ -733,6 +733,9 @@
+ 				$whereStr = $field_args['cargo where'];
+ 				$autocompletionSource .= "|$whereStr";
+ 			}
++		} elseif ( array_key_exists( 'semantic_query', $field_args ) ) {
++			$autocompletionSource = $field_args['semantic_query'];
++			$autocompleteFieldType = 'semantic_query';
+ 		} elseif ( array_key_exists( 'semantic_property', $field_args ) ) {
+ 			$autocompletionSource = $field_args['semantic_property'];
+ 			$autocompleteFieldType = 'property';
+@@ -741,7 +744,7 @@
+ 			$autocompletionSource = null;
+ 		}
+ 
+-		if ( $wgCapitalLinks && $autocompleteFieldType != 'external_url' && $autocompleteFieldType != 'cargo field' ) {
++		if ( $wgCapitalLinks && $autocompleteFieldType != 'external_url' && $autocompleteFieldType != 'cargo field' && $autocompleteFieldType != 'semantic_query' ) {
+ 			$autocompletionSource = PFUtils::getContLang()->ucfirst( $autocompletionSource );
+ 		}
+ 
+@@ -902,8 +905,9 @@
+ 	 * @return array
+ 	 */
+ 	public static function getAllPagesForQuery( $rawQuery ) {
++		global $wgPageFormsUseDisplayTitle;
+ 		$rawQueryArray = [ $rawQuery ];
+-		SMWQueryProcessor::processFunctionParams( $rawQueryArray, $queryString, $processedParams, $printouts );
++		list( $queryString, $processedParams, $printouts ) = SMWQueryProcessor::getComponentsFromFunctionParams( $rawQueryArray, false );
+ 		SMWQueryProcessor::addThisPrintout( $printouts, $processedParams );
+ 		$processedParams = SMWQueryProcessor::getProcessedParams( $processedParams, $printouts );
+ 		$queryObj = SMWQueryProcessor::createQuery( $queryString,
+@@ -911,9 +915,38 @@
+ 			SMWQueryProcessor::SPECIAL_PAGE, '', $printouts );
+ 		$res = PFUtils::getSMWStore()->getQueryResult( $queryObj );
+ 		$rows = $res->getResults();
++		$titles = [];
+ 		$pages = [];
+-		foreach ( $rows as $row ) {
+-			$pages[] = $row->getDbKey();
++
++		foreach ( $rows as $diWikiPage ) {
++			$titles[] = $diWikiPage->getTitle();
++		}
++
++		if ( $wgPageFormsUseDisplayTitle ) {
++			$services = MediaWikiServices::getInstance();
++			if ( method_exists( $services, 'getPageProps' ) ) {
++				// MW 1.36+
++				$pageProps = $services->getPageProps();
++			} else {
++				$pageProps = PageProps::getInstance();
++			}
++			$properties = $pageProps->getProperties( $titles,
++				[ 'displaytitle', 'defaultsort' ] );
++			foreach ( $titles as $title ) {
++				if ( array_key_exists( $title->getArticleID(), $properties ) ) {
++					$titleprops = $properties[$title->getArticleID()];
++				} else {
++					$titleprops = [];
++				}
++
++				$titleText = $title->getPrefixedText();
++				if ( array_key_exists( 'displaytitle', $titleprops ) &&
++					 trim( str_replace( '&#160;', '', strip_tags( $titleprops['displaytitle'] ) ) ) !== '' ) {
++					$pages[$titleText] = htmlspecialchars_decode( $titleprops['displaytitle'] );
++				} else {
++					$pages[$titleText] = $titleText;
++				}
++			}
+ 		}
+ 
+ 		return $pages;

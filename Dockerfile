@@ -766,6 +766,11 @@ RUN set -x; \
 	cd $MW_HOME/extensions/MassPasswordReset \
 	&& git apply /tmp/MassPasswordReset.patch
 
+COPY _sources/patches/PageForms.Adds_semantic_query_param.fb9511c.diff /tmp/PageForms.Adds_semantic_query_param.fb9511c.diff
+RUN set -x; \
+    cd $MW_HOME/extensions/PageForms \
+    && git apply /tmp/PageForms.Adds_semantic_query_param.fb9511c.diff
+
 # Composer dependencies
 COPY _sources/configs/composer.canasta.json $MW_HOME/composer.local.json
 RUN set -x; \
