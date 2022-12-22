@@ -3,6 +3,8 @@ FROM debian:11.4 as base
 LABEL maintainers="pastakhov@yandex.ru,alexey@wikiteq.com"
 LABEL org.opencontainers.image.source=https://github.com/WikiTeq/Taqasta
 
+ARG COMPOSER_TOKEN
+
 ENV MW_VERSION=REL1_35 \
 	MW_CORE_VERSION=1.35.8 \
 	WWW_ROOT=/var/www/mediawiki \
@@ -12,7 +14,8 @@ ENV MW_VERSION=REL1_35 \
 	MW_VOLUME=/mediawiki \
 	WWW_USER=www-data \
 	WWW_GROUP=www-data \
-	APACHE_LOG_DIR=/var/log/apache2
+	APACHE_LOG_DIR=/var/log/apache2 \
+	COMPOSER_TOKEN=$COMPOSER_TOKEN
 
 # System setup
 RUN set x; \
@@ -774,6 +777,8 @@ RUN set -x; \
 	&& cat composer.json.bak | jq '. + {"prefer-stable": true}' > composer.json \
 	&& rm composer.json.bak \
 	&& composer clear-cache \
+	# configure auth
+	&& [ "$COMPOSER_TOKEN" != "" ] && composer config -g github-oauth.github.com $COMPOSER_TOKEN \
 	&& composer update --no-dev --with-dependencies \
 	&& composer clear-cache
 

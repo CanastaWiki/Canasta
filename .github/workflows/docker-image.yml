@@ -137,6 +137,8 @@ jobs:
         with:
           context: .
           platforms: linux/amd64, linux/arm64
+          build-args: |
+            COMPOSER_TOKEN=${{ secrets.GITHUB_TOKEN }}
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
