@@ -7,10 +7,6 @@ get_mediawiki_variable () {
     php /getMediawikiSettings.php --variable="$1" --format="${2:-string}"
 }
 
-get_docker_gateway () {
-  getent hosts "gateway.docker.internal" | awk '{ print $1 }'
-}
-
 isTrue() {
     case $1 in
         "True" | "TRUE" | "true" | 1)
@@ -101,25 +97,7 @@ rsync -ah --inplace --ignore-existing --remove-source-files \
 # We don't need it anymore
 rm -rf "$MW_ORIGIN_FILES"
 
-# Try to fetch gateway IP from extra host
-DOCKER_GATEWAY=$(get_docker_gateway)
-
-# Fall back to default 172.x network if unable to fetch gateway
-if [ -z "$DOCKER_GATEWAY" ]; then
-  DOCKER_GATEWAY="172.17.0.1"
-fi
-
-# Map host for VisualEditor
-if [ -e "$MW_VOLUME/config/LocalSettings.php"  ]; then
-  MW_SITE_SERVER=$(get_mediawiki_variable wgServer)
-  if [[ ! $MW_SITE_SERVER =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    DOMAIN=$(echo "$MW_SITE_SERVER" | sed -e 's|^[^/]*//||' -e 's|[:/].*$||')
-    echo "$DOCKER_GATEWAY $DOMAIN" >> /etc/hosts
-  fi
-fi
-
-# Update /etc/ssmtp/ssmtp.conf to use DOCKER_GATEWAY
-sed -i "s/DOCKER_GATEWAY/$DOCKER_GATEWAY/" /etc/msmtprc
+/update-docker-gateway.sh
 
 # Permissions
 # Note: this part if checking for root directories permissions
