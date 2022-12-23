@@ -27,10 +27,10 @@ function cfLoadSkin( $skinName ) {
  * Not exactly a utility function, but - show a warning to users if $wgSMTP is not set.
  */
 $wgHooks['SiteNoticeAfter'][] = 'showSMTPWarning';
-function showSMTPWarning( &$siteNotice, Skin $skin ) {
-	global $wgSMTP;
+function showSMTPWarning( &$siteNotice, Skin $skin ) {{
+	global $wgSMTP, $wgEnableEmail, $wgEnableUserEmail;
 
-	if ( $wgSMTP !== false ) {
+	if ( $wgEnableEmail == false || $wgSMTP !== false ) {
 		return true;
 	}
 	$title = $skin->getTitle();
@@ -42,7 +42,11 @@ function showSMTPWarning( &$siteNotice, Skin $skin ) {
 		->getPage( $title->getText() );
 	$canonicalName = $specialPage->getName();
 	// Only display this warning for pages that could result in an email getting sent.
-	if ( !in_array( $canonicalName, [ 'Preferences', 'CreateAccount', 'Emailuser' ] ) ) {
+	$specialPagesWithEmail = [ 'Preferences', 'CreateAccount' ];
+	if ( $wgEnableUserEmail ) {
+		$specialPagesWithEmail[] = 'Emailuser';
+	}
+	if ( !in_array( $canonicalName, $specialPagesWithEmail ) ) {
 		return true;
 	}
 
