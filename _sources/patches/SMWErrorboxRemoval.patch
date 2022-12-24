@@ -1,0 +1,17 @@
+diff --git a/src/MediaWiki/Hooks/BeforePageDisplay.php b/src/MediaWiki/Hooks/BeforePageDisplay.php
+index f1f662056..5afdf3807 100644
+--- a/src/MediaWiki/Hooks/BeforePageDisplay.php
++++ b/src/MediaWiki/Hooks/BeforePageDisplay.php
+@@ -46,12 +46,6 @@ class BeforePageDisplay implements HookListener {
+ 			return;
+ 		}
+
+-		$outputPage->prependHTML(
+-			'<div class="errorbox" style="display:block;">Semantic MediaWiki ' .
+-			'was installed but not enabled on this wiki. Please consult the ' .
+-			'<a href="https://www.semantic-mediawiki.org/wiki/Extension_registration">help page</a> for ' .
+-			'instructions and further assistances.</div>'
+-		);
+ 	}
+
+ 	/**
