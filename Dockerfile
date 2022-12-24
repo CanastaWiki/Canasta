@@ -286,6 +286,7 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/EmailAuthorization $MW_HOME/extensions/EmailAuthorization \
 	&& cd $MW_HOME/extensions/EmailAuthorization \
 	&& git checkout -q 5d1594a762427e37f243220578a393e6134aa020 \
+	&& git submodule update --init --recursive \
 	# EmbedVideo
 	&& git clone --single-branch -b master https://gitlab.com/hydrawiki/extensions/EmbedVideo.git $MW_HOME/extensions/EmbedVideo \
 	&& cd $MW_HOME/extensions/EmbedVideo \
@@ -801,6 +802,12 @@ COPY _sources/patches/parsoid.0.12.1.diff /tmp/parsoid.0.12.1.diff
 RUN set -x; \
 	cd $MW_HOME/vendor/wikimedia/parsoid/src/Utils/ \
 	&& patch --verbose --ignore-whitespace --fuzz 3 PHPUtils.php /tmp/parsoid.0.12.1.diff
+
+# Add Bootstrap to LocalSettings.php if the web installer added the Chameleon skin
+COPY _sources/patches/core-local-settings-generator.patch /tmp/core-local-settings-generator.patch
+RUN set -x; \
+	cd $MW_HOME \
+	&& git apply /tmp/core-local-settings-generator.patch
 
 # SemanticResultFormats, see https://github.com/WikiTeq/SemanticResultFormats/compare/master...WikiTeq:fix1_35
 COPY _sources/patches/semantic-result-formats.patch /tmp/semantic-result-formats.patch
