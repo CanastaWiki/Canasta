@@ -573,6 +573,10 @@ RUN set -x; \
 #    cd $MW_HOME/skins/chameleon \
 #    && git apply /tmp/chameleon-path.patch
 
+COPY _sources/patches/SMWErrorboxRemoval.patch /tmp/SMWErrorboxRemoval.patch
+RUN set -x; \
+    cd $MW_HOME/extensions/SemanticMediaWiki \
+    && git apply /tmp/SMWErrorboxRemoval.patch
 
 # Cleanup all .git leftovers
 RUN set -x; \
