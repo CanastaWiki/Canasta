@@ -51,4 +51,4 @@ $wgHooks['SiteNoticeAfter'][] = function ( &$siteNotice, Skin $skin ) {
 
 	$siteNotice .= '<div class="warningbox" style="font-size: larger;">Please note that mailing does not currently work on this wiki, because Canasta requires <a href="https://www.mediawiki.org/wiki/Manual:$wgSMTP">$wgSMTP</a> to be set in order to send emails.</div>';
 	return true;
-}
+};
