@@ -26,11 +26,10 @@ function cfLoadSkin( $skinName ) {
 /**
  * Not exactly a utility function, but - show a warning to users if $wgSMTP is not set.
  */
-$wgHooks['SiteNoticeAfter'][] = 'showSMTPWarning';
-function showSMTPWarning( &$siteNotice, Skin $skin ) {{
+$wgHooks['SiteNoticeAfter'][] = function ( &$siteNotice, Skin $skin ) {
 	global $wgSMTP, $wgEnableEmail, $wgEnableUserEmail;
 
-	if ( $wgEnableEmail == false || $wgSMTP !== false ) {
+	if ( !$wgEnableEmail || $wgSMTP ) {
 		return true;
 	}
 	$title = $skin->getTitle();
@@ -50,6 +49,6 @@ function showSMTPWarning( &$siteNotice, Skin $skin ) {{
 		return true;
 	}
 
-	$siteNotice .= '<div class="warningbox"><big>Please note that mailing does not currently work on this wiki, because Canasta requires <a href="https://www.mediawiki.org/wiki/Manual:$wgSMTP">$wgSMTP</a> to be set in order to send emails.</big></div>';
+	$siteNotice .= '<div class="warningbox" style="font-size: larger;">Please note that mailing does not currently work on this wiki, because Canasta requires <a href="https://www.mediawiki.org/wiki/Manual:$wgSMTP">$wgSMTP</a> to be set in order to send emails.</div>';
 	return true;
 }
