@@ -784,7 +784,7 @@ RUN set -x; \
 	&& rm composer.json.bak \
 	&& composer clear-cache \
 	# configure auth
-	&& [ "$COMPOSER_TOKEN" != "" ] && composer config -g github-oauth.github.com $COMPOSER_TOKEN \
+	&& if [ "$COMPOSER_TOKEN" != "" ]; then composer config -g github-oauth.github.com $COMPOSER_TOKEN; fi \
 	&& composer update --no-dev --with-dependencies \
 	&& composer clear-cache
 
