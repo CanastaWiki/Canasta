@@ -30,11 +30,11 @@ $wgHooks['SiteNoticeAfter'][] = function ( &$siteNotice, Skin $skin ) {
 	global $wgSMTP, $wgEnableEmail, $wgEnableUserEmail;
 
 	if ( !$wgEnableEmail || $wgSMTP ) {
-		return true;
+		return;
 	}
 	$title = $skin->getTitle();
 	if ( !$title->isSpecialPage() ) {
-		return true;
+		return;
 	}
 	$specialPage = MediaWiki\MediaWikiServices::getInstance()
 		->getSpecialPageFactory()
@@ -46,9 +46,9 @@ $wgHooks['SiteNoticeAfter'][] = function ( &$siteNotice, Skin $skin ) {
 		$specialPagesWithEmail[] = 'Emailuser';
 	}
 	if ( !in_array( $canonicalName, $specialPagesWithEmail ) ) {
-		return true;
+		return;
 	}
 
-	$siteNotice .= '<div class="warningbox" style="font-size: larger;">Please note that mailing does not currently work on this wiki, because Canasta requires <a href="https://www.mediawiki.org/wiki/Manual:$wgSMTP">$wgSMTP</a> to be set in order to send emails.</div>';
-	return true;
+	$warningText = 'Please note that mailing does not currently work on this wiki, because Canasta requires <a href="https://www.mediawiki.org/wiki/Manual:$wgSMTP">$wgSMTP</a> to be set in order to send emails.';
+	$siteNotice .= Html::warningBox( '<span style="font-size: larger;">' . $warningText . '</span>' );
 };
