@@ -453,6 +453,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/TemplateStyles $MW_HOME/extensions/TemplateStyles \
 	&& cd $MW_HOME/extensions/TemplateStyles \
 	&& git checkout -q 2a93b56e370ab8b8e020ed29c507104b56f1d11a \
+	# TemplateWizard
+	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/TemplateWizard $MW_HOME/extensions/TemplateWizard \
+	&& cd $MW_HOME/extensions/TemplateWizard \
+	&& git checkout -q d486e3475f84118fd9b5c77d60254daa2f56f654 \
 	# Thanks
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Thanks $MW_HOME/extensions/Thanks \
 	&& cd $MW_HOME/extensions/Thanks \
