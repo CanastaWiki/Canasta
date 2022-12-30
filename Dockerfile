@@ -504,10 +504,10 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/PageExchange $MW_HOME/extensions/PageExchange \
 	&& cd $MW_HOME/extensions/PageExchange \
 	&& git checkout -q d55d5e91963fa72c6b1f6bf4304493bfe7500bd5 \
-	# PageForms (v. 5.4)
+	# PageForms (v. 5.5.1)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms $MW_HOME/extensions/PageForms \
 	&& cd $MW_HOME/extensions/PageForms \
-	&& git checkout -q 23d4f15192038d2c5431d2caeedb93d075e1ff7b \
+	&& git checkout -q fb9511cd59845b9d2e5bbeb2964a5c4fca698c13 \
 	# PDFEmbed
 	&& git clone https://github.com/WolfgangFahl/PDFEmbed.git $MW_HOME/extensions/PDFEmbed \
 	&& cd $MW_HOME/extensions/PDFEmbed \
@@ -766,11 +766,6 @@ COPY _sources/patches/MassPasswordReset.patch /tmp/MassPasswordReset.patch
 RUN set -x; \
 	cd $MW_HOME/extensions/MassPasswordReset \
 	&& git apply /tmp/MassPasswordReset.patch
-
-COPY _sources/patches/PageForms.Adds_semantic_query_param.fb9511c.diff /tmp/PageForms.Adds_semantic_query_param.fb9511c.diff
-RUN set -x; \
-    cd $MW_HOME/extensions/PageForms \
-    && git apply /tmp/PageForms.Adds_semantic_query_param.fb9511c.diff
 
 # Composer dependencies
 COPY _sources/configs/composer.canasta.json $MW_HOME/composer.local.json
