@@ -561,12 +561,6 @@ RUN set -x; \
 #	cd $MW_HOME/skins/Refreshed \
 #	&& patch -u -b includes/RefreshedTemplate.php -i /tmp/skin-refreshed.patch
 
-# WikiTeq's patch allowing to manage fields visibility site-wide
-#COPY _sources/patches/SocialProfile-disable-fields.patch /tmp/SocialProfile-disable-fields.patch
-#RUN set -x; \
-#    cd $MW_HOME/extensions/SocialProfile \
-#    && git apply /tmp/SocialProfile-disable-fields.patch
-
 #COPY _sources/patches/bootstrap-path.patch /tmp/bootstrap-path.patch
 #RUN set -x; \
 #    cd $MW_HOME/extensions/Bootstrap \
