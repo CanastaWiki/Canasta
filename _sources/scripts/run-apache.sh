@@ -189,7 +189,7 @@ check_mount_points () {
   fi
 }
 
-inotifywait () {
+inotifywait() {
         runuser -c /inotifywait.sh -s /bin/bash "$WWW_USER"
 }
 
