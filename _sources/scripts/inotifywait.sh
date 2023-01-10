@@ -11,7 +11,7 @@ sym_remove() {
 unlink "${1}"
 return
 }
-declare -A array=( ["/root/Cani/"]="/root/Cani2/" ["/root/somewhere1/"]="/root/somewhere2/" )
+declare -A array=( [""${MW_HOME}"/user-extensions/"]=""$MW_HOME"/extensions/" [""${MW_HOME}"/user-skins/"]=""${MW_HOME}"/skins/" )
 inotifywait --exclude "${exclude:-\$^}" "${recursive}" --monitor "${!array[@]}" |
     while read -r directory event file; do
         case "${event}" in
