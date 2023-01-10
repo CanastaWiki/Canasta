@@ -24,6 +24,7 @@ RUN set x; \
 	apache2 \
 	software-properties-common \
 	gpg \
+	inotify-tools \
 	apt-transport-https \
 	ca-certificates \
 	wget \
