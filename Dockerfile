@@ -1,4 +1,4 @@
-FROM debian:11.4 as base
+FROM debian:bullseye-backports as base
 
 LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
@@ -24,7 +24,6 @@ RUN set x; \
 	apache2 \
 	software-properties-common \
 	gpg \
-	inotify-tools \
 	apt-transport-https \
 	ca-certificates \
 	wget \
@@ -60,6 +59,8 @@ RUN set x; \
 	php7.4-redis \
 	php7.4-curl \
 	php7.4-zip \
+	&& aptitude update \
+	&& apt install -t bullseye-backports inotify-tools -y\
 	&& aptitude clean \
 	&& rm -rf /var/lib/apt/lists/*
 
@@ -682,6 +683,7 @@ COPY _sources/configs/php_max_input_vars.ini _sources/configs/php_max_input_vars
 COPY _sources/configs/php_timeouts.ini /etc/php/7.4/apache2/conf.d/
 COPY _sources/scripts/*.sh /
 COPY _sources/scripts/*.php $MW_HOME/maintenance/
+COPY _sources/scripts/notify/*.sh $MW_HOME/
 COPY _sources/configs/robots.txt $WWW_ROOT/
 COPY _sources/configs/.htaccess $WWW_ROOT/
 COPY _sources/images/favicon.ico $WWW_ROOT/
