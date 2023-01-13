@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 set -x
 
-inotifywait -m -e create,moved_to,delete,moved_from --format '%e:%f%0%n' user-extensions | while IFS=: read -r event file; do case $event in CREATE,ISDIR|MOVED_TO,ISDIR) ln -rsft extensions -- user-extensions/"$file" ;; DELETE,ISDIR|MOVED_FROM,ISDIR) echo "event: ${event}   file: ${file}"; ln -rsft extensions -- canasta-extensions/"$file" || rm -- "$file"; esac done
+userexts="$MW_HOME/user-extensions"
+extensions="$MW_HOME/extensions"
+canexts="$MW_HOME/canasta-extensions"
 
-inotifywait -m -e create,moved_to,delete,moved_from --format '%e:%f%0%n' user-skins | while IFS=: read -r event file; do case $event in CREATE,ISDIR|MOVED_TO,ISDIR) ln -rsft skins -- user-skins/"$file" ;; DELETE,ISDIR|MOVED_FROM,ISDIR) echo "event: ${event}   file: ${file}"; ln -rsft skins -- canasta-skins/"$file" || rm -- "$file"; esac done
+userskins="$MW_HOME/user-skins"
+skins="$MW_HOME/skins"
+canskins="$MW_HOME/canasta-skins"
+
+
+inotifywait -m -e create,moved_to,delete,moved_from --format '%e:%f%0' -- "$userexts"| while IFS=: read -r event file; do case $event in CREATE,ISDIR|MOVED_TO,ISDIR) ln -rsft "$extensions" -- "$userexts"/"$file" ;; DELETE,ISDIR|MOVED_FROM,ISDIR) echo "event: ${event}   file: ${file}"; ln -rsft "$extensions" -- "$canexts"/"$file" || rm -- "$file"; esac done
+
+inotifywait -m -e create,moved_to,delete,moved_from --format '%e:%f%0' -- "$userskins" | while IFS=: read -r event file; do case $event in CREATE,ISDIR|MOVED_TO,ISDIR) ln -rsft skins -- "$userskins"/"$file" ;; DELETE,ISDIR|MOVED_FROM,ISDIR) echo "event: ${event}   file: ${file}"; ln -rsft skins -- "$canskins"/"$file" || rm -- "$file"; esac done
