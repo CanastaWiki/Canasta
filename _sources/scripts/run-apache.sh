@@ -188,10 +188,10 @@ check_mount_points () {
     exit 1
   fi
 }
-
 inotifywait() {
-        runuser -c /inotifywait.sh -s /bin/bash "$WWW_USER"
+	runuser -c $MW_HOME/inotifywait.sh -s /bin/bash "$WWW_USER"	
 }
+
 
 # Wait db
 waitdatabase
