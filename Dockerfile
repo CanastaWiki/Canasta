@@ -714,7 +714,7 @@ RUN set -x; \
 	# Widgets
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Widgets $MW_HOME/extensions/Widgets \
 	&& cd $MW_HOME/extensions/Widgets \
-	&& git checkout -q e9ebcb7a60e04a4b6054538032d1d2e1badf9934 \
+	&& git checkout -q 32993157584b182390962d93341561cd3aecdb58 \
 	# WikiForum
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/WikiForum $MW_HOME/extensions/WikiForum \
 	&& cd $MW_HOME/extensions/WikiForum \
