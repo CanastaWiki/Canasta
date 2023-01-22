@@ -3,6 +3,7 @@
 		"elasticsearch/elasticsearch": "^7.11.0",
 		"mediawiki/chameleon-skin": "^3.4.1",
 		"mediawiki/maps": "8.0.0",
+		"mediawiki/mermaid": "~3.1",
 		"mediawiki/semantic-media-wiki": "^4.0.0"
 	},
 	"extra": {

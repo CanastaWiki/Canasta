@@ -124,9 +124,9 @@ RUN set -x; \
 # PdfHandler, Poem, Renameuser, Replace Text, Scribunto, SecureLinkFixer, SpamBlacklist, SyntaxHighlight, TemplateData,
 # TextExtracts, TitleBlacklist, VisualEditor, WikiEditor.
 # The following extensions are downloaded via Composer and also do not need to be downloaded here: Bootstrap,
-# BootstrapComponents, Maps, Semantic Breadcrumb Links, Semantic Compound Queries, Semantic Extra Special Properties,
-# Semantic MediaWiki (along with all its helper library extensions, like DataValues), Semantic Result Formats, Semantic
-# Scribunto, SimpleBatchUpload, SubPageList.
+# BootstrapComponents, Maps, Mermaid, Semantic Breadcrumb Links, Semantic Compound Queries, Semantic Extra Special
+# Properties, Semantic MediaWiki (along with all its helper library extensions, like DataValues), Semantic Result
+# Formats, Semantic Scribunto, SimpleBatchUpload, SubPageList.
 RUN set -x; \
 	cd $MW_HOME/extensions \
 	# AdminLinks
@@ -213,6 +213,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/DataTransfer $MW_HOME/extensions/DataTransfer \
 	&& cd $MW_HOME/extensions/DataTransfer \
 	&& git checkout -q 2f9f949f71f0bb7d1bd8b6b97c795b9428bb1c71 \
+	# DeleteBatch
+	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/DeleteBatch $MW_HOME/extensions/DeleteBatch \
+	&& cd $MW_HOME/extensions/DeleteBatch \
+	&& git checkout -q 82078d60fc59a718f429ddebe5e99de8a8734413 \
 	# Description2
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Description2 $MW_HOME/extensions/Description2 \
 	&& cd $MW_HOME/extensions/Description2 \
@@ -425,6 +429,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SaveSpinner $MW_HOME/extensions/SaveSpinner \
 	&& cd $MW_HOME/extensions/SaveSpinner \
 	&& git checkout -q 1e819e2fff7fad6999bafe71d866c3af50836c42 \
+	# SemanticDependencyUpdater (v. 2.0.2)
+	&& git clone --single-branch -b master https://github.com/gesinn-it/SemanticDependencyUpdater $MW_HOME/extensions/SemanticDependencyUpdater \
+	&& cd $MW_HOME/extensions/SemanticDependencyUpdater \
+	&& git checkout -q 389e34c4d4249d27b283a8a29c654fb708b8b294 \
 	# SemanticDrilldown
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SemanticDrilldown $MW_HOME/extensions/SemanticDrilldown \
 	&& cd $MW_HOME/extensions/SemanticDrilldown \
@@ -469,6 +477,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/TinyMCE $MW_HOME/extensions/TinyMCE \
 	&& cd $MW_HOME/extensions/TinyMCE \
 	&& git checkout -q 06436ec3a53c6cd53c458e4e8ab3ec8d1a23029b \
+	# TitleIcon
+	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/TitleIcon $MW_HOME/extensions/TitleIcon \
+	&& cd $MW_HOME/extensions/TitleIcon \
+	&& git checkout -q 7c6c83f4859642542393612ad961a258378e0cac \
 	# UniversalLanguageSelector
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/UniversalLanguageSelector $MW_HOME/extensions/UniversalLanguageSelector \
 	&& cd $MW_HOME/extensions/UniversalLanguageSelector \
@@ -505,10 +517,18 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/VoteNY $MW_HOME/extensions/VoteNY \
 	&& cd $MW_HOME/extensions/VoteNY \
 	&& git checkout -q 11c103f4b9167a8d8d5e850d8a781c6f49b249c1 \
+	# WatchAnalytics (v. 3.2.0)
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/WatchAnalytics $MW_HOME/extensions/WatchAnalytics \
+	&& cd $MW_HOME/extensions/WatchAnalytics \
+	&& git checkout -q a5751cb6e066eaf9b151b1b86857cafe254f7feb \
 	# WhoIsWatching
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/WhoIsWatching $MW_HOME/extensions/WhoIsWatching \
 	&& cd $MW_HOME/extensions/WhoIsWatching \
 	&& git checkout -q 836a31018e26ab7c993088c4cca31a89efec2ee5 \
+	# WhosOnline
+	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/WhosOnline $MW_HOME/extensions/WhosOnline \
+	&& cd $MW_HOME/extensions/WhosOnline \
+	&& git checkout -q bb1765d2eb5c88ca10dc8a0be19f35fcffdccdae \
 	# Widgets
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Widgets $MW_HOME/extensions/Widgets \
 	&& cd $MW_HOME/extensions/Widgets \
