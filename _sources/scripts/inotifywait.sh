@@ -12,7 +12,7 @@ canskins="$MW_HOME/canasta-skins"
 			#  - Detects activity changes inside user-extensions and user-skins.                           #
 			#  - Adds symlinks from the those folders to the appropriate correspondent folders, 	       #
 			#    user-extensions to extensions and user-skins to skins. 				       #
-			#    As a fallback, if the administrator wants to go back 				       #
+			#  - As a fallback, if the administrator wants to go back 				       #
 			#    to the default extension provided by canasta-extensions folder it will then revert back.  #
 
 inotifywait -m -e create,moved_to,delete,moved_from --format '%e:%f%0' -- "$userexts" | 
