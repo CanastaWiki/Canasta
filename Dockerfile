@@ -20,6 +20,7 @@ RUN set x; \
 	&& apt-get install -y aptitude \
 	&& aptitude -y upgrade \
 	&& aptitude install -y \
+	inotify-tools \
 	git \
 	apache2 \
 	software-properties-common \
