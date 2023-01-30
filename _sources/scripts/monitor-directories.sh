@@ -1,37 +1,37 @@
 #!/usr/bin/env bash
+set -x
 
-recursive="--recursive"
-exclude=""
+userexts="$MW_HOME/user-extensions"
+extensions="$MW_HOME/extensions"
+canexts="$MW_HOME/canasta-extensions"
 
-sym_create() {
-ln -s "${1}" "${2}" 
- return
-}
-sym_remove() {
-unlink "${1}"
-return
-}
-declare -A array=( ["/root/Cani/"]="/root/Cani2/" ["/root/somewhere1/"]="/root/somewhere2/" )
-inotifywait --exclude "${exclude:-\$^}" "${recursive}" --monitor "${!array[@]}" |
-    while read -r directory event file; do
-        case "${event}" in
-	 CREATE*|MOVED_TO*)
-		if [[ $? -eq 0 ]]; then
-		    sym_create "${directory}${file}" "${array["${directory}"]}${file}"
-		fi
-	    ;;
-	
-	MOVED_FROM*|DELETE*)
-		if [[ $? -eq 0 ]]; then
-	            if [[ -n ${file} ]]; then
-			sym_remove "${array["${directory}"]}${file}"
-              		rm -rf "${array["${directory}"]}${file}"
-	            else
-			 sym_remove "${array["${directory}"]}"
-        	         rm -rf  "${array["${directory}"]}"
-	            fi
-                fi
-            ;;
+userskins="$MW_HOME/user-skins"
+skins="$MW_HOME/skins"
+canskins="$MW_HOME/canasta-skins"
 
-        esac
-    done
+#  - Detects activity changes inside user-extensions and user-skins.                           
+#  - Adds symlinks from the those folders to the appropriate correspondent folders, user-extensions to extensions and user-skins to skins. 				       
+#  - As a fallback, the moment the extension is removed or moved from user-extensions it will revert back by adding a symlink to the extension
+#    located in canasta-extensions.  
+
+inotifywait -m -e create,moved_to,delete,moved_from --format '%e:%f%0' -- "$userexts" | 
+	while IFS=: read -r event file; do 
+		case $event in 
+			CREATE,ISDIR|MOVED_TO,ISDIR) 
+				ln -rsft "$extensions" -- "$userexts"/"$file" ;; 
+			DELETE,ISDIR|MOVED_FROM,ISDIR) 
+				echo "event: ${event} file: ${file}"; 
+				ln -rsft "$extensions" -- "$canexts"/"$file" || rm -- "$file";
+		esac 
+	done
+
+inotifywait -m -e create,moved_to,delete,moved_from --format '%e:%f%0' -- "$userskins" | 
+	while IFS=: read -r event file; do 
+		case $event in 
+			CREATE,ISDIR|MOVED_TO,ISDIR) 
+				ln -rsft skins -- "$userskins"/"$file" ;; 
+			DELETE,ISDIR|MOVED_FROM,ISDIR) 
+				echo "event: ${event} file: ${file}"; 
+				ln -rsft skins -- "$canskins"/"$file" || rm -- "$file"; 
+		esac 
+	done
