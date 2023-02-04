@@ -471,7 +471,7 @@ RUN set -x; \
 	# TODO switch me to $MW_VERSION branch for next LTS version
 	&& git clone --single-branch https://gerrit.wikimedia.org/r/mediawiki/extensions/MyVariables $MW_HOME/extensions/MyVariables \
 	&& cd $MW_HOME/extensions/MyVariables \
-	&& git checkout -q a175761a49a8c9d77e9a42f419c7151f8f5c449f \
+	&& git checkout -q b592513f5a1a1dbb765d4b26e76f7fb788bb3af0 \
 	# NCBITaxonomyLookup
 	&& cd $MW_HOME/extensions \
 	&& git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/NCBITaxonomyLookup \
