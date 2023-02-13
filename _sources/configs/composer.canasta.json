@@ -34,7 +34,8 @@
 				"extensions/Sentry/composer.json",
 				"extensions/OpenIDConnect/composer.json",
 				"extensions/WSOAuth/composer.json",
-				"extensions/Mpdf/composer.json"
+				"extensions/Mpdf/composer.json",
+				"extensions/GoogleLogin/composer.json"
 			]
 		}
 	},

@@ -733,7 +733,11 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/YouTube \
 	&& git checkout -q bd736585dca8412d5eb9dde8f68a54b3c69df9cf \
     # mPDF
-    && git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/Mpdf.git $MW_HOME/extensions/Mpdf
+    && git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/Mpdf.git $MW_HOME/extensions/Mpdf \
+    # GoogleLogin
+	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-GoogleLogin.git $MW_HOME/extensions/GoogleLogin \
+    && cd $MW_HOME/extensions/GoogleLogin \
+    && git checkout -q c81f4df8bebcbf3a217e99e5d224051106f2732e
 
 # ReplaceText (switch to more recent commit due to bug on submodule HEAD)
 RUN set -x; \
@@ -751,6 +755,12 @@ COPY _sources/patches/core-fix-composer-for-GoogleAnalyticsMetrics.diff /tmp/cor
 RUN set -x; \
 	cd $MW_HOME \
 	&& git apply /tmp/core-fix-composer-for-GoogleAnalyticsMetrics.diff
+
+# GoogleLogin: removed explicit monolog/monolog v2 dependency
+COPY _sources/patches/GoogleLogin.monolog.diff /tmp/GoogleLogin.monolog.diff
+RUN set -x; \
+    cd $MW_HOME/extensions/GoogleLogin \
+    && git apply /tmp/GoogleLogin.monolog.diff
 
 COPY _sources/patches/FlexDiagrams.0.4.fix.diff /tmp/FlexDiagrams.0.4.fix.diff
 RUN set -x; \
