@@ -477,7 +477,7 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions \
 	&& git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/NCBITaxonomyLookup \
 	&& cd NCBITaxonomyLookup \
-	&& git checkout -b $MW_VERSION 512a390a62fbe6f3a7480641f6582126678e5a7c \
+	&& git checkout -b $MW_VERSION 0e72588433a0423660fac124549b77403cb3eba5 \
 	# NewUserMessage
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/NewUserMessage $MW_HOME/extensions/NewUserMessage \
 	&& cd $MW_HOME/extensions/NewUserMessage \
