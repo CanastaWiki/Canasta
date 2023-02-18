@@ -4,7 +4,7 @@ LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
 
 ENV MW_VERSION=REL1_39 \
-	MW_CORE_VERSION=1.39.0 \
+	MW_CORE_VERSION=1.39.1 \
 	WWW_ROOT=/var/www/mediawiki \
 	MW_HOME=/var/www/mediawiki/w \
 	MW_ORIGIN_FILES=/mw_origin_files \
@@ -201,7 +201,7 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ContactPage $MW_HOME/extensions/ContactPage \
 	&& cd $MW_HOME/extensions/ContactPage \
 	&& git checkout -q f509796056ae1fc597b6e3c3c268fac35bf66636 \
-	# ContributionScores 
+	# ContributionScores
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ContributionScores $MW_HOME/extensions/ContributionScores \
 	&& cd $MW_HOME/extensions/ContributionScores \
 	&& git checkout -q e307850555ef313f623dde6e2f1d5d2a43663730 \
@@ -292,7 +292,7 @@ RUN set -x; \
 	# HeaderTabs
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/HeaderTabs $MW_HOME/extensions/HeaderTabs \
 	&& cd $MW_HOME/extensions/HeaderTabs \
-	&& git checkout -q b3d96193f3cacef5ac2637f197f0b2822597925e \
+	&& git checkout -q 42aaabf1deeb0a228fc99e578ff7ec925e560dd7 \
 	# HTMLTags
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/HTMLTags $MW_HOME/extensions/HTMLTags \
 	&& cd $MW_HOME/extensions/HTMLTags \
