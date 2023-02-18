@@ -9,7 +9,7 @@
 		"mediawiki/semantic-compound-queries": "~2.2",
 		"mediawiki/semantic-extra-special-properties": "3.0.1",
 		"mediawiki/semantic-scribunto": "2.2.0",
-		"mediawiki/simple-batch-upload": "^1.0",
+		"mediawiki/simple-batch-upload": "1.8.2",
 		"mediawiki/bootstrap-components": "^5.0",
 		"mediawiki/sub-page-list": "2.0.2"
 	},
