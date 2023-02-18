@@ -142,10 +142,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/AntiSpoof $MW_HOME/extensions/AntiSpoof \
 	&& cd $MW_HOME/extensions/AntiSpoof \
 	&& git checkout -q 01cf89a678d5bab6610d24e07d3534356a5880cb \
-	# ApprovedRevs (v. 1.8)
+	# ApprovedRevs (v. 1.8.1)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/ApprovedRevs $MW_HOME/extensions/ApprovedRevs \
 	&& cd $MW_HOME/extensions/ApprovedRevs \
-	&& git checkout -q 6e9c957f2f7951f19054ecae8745e55c0425941f \
+	&& git checkout -q a8cb4bd840465a7db1e10654a0969cfc961d8428 \
 	# Arrays
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Arrays $MW_HOME/extensions/Arrays \
 	&& cd $MW_HOME/extensions/Arrays \
