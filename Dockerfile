@@ -82,14 +82,11 @@ RUN set -x; \
 
 FROM base as source
 
-# MediaWiki Core
+# MediaWiki core
 RUN set -x; \
 	git clone --depth 1 -b $MW_CORE_VERSION https://gerrit.wikimedia.org/r/mediawiki/core.git $MW_HOME \
 	&& cd $MW_HOME \
-	&& git submodule update --init --recursive \
-    # VisualEditor
-    && cd extensions/VisualEditor \
-    && git submodule update --init
+	&& git submodule update --init --recursive
 
 # Skins
 # The MonoBook, Timeless and Vector skins are bundled into MediaWiki and do not need to be separately installed.
@@ -575,23 +572,6 @@ RUN set -x; \
 	cd $MW_HOME \
 	&& git apply /tmp/core-local-settings-generator.patch
 
-# TODO send to upstream, see https://wikiteq.atlassian.net/browse/MW-64 and https://wikiteq.atlassian.net/browse/MW-81
-#COPY _sources/patches/skin-refreshed.patch /tmp/skin-refreshed.patch
-#RUN set -x; \
-#	cd $MW_HOME/skins/Refreshed \
-#	&& patch -u -b includes/RefreshedTemplate.php -i /tmp/skin-refreshed.patch
-
-#COPY _sources/patches/bootstrap-path.patch /tmp/bootstrap-path.patch
-#RUN set -x; \
-#    cd $MW_HOME/extensions/Bootstrap \
-#    && patch -p1 < /tmp/bootstrap-path.patch
-
-#COPY _sources/patches/chameleon-path.patch /tmp/chameleon-path.patch
-#RUN set -x; \
-#    cd $MW_HOME/skins/chameleon \
-#    && git apply /tmp/chameleon-path.patch
-
-
 # Cleanup all .git leftovers
 RUN set -x; \
     cd $MW_HOME \
@@ -640,6 +620,7 @@ ENV MW_ENABLE_JOB_RUNNER=true \
 	MW_JOB_RUNNER_PAUSE=2 \
 	MW_ENABLE_TRANSCODER=true \
 	MW_JOB_TRANSCODER_PAUSE=60 \
+	MW_MAP_DOMAIN_TO_DOCKER_GATEWAY=true \
 	MW_ENABLE_SITEMAP_GENERATOR=false \
 	MW_SITEMAP_PAUSE_DAYS=1 \
 	MW_SITEMAP_SUBDIR="" \
