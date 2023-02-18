@@ -1,6 +1,6 @@
 --- a/includes/installer/LocalSettingsGenerator.php
 +++ b/includes/installer/LocalSettingsGenerator.php
-@@ -51,6 +51,15 @@ class LocalSettingsGenerator {
+@@ -51,6 +51,15 @@
  		$this->skins = $installer->getVar( '_Skins' );
  		$this->IP = $installer->getVar( 'IP' );
 
