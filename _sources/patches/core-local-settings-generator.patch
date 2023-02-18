@@ -1,8 +1,9 @@
 --- a/includes/installer/LocalSettingsGenerator.php
 +++ b/includes/installer/LocalSettingsGenerator.php
-@@ -48,6 +48,15 @@ class LocalSettingsGenerator {
+@@ -51,6 +51,15 @@
  		$this->skins = $installer->getVar( '_Skins' );
  		$this->IP = $installer->getVar( 'IP' );
+
 +		// Patch for Canasta - if the user is enabling the Chameleon
 +		// skin (likely, since all skins are selected by default), make
 +		// sure the Bootstrap skin is enabled as well, to avoid a

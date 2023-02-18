@@ -286,8 +286,8 @@ RUN set -x; \
 	&& git clone https://github.com/enterprisemediawiki/HeaderFooter.git $MW_HOME/extensions/HeaderFooter \
 	&& cd $MW_HOME/extensions/HeaderFooter \
 	&& git checkout -q eee7d2c1a3373c7d6b326fd460e5d4859dd22c40 \
-	# HeaderTabs
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/HeaderTabs $MW_HOME/extensions/HeaderTabs \
+	# HeaderTabs (v2.2)
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/HeaderTabs $MW_HOME/extensions/HeaderTabs \
 	&& cd $MW_HOME/extensions/HeaderTabs \
 	&& git checkout -q 42aaabf1deeb0a228fc99e578ff7ec925e560dd7 \
 	# HTMLTags
