@@ -18,6 +18,17 @@ isTrue() {
     esac
 }
 
+isFalse() {
+    case $1 in
+        "True" | "TRUE" | "true" | 1)
+            return 1
+            ;;
+        *)
+            return 0
+            ;;
+    esac
+}
+
 dir_is_writable() {
   # Use -L to get information about the target of a symlink,
   # not the link itself, as pointed out in the comments
@@ -162,7 +173,9 @@ sitemapgen() {
 }
 
 waitdatabase() {
-  /wait-for-it.sh -t 60 db:3306
+  if isFalse "$USE_EXTERNAL_DB"; then
+    /wait-for-it.sh -t 60 db:3306
+  fi
 }
 
 #waitelastic() {
