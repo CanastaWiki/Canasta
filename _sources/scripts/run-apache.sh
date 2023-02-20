@@ -202,6 +202,10 @@ check_mount_points () {
   fi
 }
 
+inotifywait() {
+	runuser -c /monitor-directories.sh -s /bin/bash "$WWW_USER"	
+}
+
 # Wait db
 waitdatabase
 
