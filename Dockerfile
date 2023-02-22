@@ -529,7 +529,7 @@ RUN set -x; \
 	# Widgets
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Widgets $MW_HOME/extensions/Widgets \
 	&& cd $MW_HOME/extensions/Widgets \
-	&& git checkout -q 583c4f5e1829d2f78fb4a6e1f22bc9de4cf4d3a8 \
+	&& git checkout -q 197d429f971b2aebbce29b7a91a194e1f8181e64 \
 	# WikiForum
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/WikiForum $MW_HOME/extensions/WikiForum \
 	&& cd $MW_HOME/extensions/WikiForum \
