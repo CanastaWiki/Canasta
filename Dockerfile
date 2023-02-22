@@ -21,6 +21,7 @@ RUN set x; \
 	&& aptitude -y upgrade \
 	&& aptitude install -y \
 	git \
+	inotify-tools \
 	apache2 \
 	software-properties-common \
 	gpg \
