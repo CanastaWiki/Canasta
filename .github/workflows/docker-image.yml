@@ -24,6 +24,9 @@ jobs:
   # Test the image Dockerfile syntax using https://github.com/replicatedhq/dockerfilelint
   test:
     runs-on: ubuntu-latest
+    permissions:
+        contents: read
+        packages: write
     if: github.event_name == 'push' || github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v3
