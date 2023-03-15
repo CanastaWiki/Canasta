@@ -223,6 +223,10 @@ jobrunner &
 transcoder &
 sitemapgen &
 
+# Running php-fpm
+service php7.4-fpm start
+
+
 ############### Run Apache ###############
 # Make sure we're not confused by old, incompletely-shutdown httpd
 # context after restarting the container.  httpd won't start correctly
