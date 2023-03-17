@@ -224,7 +224,7 @@ transcoder &
 sitemapgen &
 
 # Running php-fpm
-service php7.4-fpm start
+/run-php-fpm.sh &
 
 
 ############### Run Apache ###############
