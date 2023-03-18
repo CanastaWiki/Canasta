@@ -1,13 +1,22 @@
+From a1fbbff7bb43d514fbd61c3c4be2ca17bb76f22e Mon Sep 17 00:00:00 2001
+From: Pavel Astakhov <pastakhov@yandex.ru>
+Date: Sun, 8 Jan 2023 23:59:34 +0600
+Subject: [PATCH] Update DisplayTitleHooks.php
+
+---
+ includes/DisplayTitleHooks.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/includes/DisplayTitleHooks.php b/includes/DisplayTitleHooks.php
-index 7d5308a..b864c2a 100644
+index 6da52bc..7f87b43 100644
 --- a/includes/DisplayTitleHooks.php
 +++ b/includes/DisplayTitleHooks.php
-@@ -138,7 +138,7 @@ class DisplayTitleHooks {
- 			// handle named Semantic MediaWiki subobjects (see T275984)
- 			// by removing trailing fragment
+@@ -137,7 +137,7 @@ private static function handleLink( Title $target, &$html, $wrap ) {
+ 			// handle named Semantic MediaWiki subobjects (see T275984) by removing trailing fragment
+ 			// skip fragment detection on category pages
  			$fragment = $target->getFragment();
--			if ( $fragment != '' && $target->getNamespace() != NS_CATEGORY ) {
-+			if ( $fragment != '' && substr( $fragment, 0, 3 ) !== 'mw-' && $target->getNamespace() != NS_CATEGORY ) {
- 				$fragment = '#' . $fragment;
- 				$fraglen = strlen( $fragment );
- 				if ( strrpos( $text, $fragment ) === strlen( $text ) - $fraglen ) {
+-			if ( $fragment !== '' && $target->getNamespace() != NS_CATEGORY ) {
++			if ( $fragment !== '' && substr( $fragment, 0, 3 ) !== 'mw-' && $target->getNamespace() != NS_CATEGORY ) {
+ 				$fragmentLength = strlen( $fragment );
+ 				if ( substr( $text, -$fragmentLength ) === $fragment ) {
+ 					$textTitle = substr( $text, 0, -( $fragmentLength + 1 ) );

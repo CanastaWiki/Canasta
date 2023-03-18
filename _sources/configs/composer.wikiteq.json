@@ -1,0 +1,48 @@
+{
+	"require": {
+		"mediawiki/semantic-media-wiki": "4.1.1",
+		"mediawiki/chameleon-skin": "4.2.1",
+		"mediawiki/bootstrap-components": "5.0.0",
+		"mediawiki/mermaid": "3.1.0",
+		"mediawiki/remote-wiki": "dev-master#cb31c362e0759c95b0b97f03ad3b2b08c2e77529",
+		"mediawiki/semantic-compound-queries": "2.2.0",
+		"mediawiki/semantic-extra-special-properties": "3.0.2",
+		"mediawiki/semantic-result-formats": "4.0.2",
+		"mediawiki/semantic-scribunto": "2.2.0",
+		"mediawiki/simple-batch-upload": "1.9.0",
+		"mediawiki/sub-page-list": "2.0.2",
+		"mediawiki/maps": "10.0.0"
+	},
+	"extra": {
+		"merge-plugin": {
+			"include": [
+				"extensions/Flow/composer.json",
+				"extensions/GoogleAnalyticsMetrics/composer.json",
+				"extensions/MassPasswordReset/composer.json",
+				"extensions/Mpdf/composer.json",
+				"extensions/Sentry/composer.json",
+				"extensions/AbuseFilter/composer.json",
+				"extensions/CirrusSearch/composer.json",
+				"extensions/DataTransfer/composer.json",
+				"extensions/Elastica/composer.json",
+				"extensions/OATHAuth/composer.json",
+				"extensions/AntiSpoof/composer.json",
+				"extensions/TemplateStyles/composer.json",
+				"extensions/Widgets/composer.json",
+				"extensions/OpenIDConnect/composer.json",
+				"extensions/WSOAuth/composer.json",
+				"extensions/GoogleLogin/composer.json"
+			]
+		}
+	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/WikiTeq/mediawiki-api-base.git"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/WikiTeq/mediawiki-extension-RemoteWiki"
+		}
+	]
+}

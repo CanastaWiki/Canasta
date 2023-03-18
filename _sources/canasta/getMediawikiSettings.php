@@ -1,6 +1,7 @@
 <?php
 
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Settings\SettingsBuilder;
 
 $mwHome = getenv( 'MW_HOME' );
 
@@ -138,9 +139,11 @@ class GetMediawikiSettings extends Maintenance {
 	 * some extensions makes requests to the database using the SetupAfterCache hook
 	 * (for example they can check user and etc..)
 	 * but this script can be used for getting parameters when database is not initialized yet
+	 *
+	 * @param SettingsBuilder|null $settingsBuilder
 	 */
-	public function finalSetup() {
-		parent::finalSetup();
+	public function finalSetup( SettingsBuilder $settingsBuilder = null ) {
+		parent::finalSetup( $settingsBuilder );
 
 		global $wgShowExceptionDetails, $wgHooks;
 

@@ -36,6 +36,7 @@ const DOCKER_SKINS = [
 ];
 
 const DOCKER_EXTENSIONS = [
+	'SemanticMediaWiki', // keep it at the top to be enabled first, because some Semantic extension don't work in other case.
 	'AJAXPoll',
 	'AbuseFilter',
 	'AdminLinks',
@@ -71,6 +72,7 @@ const DOCKER_EXTENSIONS = [
 	'CookieWarning',
 	'DataTransfer',
 	'DebugMode',
+	'DeleteBatch',
 	'Description2',
 	'Disambiguator',
 	'DiscussionTools',
@@ -86,8 +88,6 @@ const DOCKER_EXTENSIONS = [
 	'EventLogging',
 	'EventStreamConfig',
 	'ExternalData',
-	'Favorites',
-	'FixedHeaderTable',
 	'FlexDiagrams',
 	'Flow',
 	'GTag',
@@ -115,7 +115,6 @@ const DOCKER_EXTENSIONS = [
 	'LinkTarget',
 	'Linter',
 	'LiquidThreads',
-	'LocalisationUpdate', # bundled
 	'LockAuthor',
 	'Lockdown',
 	'LookupUser',
@@ -126,17 +125,18 @@ const DOCKER_EXTENSIONS = [
 	'MassMessageEmail',
 	'MassPasswordReset',
 	'Math',
-	'Mendeley',
+	'MediaUploader',
+	'Mermaid',
 	'MintyDocs',
 	'MobileDetect',
 	'MobileFrontend',
+	'Mpdf',
 	'MsUpload',
 	'MultimediaViewer', # bundled
 	'MyVariables',
 	'NCBITaxonomyLookup',
 	'NewUserMessage',
 	'Nuke', # bundled
-	'NumerAlpha',
 	'OATHAuth', # bundled
 	'OpenGraphMeta',
 	'OpenIDConnect',
@@ -158,23 +158,22 @@ const DOCKER_EXTENSIONS = [
 	'ReplaceText', # bundled
 	'RevisionSlider',
 	'RottenLinks',
-	'SRFEventCalendarMod',
 	'SandboxLink',
 	'SaveSpinner',
 	'Scopus',
 	'Scribunto', # bundled
 	'SecureLinkFixer', # bundled
 	'SelectCategory',
-	'SemanticBreadcrumbLinks',
 	'SemanticCompoundQueries',
+	'SemanticDependencyUpdater', //  must be enabled after SemanticMediaWiki
 	'SemanticDrilldown',
-	'SemanticExternalQueryLookup',
 	'SemanticExtraSpecialProperties',
-	'SemanticMediaWiki',
+//	'SemanticMediaWiki', moved the top to be enabled first, because some Semantic extension don't work in other case.
 	'SemanticQueryInterface',
 	'SemanticResultFormats',
 	'SemanticScribunto',
 	'Sentry',
+	'ShowMe',
 	'SimpleBatchUpload',
 	'SimpleChanges',
 	'SimpleMathJax',
@@ -188,18 +187,18 @@ const DOCKER_EXTENSIONS = [
 	'SpamBlacklist', # bundled
 	'SubPageList',
 	'Survey',
-	'Sync',
 	'SyntaxHighlight_GeSHi', # bundled
 	'Tabber',
 	'TabberNeue',
 	'Tabs',
 	'TemplateData', # bundled
 	'TemplateStyles',
+	'TemplateWizard',
 	'TextExtracts', # bundled
 	'Thanks',
-	'TimedMediaHandler',
 	'TinyMCE',
 	'TitleBlacklist', # bundled
+	'TitleIcon',
 	'TwitterTag',
 	'UniversalLanguageSelector',
 	'UploadWizard',
@@ -207,20 +206,22 @@ const DOCKER_EXTENSIONS = [
 	'UrlGetParameters',
 	'UserFunctions',
 	'UserMerge',
+	'UserPageViewTracker',
 	'VEForAll',
 	'Validator',
 	'Variables',
+	'VariablesLua',
 	'VisualEditor', # bundled
 	'VoteNY',
+	'WatchAnalytics',
 	'WSOAuth',
 	'WhoIsWatching',
+	'WhosOnline',
 	'Widgets',
 	'WikiEditor', # bundled
 	'WikiForum',
 	'WikiSEO',
-	'Wiretap',
 	'YouTube',
-	'googleAnalytics',
 ];
 
 $DOCKER_MW_VOLUME = getenv( 'MW_VOLUME' );
@@ -289,7 +290,8 @@ $wgShellLocale = "en_US.utf8";
 ## be publicly accessible from the web.
 $wgCacheDirectory = getenv( 'MW_USE_CACHE_DIRECTORY' ) ? "$IP/cache" : false;
 
-$wgSecretKey = getenv( 'MW_SECRET_KEY' );
+# Do not overwrite $wgSecretKey with empty string if MW_SECRET_KEY is not defined
+$wgSecretKey = getenv( 'MW_SECRET_KEY' ) ?: $wgSecretKey;
 
 # Changing this will log out all existing sessions.
 $wgAuthenticationTokenVersion = "1";
@@ -356,7 +358,15 @@ if ( $dockerLoadExtensions ) {
 	$dockerLoadExtensions = array_intersect( DOCKER_EXTENSIONS, $dockerLoadExtensions );
 	if ( $dockerLoadExtensions ) {
 		$dockerLoadExtensions = array_combine( $dockerLoadExtensions, $dockerLoadExtensions );
+		// Enable SemanticMediaWiki first, because some Semantic extension don't work in other case
+		if ( isset( $dockerLoadExtensions['SemanticMediaWiki'] ) ) {
+			wfLoadExtension( 'SemanticMediaWiki' );
+		}
 		foreach ( $dockerLoadExtensions as $extension ) {
+			if ( $extension === 'SemanticMediaWiki' ) {
+				// Already loaded above ^
+				continue;
+			}
 			if ( file_exists( "$wgExtensionDirectory/$extension/extension.json" ) ) {
 				wfLoadExtension( $extension );
 			} else {
@@ -466,6 +476,10 @@ if ( $wgDebugMode ) {
 		wfLoadExtension( 'DebugMode' );
 	}
 }
+
+# AdvancedSearch
+# Deep category searching requires SPARQL (like wikidata), should be disabled by default for non Wikimedia wikis
+$wgAdvancedSearchDeepcatEnabled = false;
 
 ######################### Custom Settings ##########################
 $canastaLocalSettingsFilePath = getenv( 'MW_CONFIG_DIR' ) . '/LocalSettings.php';
