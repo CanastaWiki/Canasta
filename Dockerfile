@@ -668,7 +668,9 @@ RUN set -x; \
     && sed -i 's/MW_CONFIG_FILE/CANASTA_CONFIG_FILE/g' "$MW_HOME/includes/CanastaNoLocalSettings.php" \
     # Modify config
     && sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf \
-    && a2enmod expires
+    && a2enmod expires \
+	# Enable environment variables for FPM workers
+	&& sed -i '/clear_env/s/^;//' /etc/php/7.4/fpm/pool.d/www.conf 
 
 COPY _sources/images/Powered-by-Canasta.png /var/www/mediawiki/w/resources/assets/
 
