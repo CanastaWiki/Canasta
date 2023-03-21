@@ -228,6 +228,10 @@ transcoder &
 sitemapgen &
 inotifywait &
 
+# Running php-fpm
+/run-php-fpm.sh &
+
+
 ############### Run Apache ###############
 # Make sure we're not confused by old, incompletely-shutdown httpd
 # context after restarting the container.  httpd won't start correctly

@@ -59,7 +59,9 @@ RUN set x; \
 	php7.4-apcu \
 	php7.4-redis \
 	php7.4-curl \
-	php7.4-zip \
+	php7.4-zip \	
+	php7.4-fpm \
+	libapache2-mod-fcgid \
 	&& aptitude clean \
 	&& rm -rf /var/lib/apt/lists/*
 
@@ -71,6 +73,11 @@ RUN set -x; \
 	&& rm -rf /var/www/html \
 	# Enable rewrite module
     && a2enmod rewrite \
+	# enabling mpm_event and php-fpm
+	&& a2dismod mpm_prefork \
+	&& a2enconf php7.4-fpm \
+	&& a2enmod mpm_event \
+	&& a2enmod proxy_fcgi \
     # Create directories
     && mkdir -p $MW_HOME \
     && mkdir -p $MW_ORIGIN_FILES \
@@ -648,7 +655,7 @@ COPY _sources/configs/.htaccess $WWW_ROOT/
 COPY _sources/images/favicon.ico $WWW_ROOT/
 COPY _sources/canasta/LocalSettings.php _sources/canasta/CanastaUtils.php _sources/canasta/CanastaDefaultSettings.php $MW_HOME/
 COPY _sources/canasta/getMediawikiSettings.php /
-COPY _sources/configs/mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
+COPY _sources/configs/mpm_event.conf /etc/apache2/mods-available/mpm_event.conf
 
 RUN set -x; \
 	chmod -v +x /*.sh \
@@ -662,7 +669,9 @@ RUN set -x; \
     && sed -i 's/MW_CONFIG_FILE/CANASTA_CONFIG_FILE/g' "$MW_HOME/includes/CanastaNoLocalSettings.php" \
     # Modify config
     && sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf \
-    && a2enmod expires
+    && a2enmod expires \
+	# Enable environment variables for FPM workers
+	&& sed -i '/clear_env/s/^;//' /etc/php/7.4/fpm/pool.d/www.conf 
 
 COPY _sources/images/Powered-by-Canasta.png /var/www/mediawiki/w/resources/assets/
 
