@@ -102,7 +102,7 @@ prepare_extensions_skins_symlinks
 # note that this command will also set all the necessary permissions
 echo "Syncing files..."
 rsync -ah --inplace --ignore-existing --remove-source-files \
-  -og --chown=$WWW_GROUP:$WWW_USER --chmod=Fg=rw,Dg=rwx \
+  -og --chown=$WWW_USER:$WWW_GROUP --chmod=Fg=rw,Dg=rwx \
   "$MW_ORIGIN_FILES"/ "$MW_VOLUME"/
 
 # We don't need it anymore
@@ -122,7 +122,7 @@ echo "Checking permissions of $MW_VOLUME..."
 if dir_is_writable $MW_VOLUME; then
   echo "Permissions are OK!"
 else
-  chown -R "$WWW_GROUP":"$WWW_GROUP" "$MW_VOLUME"
+  chown -R "$WWW_USER":"$WWW_GROUP" "$MW_VOLUME"
   chmod -R g=rwX "$MW_VOLUME"
 fi
 
@@ -130,47 +130,9 @@ echo "Checking permissions of $APACHE_LOG_DIR..."
 if dir_is_writable $APACHE_LOG_DIR; then
   echo "Permissions are OK!"
 else
-  chown -R "$WWW_GROUP":"$WWW_GROUP" $APACHE_LOG_DIR
+  chown -R "$WWW_USER":"$WWW_GROUP" $APACHE_LOG_DIR
   chmod -R g=rwX $APACHE_LOG_DIR
 fi
-
-jobrunner() {
-    sleep 3
-    if isTrue "$MW_ENABLE_JOB_RUNNER"; then
-        echo >&2 Run Jobs
-        nice -n 20 runuser -c /mwjobrunner.sh -s /bin/bash "$WWW_USER"
-    else
-        echo >&2 Job runner is disabled
-    fi
-}
-
-transcoder() {
-    sleep 3
-    if isTrue "$MW_ENABLE_TRANSCODER"; then
-        echo >&2 Run transcoder
-        nice -n 20 runuser -c /mwtranscoder.sh -s /bin/bash "$WWW_USER"
-    else
-        echo >&2 Transcoder disabled
-    fi
-}
-
-sitemapgen() {
-    sleep 3
-    if isTrue "$MW_ENABLE_SITEMAP_GENERATOR"; then
-        # Fetch & export script path for sitemap generator
-        if [ -z "$MW_SCRIPT_PATH" ]; then
-          MW_SCRIPT_PATH=$(get_mediawiki_variable wgScriptPath)
-        fi
-        # Fall back to default value if can't fetch the variable
-        if [ -z "$MW_SCRIPT_PATH" ]; then
-          MW_SCRIPT_PATH="/w"
-        fi
-        echo >&2 Run sitemap generator
-        MW_SCRIPT_PATH=$MW_SCRIPT_PATH nice -n 20 runuser -c /mwsitemapgen.sh -s /bin/bash "$WWW_USER"
-    else
-        echo >&2 Sitemap generator is disabled
-    fi
-}
 
 waitdatabase() {
   if isFalse "$USE_EXTERNAL_DB"; then
@@ -217,11 +179,6 @@ if [ -e "$MW_VOLUME/config/LocalSettings.php"  ]; then
   # Run auto-update
   run_autoupdate
 fi
-
-echo "Starting services..."
-jobrunner &
-transcoder &
-sitemapgen &
 
 # Running php-fpm
 /run-php-fpm.sh &
