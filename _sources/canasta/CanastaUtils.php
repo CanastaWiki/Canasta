@@ -39,6 +39,9 @@ $wgHooks['SiteNoticeAfter'][] = function ( &$siteNotice, Skin $skin ) {
 	$specialPage = MediaWiki\MediaWikiServices::getInstance()
 		->getSpecialPageFactory()
 		->getPage( $title->getText() );
+	if ( $specialPage == null ) {
+		return;
+	}
 	$canonicalName = $specialPage->getName();
 	// Only display this warning for pages that could result in an email getting sent.
 	$specialPagesWithEmail = [ 'Preferences', 'CreateAccount' ];
