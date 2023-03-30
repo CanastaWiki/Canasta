@@ -7,7 +7,7 @@ echo Starting job runner...
 sleep 10
 echo Job runner started.
 while true; do
-    # Job types that need to be run ASAP no matter how many of them are in the queue
+    # Job types that need to be run ASAP mo matter how many of them are in the queue
     # Those jobs should be very "cheap" to run
     php $RJ --type="enotifNotify"
     sleep 1
