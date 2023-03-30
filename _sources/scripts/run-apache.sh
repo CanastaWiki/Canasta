@@ -138,7 +138,7 @@ jobrunner() {
     sleep 3
     if isTrue "$MW_ENABLE_JOB_RUNNER"; then
         echo >&2 Run Jobs
-        nice -n 20 runuser -c /mwjobrunner.sh -s /bin/bash "$WWW_USER"
+        nice -n 20 runuser -c /maintenance-scripts/mwjobrunner.sh -s /bin/bash "$WWW_USER"
     else
         echo >&2 Job runner is disabled
     fi
@@ -148,7 +148,7 @@ transcoder() {
     sleep 3
     if isTrue "$MW_ENABLE_TRANSCODER"; then
         echo >&2 Run transcoder
-        nice -n 20 runuser -c /mwtranscoder.sh -s /bin/bash "$WWW_USER"
+        nice -n 20 runuser -c /maintenance-scripts/mwtranscoder.sh -s /bin/bash "$WWW_USER"
     else
         echo >&2 Transcoder disabled
     fi
@@ -166,7 +166,7 @@ sitemapgen() {
           MW_SCRIPT_PATH="/w"
         fi
         echo >&2 Run sitemap generator
-        MW_SCRIPT_PATH=$MW_SCRIPT_PATH nice -n 20 runuser -c /mwsitemapgen.sh -s /bin/bash "$WWW_USER"
+        MW_SCRIPT_PATH=$MW_SCRIPT_PATH nice -n 20 runuser -c /maintenance-scripts/mwsitemapgen.sh -s /bin/bash "$WWW_USER"
     else
         echo >&2 Sitemap generator is disabled
     fi
