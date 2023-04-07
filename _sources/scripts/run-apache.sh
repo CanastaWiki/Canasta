@@ -202,6 +202,10 @@ check_mount_points () {
   fi
 }
 
+inotifywait() {
+	runuser -c /monitor-directories.sh -s /bin/bash "$WWW_USER"	
+}
+
 # Wait db
 waitdatabase
 
@@ -222,6 +226,11 @@ echo "Starting services..."
 jobrunner &
 transcoder &
 sitemapgen &
+inotifywait &
+
+# Running php-fpm
+/run-php-fpm.sh &
+
 
 ############### Run Apache ###############
 # Make sure we're not confused by old, incompletely-shutdown httpd
