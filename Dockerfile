@@ -511,10 +511,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Variables $MW_HOME/extensions/Variables \
 	&& cd $MW_HOME/extensions/Variables \
 	&& git checkout -q b4a9063f16a928567e3b6788cda9246c2e94797f \
-	# VEForAll (v. 0.4.1)
+	# VEForAll (v. 0.5)
 	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-VEForAll $MW_HOME/extensions/VEForAll \
 	&& cd $MW_HOME/extensions/VEForAll \
-	&& git checkout -q 2f1f08eca7fbf61198e5f4ccf2d627a6c9ef7b64 \
+	&& git checkout -q cffa12abb85200e90b1cbc636325b1ec1a89a6af \
 	# VoteNY
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-VoteNY $MW_HOME/extensions/VoteNY \
 	&& cd $MW_HOME/extensions/VoteNY \
