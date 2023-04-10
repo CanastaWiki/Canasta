@@ -134,43 +134,47 @@ else
   chmod -R g=rwX $APACHE_LOG_DIR
 fi
 
-jobrunner() {
-    sleep 3
-    if isTrue "$MW_ENABLE_JOB_RUNNER"; then
-        echo >&2 Run Jobs
-        nice -n 20 runuser -c /maintenance-scripts/mwjobrunner.sh -s /bin/bash "$WWW_USER"
-    else
-        echo >&2 Job runner is disabled
+run_maintenance_scripts() {
+  # ...
+  for maintenance_script in $(find /maintenance-scripts/ -maxdepth 1 -mindepth 1 -type f -name "*.sh"); do
+    script_name=$(basename "$maintenance_script")
+    
+    if [[ "$script_name" == mw* ]]; then
+      run_mw_script "$script_name" &
     fi
+    
+  done
 }
 
-transcoder() {
-    sleep 3
-    if isTrue "$MW_ENABLE_TRANSCODER"; then
-        echo >&2 Run transcoder
-        nice -n 20 runuser -c /maintenance-scripts/mwtranscoder.sh -s /bin/bash "$WWW_USER"
+
+run_mw_script() {
+  sleep 3
+  local script_name="$1"
+  script_name_no_ext="${script_name%.*}"
+  script_name_upper=$(basename "$script_name_no_ext" | tr '[:lower:]' '[:upper:]')
+  local MW_ENABLE_VAR="${script_name_upper/_/_ENABLE_}"
+
+  if [[ "$script_name" == "mw_sitemap_generator.sh" ]]; then
+    if isTrue "${!MW_ENABLE_VAR}"; then
+      if [ -z "$MW_SCRIPT_PATH" ]; then
+        MW_SCRIPT_PATH=$(get_mediawiki_variable wgScriptPath)
+      fi
+      if [ -z "$MW_SCRIPT_PATH" ]; then
+        MW_SCRIPT_PATH="/w"
+      fi
+      echo "Running $script_name with user $WWW_USER and MW_SCRIPT_PATH=$MW_SCRIPT_PATH..."
+      MW_SCRIPT_PATH="$MW_SCRIPT_PATH" nice -n 20 runuser -c "/maintenance-scripts/$script_name" -s /bin/bash "$WWW_USER"
     else
-        echo >&2 Transcoder disabled
+      echo "$script_name is disabled."
     fi
+  elif isTrue "${!MW_ENABLE_VAR}"; then
+    echo "Running $script_name with user $WWW_USER..."
+    nice -n 20 runuser -c "/maintenance-scripts/$script_name" -s /bin/bash "$WWW_USER"
+  else
+    echo "$script_name is disabled."
+  fi
 }
 
-sitemapgen() {
-    sleep 3
-    if isTrue "$MW_ENABLE_SITEMAP_GENERATOR"; then
-        # Fetch & export script path for sitemap generator
-        if [ -z "$MW_SCRIPT_PATH" ]; then
-          MW_SCRIPT_PATH=$(get_mediawiki_variable wgScriptPath)
-        fi
-        # Fall back to default value if can't fetch the variable
-        if [ -z "$MW_SCRIPT_PATH" ]; then
-          MW_SCRIPT_PATH="/w"
-        fi
-        echo >&2 Run sitemap generator
-        MW_SCRIPT_PATH=$MW_SCRIPT_PATH nice -n 20 runuser -c /maintenance-scripts/mwsitemapgen.sh -s /bin/bash "$WWW_USER"
-    else
-        echo >&2 Sitemap generator is disabled
-    fi
-}
 
 waitdatabase() {
   if isFalse "$USE_EXTERNAL_DB"; then
@@ -219,9 +223,7 @@ if [ -e "$MW_VOLUME/config/LocalSettings.php"  ]; then
 fi
 
 echo "Starting services..."
-jobrunner &
-transcoder &
-sitemapgen &
+run_maintenance_scripts &
 
 ############### Run Apache ###############
 # Make sure we're not confused by old, incompletely-shutdown httpd
