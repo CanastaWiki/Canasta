@@ -99,14 +99,15 @@ RUN set -x; \
 
 FROM base as source
 
-# MediaWiki Core
+# MediaWiki core
 RUN set -x; \
 	git clone --depth 1 -b $MW_CORE_VERSION https://gerrit.wikimedia.org/r/mediawiki/core.git $MW_HOME \
 	&& cd $MW_HOME \
 	&& git submodule update --init --recursive
 
 # Skins
-# The MonoBook, Timeless and Vector skins are bundled into MediaWiki and do not need to be separately installed.
+# The Minerva Neue, MonoBook, Timeless, Vector and Vector 2022 skins are bundled into MediaWiki and do not need to be
+# separately installed.
 # The Chameleon skin is downloaded via Composer and also does not need to be installed.
 RUN set -x; \
 	cd $MW_HOME/skins \
@@ -114,10 +115,6 @@ RUN set -x; \
 	&& git clone -b $MW_VERSION --single-branch https://gerrit.wikimedia.org/r/mediawiki/skins/CologneBlue $MW_HOME/skins/CologneBlue \
 	&& cd $MW_HOME/skins/CologneBlue \
 	&& git checkout -q 4d588eb78d7e64e574f631c5897579537305437d \
-	# MinervaNeue
-	#&& git clone -b $MW_VERSION --single-branch https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue $MW_HOME/skins/MinervaNeue \
-	#&& cd $MW_HOME/skins/MinervaNeue \
-	#&& git checkout -q e4741ff2c4375c2befee0d9f350aff6eb6e1a4da \
 	# Modern
 	&& git clone -b $MW_VERSION --single-branch https://gerrit.wikimedia.org/r/mediawiki/skins/Modern $MW_HOME/skins/Modern \
 	&& cd $MW_HOME/skins/Modern \
