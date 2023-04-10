@@ -135,25 +135,32 @@ else
 fi
 
 run_maintenance_scripts() {
-  # ...
+  # Iterate through all the .sh files in /maintenance-scripts/ directory
   for maintenance_script in $(find /maintenance-scripts/ -maxdepth 1 -mindepth 1 -type f -name "*.sh"); do
     script_name=$(basename "$maintenance_script")
-    
+
+    # Only run scripts with names starting with "mw_"
     if [[ "$script_name" == mw* ]]; then
       run_mw_script "$script_name" &
     fi
-    
   done
 }
 
+# Naming convention:
+# Scripts with names starting with "mw_" have corresponding enable variables.
+# The enable variable is formed by converting the script's name to uppercase and replacing the first underscore with "_ENABLE_". 
+# For example, the enable variable for "mw_sitemap_generator.sh" would be "MW_SITEMAP_GENERATOR_ENABLE".
 
 run_mw_script() {
   sleep 3
+
+  # Process the script name and create the corresponding enable variable
   local script_name="$1"
   script_name_no_ext="${script_name%.*}"
   script_name_upper=$(basename "$script_name_no_ext" | tr '[:lower:]' '[:upper:]')
   local MW_ENABLE_VAR="${script_name_upper/_/_ENABLE_}"
 
+  # Special handling for "mw_sitemap_generator.sh"
   if [[ "$script_name" == "mw_sitemap_generator.sh" ]]; then
     if isTrue "${!MW_ENABLE_VAR}"; then
       if [ -z "$MW_SCRIPT_PATH" ]; then
@@ -167,6 +174,7 @@ run_mw_script() {
     else
       echo >&2 "$script_name is disabled."
     fi
+  # Handling for other maintenance scripts with names starting with "mw_"
   elif isTrue "${!MW_ENABLE_VAR}"; then
     echo "Running $script_name with user $WWW_USER..."
     nice -n 20 runuser -c "/maintenance-scripts/$script_name" -s /bin/bash "$WWW_USER"
