@@ -2,11 +2,6 @@
 
 set -x
 
-# read variables from LocalSettings.php
-get_mediawiki_variable () {
-    php /getMediawikiSettings.php --variable="$1" --format="${2:-string}"
-}
-
 isTrue() {
     case $1 in
         "True" | "TRUE" | "true" | 1)
@@ -139,9 +134,13 @@ run_maintenance_scripts() {
   for maintenance_script in $(find /maintenance-scripts/ -maxdepth 1 -mindepth 1 -type f -name "*.sh"); do
     script_name=$(basename "$maintenance_script")
 
-    # Only run scripts with names starting with "mw_"
+    # If the script's name starts with "mw_", run it with the run_mw_script function
     if [[ "$script_name" == mw* ]]; then
       run_mw_script "$script_name" &
+    else
+      # If the script's name doesn't start with "mw"
+      echo "Running $script_name with user $WWW_USER..."
+      nice -n 20 runuser -c "/maintenance-scripts/$script_name" -s /bin/bash "$WWW_USER" &
     fi
   done
 }
@@ -149,7 +148,7 @@ run_maintenance_scripts() {
 # Naming convention:
 # Scripts with names starting with "mw_" have corresponding enable variables.
 # The enable variable is formed by converting the script's name to uppercase and replacing the first underscore with "_ENABLE_". 
-# For example, the enable variable for "mw_sitemap_generator.sh" would be "MW_SITEMAP_GENERATOR_ENABLE".
+# For example, the enable variable for "mw_sitemap_generator.sh" would be "MW_ENABLE_SITEMAP_GENERATOR".
 
 run_mw_script() {
   sleep 3
@@ -160,22 +159,7 @@ run_mw_script() {
   script_name_upper=$(basename "$script_name_no_ext" | tr '[:lower:]' '[:upper:]')
   local MW_ENABLE_VAR="${script_name_upper/_/_ENABLE_}"
 
-  # Special handling for "mw_sitemap_generator.sh"
-  if [[ "$script_name" == "mw_sitemap_generator.sh" ]]; then
-    if isTrue "${!MW_ENABLE_VAR}"; then
-      if [ -z "$MW_SCRIPT_PATH" ]; then
-        MW_SCRIPT_PATH=$(get_mediawiki_variable wgScriptPath)
-      fi
-      if [ -z "$MW_SCRIPT_PATH" ]; then
-        MW_SCRIPT_PATH="/w"
-      fi
-      echo "Running $script_name with user $WWW_USER and MW_SCRIPT_PATH=$MW_SCRIPT_PATH..."
-      MW_SCRIPT_PATH="$MW_SCRIPT_PATH" nice -n 20 runuser -c "/maintenance-scripts/$script_name" -s /bin/bash "$WWW_USER"
-    else
-      echo >&2 "$script_name is disabled."
-    fi
-  # Handling for other maintenance scripts with names starting with "mw_"
-  elif isTrue "${!MW_ENABLE_VAR}"; then
+  if isTrue "${!MW_ENABLE_VAR}"; then
     echo "Running $script_name with user $WWW_USER..."
     nice -n 20 runuser -c "/maintenance-scripts/$script_name" -s /bin/bash "$WWW_USER"
   else

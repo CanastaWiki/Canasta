@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# read variables from LocalSettings.php
+if [ -z "$MW_SCRIPT_PATH" ]; then
+    MW_SCRIPT_PATH=$(php /getMediawikiSettings.php --variable=wgScriptPath --format=string)
+fi
+if [ -z "$MW_SCRIPT_PATH" ]; then
+    MW_SCRIPT_PATH="/w"
+fi
+
 SCRIPT=$MW_HOME/maintenance/generateSitemap.php
 # Verify the delay is >= 1, otherwise fall back to 1
 if [ "$MW_SITEMAP_PAUSE_DAYS" -lt "1" ]; then
