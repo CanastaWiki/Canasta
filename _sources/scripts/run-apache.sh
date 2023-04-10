@@ -165,13 +165,13 @@ run_mw_script() {
       echo "Running $script_name with user $WWW_USER and MW_SCRIPT_PATH=$MW_SCRIPT_PATH..."
       MW_SCRIPT_PATH="$MW_SCRIPT_PATH" nice -n 20 runuser -c "/maintenance-scripts/$script_name" -s /bin/bash "$WWW_USER"
     else
-      echo "$script_name is disabled."
+      echo >&2 "$script_name is disabled."
     fi
   elif isTrue "${!MW_ENABLE_VAR}"; then
     echo "Running $script_name with user $WWW_USER..."
     nice -n 20 runuser -c "/maintenance-scripts/$script_name" -s /bin/bash "$WWW_USER"
   else
-    echo "$script_name is disabled."
+    echo >&2 "$script_name is disabled."
   fi
 }
 
