@@ -384,6 +384,7 @@ $smwgConfigFileDir = "$DOCKER_MW_VOLUME/extensions/SemanticMediaWiki/config";
 
 // Scribunto https://www.mediawiki.org/wiki/Extension:Scribunto
 $wgScribuntoDefaultEngine = 'luasandbox';
+$wgScribuntoEngineConf['luasandbox']['cpuLimit'] = '120';
 $wgScribuntoUseGeSHi = boolval( $dockerLoadExtensions['SyntaxHighlight_GeSHi'] ?? false );
 $wgScribuntoUseCodeEditor = boolval( $dockerLoadExtensions['CodeEditor'] ?? false );
 
