@@ -105,6 +105,7 @@ const DOCKER_EXTENSIONS = [
 	'ImageMap', # bundled
 	'InputBox', # bundled
 	'Interwiki', # bundled
+	'JWTAuth',
 	'LDAPAuthentication2',
 	'LDAPAuthorization',
 	'LDAPProvider',

@@ -727,7 +727,11 @@ RUN set -x; \
 	# VariablesLue
 	&& git clone --single-branch -b master https://github.com/Liquipedia/VariablesLua.git $MW_HOME/extensions/VariablesLua \
 	&& cd $MW_HOME/extensions/VariablesLua \
-	&& git checkout -q dced585ef5ddcfbaa49c510c49c3b398ecc6f1c6
+	&& git checkout -q dced585ef5ddcfbaa49c510c49c3b398ecc6f1c6 \
+	# JWTAuth
+	&& git clone --single-branch -b main https://github.com/jeffw16/JWTAuth.git $MW_HOME/extensions/JWTAuth \
+	&& cd $MW_HOME/extensions/JWTAuth \
+	&& git checkout -q 6c6e0474ce38e0c261c9c14a119c5c7f25b81d48
 
 # WikiTeq removes/fixes the extensions with issues in Canasta docker image, remove it if fixed in Canasta
 RUN set -x; \
