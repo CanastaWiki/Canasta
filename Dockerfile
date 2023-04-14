@@ -388,6 +388,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/MyVariables $MW_HOME/extensions/MyVariables \
 	&& cd $MW_HOME/extensions/MyVariables \
 	&& git checkout -q 8b45be10c9b0a484824c55d8cc48399290384260 \
+	# NCBITaxonomyLookup
+	&& git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/NCBITaxonomyLookup $MW_HOME/extensions/NCBITaxonomyLookup \
+	&& cd $MW_HOME/extensions/NCBITaxonomyLookup \
+	&& git checkout -q 8f4a7ed7bdc14378d4dbfba7aec0e1d8eece96ca \
 	# NewUserMessage
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/NewUserMessage $MW_HOME/extensions/NewUserMessage \
 	&& cd $MW_HOME/extensions/NewUserMessage \
@@ -631,10 +635,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Mpdf.git $MW_HOME/extensions/Mpdf \
 	&& cd $MW_HOME/extensions/Mpdf \
 	&& git checkout -q fb6ff534526f3b9a554cc4172db6e3715adfef36 \
-	# NCBITaxonomyLookup
-	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/NCBITaxonomyLookup $MW_HOME/extensions/NCBITaxonomyLookup \
-	&& cd $MW_HOME/extensions/NCBITaxonomyLookup \
-	&& git checkout -b $MW_VERSION 0e72588433a0423660fac124549b77403cb3eba5 \
 	# PageSchemas
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/PageSchemas $MW_HOME/extensions/PageSchemas \
 	&& cd $MW_HOME/extensions/PageSchemas \
