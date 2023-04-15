@@ -122,7 +122,7 @@ RUN set -x; \
 # Extensions
 # The following extensions are bundled into MediaWiki and do not need to be separately installed (though in some cases
 # they are modified): AbuseFilter, CategoryTree, Cite, CiteThisPage, CodeEditor, ConfirmEdit, Gadgets, ImageMap,
-# InputBox, Interwiki, LocalisationUpdate, Math, MultimediaViewer, Nuke, OATHAuth, PageImages, ParserFunctions,
+# InputBox, Interwiki, Math, MultimediaViewer, Nuke, OATHAuth, PageImages, ParserFunctions,
 # PdfHandler, Poem, Renameuser, Replace Text, Scribunto, SecureLinkFixer, SpamBlacklist, SyntaxHighlight, TemplateData,
 # TextExtracts, TitleBlacklist, VisualEditor, WikiEditor.
 # The following extensions are downloaded via Composer and also do not need to be downloaded here: Bootstrap,
