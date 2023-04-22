@@ -788,6 +788,12 @@ RUN set -x; \
 	cd $MW_HOME/extensions/FlexDiagrams \
 	&& git apply /tmp/FlexDiagrams.0.4.fix.diff
 
+# PageForms WLDR-319, WLDR-318
+COPY _sources/patches/PF.5.6.usedisplaytitle.autocomplete.forminput.diff /tmp/PF.5.6.usedisplaytitle.autocomplete.forminput.diff
+RUN set -x; \
+    cd $MW_HOME/extensions/PageForms \
+    && git apply /tmp/PF.5.6.usedisplaytitle.autocomplete.forminput.diff
+
 # Composer dependencies
 # Original Canasta string:
 # COPY _sources/configs/composer.canasta.json $MW_HOME/composer.local.json
