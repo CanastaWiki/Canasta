@@ -232,6 +232,16 @@ if [ ! -e "$MW_VOLUME/LocalSettings.php" ] && [ ! -e "$MW_HOME/LocalSettings.php
                 "$WG_SITE_NAME" \
                 "$MW_ADMIN_USER"
 
+            # Check if the installation script did not end with zero exit code and
+            # if so display an error and exit the process
+            installExitCode=$?
+            if [ $installExitCode -ne 0 ]; then
+                echo "ERROR: install.php did not complete successfully, setup is aborted!"
+                # To prevent immediate container restart with unless-stopped policy
+                sleep 5
+                exit 1
+            fi
+
             # Append inclusion of DockerSettings.php
             echo "@include('DockerSettings.php');" >> "$MW_VOLUME/LocalSettings.php"
         fi
