@@ -581,5 +581,3 @@ $wgActions['mcrundo'] = false;
 $wgActions['mcrrestore'] = false;
 $wgWhitelistRead = [];
 $wgWhitelistReadRegexp = [];
-
-$wgTmpDirectory = "{$wgUploadDirectory}/tmp";
