@@ -59,7 +59,7 @@ RUN set x; \
 	php7.4-apcu \
 	php7.4-redis \
 	php7.4-curl \
-	php7.4-zip \	
+	php7.4-zip \
 	php7.4-fpm \
 	libapache2-mod-fcgid \
 	&& aptitude clean \
@@ -642,9 +642,9 @@ COPY _sources/configs/msmtprc /etc/
 COPY _sources/configs/mediawiki.conf /etc/apache2/sites-enabled/
 COPY _sources/configs/status.conf /etc/apache2/mods-available/
 COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/7.4/cli/conf.d/
-COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/7.4/apache2/conf.d/
-COPY _sources/configs/php_max_input_vars.ini _sources/configs/php_max_input_vars.ini /etc/php/7.4/apache2/conf.d/
-COPY _sources/configs/php_timeouts.ini /etc/php/7.4/apache2/conf.d/
+COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/7.4/fpm/conf.d/
+COPY _sources/configs/php_max_input_vars.ini _sources/configs/php_max_input_vars.ini /etc/php/7.4/fpm/conf.d/
+COPY _sources/configs/php_timeouts.ini /etc/php/7.4/fpm/conf.d/
 COPY _sources/scripts/*.sh /
 COPY _sources/scripts/*.php $MW_HOME/maintenance/
 COPY _sources/configs/robots.txt $WWW_ROOT/
@@ -661,14 +661,14 @@ RUN set -x; \
 	# Comment out ErrorLog and CustomLog parameters, we use rotatelogs in mediawiki.conf for the log files
 	&& sed -i 's/^\(\s*ErrorLog .*\)/# \1/g' /etc/apache2/apache2.conf \
 	&& sed -i 's/^\(\s*CustomLog .*\)/# \1/g' /etc/apache2/apache2.conf \
-    # Make web installer work with Canasta
-    && cp "$MW_HOME/includes/NoLocalSettings.php" "$MW_HOME/includes/CanastaNoLocalSettings.php" \
-    && sed -i 's/MW_CONFIG_FILE/CANASTA_CONFIG_FILE/g' "$MW_HOME/includes/CanastaNoLocalSettings.php" \
-    # Modify config
-    && sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf \
-    && a2enmod expires \
+	# Make web installer work with Canasta
+	&& cp "$MW_HOME/includes/NoLocalSettings.php" "$MW_HOME/includes/CanastaNoLocalSettings.php" \
+	&& sed -i 's/MW_CONFIG_FILE/CANASTA_CONFIG_FILE/g' "$MW_HOME/includes/CanastaNoLocalSettings.php" \
+	# Modify config
+	&& sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf \
+	&& a2enmod expires \
 	# Enable environment variables for FPM workers
-	&& sed -i '/clear_env/s/^;//' /etc/php/7.4/fpm/pool.d/www.conf 
+	&& sed -i '/clear_env/s/^;//' /etc/php/7.4/fpm/pool.d/www.conf
 
 COPY _sources/images/Powered-by-Canasta.png /var/www/mediawiki/w/resources/assets/
 
