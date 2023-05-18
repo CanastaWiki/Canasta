@@ -1,5 +1,5 @@
 diff --git a/includes/PF_AutocompleteAPI.php b/includes/PF_AutocompleteAPI.php
-index 9b734641..d9ba1e6f 100644
+index 9b734641..cdf543a7 100644
 --- a/includes/PF_AutocompleteAPI.php
 +++ b/includes/PF_AutocompleteAPI.php
 @@ -19,6 +19,8 @@ class PFAutocompleteAPI extends ApiBase {
@@ -11,7 +11,7 @@ index 9b734641..d9ba1e6f 100644
  		$params = $this->extractRequestParams();
  		$substr = $params['substr'];
  		$namespace = $params['namespace'];
-@@ -35,14 +37,20 @@ class PFAutocompleteAPI extends ApiBase {
+@@ -35,13 +37,20 @@ class PFAutocompleteAPI extends ApiBase {
  		$base_cargo_table = $params['base_cargo_table'];
  		$base_cargo_field = $params['base_cargo_field'];
  		$basevalue = $params['basevalue'];
@@ -30,11 +30,10 @@ index 9b734641..d9ba1e6f 100644
  		}
 
 -		global $wgPageFormsUseDisplayTitle;
--		$map = false;
+ 		$map = false;
  		if ( $baseprop !== null ) {
  			if ( $property !== null ) {
- 				$data = $this->getAllValuesForProperty( $property, null, $baseprop, $basevalue );
-@@ -52,29 +60,25 @@ class PFAutocompleteAPI extends ApiBase {
+@@ -52,29 +61,28 @@ class PFAutocompleteAPI extends ApiBase {
  		} elseif ( $wikidata !== null ) {
  			$data = PFValuesUtils::getAllValuesFromWikidata( urlencode( $wikidata ), $substr );
  		} elseif ( $category !== null ) {
@@ -43,6 +42,7 @@ index 9b734641..d9ba1e6f 100644
 -			if ( $map ) {
 +			$data = PFValuesUtils::getAllPagesForCategory( $category, 3, $substr, $usedisplaytitle );
 +			if ( $usedisplaytitle ) {
++				$map = true;
  				$data = PFValuesUtils::disambiguateLabels( $data );
  			}
  		} elseif ( $concept !== null ) {
@@ -50,6 +50,7 @@ index 9b734641..d9ba1e6f 100644
 -			$map = $wgPageFormsUseDisplayTitle;
 -			if ( $map ) {
 +			if ( $usedisplaytitle ) {
++				$map = true;
  				$data = PFValuesUtils::disambiguateLabels( $data );
  			}
  		} elseif ( $query !== null ) {
@@ -58,6 +59,7 @@ index 9b734641..d9ba1e6f 100644
 -			$map = $wgPageFormsUseDisplayTitle;
 -			if ( $map ) {
 +			if ( $usedisplaytitle ) {
++				$map = true;
  				$data = PFValuesUtils::disambiguateLabels( $data );
  			}
  		} elseif ( $cargo_table !== null && $cargo_field !== null ) {
@@ -68,16 +70,7 @@ index 9b734641..d9ba1e6f 100644
  		} elseif ( $external_url !== null ) {
  			$data = PFValuesUtils::getValuesFromExternalURL( $external_url, $substr );
  		} else {
-@@ -112,7 +116,7 @@ class PFAutocompleteAPI extends ApiBase {
- 		if ( $external_url === null ) {
- 			$formattedData = [];
- 			foreach ( $data as $index => $value ) {
--				if ( $map ) {
-+				if ( $usedisplaytitle ) {
- 					$formattedData[] = [ 'title' => $index, 'displaytitle' => $value ];
- 				} else {
- 					$formattedData[] = [ 'title' => $value ];
-@@ -152,6 +156,7 @@ class PFAutocompleteAPI extends ApiBase {
+@@ -152,6 +160,7 @@ class PFAutocompleteAPI extends ApiBase {
  			'base_cargo_table' => null,
  			'base_cargo_field' => null,
  			'basevalue' => null,
@@ -85,7 +78,7 @@ index 9b734641..d9ba1e6f 100644
  		];
  	}
 
-@@ -167,6 +172,7 @@ class PFAutocompleteAPI extends ApiBase {
+@@ -167,6 +176,7 @@ class PFAutocompleteAPI extends ApiBase {
  			'external_url' => 'Alias for external URL from which to get values',
  			'baseprop' => 'A previous property in the form to check against',
  			'basevalue' => 'The value to check for the previous property',
@@ -183,7 +176,7 @@ index cf8567e1..318fd496 100644
  			$formInputAttrs['data-placeholder'] = $inPlaceholder;
  		}
 diff --git a/libs/PF_AutocompleteWidget.js b/libs/PF_AutocompleteWidget.js
-index 5d9941ba..963e2e73 100644
+index 5d9941ba..7a336528 100644
 --- a/libs/PF_AutocompleteWidget.js
 +++ b/libs/PF_AutocompleteWidget.js
 @@ -83,6 +83,10 @@ pf.AutocompleteWidget.prototype.getLookupRequest = function () {
@@ -204,7 +197,7 @@ index 5d9941ba..963e2e73 100644
 -			data: data[ i ].title,
 -			label: this.highlightText( data[ i ].title )
 +			data: data[ i ].title.toString(),
-+			label: this.highlightText( '' + data[ i ].title )
++			label: this.highlightText( data[ i ].title.toString() )
  		} );
  		items.push( item );
  	}
