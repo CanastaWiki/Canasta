@@ -391,7 +391,8 @@ RUN set -x; \
 	# NCBITaxonomyLookup
 	&& git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/NCBITaxonomyLookup $MW_HOME/extensions/NCBITaxonomyLookup \
 	&& cd $MW_HOME/extensions/NCBITaxonomyLookup \
-	&& git checkout -q 8f4a7ed7bdc14378d4dbfba7aec0e1d8eece96ca \
+	&& git fetch https://gerrit.wikimedia.org/r/mediawiki/extensions/NCBITaxonomyLookup refs/changes/52/916452/1 \
+	&& git checkout FETCH_HEAD \
 	# NewUserMessage
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/NewUserMessage $MW_HOME/extensions/NewUserMessage \
 	&& cd $MW_HOME/extensions/NewUserMessage \
