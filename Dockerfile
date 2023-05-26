@@ -852,6 +852,12 @@ RUN set -x; \
 	cd $MW_HOME/extensions/DisplayTitle \
 	&& git apply /tmp/DisplayTitleHooks.fragment.master.patch
 
+# Fix premature access to MediaWikiServices. See DEMO-74
+COPY _sources/patches/EmbedVideo-hooks-services.patch /tmp/EmbedVideo-hooks-services.patch
+RUN set -x; \
+	cd $MW_HOME/extensions/EmbedVideo \
+	&& git apply /tmp/EmbedVideo-hooks-services.patch
+
 # Cleanup all .git leftovers
 RUN set -x; \
 	cd $MW_HOME \
