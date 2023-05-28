@@ -36,6 +36,7 @@ RUN set x; \
 	patch \
 	vim \
 	mc \
+	nano \
 	ffmpeg \
 	curl \
 	iputils-ping \
