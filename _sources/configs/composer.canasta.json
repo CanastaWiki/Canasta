@@ -27,7 +27,8 @@
 				"extensions/Widgets/composer.json",
 				"extensions/GoogleAnalyticsMetrics/composer.json",
 				"extensions/OpenIDConnect/composer.json",
-				"extensions/WSOAuth/composer.json"
+				"extensions/WSOAuth/composer.json",
+				"extensions/SemanticFormsSelect/composer.json"
 			]
 		}
 	}

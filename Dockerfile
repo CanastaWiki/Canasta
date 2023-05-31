@@ -443,6 +443,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-SimpleChanges $MW_HOME/extensions/SimpleChanges \
 	&& cd $MW_HOME/extensions/SimpleChanges \
 	&& git checkout -q 5352de89dfaf043f646a44582b26f07822f02be7 \
+	# SemanticFormsSelect
+	&& git clone https://github.com/SemanticMediaWiki/SemanticFormsSelect.git $MW_HOME/extensions/SemanticFormsSelect \
+	&& cd $MW_HOME/extensions/SemanticFormsSelect \
+	&& git checkout 2999c1b3d81e741c843179d1608c1838a5c6eb3a \
 	# SimpleMathJax
 	&& git clone --single-branch https://github.com/jmnote/SimpleMathJax.git $MW_HOME/extensions/SimpleMathJax \
 	&& cd $MW_HOME/extensions/SimpleMathJax \
