@@ -138,6 +138,7 @@ const DOCKER_EXTENSIONS = [
 	'NCBITaxonomyLookup',
 	'NewUserMessage',
 	'Nuke', # bundled
+	'NumerAlpha',
 	'OATHAuth', # bundled
 	'OpenGraphMeta',
 	'OpenIDConnect',

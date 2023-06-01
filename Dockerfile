@@ -399,9 +399,9 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/NewUserMessage \
 	&& git checkout -q 206f32880fa7bf70b191d33ed80b8626bca39efe \
 	# NumerAlpha
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/NumerAlpha $MW_HOME/extensions/NumerAlpha \
+	&& git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/NumerAlpha $MW_HOME/extensions/NumerAlpha \
 	&& cd $MW_HOME/extensions/NumerAlpha \
-	&& git checkout -q 93c0869735581006a3f510096738e262d49f4107 \
+	&& git checkout -q f792da2842527b4f1ea1c12fd3618b0e288276d2 \
 	# OpenGraphMeta
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/OpenGraphMeta $MW_HOME/extensions/OpenGraphMeta \
 	&& cd $MW_HOME/extensions/OpenGraphMeta \
@@ -763,8 +763,6 @@ RUN set -x; \
 #	&& cd $MW_HOME/extensions/SocialProfile \
 #	&& git fetch origin master \
 #	&& git checkout -q 3ba3b1808d2ba5d48470a6258eb6e716ccc5473a \
-	# Throws the errors, see WIK-702?focusedCommentId=41196
-	&& rm -fr $MW_HOME/extensions/NumerAlpha \
 	# does not work? see WIK-702?focusedCommentId=41955
 	&& rm -fr $MW_HOME/extensions/TimedMediaHandler \
 	# see WLDR-242
