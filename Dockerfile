@@ -252,9 +252,9 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/EmailAuthorization \
 	&& git checkout -q 2016da1b354f741d89b5dc207d4a84e11ffe9bce \
 	# EmbedVideo
-	&& git clone --single-branch -b master https://gitlab.com/hydrawiki/extensions/EmbedVideo.git $MW_HOME/extensions/EmbedVideo \
+	&& git clone --single-branch -b master https://github.com/StarCitizenWiki/mediawiki-extensions-EmbedVideo.git $MW_HOME/extensions/EmbedVideo \
 	&& cd $MW_HOME/extensions/EmbedVideo \
-	&& git checkout -q 954af96d3744d8adc7ff6458a05e579784f2d991 \
+	&& git checkout -q 5c03c031070981730a0e01aa3cbc3e5cbd1b88c1 \
 	# EventLogging
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-EventLogging $MW_HOME/extensions/EventLogging \
 	&& cd $MW_HOME/extensions/EventLogging \
