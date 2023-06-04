@@ -61,6 +61,7 @@ RUN set x; \
 	php7.4-curl \
 	php7.4-zip \
 	php7.4-fpm \
+	php7.4-yaml \
 	libapache2-mod-fcgid \
 	&& aptitude clean \
 	&& rm -rf /var/lib/apt/lists/*
@@ -650,7 +651,7 @@ COPY _sources/scripts/*.php $MW_HOME/maintenance/
 COPY _sources/configs/robots.txt $WWW_ROOT/
 COPY _sources/configs/.htaccess $WWW_ROOT/
 COPY _sources/images/favicon.ico $WWW_ROOT/
-COPY _sources/canasta/LocalSettings.php _sources/canasta/CanastaUtils.php _sources/canasta/CanastaDefaultSettings.php $MW_HOME/
+COPY _sources/canasta/LocalSettings.php _sources/canasta/CanastaUtils.php _sources/canasta/CanastaDefaultSettings.php _sources/canasta/FarmConfigLoader.php $MW_HOME/
 COPY _sources/canasta/getMediawikiSettings.php /
 COPY _sources/configs/mpm_event.conf /etc/apache2/mods-available/mpm_event.conf
 

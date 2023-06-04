@@ -135,6 +135,12 @@ sitemapgen() {
     fi
 }
 
+update_htaccess() {
+    echo "Updating .htaccess files..."
+    /generatewikihtaccess.sh
+    echo ".htaccess files updated"
+}
+
 waitdatabase() {
   if isFalse "$USE_EXTERNAL_DB"; then
     /wait-for-it.sh -t 60 db:3306
@@ -183,6 +189,8 @@ echo "Checking for LocalSettings..."
 if [ -e "$MW_VOLUME/config/LocalSettings.php"  ]; then
   # Run auto-update
   run_autoupdate
+  # Update .htaccess files
+  update_htaccess
 fi
 
 echo "Starting services..."

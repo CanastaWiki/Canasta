@@ -77,3 +77,10 @@ require_once "$canastaLocalSettingsFilePath";
 foreach (glob(getenv( 'MW_VOLUME' ) . '/config/settings/*.php') as $filename) {
 	require_once $filename;
 }
+
+# Include the FarmConfig
+require_once "$IP/FarmConfigLoader.php";
+
+require_once getenv('MW_VOLUME') . '/config/CommonSettings.php';
+
+require_once getenv('MW_VOLUME') . "/config/LocalSettings_{$wikiID}.php";
