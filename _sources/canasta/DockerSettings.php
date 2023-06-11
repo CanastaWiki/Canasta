@@ -582,3 +582,10 @@ $wgActions['mcrundo'] = false;
 $wgActions['mcrrestore'] = false;
 $wgWhitelistRead = [];
 $wgWhitelistReadRegexp = [];
+
+if ( isset( $_REQUEST['forceprofile'] ) ) {
+	$wgProfiler['class'] = 'ProfilerXhprof';
+	$wgProfiler['output'] = [ 'ProfilerOutputText' ];
+	$wgProfiler['visible'] = false;
+	$wgUseCdn = false; // make sure profile is not cached
+}

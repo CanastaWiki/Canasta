@@ -63,6 +63,7 @@ RUN set x; \
 	php7.4-tidy \
 	php7.4-zip \
 	php-luasandbox \
+	php-tideways \
 	monit \
 	zip \
 	weasyprint \
