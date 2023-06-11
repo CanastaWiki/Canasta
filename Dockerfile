@@ -794,7 +794,9 @@ RUN set -x; \
 COPY _sources/patches/PF.5.6.usedisplaytitle.autocomplete.forminput.diff /tmp/PF.5.6.usedisplaytitle.autocomplete.forminput.diff
 RUN set -x; \
     cd $MW_HOME/extensions/PageForms \
-    && git apply /tmp/PF.5.6.usedisplaytitle.autocomplete.forminput.diff
+    && git apply /tmp/PF.5.6.usedisplaytitle.autocomplete.forminput.diff \
+    # WLDR-303
+    && GIT_COMMITTER_EMAIL=docker@docker.invalid git cherry-pick -x 94ceca65c23a2894da1a26445077c786671aef0c
 
 # Composer dependencies
 # Original Canasta string:
