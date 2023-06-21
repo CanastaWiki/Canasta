@@ -79,8 +79,10 @@ foreach (glob(getenv( 'MW_VOLUME' ) . '/config/settings/*.php') as $filename) {
 }
 
 # Include the FarmConfig
-require_once "$IP/FarmConfigLoader.php";
+if (file_exists(getenv('MW_VOLUME') . '/config/wikis.yaml')) {
+    require_once "$IP/FarmConfigLoader.php";
+}
 
-require_once getenv('MW_VOLUME') . '/config/CommonSettings.php';
-
-require_once getenv('MW_VOLUME') . "/config/LocalSettings_{$wikiID}.php";
+if (isset($wikiID) && file_exists(getenv('MW_VOLUME') . "/config/{$wikiID}/LocalSettings.php")) {
+    require_once getenv('MW_VOLUME') . "/config/{$wikiID}/LocalSettings.php";
+}

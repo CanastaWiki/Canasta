@@ -39,6 +39,10 @@ if ($selectedWikiConfig) {
     die( 'Unknown wiki.' );
 }
 
+foreach (glob(getenv( 'MW_VOLUME' ) . "/config/{$wikiID}/settings/*.php") as $filename) {
+	require_once $filename;
+}
+
 // Configure the wiki server and URL paths
 $wgServer = "http://$serverName";
 $wgScriptPath = ($path !== null && $path !== '') ? "/" . $path . "/w" : "/w";
