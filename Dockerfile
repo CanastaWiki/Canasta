@@ -529,10 +529,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Variables $MW_HOME/extensions/Variables \
 	&& cd $MW_HOME/extensions/Variables \
 	&& git checkout -q b4a9063f16a928567e3b6788cda9246c2e94797f \
-	# VEForAll (v. 0.4.1)
+	# VEForAll (v. 0.5)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/VEForAll $MW_HOME/extensions/VEForAll \
 	&& cd $MW_HOME/extensions/VEForAll \
-	&& git checkout -q 2f1f08eca7fbf61198e5f4ccf2d627a6c9ef7b64 \
+	&& git checkout -q cffa12abb85200e90b1cbc636325b1ec1a89a6af \
 	# VoteNY
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/VoteNY $MW_HOME/extensions/VoteNY \
 	&& cd $MW_HOME/extensions/VoteNY \
@@ -748,10 +748,6 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/Lingo \
 	&& git fetch \
 	&& git checkout -q 23511cdf80c4665d992b0822a7c90ded6572d395 \
-	# It throws the error: Class 'VEForAll\\RequestContext' not found"
-	&& cd $MW_HOME/extensions/VEForAll \
-	&& git fetch https://gerrit.wikimedia.org/r/mediawiki/extensions/VEForAll refs/changes/35/891335/1  \
-	&& git checkout -b change-891335 FETCH_HEAD \
 	# HeaderFooter throws the errors, see WIK-702?focusedCommentId=41302 \
 	&& rm -fr $MW_HOME/extensions/HeaderFooter \
 	&& git clone --single-branch -b fix-mw36 https://github.com/JeroenDeDauw/HeaderFooter.git $MW_HOME/extensions/HeaderFooter \
