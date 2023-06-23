@@ -552,6 +552,12 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/WSOAuth \
 	&& git checkout -q 3c54c4899dd63989bc3214273bf1c5807c7ac5db
 
+# GTag
+COPY _sources/extensions/GTag1.2.0.tar.gz /tmp/
+RUN set -x; \
+    tar -xvf /tmp/GTag*.tar.gz -C $MW_HOME/extensions \
+    && rm /tmp/GTag*.tar.gz
+
 # Patch composer
 RUN set -x; \
     sed -i 's="monolog/monolog": "2.2.0",="monolog/monolog": "^2.2",=g' $MW_HOME/composer.json
