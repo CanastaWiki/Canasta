@@ -287,6 +287,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Graph $MW_HOME/extensions/Graph \
 	&& cd $MW_HOME/extensions/Graph \
 	&& git checkout -q 9c229eafdf406c95a4a666a6b7f2a9d0d3d682e4 \
+	# GTag
+	&& git clone https://github.com/SkizNet/mediawiki-GTag $MW_HOME/extensions/GTag \
+	&& cd $MW_HOME/extensions/GTag \
+	&& git checkout -q d45f54085d003166aa032363408b8dbef7dd3628 \
 	# HeaderFooter
 	&& git clone https://github.com/enterprisemediawiki/HeaderFooter.git $MW_HOME/extensions/HeaderFooter \
 	&& cd $MW_HOME/extensions/HeaderFooter \
@@ -551,12 +555,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-WSOAuth $MW_HOME/extensions/WSOAuth \
 	&& cd $MW_HOME/extensions/WSOAuth \
 	&& git checkout -q 3c54c4899dd63989bc3214273bf1c5807c7ac5db
-
-# GTag
-COPY _sources/extensions/GTag1.2.0.tar.gz /tmp/
-RUN set -x; \
-    tar -xvf /tmp/GTag*.tar.gz -C $MW_HOME/extensions \
-    && rm /tmp/GTag*.tar.gz
 
 # Patch composer
 RUN set -x; \
