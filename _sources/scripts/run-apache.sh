@@ -166,7 +166,7 @@ check_mount_points () {
 }
 
 inotifywait() {
-	runuser -c /monitor-directories.sh -s /bin/bash "$WWW_USER"	
+	/monitor-directories.sh
 }
 
 # Wait db
