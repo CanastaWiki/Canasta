@@ -4,6 +4,10 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
 
+// // Echo ORIGINAL_URL for debugging
+$original_url = getenv('ORIGINAL_URL');
+// echo 'ORIGINAL_URL: ' . $original_url;
+
 // Parse YAML configuration file containing information about the wikis
 $wikiConfigurations = @yaml_parse_file(getenv('MW_VOLUME') . '/config/wikis.yaml');
 
@@ -23,8 +27,8 @@ $path = null;
 // Retrieve the server name and request path if available
 if (isset($_SERVER['SERVER_NAME'])) {
     $serverName = $_SERVER['SERVER_NAME'];
-    $path = explode('/', ltrim($_SERVER['REQUEST_URI'], '/'))[0];
-    $path = rtrim($path,"wiki");
+    $path = explode('/', ltrim($original_url, '/'))[0];
+    $path = rtrim($path, "wiki");
 }
 
 // Determine the wiki ID and select the corresponding configuration
@@ -35,15 +39,19 @@ $selectedWikiConfig = $wikiIdToConfigMap[$wikiID] ?? null;
 // If a matching configuration was found, configure the wiki database, else, terminate execution
 if ($selectedWikiConfig) {
     $wgDBname = $wikiID;
+    
+    // Set $wgSitename and $wgMetaNamespace from the configuration
+    $wgSitename = $selectedWikiConfig['name'];
+    $wgMetaNamespace = $selectedWikiConfig['name'];
 } else {
     die( 'Unknown wiki.' );
-}
-
-foreach (glob(getenv( 'MW_VOLUME' ) . "/config/{$wikiID}/settings/*.php") as $filename) {
-	require_once $filename;
 }
 
 // Configure the wiki server and URL paths
 $wgServer = "http://$serverName";
 $wgScriptPath = ($path !== null && $path !== '') ? "/" . $path . "/w" : "/w";
 $wgArticlePath = ($path !== null && $path !== '') ? "/" . $path ."/wiki/$1" : "/wiki/$1";
+
+foreach (glob(getenv( 'MW_VOLUME' ) . "/config/{$wikiID}/*.php") as $filename) {
+	require_once $filename;
+}

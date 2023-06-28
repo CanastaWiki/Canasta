@@ -1,5 +1,9 @@
 RewriteEngine On
 
+# Capture original request URL
+RewriteCond %{THE_REQUEST} \s(.*?)\s
+RewriteRule ^ - [E=ORIGINAL_URL:%1]
+
 # Close access to git repo
 RedirectMatch 404 /\.git
 

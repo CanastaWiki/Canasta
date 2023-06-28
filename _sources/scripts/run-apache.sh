@@ -186,7 +186,7 @@ cd "$MW_HOME" || exit
 
 ########## Run maintenance scripts ##########
 echo "Checking for LocalSettings..."
-if [ -e "$MW_VOLUME/config/LocalSettings.php"  ]; then
+if [ -e "$MW_VOLUME/config/LocalSettings.php" ] || [ -e "$MW_VOLUME/config/CommonSettings.php" ]; then
   # Run auto-update
   run_autoupdate
   # Update .htaccess files

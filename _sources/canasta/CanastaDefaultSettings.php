@@ -8,6 +8,12 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 require_once "$IP/CanastaUtils.php";
 
 $canastaLocalSettingsFilePath = getenv( 'MW_VOLUME' ) . '/config/LocalSettings.php';
+$canastaCommonSettingsFilePath = getenv( 'MW_VOLUME' ) . '/config/CommonSettings.php';
+
+if (file_exists($canastaCommonSettingsFilePath)) {
+    $canastaLocalSettingsFilePath = $canastaCommonSettingsFilePath;
+}
+
 if ( defined( 'MW_CONFIG_CALLBACK' ) ) {
 	// Called from WebInstaller or similar entry point
 
@@ -81,8 +87,4 @@ foreach (glob(getenv( 'MW_VOLUME' ) . '/config/settings/*.php') as $filename) {
 # Include the FarmConfig
 if (file_exists(getenv('MW_VOLUME') . '/config/wikis.yaml')) {
     require_once "$IP/FarmConfigLoader.php";
-}
-
-if (isset($wikiID) && file_exists(getenv('MW_VOLUME') . "/config/{$wikiID}/LocalSettings.php")) {
-    require_once getenv('MW_VOLUME') . "/config/{$wikiID}/LocalSettings.php";
 }
