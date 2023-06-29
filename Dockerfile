@@ -447,6 +447,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SemanticDrilldown $MW_HOME/extensions/SemanticDrilldown \
 	&& cd $MW_HOME/extensions/SemanticDrilldown \
 	&& git checkout -q e960979ec5a3b1e662b3742cee7e7ef4056f9a46 \
+	# SemanticTasks
+	&& git clone https://github.com/WikiTeq/SemanticTasks.git $MW_HOME/extensions/SemanticTasks \
+	&& cd $MW_HOME/extensions/SemanticTasks \
+	&& git checkout -q 70ddd8cf6090139ce5ee6fdf1e7f3a9f2c68d5d3 \
 	# SimpleChanges
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-SimpleChanges $MW_HOME/extensions/SimpleChanges \
 	&& cd $MW_HOME/extensions/SimpleChanges \
