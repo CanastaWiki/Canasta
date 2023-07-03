@@ -2,11 +2,6 @@
 
 set -x
 
-# read variables from LocalSettings.php
-get_mediawiki_variable () {
-    php /getMediawikiSettings.php --variable="$1" --format="${2:-string}"
-}
-
 isTrue() {
     case $1 in
         "True" | "TRUE" | "true" | 1)
@@ -97,43 +92,44 @@ else
   chmod -R g=rwX $APACHE_LOG_DIR
 fi
 
-jobrunner() {
-    sleep 3
-    if isTrue "$MW_ENABLE_JOB_RUNNER"; then
-        echo >&2 Run Jobs
-        nice -n 20 runuser -c /mwjobrunner.sh -s /bin/bash "$WWW_USER"
+run_maintenance_scripts() {
+  # Iterate through all the .sh files in /maintenance-scripts/ directory
+  for maintenance_script in $(find /maintenance-scripts/ -maxdepth 1 -mindepth 1 -type f -name "*.sh"); do
+    script_name=$(basename "$maintenance_script")
+
+    # If the script's name starts with "mw_", run it with the run_mw_script function
+    if [[ "$script_name" == mw* ]]; then
+      run_mw_script "$script_name" &
     else
-        echo >&2 Job runner is disabled
+      # If the script's name doesn't start with "mw"
+      echo "Running $script_name with user $WWW_USER..."
+      nice -n 20 runuser -c "/maintenance-scripts/$script_name" -s /bin/bash "$WWW_USER" &
     fi
+  done
 }
 
-transcoder() {
-    sleep 3
-    if isTrue "$MW_ENABLE_TRANSCODER"; then
-        echo >&2 Run transcoder
-        nice -n 20 runuser -c /mwtranscoder.sh -s /bin/bash "$WWW_USER"
-    else
-        echo >&2 Transcoder disabled
-    fi
+# Naming convention:
+# Scripts with names starting with "mw_" have corresponding enable variables.
+# The enable variable is formed by converting the script's name to uppercase and replacing the first underscore with "_ENABLE_". 
+# For example, the enable variable for "mw_sitemap_generator.sh" would be "MW_ENABLE_SITEMAP_GENERATOR".
+
+run_mw_script() {
+  sleep 3
+
+  # Process the script name and create the corresponding enable variable
+  local script_name="$1"
+  script_name_no_ext="${script_name%.*}"
+  script_name_upper=$(basename "$script_name_no_ext" | tr '[:lower:]' '[:upper:]')
+  local MW_ENABLE_VAR="${script_name_upper/_/_ENABLE_}"
+
+  if isTrue "${!MW_ENABLE_VAR}"; then
+    echo "Running $script_name with user $WWW_USER..."
+    nice -n 20 runuser -c "/maintenance-scripts/$script_name" -s /bin/bash "$WWW_USER"
+  else
+    echo >&2 "$script_name is disabled."
+  fi
 }
 
-sitemapgen() {
-    sleep 3
-    if isTrue "$MW_ENABLE_SITEMAP_GENERATOR"; then
-        # Fetch & export script path for sitemap generator
-        if [ -z "$MW_SCRIPT_PATH" ]; then
-          MW_SCRIPT_PATH=$(get_mediawiki_variable wgScriptPath)
-        fi
-        # Fall back to default value if can't fetch the variable
-        if [ -z "$MW_SCRIPT_PATH" ]; then
-          MW_SCRIPT_PATH="/w"
-        fi
-        echo >&2 Run sitemap generator
-        MW_SCRIPT_PATH=$MW_SCRIPT_PATH nice -n 20 runuser -c /mwsitemapgen.sh -s /bin/bash "$WWW_USER"
-    else
-        echo >&2 Sitemap generator is disabled
-    fi
-}
 
 waitdatabase() {
   if isFalse "$USE_EXTERNAL_DB"; then
@@ -186,14 +182,11 @@ if [ -e "$MW_VOLUME/config/LocalSettings.php"  ]; then
 fi
 
 echo "Starting services..."
-jobrunner &
-transcoder &
-sitemapgen &
-inotifywait &
+
+run_maintenance_scripts &
 
 # Running php-fpm
 /run-php-fpm.sh &
-
 
 ############### Run Apache ###############
 # Make sure we're not confused by old, incompletely-shutdown httpd
