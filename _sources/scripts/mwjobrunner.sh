@@ -21,9 +21,10 @@ while true; do
     sleep 1
     php "$RJ" --memory-limit="$MW_JOB_RUNNER_MEMORY_LIMIT" --type="createPage" >> "$logfileNow" 2>&1
     sleep 1
-    php "$RJ" --memory-limit="$MW_JOB_RUNNER_MEMORY_LIMIT" --type="refreshLinks" >> "$logfileNow" 2>&1
-    sleep 1
     php "$RJ" --memory-limit="$MW_JOB_RUNNER_MEMORY_LIMIT" --type="htmlCacheUpdate" --maxjobs=500 >> "$logfileNow" 2>&1
+    # Due to the way we do varnish cache reloading, we want to aim for htmlCacheUpdate jobs
+    # to typically run before refreshLinks jobs, so do not sleep between them. (WLDR-314)
+    php "$RJ" --memory-limit="$MW_JOB_RUNNER_MEMORY_LIMIT" --type="refreshLinks" --maxjobs=25 >> "$logfileNow" 2>&1
     sleep 1
     # Everything else, limit the number of jobs on each batch
     # The --wait parameter will pause the execution here until new jobs are added,

@@ -463,6 +463,34 @@ if ( $tmpProxy ) {
 	if ( strncasecmp( $wgServer, 'https://', 8 ) === 0 ) {
 		$wgInternalServer = 'http://' . substr( $wgServer, 8 ); // Replaces HTTPS with HTTP
 	}
+	// Re-warm up varnish cache after a purge.
+	// Do this on LinksUpdate and not HTMLCacheUpdate because HTMLCacheUpdate
+	// does 100 pages at a time very quickly which can overwhelm things.
+	// WLDR-314.
+	$wgHooks['LinksUpdateComplete'][] = function ( $linksUpdate ) {
+		global $wgCdnServers;
+		$url = $linksUpdate->getTitle()->getInternalURL();
+		// Adapted from CdnCacheUpdate::naivePurge.
+		foreach( $wgCdnServers as $server ) {
+			$urlInfo = wfParseUrl( $url );
+			$urlHost = strlen( $urlInfo['port'] ?? '' )
+				? \Wikimedia\IPUtils::combineHostAndPort( $urlInfo['host'], (int)$urlInfo['port'] )
+				: $urlInfo['host'];
+			$baseReq = [
+				'method' => 'GET',
+				'url' => $url,
+				'headers' => [
+					'Host' => $urlHost,
+					'Connection' => 'Keep-Alive',
+					'Proxy-Connection' => 'Keep-Alive',
+					'User-Agent' => 'MediaWiki/' . MW_VERSION . ' LinksUpdate',
+				],
+				'proxy' => $server
+			];
+			MediaWiki\MediaWikiServices::getInstance()->getHttpRequestFactory()
+				->createMultiClient()->runMulti( [ $baseReq ] );
+		}
+	};
 }
 
 # Debug mode
