@@ -1062,7 +1062,8 @@ ENV MW_AUTOUPDATE=true \
 	LOG_FILES_REMOVE_OLDER_THAN_DAYS=10 \
 	MEDIAWIKI_MAINTENANCE_AUTO_ENABLED=false \
 	MW_DEBUG_MODE=false \
-	MW_SENTRY_DSN=""
+	MW_SENTRY_DSN="" \
+	MW_USE_CACHE_DIRECTORY=1
 
 COPY _sources/configs/msmtprc /etc/
 COPY _sources/configs/mediawiki.conf /etc/apache2/sites-enabled/
