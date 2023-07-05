@@ -400,7 +400,7 @@ RUN set -x; \
 	# Lingo
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Lingo $MW_HOME/extensions/Lingo \
 	&& cd $MW_HOME/extensions/Lingo \
-	&& git checkout -q a291fa25822097a4a2aefff242a876edadb535a4 \
+	&& git checkout -q 8cf46aa5df030c6bce68015fb305a26f93b9fa6c \
 	# LinkSuggest
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/LinkSuggest $MW_HOME/extensions/LinkSuggest \
 	&& cd $MW_HOME/extensions/LinkSuggest \
