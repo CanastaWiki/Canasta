@@ -398,9 +398,9 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/LDAPProvider \
 	&& git checkout -q 80f8cc8156b0cd250d0dfacd9378ed0db7c2091d \
 	# Lingo
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Lingo $MW_HOME/extensions/Lingo \
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/Lingo $MW_HOME/extensions/Lingo \
 	&& cd $MW_HOME/extensions/Lingo \
-	&& git checkout -q a291fa25822097a4a2aefff242a876edadb535a4 \
+	&& git checkout -q 8cf46aa5df030c6bce68015fb305a26f93b9fa6c \
 	# LinkSuggest
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/LinkSuggest $MW_HOME/extensions/LinkSuggest \
 	&& cd $MW_HOME/extensions/LinkSuggest \
@@ -923,10 +923,6 @@ RUN set -x; \
 	cd $MW_HOME/extensions/CommentStreams \
 	&& git fetch \
 	&& git checkout -q 567178f0eac7172536aac4aea20f4cd97b8ad891 \
-	# it breaks Special:ChangeContentModel, see MFAM-124
-	&& cd $MW_HOME/extensions/Lingo \
-	&& git fetch \
-	&& git checkout -q 23511cdf80c4665d992b0822a7c90ded6572d395 \
 	# HeaderFooter throws the errors, see WIK-702?focusedCommentId=41302 \
 	&& rm -fr $MW_HOME/extensions/HeaderFooter \
 	&& git clone --single-branch -b fix-mw36 https://github.com/JeroenDeDauw/HeaderFooter.git $MW_HOME/extensions/HeaderFooter \
