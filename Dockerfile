@@ -441,7 +441,7 @@ RUN set -x; \
 	&& git checkout -q 1e819e2fff7fad6999bafe71d866c3af50836c42 \
 	# SemanticDependencyUpdater (v. 2.0.2), WikiTeq fork
  	# Switch back to the original repo once https://github.com/gesinn-it/SemanticDependencyUpdater/pull/6 is merged
-	&& git clone --single-branch -b master https://github.com/WikiTeq/SemanticDependencyUpdater.git $MW_HOME/extensions/SemanticDependencyUpdater \
+	&& git clone --single-branch -b vedmaka-patch-1 https://github.com/WikiTeq/SemanticDependencyUpdater.git $MW_HOME/extensions/SemanticDependencyUpdater \
 	&& cd $MW_HOME/extensions/SemanticDependencyUpdater \
 	&& git checkout -q 955eb94bc92fc8885e6b377e2aaeabee95d4344e \
 	# SemanticDrilldown
