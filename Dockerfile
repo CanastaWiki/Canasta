@@ -439,10 +439,11 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-SaveSpinner $MW_HOME/extensions/SaveSpinner \
 	&& cd $MW_HOME/extensions/SaveSpinner \
 	&& git checkout -q 1e819e2fff7fad6999bafe71d866c3af50836c42 \
-	# SemanticDependencyUpdater (v. 2.0.2)
-	&& git clone --single-branch -b master https://github.com/gesinn-it/SemanticDependencyUpdater $MW_HOME/extensions/SemanticDependencyUpdater \
+	# SemanticDependencyUpdater (v. 2.0.2), WikiTeq fork
+ 	# Switch back to the original repo once https://github.com/gesinn-it/SemanticDependencyUpdater/pull/6 is merged
+	&& git clone --single-branch -b master https://github.com/WikiTeq/SemanticDependencyUpdater.git $MW_HOME/extensions/SemanticDependencyUpdater \
 	&& cd $MW_HOME/extensions/SemanticDependencyUpdater \
-	&& git checkout -q 389e34c4d4249d27b283a8a29c654fb708b8b294 \
+	&& git checkout -q 051c6a934b38fdd3abd8a404cb592e9a1c3870da \
 	# SemanticDrilldown
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SemanticDrilldown $MW_HOME/extensions/SemanticDrilldown \
 	&& cd $MW_HOME/extensions/SemanticDrilldown \
