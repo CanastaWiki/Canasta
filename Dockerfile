@@ -443,7 +443,7 @@ RUN set -x; \
  	# Switch back to the original repo once https://github.com/gesinn-it/SemanticDependencyUpdater/pull/6 is merged
 	&& git clone --single-branch -b master https://github.com/WikiTeq/SemanticDependencyUpdater.git $MW_HOME/extensions/SemanticDependencyUpdater \
 	&& cd $MW_HOME/extensions/SemanticDependencyUpdater \
-	&& git checkout -q 051c6a934b38fdd3abd8a404cb592e9a1c3870da \
+	&& git checkout -q 955eb94bc92fc8885e6b377e2aaeabee95d4344e \
 	# SemanticDrilldown
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SemanticDrilldown $MW_HOME/extensions/SemanticDrilldown \
 	&& cd $MW_HOME/extensions/SemanticDrilldown \
