@@ -456,9 +456,9 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/SimpleChanges \
 	&& git checkout -q 5352de89dfaf043f646a44582b26f07822f02be7 \
 	# SemanticFormsSelect
-	&& git clone https://github.com/SemanticMediaWiki/SemanticFormsSelect.git $MW_HOME/extensions/SemanticFormsSelect \
+	&& git clone https://github.com/vedmaka/SemanticFormsSelect.git $MW_HOME/extensions/SemanticFormsSelect \
 	&& cd $MW_HOME/extensions/SemanticFormsSelect \
-	&& git checkout 2999c1b3d81e741c843179d1608c1838a5c6eb3a \
+	&& git checkout c5e6a2e774c4fe5730a74dff3555f7287cdc40b1 \
 	# SimpleMathJax
 	&& git clone --single-branch https://github.com/jmnote/SimpleMathJax.git $MW_HOME/extensions/SimpleMathJax \
 	&& cd $MW_HOME/extensions/SimpleMathJax \
