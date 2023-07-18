@@ -85,6 +85,6 @@ foreach ( glob( getenv( 'MW_VOLUME' ) . '/config/settings/*.php' ) as $filename 
 }
 
 # Include the FarmConfig
-if (file_exists(getenv('MW_VOLUME') . '/config/wikis.yaml')) {
+if ( file_exists( getenv( 'MW_VOLUME' ) . '/config/wikis.yaml' ) ) {
     require_once "$IP/FarmConfigLoader.php";
 }
