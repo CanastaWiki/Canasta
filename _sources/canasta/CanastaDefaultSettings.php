@@ -5,12 +5,12 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
 
-require_once "$IP/CanastaUtils.php";
+require_once "{$IP}/CanastaUtils.php";
 
 $canastaLocalSettingsFilePath = getenv( 'MW_VOLUME' ) . '/config/LocalSettings.php';
 $canastaCommonSettingsFilePath = getenv( 'MW_VOLUME' ) . '/config/CommonSettings.php';
 
-if (file_exists($canastaCommonSettingsFilePath)) {
+if ( file_exists( $canastaCommonSettingsFilePath ) ) {
     $canastaLocalSettingsFilePath = $canastaCommonSettingsFilePath;
 }
 
@@ -80,7 +80,7 @@ $wgCdnServersNoPurge[] = '192.168.0.0/16'; // 192.168.0.0 – 192.168.255.255
 require_once "$canastaLocalSettingsFilePath";
 
 # Include all php files in config/settings directory
-foreach (glob(getenv( 'MW_VOLUME' ) . '/config/settings/*.php') as $filename) {
+foreach ( glob( getenv( 'MW_VOLUME' ) . '/config/settings/*.php' ) as $filename ) {
 	require_once $filename;
 }
 

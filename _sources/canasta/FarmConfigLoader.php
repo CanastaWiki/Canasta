@@ -1,24 +1,30 @@
 <?php
-// If the script is not running in the MediaWiki environment, terminate execution
+
+# Protect against web entry
 if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
 
 // // Echo ORIGINAL_URL for debugging
 $original_url = getenv('ORIGINAL_URL');
-// echo 'ORIGINAL_URL: ' . $original_url;
 
 // Parse YAML configuration file containing information about the wikis
-$wikiConfigurations = @yaml_parse_file(getenv('MW_VOLUME') . '/config/wikis.yaml');
+$wikiConfigurations = null;
 
-// Initialize an array to map wiki IDs to their respective configurations and URLs
-$wikiIdToConfigMap = [];
-$urlToWikiIdMap = [];
+try {
+    $file = getenv('MW_VOLUME') . '/config/wikis.yaml';
 
-// Populate the arrays using data from the configuration file
-foreach ($wikiConfigurations['wikis'] as $wiki) {
-    $urlToWikiIdMap[$wiki['url']] = $wiki['id'];
-    $wikiIdToConfigMap[$wiki['id']] = $wiki;
+    if (!file_exists($file)) {
+        throw new Exception('The configuration file does not exist');
+    }
+
+    $wikiConfigurations = yaml_parse_file($file);
+
+    if ($wikiConfigurations === false) {
+        throw new Exception('Error parsing the configuration file');
+    }
+} catch (Exception $e) {
+    die('Caught exception: ' . $e->getMessage());
 }
 
 $serverName = null;
@@ -32,7 +38,14 @@ if (isset($_SERVER['SERVER_NAME'])) {
 }
 
 // Determine the wiki ID and select the corresponding configuration
-$wikiID = defined('MW_DB') ? MW_DB : ($urlToWikiIdMap[rtrim($serverName . '/' . $path, '/')] ?? null);
+$key = rtrim($serverName . '/' . $path, '/');
+
+if (!array_key_exists($key, $urlToWikiIdMap)) {
+    // Handle the missing key. In this case, we'll log a warning.
+    error_log("Warning: $key does not exist in urlToWikiIdMap. Using default wiki ID.");
+} else {
+    $wikiID = defined('MW_WIKI_NAME') ? MW_WIKI_NAME : $urlToWikiIdMap[$key];
+}
 
 $selectedWikiConfig = $wikiIdToConfigMap[$wikiID] ?? null;
 
@@ -51,6 +64,9 @@ if ($selectedWikiConfig) {
 $wgServer = "http://$serverName";
 $wgScriptPath = ($path !== null && $path !== '') ? "/" . $path . "/w" : "/w";
 $wgArticlePath = ($path !== null && $path !== '') ? "/" . $path ."/wiki/$1" : "/wiki/$1";
+$wgCacheDirectory = "$IP/cache/$wikiID";
+// $wgUploadDirectory = "$IP/images/$wikiID";
+// $wgUploadPath = "$wgScriptPath/images/$wikiID";
 
 foreach (glob(getenv( 'MW_VOLUME' ) . "/config/{$wikiID}/*.php") as $filename) {
 	require_once $filename;
