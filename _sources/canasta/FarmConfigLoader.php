@@ -27,6 +27,15 @@ try {
     die('Caught exception: ' . $e->getMessage());
 }
 
+$wikiIdToConfigMap = [];
+$urlToWikiIdMap = [];
+
+// Populate the arrays using data from the configuration file
+foreach ($wikiConfigurations['wikis'] as $wiki) {
+    $urlToWikiIdMap[$wiki['url']] = $wiki['id'];
+    $wikiIdToConfigMap[$wiki['id']] = $wiki;
+}
+
 $serverName = null;
 $path = null;
 
@@ -37,14 +46,19 @@ if (isset($_SERVER['SERVER_NAME'])) {
     $path = rtrim($path, "wiki");
 }
 
-// Determine the wiki ID and select the corresponding configuration
+// Prepare a key
 $key = rtrim($serverName . '/' . $path, '/');
 
-if (!array_key_exists($key, $urlToWikiIdMap)) {
-    // Handle the missing key. In this case, we'll log a warning.
-    error_log("Warning: $key does not exist in urlToWikiIdMap. Using default wiki ID.");
-} else {
-    $wikiID = defined('MW_WIKI_NAME') ? MW_WIKI_NAME : $urlToWikiIdMap[$key];
+// Try to set $wikiID with the constant 'MW_WIKI_NAME', if it is defined. If it's not, $wikiID will be set to null
+$wikiID = defined('MW_WIKI_NAME') ? MW_WIKI_NAME : null;
+
+// If $wikiID is still null, and the $key exists in $urlToWikiIdMap, set $wikiID using $urlToWikiIdMap[$key]
+if (is_null($wikiID) && array_key_exists($key, $urlToWikiIdMap)) {
+    $wikiID = $urlToWikiIdMap[$key];
+} 
+// If $wikiID is still null after these two steps, log a warning
+else if (is_null($wikiID)) {
+    error_log("Warning: $key does not exist in urlToWikiIdMap.");
 }
 
 $selectedWikiConfig = $wikiIdToConfigMap[$wikiID] ?? null;
