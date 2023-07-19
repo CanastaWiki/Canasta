@@ -7,7 +7,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 
 $original_url = getenv( 'ORIGINAL_URL' );
 
-if (!$original_url) {
+if ( $original_url=== false ) {
     error_log('Warning: ORIGINAL_URL does not exist in the environment variables.');
 }
 
