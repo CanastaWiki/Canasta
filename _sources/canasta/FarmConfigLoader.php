@@ -5,8 +5,11 @@ if ( !defined( 'MEDIAWIKI' ) ) {
     exit;
 }
 
-// Echo ORIGINAL_URL for debugging
 $original_url = getenv( 'ORIGINAL_URL' );
+
+if (!$original_url) {
+    error_log('Warning: ORIGINAL_URL does not exist in the environment variables.');
+}
 
 // Parse YAML configuration file containing information about the wikis
 $wikiConfigurations = null;
@@ -61,24 +64,27 @@ if ( is_null( $wikiID ) && array_key_exists( $key, $urlToWikiIdMap ) ) {
 $selectedWikiConfig = $wikiIdToConfigMap[$wikiID] ?? null;
 
 // If a matching configuration was found, configure the wiki database, else, terminate execution
-if ( $selectedWikiConfig ) {
+if (!empty($selectedWikiConfig)) {
     $wgDBname = $wikiID;
 
     // Set $wgSitename and $wgMetaNamespace from the configuration
     $wgSitename = $selectedWikiConfig['name'];
     $wgMetaNamespace = $selectedWikiConfig['name'];
 } else {
-    die( 'Unknown wiki.' );
+    die('Unknown wiki.');
 }
 
 // Configure the wiki server and URL paths
 $wgServer = "http://$serverName";
-$wgScriptPath = ( $path !== null && $path !== '' ) ? "/" . $path . "/w" : "/w";
-$wgArticlePath = ( $path !== null && $path !== '' ) ? "/" . $path ."/wiki/$1" : "/wiki/$1";
+$wgScriptPath = !empty( $path ) ? "/" . $path . "/w" : "/w";
+$wgArticlePath = !empty( $path ) ? "/" . $path ."/wiki/$1" : "/wiki/$1";
 $wgCacheDirectory = "$IP/cache/$wikiID";
 // $wgUploadDirectory = "$IP/images/$wikiID";
 // $wgUploadPath = "$wgScriptPath/images/$wikiID";
 
-foreach ( glob( getenv( 'MW_VOLUME' ) . "/config/{$wikiID}/*.php" ) as $filename ) {
-    require_once $filename;
+$files = glob( getenv( 'MW_VOLUME' ) . "/config/{$wikiID}/*.php" );
+if ( $files !== false && count( $files ) > 0 ) {
+    $firstFile = $files[0]; // get the first file, since glob() returns files sorted lexicographically
+    require_once $firstFile;
+    // other actions with the $firstFile
 }
