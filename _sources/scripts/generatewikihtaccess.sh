@@ -24,9 +24,5 @@ for path in $wiki_paths; do
     -e "s|^/*$ %{DOCUMENT_ROOT}/w/index.php|/*$ %{DOCUMENT_ROOT}/$path/w/index.php|" \
     -e "s|^\\(.*\\)$ %{DOCUMENT_ROOT}/w/index.php|\\1$ %{DOCUMENT_ROOT}/$path/w/index.php|" \
     $WWW_ROOT/.htaccess > $WWW_ROOT/$path/.htaccess
-
-    # Remove intermediate files
-    rm $WWW_ROOT/$path/.htaccess.tmp1
-    rm $WWW_ROOT/$path/.htaccess.tmp2
   fi
 done
