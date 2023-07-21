@@ -442,7 +442,7 @@ RUN set -x; \
 	# SemanticDependencyUpdater (v. 2.0.2)
 	&& git clone --single-branch -b master https://github.com/gesinn-it/SemanticDependencyUpdater $MW_HOME/extensions/SemanticDependencyUpdater \
 	&& cd $MW_HOME/extensions/SemanticDependencyUpdater \
-	&& git checkout -q 389e34c4d4249d27b283a8a29c654fb708b8b294 \
+	&& git checkout -q e8a483dd54de6a069854789ae6c702aab98a89ab \
 	# SemanticDrilldown
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SemanticDrilldown $MW_HOME/extensions/SemanticDrilldown \
 	&& cd $MW_HOME/extensions/SemanticDrilldown \
