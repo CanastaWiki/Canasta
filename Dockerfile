@@ -684,6 +684,7 @@ RUN set -x; \
 	# Modify config
 	&& sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf \
 	&& a2enmod expires \
+	&& a2disconf other-vhosts-access-log \
 	# Enable environment variables for FPM workers
 	&& sed -i '/clear_env/s/^;//' /etc/php/7.4/fpm/pool.d/www.conf
 
