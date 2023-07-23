@@ -565,11 +565,7 @@ RUN set -x; \
 	# SmiteSpam
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SmiteSpam $MW_HOME/extensions/SmiteSpam \
 	&& cd $MW_HOME/extensions/SmiteSpam \
-	&& git checkout -q 268f212b7e366711d8e7b54c7faf5b750fa014ad \
-	# SocialProfile
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SocialProfile $MW_HOME/extensions/SocialProfile \
-	&& cd $MW_HOME/extensions/SocialProfile \
-	&& git checkout -q 74fcf9bead948ec0419eea10800c9331bcc1273e
+	&& git checkout -q 268f212b7e366711d8e7b54c7faf5b750fa014ad
 
 # T
 RUN set -x; \
@@ -933,10 +929,6 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://github.com/WikiTeq/SimpleMathJax.git $MW_HOME/extensions/SimpleMathJax \
 	&& cd $MW_HOME/extensions/SimpleMathJax \
 	&& git checkout -q 1ef413553dca4143294842fac99b56425d815396 \
-#	# SocialProfile breaks Special:SpecialPages, see WIK-702?focusedCommentId=41955
-#	&& cd $MW_HOME/extensions/SocialProfile \
-#	&& git fetch origin master \
-#	&& git checkout -q 3ba3b1808d2ba5d48470a6258eb6e716ccc5473a \
 	# does not work? see WIK-702?focusedCommentId=41955
 	&& rm -fr $MW_HOME/extensions/TimedMediaHandler \
 	# missed in Canasta
@@ -964,12 +956,6 @@ COPY _sources/patches/flow-conversion-utils.patch /tmp/flow-conversion-utils.pat
 RUN set -x; \
 	cd $MW_HOME/extensions/Flow \
 	&& git apply /tmp/flow-conversion-utils.patch
-
-# WikiTeq's patch allowing to manage fields visibility site-wide. See WZ7-1
-COPY _sources/patches/SocialProfile-disable-fields.patch /tmp/SocialProfile-disable-fields.patch
-RUN set -x; \
-	cd $MW_HOME/extensions/SocialProfile \
-	&& git apply /tmp/SocialProfile-disable-fields.patch
 
 # see HEAL-167
 # https://github.com/WikiTeq/mediawiki-extensions-DisplayTitle/commit/a1fbbff7bb43d514fbd61c3c4be2ca17bb76f22e.patch
