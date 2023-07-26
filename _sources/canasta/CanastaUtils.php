@@ -26,7 +26,7 @@ function cfLoadSkin( $skinName ) {
 /**
  * Not exactly a utility function, but - show a warning to users if $wgSMTP is not set.
  */
-$wgHooks['SiteNoticeAfter'][] = function ( &$siteNotice, Skin $skin ) {
+$wgHooks['SiteNoticeAfter'][] = static function ( &$siteNotice, Skin $skin ) {
 	global $wgSMTP, $wgEnableEmail, $wgEnableUserEmail;
 
 	if ( !$wgEnableEmail || $wgSMTP ) {

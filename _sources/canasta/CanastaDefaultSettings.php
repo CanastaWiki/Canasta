@@ -10,7 +10,6 @@ require_once "{$IP}/CanastaUtils.php";
 $canastaLocalSettingsFilePath = getenv( 'MW_VOLUME' ) . '/config/LocalSettings.php';
 $canastaCommonSettingsFilePath = getenv( 'MW_VOLUME' ) . '/config/CommonSettings.php';
 
-
 if ( defined( 'MW_CONFIG_CALLBACK' ) ) {
 	// Called from WebInstaller or similar entry point
 
@@ -74,26 +73,26 @@ $wgCdnServersNoPurge[] = '172.16.0.0/12';  // 172.16.0.0 – 172.31.255.255
 $wgCdnServersNoPurge[] = '192.168.0.0/16'; // 192.168.0.0 – 192.168.255.255
 
 # Include user defined CommonSettings.php file
-if ( file_exists( $canastaCommonSettingsFilePath ) ){
+if ( file_exists( $canastaCommonSettingsFilePath ) ) {
 	require_once "$canastaCommonSettingsFilePath";
 }
 
 # Include user defined LocalSettings.php file
-if ( file_exists( $canastaLocalSettingsFilePath ) ){
+if ( file_exists( $canastaLocalSettingsFilePath ) ) {
 	require_once "$canastaLocalSettingsFilePath";
 }
 
 $filenames = glob( getenv( 'MW_VOLUME' ) . '/config/settings/*.php' );
 
 if ( $filenames !== false && is_array( $filenames ) ) {
-    sort( $filenames );
+	sort( $filenames );
 
-    foreach ( $filenames as $filename ) {
-        require_once "$filename";
-    }
+	foreach ( $filenames as $filename ) {
+		require_once "$filename";
+	}
 }
 
 # Include the FarmConfig
 if ( file_exists( getenv( 'MW_VOLUME' ) . '/config/wikis.yaml' ) ) {
-    require_once "$IP/FarmConfigLoader.php";
+	require_once "$IP/FarmConfigLoader.php";
 }

@@ -4,7 +4,7 @@ use MediaWiki\MediaWikiServices;
 
 $mwHome = getenv( 'MW_HOME' );
 
-if ( !defined( 'MW_CONFIG_FILE' ) && !file_exists( "$mwHome/LocalSettings.php" ) && !file_exists( "$mwHome/CommonSettings.php" )) {
+if ( !defined( 'MW_CONFIG_FILE' ) && !file_exists( "$mwHome/LocalSettings.php" ) && !file_exists( "$mwHome/CommonSettings.php" ) ) {
 	return;
 }
 
@@ -145,7 +145,7 @@ class GetMediawikiSettings extends Maintenance {
 		global $wgShowExceptionDetails, $wgHooks;
 
 		$wgShowExceptionDetails = true;
-		$wgHooks['SetupAfterCache'][] = function () {
+		$wgHooks['SetupAfterCache'][] = static function () {
 			global $wgExtensionFunctions;
 			$wgExtensionFunctions = [];
 		};
