@@ -202,7 +202,7 @@ RUN set -x; \
 	# Arrays
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Arrays $MW_HOME/extensions/Arrays \
 	&& cd $MW_HOME/extensions/Arrays \
-	&& git checkout -q 338f661bf0ab377f70e029079f2c5c5b370219df
+	&& git checkout -q f42c28848f494f5f5843fa03da73f25437d2d36b
 
 # B
 RUN set -x; \
