@@ -4,7 +4,7 @@
 		"mediawiki/chameleon-skin": "4.2.1",
 		"mediawiki/bootstrap-components": "5.0.0",
 		"mediawiki/mermaid": "3.1.0",
-		"mediawiki/remote-wiki": "dev-master#cb31c362e0759c95b0b97f03ad3b2b08c2e77529",
+		"mediawiki/remote-wiki": "dev-master#63d0441e242caea50eaa9c4b526736e589ea302d",
 		"mediawiki/semantic-compound-queries": "2.2.0",
 		"mediawiki/semantic-extra-special-properties": "3.0.2",
 		"mediawiki/semantic-result-formats": "4.0.2",
