@@ -10,7 +10,7 @@ Options -Indexes
 RewriteRule ^/?w/rest.php/ - [L]
 
 # Image authorization support
-RewriteRule ^/?w/img_auth.php/ - [L]
+RewriteRule ^/?w/canasta_img.php/ - [L]
 
 # Redirect / to Main Page
 RewriteRule ^/*$ %{DOCUMENT_ROOT}/w/index.php [L]
