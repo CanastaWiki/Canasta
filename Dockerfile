@@ -296,9 +296,9 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/GTag \
 	&& git checkout -q d45f54085d003166aa032363408b8dbef7dd3628 \
 	# HeaderFooter
-	&& git clone https://github.com/enterprisemediawiki/HeaderFooter.git $MW_HOME/extensions/HeaderFooter \
+	&& git clone https://github.com/Wikia/HeaderFooter.git $MW_HOME/extensions/HeaderFooter \
 	&& cd $MW_HOME/extensions/HeaderFooter \
-	&& git checkout -q eee7d2c1a3373c7d6b326fd460e5d4859dd22c40 \
+	&& git checkout -q 0f582dd1ddf2d3e79907e064e68534eeff76be90 \
 	# HeaderTabs (v2.2)
 	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-HeaderTabs $MW_HOME/extensions/HeaderTabs \
 	&& cd $MW_HOME/extensions/HeaderTabs \
@@ -684,6 +684,7 @@ RUN set -x; \
 	# Modify config
 	&& sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf \
 	&& a2enmod expires \
+	&& a2disconf other-vhosts-access-log \
 	# Enable environment variables for FPM workers
 	&& sed -i '/clear_env/s/^;//' /etc/php/7.4/fpm/pool.d/www.conf
 
