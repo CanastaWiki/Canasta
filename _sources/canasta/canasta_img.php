@@ -49,7 +49,7 @@ $mediawiki = new MediaWiki();
 $mediawiki->doPostOutputShutdown();
 
 function wfImageAuthMain() {
-	global $wgImgAuthUrlPathMap, $wgScriptPath, $wgImgAuthPath;
+	global $wgImgAuthUrlPathMap, $wgScriptPath, $wgImgAuthPath, $wikiID;
 
 	$services = \MediaWiki\MediaWikiServices::getInstance();
 	$permissionManager = $services->getPermissionManager();
@@ -81,6 +81,10 @@ function wfImageAuthMain() {
 		// Make sure $path has a leading /
 		$path = "/" . $path;
 	}
+
+	// Replace "/images" | "/canasta_img.php" with "/images/$wikiID" | "/canasta_img.php/$wikiID" in the path.
+	$path = str_replace( "/images", "/images/$wikiID", $path );
+	$path = str_replace( "/canasta_img.php", "/canasta_img.php/$wikiID", $path );
 
 	$user = RequestContext::getMain()->getUser();
 

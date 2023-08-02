@@ -149,10 +149,10 @@ run_autoupdate () {
     echo "Auto-update completed"
 }
 
-generate_htaccess() {
-    echo "Generating .htaccess files..."
-    /generatewikihtaccess.sh
-    echo ".htaccess files updated"
+config_subdir_wikis() {
+    echo "Configuring subdirectory wikis..."
+    /config-subdir-wikis.sh
+    echo "Configured subdirectory wikis..."
 }
 
 create_cache_dirs() {
@@ -193,7 +193,7 @@ echo "Checking for LocalSettings..."
 if [ -e "$MW_VOLUME/config/LocalSettings.php" ] || [ -e "$MW_VOLUME/config/CommonSettings.php" ]; then
   # Run auto-update
   run_autoupdate
-  generate_htaccess
+  config_subdir_wikis
   create_cache_dirs
 fi
 

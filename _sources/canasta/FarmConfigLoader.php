@@ -134,23 +134,7 @@ $wgArticlePath = !empty( $path )
 	? "/$path/wiki/$1"
 	: "/wiki/$1";
 $wgCacheDirectory = "$IP/cache/$wikiID";
-
-// $wgUploadDirectory = "$IP/images/$wikiID";
-// $wgUploadPath = "$wgScriptPath/canasta_img.php";
-
-
-// $wgLocalFileRepo = [
-// 	'class' => LocalRepo::class,
-// 	'name' => 'local',
-// 	'directory' => $wgUploadDirectory,
-// 	'scriptDirUrl' => $wgScriptPath,
-// 	'url' => $wgUploadBaseUrl ? $wgUploadBaseUrl . $wgUploadPath : $wgUploadPath,
-// 	'hashLevels' => $wgHashedUploadDirectory ? 2 : 0,
-// 	'thumbScriptUrl' => $wgThumbnailScriptPath,
-// 	'transformVia404' => !$wgGenerateThumbnailOnParse,
-// 	'deletedDir' => $wgDeletedDirectory,
-// 	'deletedHashLevels' => $wgHashedUploadDirectory ? 3 : 0
-// ];
+$wgUploadDirectory = "$IP/images/$wikiID";
 
 // Load additional configuration files specific to the wiki ID
 $files = glob( getenv( 'MW_VOLUME' ) . "/config/{$wikiID}/*.php" );
