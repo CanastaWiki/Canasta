@@ -294,7 +294,7 @@ RUN set -x; \
 	# DisplayTitle
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/DisplayTitle $MW_HOME/extensions/DisplayTitle \
 	&& cd $MW_HOME/extensions/DisplayTitle \
-	&& git checkout -q a14c406cc273c73a12957b55a27c095ad98d1795
+	&& git checkout -q f5de9daf9db92d4fa74a6991269525266f2a857b
 
 # E
 RUN set -x; \
@@ -956,13 +956,6 @@ COPY _sources/patches/flow-conversion-utils.patch /tmp/flow-conversion-utils.pat
 RUN set -x; \
 	cd $MW_HOME/extensions/Flow \
 	&& git apply /tmp/flow-conversion-utils.patch
-
-# see HEAL-167
-# https://github.com/WikiTeq/mediawiki-extensions-DisplayTitle/commit/a1fbbff7bb43d514fbd61c3c4be2ca17bb76f22e.patch
-COPY _sources/patches/DisplayTitleHooks.fragment.master.patch /tmp/DisplayTitleHooks.fragment.master.patch
-RUN set -x; \
-	cd $MW_HOME/extensions/DisplayTitle \
-	&& git apply /tmp/DisplayTitleHooks.fragment.master.patch
 
 # Cleanup all .git leftovers
 RUN set -x; \
