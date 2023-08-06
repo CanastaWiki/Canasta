@@ -155,10 +155,10 @@ config_subdir_wikis() {
     echo "Configured subdirectory wikis..."
 }
 
-create_cache_dirs() {
-    echo "Creating cache dirs..."
-    /create-cache-dirs.sh
-    echo "Created cache dirs..."
+create_storage_dirs() {
+    echo "Creating cache and images dirs..."
+    /create-storage-dirs.sh
+    echo "Created cache and images dirs..."
 }
 
 check_mount_points () {
@@ -193,8 +193,10 @@ echo "Checking for LocalSettings..."
 if [ -e "$MW_VOLUME/config/LocalSettings.php" ] || [ -e "$MW_VOLUME/config/CommonSettings.php" ]; then
   # Run auto-update
   run_autoupdate
-  config_subdir_wikis
-  create_cache_dirs
+  if [ -e "$MW_VOLUME/config/wikis.yaml" ]; then
+    config_subdir_wikis
+    create_storage_dirs
+  fi
 fi
 
 echo "Starting services..."

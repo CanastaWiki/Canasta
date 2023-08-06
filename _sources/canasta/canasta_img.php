@@ -2,16 +2,19 @@
 /**
  * The web entry point for serving non-public images to logged-in users.
  *
+ * This file is specifically configured for the Canasta project. Images for each wiki
+ * are stored in their specific directories, located at /mediawiki/images/$wikiID.
+ *
  * To use this, see https://www.mediawiki.org/wiki/Manual:Image_Authorization
  *
- * - Set $wgUploadDirectory to a non-public directory (not web accessible)
- * - Set $wgUploadPath to point to this file
+ * - Set $wgUploadDirectory to a non-public directory (not web accessible). For Canasta, this would be /mediawiki/images/$wikiID.
+ * - Set $wgUploadPath to point to this file.
  *
  * Optional Parameters
  *
  * - Set $wgImgAuthDetails = true if you want the reason the access was denied messages to
  *       be displayed instead of just the 403 error (doesn't work on IE anyway),
- *       otherwise it will only appear in error logs
+ *       otherwise it will only appear in error logs.
  *
  *  For security reasons, you usually don't want your user to know *why* access was denied,
  *  just that it was. If you want to change this, you can set $wgImgAuthDetails to 'true'
@@ -82,9 +85,13 @@ function wfImageAuthMain() {
 		$path = "/" . $path;
 	}
 
-	// Replace "/images" | "/canasta_img.php" with "/images/$wikiID" | "/canasta_img.php/$wikiID" in the path.
-	$path = str_replace( "/images", "/images/$wikiID", $path );
-	$path = str_replace( "/canasta_img.php", "/canasta_img.php/$wikiID", $path );
+	if ( isset( $wikiID ) && !empty( $wikiID ) ) {
+		// Replace "/images" | "/canasta_img.php" with "/images/$wikiID" | "/canasta_img.php/$wikiID" in the path.
+		$path = str_replace_last( "/images", "/images/$wikiID", $path );
+		$path = str_replace_last( "/canasta_img.php", "/canasta_img.php/$wikiID", $path );
+	} else {
+		error_log( 'Warning: wikiID is not set or empty' );
+	}
 
 	$user = RequestContext::getMain()->getUser();
 
@@ -228,4 +235,11 @@ function wfForbidden( $msg1, $msg2, ...$args ) {
 		'msgHdr' => $msgHdr,
 		'detailMsg' => $detailMsg,
 	] );
+}
+
+function str_replace_last( $search, $replace, $subject ) {
+	if ( ( $pos = strrpos( $subject, $search ) ) !== false ) {
+		$subject = substr_replace( $subject, $replace, $pos, strlen( $search ) );
+	}
+	return $subject;
 }
