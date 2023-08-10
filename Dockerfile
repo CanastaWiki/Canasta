@@ -296,7 +296,7 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/GTag \
 	&& git checkout -q d45f54085d003166aa032363408b8dbef7dd3628 \
 	# HeaderFooter
-	&& && git clone -b MW_REL1_39_Compat https://github.com/wikimedia/mediawiki-extensions-HeaderFooter.git $MW_HOME/extensions/HeaderFooter \
+	&& git clone -b MW_REL1_39_Compat https://github.com/wikimedia/mediawiki-extensions-HeaderFooter.git $MW_HOME/extensions/HeaderFooter \
 	&& cd $MW_HOME/extensions/HeaderFooter \
 	&& git checkout -q 8b7e15ca013af371c7f37b0d955ed2039a5e2fbf \
 	# HeaderTabs (v2.2)
