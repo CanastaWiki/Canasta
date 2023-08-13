@@ -279,6 +279,10 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-FlexDiagrams $MW_HOME/extensions/FlexDiagrams \
 	&& cd $MW_HOME/extensions/FlexDiagrams \
 	&& git checkout -q eefc9e29aedfc6d8ffaf4f4e50043b390ebd7adc \
+	# Flow
+	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Flow.git $MW_HOME/extensions/Flow \
+	&& cd $MW_HOME/extensions/Flow \
+	&& git checkout -q f2998fd1a0676d26c33d97a8272c76fc68b387b6 \
 	# GlobalNotice
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-GlobalNotice $MW_HOME/extensions/GlobalNotice \
 	&& cd $MW_HOME/extensions/GlobalNotice \
