@@ -110,7 +110,7 @@ run_maintenance_scripts() {
 
 # Naming convention:
 # Scripts with names starting with "mw_" have corresponding enable variables.
-# The enable variable is formed by converting the script's name to uppercase and replacing the first underscore with "_ENABLE_". 
+# The enable variable is formed by converting the script's name to uppercase and replacing the first underscore with "_ENABLE_".
 # For example, the enable variable for "mw_sitemap_generator.sh" would be "MW_ENABLE_SITEMAP_GENERATOR".
 
 run_mw_script() {
@@ -143,7 +143,7 @@ waitdatabase() {
 
 run_autoupdate () {
     echo "Running auto-update..."
-    runuser -c "php maintenance/update.php --quick" -s /bin/bash "$WWW_USER"
+    runuser -c "php maintenance/update.php --quick --skip-config-validation" -s /bin/bash "$WWW_USER"
     echo "Auto-update completed"
 }
 
