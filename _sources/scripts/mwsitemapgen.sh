@@ -44,7 +44,7 @@ while true; do
     # generate the sitemap
     php "$SCRIPT" \
       --fspath="$MW_HOME/sitemap/$MW_SITEMAP_SUBDIR" \
-      --urlpath="$MW_SCRIPT_PATH/sitemap/$MW_SITEMAP_SUBDIR" \
+      --urlpath="$SCRIPT_PATH/sitemap/$MW_SITEMAP_SUBDIR" \
       --compress yes \
       --server="$MW_SITE_SERVER" \
       --skip-redirects \
