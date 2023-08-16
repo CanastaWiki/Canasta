@@ -366,9 +366,9 @@ RUN set -x; \
 RUN set -x; \
 	cd $MW_HOME/extensions \
 	# HeaderFooter
-	&& git clone https://github.com/enterprisemediawiki/HeaderFooter.git $MW_HOME/extensions/HeaderFooter \
+	&& git clone -b MW_REL1_39_Compat https://github.com/wikimedia/mediawiki-extensions-HeaderFooter.git $MW_HOME/extensions/HeaderFooter \
 	&& cd $MW_HOME/extensions/HeaderFooter \
-	&& git checkout -q eee7d2c1a3373c7d6b326fd460e5d4859dd22c40 \
+	&& git checkout -q 8b7e15ca013af371c7f37b0d955ed2039a5e2fbf \
 	# HeaderTabs (v2.2)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/HeaderTabs $MW_HOME/extensions/HeaderTabs \
 	&& cd $MW_HOME/extensions/HeaderTabs \
@@ -919,11 +919,6 @@ RUN set -x; \
 	cd $MW_HOME/extensions/CommentStreams \
 	&& git fetch \
 	&& git checkout -q 567178f0eac7172536aac4aea20f4cd97b8ad891 \
-	# HeaderFooter throws the errors, see WIK-702?focusedCommentId=41302 \
-	&& rm -fr $MW_HOME/extensions/HeaderFooter \
-	&& git clone --single-branch -b fix-mw36 https://github.com/JeroenDeDauw/HeaderFooter.git $MW_HOME/extensions/HeaderFooter \
-	&& cd $MW_HOME/extensions/HeaderFooter \
-	&& git checkout -q 579df9effa112c45e5d83cd8e4ee052a37c15343 \
 	# SimpleMathJax add Fix path to ext.SimpleMathJax.js in ResourceModules \
 	&& rm -fr $MW_HOME/extensions/SimpleMathJax \
 	&& git clone --single-branch -b master https://github.com/WikiTeq/SimpleMathJax.git $MW_HOME/extensions/SimpleMathJax \
