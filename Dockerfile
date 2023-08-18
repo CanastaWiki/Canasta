@@ -651,16 +651,16 @@ RUN set -x; \
 #	&& git apply /tmp/semantic-forms-select-composer-reqs.patch
 
 # SemanticResultFormats
-COPY _sources/patches/semantic-result-formats-composer-reqs.patch /tmp/semantic-result-formats-composer-reqs.patch
-RUN set -x; \
-	cd $MW_HOME/extensions/SemanticResultFormats \
-	&& git apply /tmp/semantic-result-formats-composer-reqs.patch
+# COPY _sources/patches/semantic-result-formats-composer-reqs.patch /tmp/semantic-result-formats-composer-reqs.patch
+# RUN set -x; \
+#	cd $MW_HOME/extensions/SemanticResultFormats \
+#	&& git apply /tmp/semantic-result-formats-composer-reqs.patch
 
 # SemanticTasks
 COPY _sources/patches/semantic-tasks-composer-reqs.patch /tmp/semantic-tasks-composer-reqs.patch
 RUN set -x; \
-	cd $MW_HOME/extensions/SemanticTasks # \
-	# && git apply /tmp/semantic-tasks-composer-reqs.patch
+	cd $MW_HOME/extensions/SemanticTasks \
+	&& git apply /tmp/semantic-tasks-composer-reqs.patch
 
 # Cleanup all .git leftovers
 RUN set -x; \
