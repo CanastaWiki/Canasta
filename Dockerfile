@@ -643,6 +643,12 @@ RUN set -x; \
 	cd $MW_HOME/extensions/SemanticBreadcrumbLinks \
 	&& git apply /tmp/semantic-breadcrumb-links-composer-reqs.patch
 
+# SemanticFormsSelect
+COPY _sources/patches/semantic-forms-select-composer-reqs.patch /tmp/semantic-forms-select-composer-reqs.patch
+RUN set -x; \
+	cd $MW_HOME/extensions/SemanticFormsSelect \
+	&& git apply /tmp/semantic-forms-select-composer-reqs.patch
+
 # SemanticResultFormats
 COPY _sources/patches/semantic-result-formats-composer-reqs.patch /tmp/semantic-result-formats-composer-reqs.patch
 RUN set -x; \
