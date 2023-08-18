@@ -483,7 +483,7 @@ RUN set -x; \
 	# SimpleBatchUpload (v. 2.0.0)
 	&& git clone https://github.com/ProfessionalWiki/SimpleBatchUpload $MW_HOME/extensions/SimpleBatchUpload \
 	&& cd $MW_HOME/extensions/SimpleBatchUpload \
-	&& git checkout 3b9e248b49d7fbeb81d7da32078db7040809e724 \		
+	&& git checkout -q 3b9e248b49d7fbeb81d7da32078db7040809e724 \		
 	# SimpleChanges
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-SimpleChanges $MW_HOME/extensions/SimpleChanges \
 	&& cd $MW_HOME/extensions/SimpleChanges \
@@ -495,11 +495,11 @@ RUN set -x; \
 	# SemanticMediaWiki (v. 4.1.2)
 	&& git clone https://github.com/SemanticMediaWiki/SemanticMediaWiki $MW_HOME/extensions/SemanticMediaWiki \
 	&& cd $MW_HOME/extensions/SemanticMediaWiki \
-	&& git checkout 5c94879171d5f741b896828c25a9f2bb07a03dff \
+	&& git checkout -q 5c94879171d5f741b896828c25a9f2bb07a03dff \
 	# SemanticResultFormats (v. 4.0.2)
 	&& git clone https://github.com/SemanticMediaWiki/SemanticResultFormats $MW_HOME/extensions/SemanticResultFormats \
 	&& cd $MW_HOME/extensions/SemanticMediaWiki \
-	&& git checkout d5196722a56f9b65475be68d1e97063d7b975cb9 \
+	&& git checkout -q d5196722a56f9b65475be68d1e97063d7b975cb9 \
 	# SimpleMathJax
 	&& git clone --single-branch https://github.com/jmnote/SimpleMathJax.git $MW_HOME/extensions/SimpleMathJax \
 	&& cd $MW_HOME/extensions/SimpleMathJax \
@@ -519,7 +519,7 @@ RUN set -x; \
 	# SubPageList (v. 3.0.0)
 	&& git clone https://github.com/ProfessionalWiki/SubPageList $MW_HOME/extensions/SubPageList \
 	&& cd $MW_HOME/extensions/SubPageList \
-	&& git checkout c016dcdb7866f20319731e6497b48fd43756505e \
+	&& git checkout -q c016dcdb7866f20319731e6497b48fd43756505e \
 	# TemplateStyles
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-TemplateStyles $MW_HOME/extensions/TemplateStyles \
 	&& cd $MW_HOME/extensions/TemplateStyles \
