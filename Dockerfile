@@ -637,6 +637,18 @@ RUN set -x; \
 	cd $MW_HOME \
 	&& git apply /tmp/core-local-settings-generator.patch
 
+# SemanticBreadcrumbLinks
+COPY _sources/patches/semantic-breadcrumb-links-composer-reqs.patch /tmp/semantic-breadcrumb-links-composer-reqs.patch
+RUN set -x; \
+	cd $MW_HOME/extensions/SemanticBreadcrumbLinks \
+	&& patch < /tmp/semantic-breadcrumb-links-composer-reqs.patch
+
+# SemanticResultFormats
+COPY _sources/patches/semantic-result-formats-composer-reqs.patch /tmp/semantic-result-formats-composer-reqs.patch
+RUN set -x; \
+	cd $MW_HOME/extensions/SemanticResultFormats \
+	&& patch < /tmp/semantic-result-formats-composer-reqs.patch
+
 # Cleanup all .git leftovers
 RUN set -x; \
     cd $MW_HOME \
