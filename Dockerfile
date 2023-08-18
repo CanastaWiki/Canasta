@@ -498,7 +498,7 @@ RUN set -x; \
 	&& git checkout -q 5c94879171d5f741b896828c25a9f2bb07a03dff \
 	# SemanticResultFormats (v. 4.0.2)
 	&& git clone https://github.com/SemanticMediaWiki/SemanticResultFormats $MW_HOME/extensions/SemanticResultFormats \
-	&& cd $MW_HOME/extensions/SemanticMediaWiki \
+	&& cd $MW_HOME/extensions/SemanticResultFormats \
 	&& git checkout -q d5196722a56f9b65475be68d1e97063d7b975cb9 \
 	# SimpleMathJax
 	&& git clone --single-branch https://github.com/jmnote/SimpleMathJax.git $MW_HOME/extensions/SimpleMathJax \
