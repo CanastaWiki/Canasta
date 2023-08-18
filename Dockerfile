@@ -99,9 +99,11 @@ RUN set -x; \
 # Skins
 # The Minerva Neue, MonoBook, Timeless, Vector and Vector 2022 skins are bundled into MediaWiki and do not need to be
 # separately installed.
-# The Chameleon skin is downloaded via Composer and also does not need to be installed.
 RUN set -x; \
 	cd $MW_HOME/skins \
+ 	# Chameleon (v. 4.2.1)
+  	&& git clone https://github.com/ProfessionalWiki/chameleon $MW_HOME/skins/Chameleon \
+	&& git checkout -q f34a56528ada14ac07e1b03beda41f775ef27606
 	# CologneBlue
 	&& git clone -b $MW_VERSION --single-branch https://github.com/wikimedia/mediawiki-skins-CologneBlue $MW_HOME/skins/CologneBlue \
 	&& cd $MW_HOME/skins/CologneBlue \
@@ -126,9 +128,7 @@ RUN set -x; \
 # PdfHandler, Poem, Renameuser, Replace Text, Scribunto, SecureLinkFixer, SpamBlacklist, SyntaxHighlight, TemplateData,
 # TextExtracts, TitleBlacklist, VisualEditor, WikiEditor.
 # The following extensions are downloaded via Composer and also do not need to be downloaded here: Bootstrap,
-# BootstrapComponents, Maps, Mermaid, Semantic Breadcrumb Links, Semantic Compound Queries, Semantic Extra Special
-# Properties, Semantic MediaWiki (along with all its helper library extensions, like DataValues), Semantic Result
-# Formats, Semantic Scribunto, SimpleBatchUpload, SubPageList.
+# DataValues (and related extensions like DataValuesCommon), ParserHooks.
 RUN set -x; \
 	cd $MW_HOME/extensions \
 	# AdminLinks (v. 0.6.1)
@@ -159,6 +159,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-BetaFeatures $MW_HOME/extensions/BetaFeatures \
 	&& cd $MW_HOME/extensions/BetaFeatures \
 	&& git checkout -q 09cca44341f9695446c4e9fc9e8fec3fdcb197b0 \
+	# BootstrapComponents (v. 5.1.0)
+	&& git clone --single-branch -b master https://github.com/oetterer/BootstrapComponents $MW_HOME/extensions/BootstrapComponents \
+	&& cd $MW_HOME/extensions/BootstrapComponents \
+	&& git checkout -q 665c3dee1d9e3f4bcb18dd1920fe27b70e334574 \
 	# BreadCrumbs2
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-BreadCrumbs2 $MW_HOME/extensions/BreadCrumbs2 \
 	&& cd $MW_HOME/extensions/BreadCrumbs2 \
@@ -359,6 +363,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MagicNoCache $MW_HOME/extensions/MagicNoCache \
 	&& cd $MW_HOME/extensions/MagicNoCache \
 	&& git checkout -q 93534c12dac0e821c46c94b21053d274a6e557de \
+ 	# Maps
+	&& git clone --single-branch -b master https://github.com/ProfessionalWiki/Maps $MW_HOME/extensions/Maps \
+	&& cd $MW_HOME/extensions/Maps \
+	&& git checkout -q 5c87d702b30bb132d89ec03d24b7c19a9805db87 \
 	# MassMessage
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MassMessage $MW_HOME/extensions/MassMessage \
 	&& cd $MW_HOME/extensions/MassMessage \
@@ -371,6 +379,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MediaUploader $MW_HOME/extensions/MediaUploader \
 	&& cd $MW_HOME/extensions/MediaUploader \
 	&& git checkout -q 1edd91c506c1c0319e7b9a3e71d639130760b1fd \
+	# Mermaid (v. 3.1.0)
+	&& git clone --single-branch -b master https://github.com/SemanticMediaWiki/Mermaid $MW_HOME/extensions/Mermaid \
+	&& cd $MW_HOME/extensions/Mermaid \
+	&& git checkout -q fd792683fef3c84a7cdd56f8f474c4da0dd630f2 \
 	# MintyDocs (1.0)
 	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-MintyDocs $MW_HOME/extensions/MintyDocs \
 	&& cd $MW_HOME/extensions/MintyDocs \
@@ -439,6 +451,14 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-SaveSpinner $MW_HOME/extensions/SaveSpinner \
 	&& cd $MW_HOME/extensions/SaveSpinner \
 	&& git checkout -q 1e819e2fff7fad6999bafe71d866c3af50836c42 \
+	# SemanticBreadcrumbLinks
+	&& git clone --single-branch -b master https://github.com/SemanticMediaWiki/SemanticBreadcrumbLinks $MW_HOME/extensions/SemanticBreadcrumbLinks \
+	&& cd $MW_HOME/extensions/SemanticBreadcrumbLinks \
+	&& git checkout -q 87a69003743f1de52338f4717cfcf5218ca5a743 \
+	# SemanticCompoundQueries (v. 2.2.0)
+	&& git clone --single-branch -b master https://github.com/SemanticMediaWiki/SemanticCompoundQueries $MW_HOME/extensions/SemanticCompoundQueries \
+	&& cd $MW_HOME/extensions/SemanticCompoundQueries \
+	&& git checkout -q eeb514393fdf2e80ae7084839d8803ee32ae3da4 \
 	# SemanticDependencyUpdater (v. 2.0.2)
 	&& git clone --single-branch -b master https://github.com/gesinn-it/SemanticDependencyUpdater $MW_HOME/extensions/SemanticDependencyUpdater \
 	&& cd $MW_HOME/extensions/SemanticDependencyUpdater \
@@ -447,10 +467,22 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SemanticDrilldown $MW_HOME/extensions/SemanticDrilldown \
 	&& cd $MW_HOME/extensions/SemanticDrilldown \
 	&& git checkout -q e960979ec5a3b1e662b3742cee7e7ef4056f9a46 \
+	# SemanticExtraSpecialProperties (v. 3.0.4)
+	&& git clone --single-branch -b master https://github.com/SemanticMediaWiki/SemanticExtraSpecialProperties $MW_HOME/extensions/SemanticExtraSpecialProperties \
+	&& cd $MW_HOME/extensions/SemanticExtraSpecialProperties \
+	&& git checkout -q e449633082a4bf7dcae119b6a6d0bfeec8e3cfe8 \
+	# SemanticScribunto (v. 2.2.0)
+	&& git clone --single-branch -b master https://github.com/SemanticMediaWiki/SemanticScribunto $MW_HOME/extensions/SemanticScribunto \
+	&& cd $MW_HOME/extensions/SemanticScribunto \
+	&& git checkout -q 1c616a4c4da443b3433000d6870bb92c184236fa \
 	# SemanticTasks
 	&& git clone https://github.com/WikiTeq/SemanticTasks.git $MW_HOME/extensions/SemanticTasks \
 	&& cd $MW_HOME/extensions/SemanticTasks \
 	&& git checkout -q 70ddd8cf6090139ce5ee6fdf1e7f3a9f2c68d5d3 \
+	# SimpleBatchUpload (v. 2.0.0)
+	&& git clone https://github.com/ProfessionalWiki/SimpleBatchUpload $MW_HOME/extensions/SimpleBatchUpload \
+	&& cd $MW_HOME/extensions/SimpleBatchUpload \
+	&& git checkout 3b9e248b49d7fbeb81d7da32078db7040809e724 \		
 	# SimpleChanges
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-SimpleChanges $MW_HOME/extensions/SimpleChanges \
 	&& cd $MW_HOME/extensions/SimpleChanges \
@@ -459,6 +491,14 @@ RUN set -x; \
 	&& git clone https://github.com/SemanticMediaWiki/SemanticFormsSelect.git $MW_HOME/extensions/SemanticFormsSelect \
 	&& cd $MW_HOME/extensions/SemanticFormsSelect \
 	&& git checkout 4b56baa752401b4ff9fe555fd57fc5c3309601d4 \
+	# SemanticMediaWiki (v. 4.1.2)
+	&& git clone https://github.com/SemanticMediaWiki/SemanticMediaWiki $MW_HOME/extensions/SemanticMediaWiki \
+	&& cd $MW_HOME/extensions/SemanticMediaWiki \
+	&& git checkout 5c94879171d5f741b896828c25a9f2bb07a03dff \
+	# SemanticResultFormats (v. 4.0.2)
+	&& git clone https://github.com/SemanticMediaWiki/SemanticResultFormats $MW_HOME/extensions/SemanticResultFormats \
+	&& cd $MW_HOME/extensions/SemanticMediaWiki \
+	&& git checkout d5196722a56f9b65475be68d1e97063d7b975cb9 \
 	# SimpleMathJax
 	&& git clone --single-branch https://github.com/jmnote/SimpleMathJax.git $MW_HOME/extensions/SimpleMathJax \
 	&& cd $MW_HOME/extensions/SimpleMathJax \
@@ -475,6 +515,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-SocialProfile $MW_HOME/extensions/SocialProfile \
 	&& cd $MW_HOME/extensions/SocialProfile \
 	&& git checkout -q 74fcf9bead948ec0419eea10800c9331bcc1273e \
+	# SubPageList (v. 3.0.0)
+	&& git clone https://github.com/ProfessionalWiki/SubPageList $MW_HOME/extensions/SubPageList \
+	&& cd $MW_HOME/extensions/SubPageList \
+	&& git checkout c016dcdb7866f20319731e6497b48fd43756505e \
 	# TemplateStyles
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-TemplateStyles $MW_HOME/extensions/TemplateStyles \
 	&& cd $MW_HOME/extensions/TemplateStyles \
