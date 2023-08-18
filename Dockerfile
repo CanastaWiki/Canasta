@@ -641,8 +641,8 @@ RUN set -x; \
 # SemanticBreadcrumbLinks
 COPY _sources/patches/semantic-breadcrumb-links-composer-reqs.patch /tmp/semantic-breadcrumb-links-composer-reqs.patch
 RUN set -x; \
-	cd $MW_HOME/extensions/SemanticBreadcrumbLinks # \
-	# && git apply /tmp/semantic-breadcrumb-links-composer-reqs.patch
+	cd $MW_HOME/extensions/SemanticBreadcrumbLinks \
+	&& git apply /tmp/semantic-breadcrumb-links-composer-reqs.patch
 
 # SemanticFormsSelect
 COPY _sources/patches/semantic-forms-select-composer-reqs.patch /tmp/semantic-forms-select-composer-reqs.patch
