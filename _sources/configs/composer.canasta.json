@@ -4,9 +4,11 @@
 			"include": [
 				"/mediawiki/config/composer.local.json",
 				"extensions/AbuseFilter/composer.json",
+				"extensions/BootstrapComponents/composer.json",
 				"extensions/CirrusSearch/composer.json",
 				"extensions/DataTransfer/composer.json",
 				"extensions/Elastica/composer.json",
+				"extensions/Maps/composer.json",
 				"extensions/OATHAuth/composer.json",
 				"extensions/TimedMediaHandler/composer.json",
 				"extensions/AntiSpoof/composer.json",
@@ -15,8 +17,12 @@
 				"extensions/GoogleAnalyticsMetrics/composer.json",
 				"extensions/OpenIDConnect/composer.json",
 				"extensions/WSOAuth/composer.json",
+				"extensions/SemanticBreadcrumbLinks/composer.json",
 				"extensions/SemanticFormsSelect/composer.json",
-				"extensions/SemanticTasks/composer.json"
+				"extensions/SemanticMediaWiki/composer.json",
+				"extensions/SemanticResultFormats/composer.json",
+				"extensions/SemanticTasks/composer.json,
+				"skins/Chameleon/composer.json"
 			]
 		}
 	}
