@@ -613,30 +613,7 @@ RUN set -x; \
 RUN set -x; \
     sed -i 's="monolog/monolog": "2.2.0",="monolog/monolog": "^2.2",=g' $MW_HOME/composer.json
 
-# Composer dependencies
-COPY _sources/configs/composer.canasta.json $MW_HOME/composer.local.json
-RUN set -x; \
-	cd $MW_HOME \
-	&& composer update --no-dev \
-	# We need the 2nd update for SMW dependencies
-	&& composer update --no-dev \
-    # Fix up future use of canasta-extensions directory for composer autoload
-    && sed -i 's/extensions/canasta-extensions/g' $MW_HOME/vendor/composer/autoload_static.php \
-    && sed -i 's/extensions/canasta-extensions/g' $MW_HOME/vendor/composer/autoload_files.php \
-    && sed -i 's/extensions/canasta-extensions/g' $MW_HOME/vendor/composer/autoload_classmap.php \
-    && sed -i 's/extensions/canasta-extensions/g' $MW_HOME/vendor/composer/autoload_psr4.php \
-    && sed -i 's/skins/canasta-skins/g' $MW_HOME/vendor/composer/autoload_static.php \
-    && sed -i 's/skins/canasta-skins/g' $MW_HOME/vendor/composer/autoload_files.php \
-    && sed -i 's/skins/canasta-skins/g' $MW_HOME/vendor/composer/autoload_classmap.php \
-    && sed -i 's/skins/canasta-skins/g' $MW_HOME/vendor/composer/autoload_psr4.php
-
-# Patches
-
-# Add Bootstrap to LocalSettings.php if the web installer added the Chameleon skin
-COPY _sources/patches/core-local-settings-generator.patch /tmp/core-local-settings-generator.patch
-RUN set -x; \
-	cd $MW_HOME \
-	&& git apply /tmp/core-local-settings-generator.patch
+# Patch some extensions' composer.json files to avoid downloading certain extensions (notably SMW) twice.
 
 # SemanticBreadcrumbLinks
 COPY _sources/patches/semantic-breadcrumb-links-composer-reqs.patch /tmp/semantic-breadcrumb-links-composer-reqs.patch
@@ -661,6 +638,29 @@ COPY _sources/patches/semantic-tasks-composer-reqs.patch /tmp/semantic-tasks-com
 RUN set -x; \
 	cd $MW_HOME/extensions/SemanticTasks \
 	&& git apply /tmp/semantic-tasks-composer-reqs.patch
+
+# Composer dependencies
+COPY _sources/configs/composer.canasta.json $MW_HOME/composer.local.json
+RUN set -x; \
+	cd $MW_HOME \
+	&& composer update --no-dev \
+    # Fix up future use of canasta-extensions directory for composer autoload
+    && sed -i 's/extensions/canasta-extensions/g' $MW_HOME/vendor/composer/autoload_static.php \
+    && sed -i 's/extensions/canasta-extensions/g' $MW_HOME/vendor/composer/autoload_files.php \
+    && sed -i 's/extensions/canasta-extensions/g' $MW_HOME/vendor/composer/autoload_classmap.php \
+    && sed -i 's/extensions/canasta-extensions/g' $MW_HOME/vendor/composer/autoload_psr4.php \
+    && sed -i 's/skins/canasta-skins/g' $MW_HOME/vendor/composer/autoload_static.php \
+    && sed -i 's/skins/canasta-skins/g' $MW_HOME/vendor/composer/autoload_files.php \
+    && sed -i 's/skins/canasta-skins/g' $MW_HOME/vendor/composer/autoload_classmap.php \
+    && sed -i 's/skins/canasta-skins/g' $MW_HOME/vendor/composer/autoload_psr4.php
+
+# Other patches
+
+# Add Bootstrap to LocalSettings.php if the web installer added the Chameleon skin
+COPY _sources/patches/core-local-settings-generator.patch /tmp/core-local-settings-generator.patch
+RUN set -x; \
+	cd $MW_HOME \
+	&& git apply /tmp/core-local-settings-generator.patch
 
 # Cleanup all .git leftovers
 RUN set -x; \
