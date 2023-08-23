@@ -797,14 +797,6 @@ RUN set -x; \
 	&& cd PubmedParser \
 	&& git checkout -b $MW_VERSION b77635651cc8ef2d39fd0f04fe73285c4ea3cd19
 
-# R
-RUN set -x; \
-	cd $MW_HOME/extensions \
-  	# RandomInCategory
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/RandomInCategory $MW_HOME/extensions/RandomInCategory \
-	&& cd $MW_HOME/extensions/RandomInCategory \
-	&& git checkout -q ea4c8ad59df4732be25c1cd51ef2fe56c3e58d18
-
 # S
 RUN set -x; \
 	cd $MW_HOME/extensions \

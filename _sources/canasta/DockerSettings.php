@@ -153,7 +153,6 @@ const DOCKER_EXTENSIONS = [
 	'Poem', # bundled
 	'Popups',
 	'PubmedParser',
-	'RandomInCategory',
 	'RegularTooltips',
 	'RemoteWiki',
 	'Renameuser', # bundled
