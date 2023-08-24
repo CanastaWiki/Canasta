@@ -648,12 +648,12 @@ RUN set -x; \
 # Composer autoloading
 COPY _sources/patches/semantic-compound-queries-autoload.patch /tmp/semantic-compound-queries-autoload.patch
 RUN set -x; \
-	cd $MW_HOME \
+	cd $MW_HOME/extensions/SemanticCompoundQueries \
 	&& git apply /tmp/semantic-compound-queries-autoload.patch
 
 COPY _sources/patches/semantic-scribunto-autoload.patch /tmp/semantic-scribunto-autoload.patch
 RUN set -x; \
-	cd $MW_HOME \
+	cd $MW_HOME/extensions/SemanticScribunto \
 	&& git apply /tmp/semantic-scribunto-autoload.patch
 
 # Add Bootstrap to LocalSettings.php if the web installer added the Chameleon skin
