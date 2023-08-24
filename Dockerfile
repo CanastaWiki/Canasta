@@ -613,7 +613,7 @@ RUN set -x; \
 RUN set -x; \
     sed -i 's="monolog/monolog": "2.2.0",="monolog/monolog": "^2.2",=g' $MW_HOME/composer.json
 
-# Patch some extensions' composer.json files to avoid downloading certain extensions (notably SMW) twice.
+# Patch some SMW-based extensions' composer.json files to avoid Composer-based downloading of SMW.
 
 # SemanticBreadcrumbLinks
 COPY _sources/patches/semantic-breadcrumb-links-composer-reqs.patch /tmp/semantic-breadcrumb-links-composer-reqs.patch
@@ -621,23 +621,11 @@ RUN set -x; \
 	cd $MW_HOME/extensions/SemanticBreadcrumbLinks \
 	&& git apply /tmp/semantic-breadcrumb-links-composer-reqs.patch
 
-# SemanticFormsSelect
-COPY _sources/patches/semantic-forms-select-composer-reqs.patch /tmp/semantic-forms-select-composer-reqs.patch
-RUN set -x; \
-	cd $MW_HOME/extensions/SemanticFormsSelect \
-	&& git apply /tmp/semantic-forms-select-composer-reqs.patch
-
 # SemanticResultFormats
 COPY _sources/patches/semantic-result-formats-composer-reqs.patch /tmp/semantic-result-formats-composer-reqs.patch
 RUN set -x; \
 	cd $MW_HOME/extensions/SemanticResultFormats \
 	&& git apply /tmp/semantic-result-formats-composer-reqs.patch
-
-# SemanticTasks
-COPY _sources/patches/semantic-tasks-composer-reqs.patch /tmp/semantic-tasks-composer-reqs.patch
-RUN set -x; \
-	cd $MW_HOME/extensions/SemanticTasks \
-	&& git apply /tmp/semantic-tasks-composer-reqs.patch
 
 # Composer dependencies
 COPY _sources/configs/composer.canasta.json $MW_HOME/composer.local.json
