@@ -1,4 +1,7 @@
 {
+	"require": {
+		"psr/http-message": "1.1"
+	},
 	"extra": {
 		"merge-plugin": {
 			"include": [
@@ -16,12 +19,10 @@
 				"extensions/Widgets/composer.json",
 				"extensions/GoogleAnalyticsMetrics/composer.json",
 				"extensions/OpenIDConnect/composer.json",
-				"extensions/WSOAuth/composer.json",
 				"extensions/SemanticBreadcrumbLinks/composer.json",
-				"extensions/SemanticFormsSelect/composer.json",
 				"extensions/SemanticMediaWiki/composer.json",
 				"extensions/SemanticResultFormats/composer.json",
-				"extensions/SemanticTasks/composer.json",
+				"extensions/WSOAuth/composer.json",
 				"skins/Chameleon/composer.json"
 			]
 		}
