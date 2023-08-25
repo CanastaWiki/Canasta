@@ -1,0 +1,10 @@
+--- a/composer.json
++++ b/composer.json
+@@ -46,7 +46,6 @@
+ 	"require": {
+ 		"php": ">=7.3",
+ 		"composer/installers": ">=1.0.1",
+-		"mediawiki/semantic-media-wiki": "~3.0|~4.0",
+ 		"nicmart/tree": "^0.2.7",
+ 		"data-values/geo": "~4.0|~3.0|~2.0"
+ 	},

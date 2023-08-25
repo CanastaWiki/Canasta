@@ -1,0 +1,17 @@
+diff --git a/extension.json b/extension.json
+index 27f39c2..092b8dc 100644
+--- a/extension.json
++++ b/extension.json
+@@ -26,6 +26,11 @@
+ 	"ExtensionFunctions": [
+ 		"SemanticScribunto::onExtensionFunction"
+ 	],
+-	"load_composer_autoloader":true,
++	"AutoloadNamespaces": {
++		"SMW\\Scribunto\\": "src/"
++	},
++	"AutoloadClasses": {
++		"SemanticScribunto": "SemanticScribunto.php"
++	},
+ 	"manifest_version": 2
+ }
