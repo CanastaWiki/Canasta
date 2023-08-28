@@ -491,7 +491,7 @@ RUN set -x; \
 	# SemanticFormsSelect
 	&& git clone https://github.com/SemanticMediaWiki/SemanticFormsSelect.git $MW_HOME/extensions/SemanticFormsSelect \
 	&& cd $MW_HOME/extensions/SemanticFormsSelect \
-	&& git checkout 4b56baa752401b4ff9fe555fd57fc5c3309601d4 \
+	&& git checkout -q 4b56baa752401b4ff9fe555fd57fc5c3309601d4 \
 	# SemanticMediaWiki (v. 4.1.2)
 	&& git clone https://github.com/SemanticMediaWiki/SemanticMediaWiki $MW_HOME/extensions/SemanticMediaWiki \
 	&& cd $MW_HOME/extensions/SemanticMediaWiki \
