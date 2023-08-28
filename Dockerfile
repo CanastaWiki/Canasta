@@ -1,4 +1,4 @@
-FROM debian:11.5 as base
+FROM debian:11.7 as base
 
 LABEL maintainers="pavel@wikiteq.com,alexey@wikiteq.com"
 LABEL org.opencontainers.image.source=https://github.com/WikiTeq/Taqasta
