@@ -1,0 +1,17 @@
+diff --git a/extension.json b/extension.json
+index 11c452d..cad612a 100644
+--- a/extension.json
++++ b/extension.json
+@@ -26,6 +26,11 @@
+ 	"ExtensionFunctions": [
+ 		"SemanticCompoundQueries::onExtensionFunction"
+ 	],
+-	"load_composer_autoloader": true,
++	"AutoloadNamespaces": {
++		"SCQ\\": "src/"
++	},
++	"AutoloadClasses": {
++		"SemanticCompoundQueries": "SemanticCompoundQueries.php"
++	},
+ 	"manifest_version": 2
+ }

@@ -1,25 +1,17 @@
 {
 	"require": {
-		"mediawiki/chameleon-skin": "~4.0",
-		"mediawiki/maps": "10.0.0",
-		"mediawiki/mermaid": "~3.1",
-		"mediawiki/semantic-media-wiki": "4.1.1",
-		"mediawiki/semantic-result-formats": "4.0.2",
-		"mediawiki/semantic-breadcrumb-links": "2.1.x-dev",
-		"mediawiki/semantic-compound-queries": "~2.2",
-		"mediawiki/semantic-extra-special-properties": "3.0.2",
-		"mediawiki/semantic-scribunto": "2.2.0",
-		"mediawiki/simple-batch-upload": "1.8.2",
-		"mediawiki/bootstrap-components": "^5.0",
-		"mediawiki/sub-page-list": "2.0.2"
+		"psr/http-message": "1.1"
 	},
 	"extra": {
 		"merge-plugin": {
 			"include": [
+				"/mediawiki/config/composer.local.json",
 				"extensions/AbuseFilter/composer.json",
+				"extensions/BootstrapComponents/composer.json",
 				"extensions/CirrusSearch/composer.json",
 				"extensions/DataTransfer/composer.json",
 				"extensions/Elastica/composer.json",
+				"extensions/Maps/composer.json",
 				"extensions/OATHAuth/composer.json",
 				"extensions/TimedMediaHandler/composer.json",
 				"extensions/AntiSpoof/composer.json",
@@ -27,7 +19,11 @@
 				"extensions/Widgets/composer.json",
 				"extensions/GoogleAnalyticsMetrics/composer.json",
 				"extensions/OpenIDConnect/composer.json",
-				"extensions/WSOAuth/composer.json"
+				"extensions/SemanticBreadcrumbLinks/composer.json",
+				"extensions/SemanticMediaWiki/composer.json",
+				"extensions/SemanticResultFormats/composer.json",
+				"extensions/WSOAuth/composer.json",
+				"skins/Chameleon/composer.json"
 			]
 		}
 	}

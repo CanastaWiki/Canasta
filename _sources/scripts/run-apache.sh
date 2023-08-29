@@ -176,7 +176,7 @@ check_mount_points () {
 }
 
 inotifywait() {
-	runuser -c /monitor-directories.sh -s /bin/bash "$WWW_USER"	
+	/monitor-directories.sh
 }
 
 # Wait db
@@ -200,6 +200,7 @@ if [ -e "$MW_VOLUME/config/LocalSettings.php" ] || [ -e "$MW_VOLUME/config/Commo
 fi
 
 echo "Starting services..."
+
 run_maintenance_scripts &
 inotifywait &
 
