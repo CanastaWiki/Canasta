@@ -20,9 +20,9 @@ if [ -f "$MW_VOLUME/config/wikis.yaml" ]; then
         echo "$wiki_id transcoder started."
         {
             while true; do
-                php $RJ --type=webVideoTranscodePrioritized --maxjobs=10 --wiki="$wiki_id" --server="http://$wiki_url"
+                php $RJ --type=webVideoTranscodePrioritized --maxjobs=10 --wiki="$wiki_id" --server="https://$wiki_url"
                 sleep 1
-                php $RJ --type=webVideoTranscode --maxjobs=1 --wiki="$wiki_id" --server="http://$wiki_url"
+                php $RJ --type=webVideoTranscode --maxjobs=1 --wiki="$wiki_id" --server="https://$wiki_url"
 
                 # Wait some seconds to let the CPU do other things, like handling web requests, etc
                 echo mwtranscoder waits for "$MW_JOB_TRANSCODER_PAUSE" seconds...

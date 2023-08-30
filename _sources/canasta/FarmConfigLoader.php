@@ -125,7 +125,7 @@ if ( !empty( $selectedWikiConfig ) ) {
 }
 
 // Configure the wiki server and URL paths
-$wgServer = "http://$serverName";
+$wgServer = "https://$serverName";
 $wgScriptPath = !empty( $path )
 	? "/$path/w"
 	: "/w";
