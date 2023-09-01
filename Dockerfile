@@ -656,12 +656,6 @@ RUN set -x; \
 	cd $MW_HOME/extensions/SemanticScribunto \
 	&& git apply /tmp/semantic-scribunto-autoload.patch
 
-# Add Bootstrap to LocalSettings.php if the web installer added the Chameleon skin
-COPY _sources/patches/core-local-settings-generator.patch /tmp/core-local-settings-generator.patch
-RUN set -x; \
-	cd $MW_HOME \
-	&& git apply /tmp/core-local-settings-generator.patch
-
 # Cleanup all .git leftovers
 RUN set -x; \
     cd $MW_HOME \
