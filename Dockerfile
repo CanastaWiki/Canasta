@@ -122,13 +122,13 @@ RUN set -x; \
 	&& git checkout -q 86f33620f25335eb62289aa18d342ff3b980d8b8
 
 # Extensions
-# The following extensions are bundled into MediaWiki and do not need to be separately installed (though in some cases
-# they are modified): AbuseFilter, CategoryTree, Cite, CiteThisPage, CodeEditor, ConfirmEdit, Gadgets, ImageMap,
-# InputBox, Interwiki, Math, MultimediaViewer, Nuke, OATHAuth, PageImages, ParserFunctions,
-# PdfHandler, Poem, Renameuser, Replace Text, Scribunto, SecureLinkFixer, SpamBlacklist, SyntaxHighlight, TemplateData,
-# TextExtracts, TitleBlacklist, VisualEditor, WikiEditor.
-# The following extensions are downloaded via Composer and also do not need to be downloaded here: Bootstrap,
-# DataValues (and related extensions like DataValuesCommon), ParserHooks.
+# The following extensions are bundled into MediaWiki and do not need to be separately installed:
+# AbuseFilter, CategoryTree, Cite, CiteThisPage, CodeEditor, ConfirmEdit, Gadgets, ImageMap, InputBox, Interwiki,
+# Math, MultimediaViewer, Nuke, OATHAuth, PageImages, ParserFunctions, PdfHandler, Poem, Renameuser, Replace Text,
+# Scribunto, SecureLinkFixer, SpamBlacklist, SyntaxHighlight, TemplateData, TextExtracts, TitleBlacklist,
+# VisualEditor, WikiEditor.
+# The following extensions are downloaded via Composer and also do not need to be downloaded here:
+# Bootstrap, DataValues (and related extensions like DataValuesCommon), ParserHooks.
 RUN set -x; \
 	cd $MW_HOME/extensions \
 	# AdminLinks (v. 0.6.1)
