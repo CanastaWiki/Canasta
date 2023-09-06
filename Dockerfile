@@ -471,6 +471,18 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://github.com/SemanticMediaWiki/SemanticExtraSpecialProperties $MW_HOME/extensions/SemanticExtraSpecialProperties \
 	&& cd $MW_HOME/extensions/SemanticExtraSpecialProperties \
 	&& git checkout -q e449633082a4bf7dcae119b6a6d0bfeec8e3cfe8 \
+	# SemanticFormsSelect
+	&& git clone https://github.com/SemanticMediaWiki/SemanticFormsSelect.git $MW_HOME/extensions/SemanticFormsSelect \
+	&& cd $MW_HOME/extensions/SemanticFormsSelect \
+	&& git checkout -q 4b56baa752401b4ff9fe555fd57fc5c3309601d4 \
+	# SemanticMediaWiki (v. 4.1.2)
+	&& git clone https://github.com/SemanticMediaWiki/SemanticMediaWiki $MW_HOME/extensions/SemanticMediaWiki \
+	&& cd $MW_HOME/extensions/SemanticMediaWiki \
+	&& git checkout -q 5c94879171d5f741b896828c25a9f2bb07a03dff \
+	# SemanticResultFormats (v. 4.0.2)
+	&& git clone https://github.com/SemanticMediaWiki/SemanticResultFormats $MW_HOME/extensions/SemanticResultFormats \
+	&& cd $MW_HOME/extensions/SemanticResultFormats \
+	&& git checkout -q d5196722a56f9b65475be68d1e97063d7b975cb9 \
 	# SemanticScribunto (v. 2.2.0)
 	&& git clone --single-branch -b master https://github.com/SemanticMediaWiki/SemanticScribunto $MW_HOME/extensions/SemanticScribunto \
 	&& cd $MW_HOME/extensions/SemanticScribunto \
@@ -487,18 +499,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-SimpleChanges $MW_HOME/extensions/SimpleChanges \
 	&& cd $MW_HOME/extensions/SimpleChanges \
 	&& git checkout -q 5352de89dfaf043f646a44582b26f07822f02be7 \
-	# SemanticFormsSelect
-	&& git clone https://github.com/SemanticMediaWiki/SemanticFormsSelect.git $MW_HOME/extensions/SemanticFormsSelect \
-	&& cd $MW_HOME/extensions/SemanticFormsSelect \
-	&& git checkout -q 4b56baa752401b4ff9fe555fd57fc5c3309601d4 \
-	# SemanticMediaWiki (v. 4.1.2)
-	&& git clone https://github.com/SemanticMediaWiki/SemanticMediaWiki $MW_HOME/extensions/SemanticMediaWiki \
-	&& cd $MW_HOME/extensions/SemanticMediaWiki \
-	&& git checkout -q 5c94879171d5f741b896828c25a9f2bb07a03dff \
-	# SemanticResultFormats (v. 4.0.2)
-	&& git clone https://github.com/SemanticMediaWiki/SemanticResultFormats $MW_HOME/extensions/SemanticResultFormats \
-	&& cd $MW_HOME/extensions/SemanticResultFormats \
-	&& git checkout -q d5196722a56f9b65475be68d1e97063d7b975cb9 \
 	# SimpleMathJax
 	&& git clone --single-branch https://github.com/jmnote/SimpleMathJax.git $MW_HOME/extensions/SimpleMathJax \
 	&& cd $MW_HOME/extensions/SimpleMathJax \
