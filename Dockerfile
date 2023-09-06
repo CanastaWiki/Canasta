@@ -479,14 +479,6 @@ RUN set -x; \
 	&& git clone https://github.com/WikiTeq/SemanticTasks.git $MW_HOME/extensions/SemanticTasks \
 	&& cd $MW_HOME/extensions/SemanticTasks \
 	&& git checkout -q 70ddd8cf6090139ce5ee6fdf1e7f3a9f2c68d5d3 \
-	# SimpleBatchUpload (v. 2.0.0)
-	&& git clone https://github.com/ProfessionalWiki/SimpleBatchUpload $MW_HOME/extensions/SimpleBatchUpload \
-	&& cd $MW_HOME/extensions/SimpleBatchUpload \
-	&& git checkout -q 3b9e248b49d7fbeb81d7da32078db7040809e724 \		
-	# SimpleChanges
-	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-SimpleChanges $MW_HOME/extensions/SimpleChanges \
-	&& cd $MW_HOME/extensions/SimpleChanges \
-	&& git checkout -q 5352de89dfaf043f646a44582b26f07822f02be7 \
 	# SemanticFormsSelect
 	&& git clone https://github.com/SemanticMediaWiki/SemanticFormsSelect.git $MW_HOME/extensions/SemanticFormsSelect \
 	&& cd $MW_HOME/extensions/SemanticFormsSelect \
@@ -499,6 +491,14 @@ RUN set -x; \
 	&& git clone https://github.com/SemanticMediaWiki/SemanticResultFormats $MW_HOME/extensions/SemanticResultFormats \
 	&& cd $MW_HOME/extensions/SemanticResultFormats \
 	&& git checkout -q d5196722a56f9b65475be68d1e97063d7b975cb9 \
+	# SimpleBatchUpload (v. 2.0.0)
+	&& git clone https://github.com/ProfessionalWiki/SimpleBatchUpload $MW_HOME/extensions/SimpleBatchUpload \
+	&& cd $MW_HOME/extensions/SimpleBatchUpload \
+	&& git checkout -q 3b9e248b49d7fbeb81d7da32078db7040809e724 \		
+	# SimpleChanges
+	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-SimpleChanges $MW_HOME/extensions/SimpleChanges \
+	&& cd $MW_HOME/extensions/SimpleChanges \
+	&& git checkout -q 5352de89dfaf043f646a44582b26f07822f02be7 \
 	# SimpleMathJax
 	&& git clone --single-branch https://github.com/jmnote/SimpleMathJax.git $MW_HOME/extensions/SimpleMathJax \
 	&& cd $MW_HOME/extensions/SimpleMathJax \
