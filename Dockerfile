@@ -471,14 +471,6 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://github.com/SemanticMediaWiki/SemanticExtraSpecialProperties $MW_HOME/extensions/SemanticExtraSpecialProperties \
 	&& cd $MW_HOME/extensions/SemanticExtraSpecialProperties \
 	&& git checkout -q e449633082a4bf7dcae119b6a6d0bfeec8e3cfe8 \
-	# SemanticScribunto (v. 2.2.0)
-	&& git clone --single-branch -b master https://github.com/SemanticMediaWiki/SemanticScribunto $MW_HOME/extensions/SemanticScribunto \
-	&& cd $MW_HOME/extensions/SemanticScribunto \
-	&& git checkout -q 1c616a4c4da443b3433000d6870bb92c184236fa \
-	# SemanticTasks
-	&& git clone https://github.com/WikiTeq/SemanticTasks.git $MW_HOME/extensions/SemanticTasks \
-	&& cd $MW_HOME/extensions/SemanticTasks \
-	&& git checkout -q 70ddd8cf6090139ce5ee6fdf1e7f3a9f2c68d5d3 \
 	# SemanticFormsSelect
 	&& git clone https://github.com/SemanticMediaWiki/SemanticFormsSelect.git $MW_HOME/extensions/SemanticFormsSelect \
 	&& cd $MW_HOME/extensions/SemanticFormsSelect \
@@ -491,6 +483,14 @@ RUN set -x; \
 	&& git clone https://github.com/SemanticMediaWiki/SemanticResultFormats $MW_HOME/extensions/SemanticResultFormats \
 	&& cd $MW_HOME/extensions/SemanticResultFormats \
 	&& git checkout -q d5196722a56f9b65475be68d1e97063d7b975cb9 \
+	# SemanticScribunto (v. 2.2.0)
+	&& git clone --single-branch -b master https://github.com/SemanticMediaWiki/SemanticScribunto $MW_HOME/extensions/SemanticScribunto \
+	&& cd $MW_HOME/extensions/SemanticScribunto \
+	&& git checkout -q 1c616a4c4da443b3433000d6870bb92c184236fa \
+	# SemanticTasks
+	&& git clone https://github.com/WikiTeq/SemanticTasks.git $MW_HOME/extensions/SemanticTasks \
+	&& cd $MW_HOME/extensions/SemanticTasks \
+	&& git checkout -q 70ddd8cf6090139ce5ee6fdf1e7f3a9f2c68d5d3 \
 	# SimpleBatchUpload (v. 2.0.0)
 	&& git clone https://github.com/ProfessionalWiki/SimpleBatchUpload $MW_HOME/extensions/SimpleBatchUpload \
 	&& cd $MW_HOME/extensions/SimpleBatchUpload \
