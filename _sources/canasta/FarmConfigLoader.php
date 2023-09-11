@@ -12,7 +12,7 @@ $path = "";
 
 // Check if the original URL is defined, else throw an exception
 if ( $original_url === false && !defined( 'MW_WIKI_NAME' ) ) {
-	throw new Exception( 'Error: ORIGINAL_URL does not exist in the environment variables' );
+	return;
 }
 
 // Parse the original URL

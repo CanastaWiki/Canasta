@@ -1,45 +1,34 @@
 <?php
 /**
- * The web entry point for serving non-public images to logged-in users.
+ * The web entry point for serving non-public images to logged-in users in the Canasta project.
  *
- * This file is specifically configured for the Canasta project. Images for each wiki
+ * This file is specifically configured for the Canasta project. In Canasta, images for each wiki
  * are stored in their specific directories, located at /mediawiki/images/$wikiID.
+ * 
+ * This script also includes functionality for 'canasta_img', which helps in redirecting users
+ * to their corresponding image locations. If the 'wikis.yaml' file does not exist, 
+ * the script will function as originally designed.
  *
- * To use this, see https://www.mediawiki.org/wiki/Manual:Image_Authorization
+ * For general setup, see https://www.mediawiki.org/wiki/Manual:Image_Authorization
  *
- * - Set $wgUploadDirectory to a non-public directory (not web accessible). For Canasta, this would be /mediawiki/images/$wikiID.
+ * Configuration:
+ * - Set $wgUploadDirectory to point to the non-public directory where images are stored. 
+ *   For Canasta, this would be /mediawiki/images/$wikiID.
  * - Set $wgUploadPath to point to this file.
  *
- * Optional Parameters
+ * Optional Parameters:
+ * - Set $wgImgAuthDetails = true to display denial reason messages instead of just a 403 error.
+ *   This can be useful for debugging but is generally not recommended for production use.
+ * 
+ * Server Requirements:
+ * Your server needs to support REQUEST_URI or PATH_INFO; some CGI-based configurations don't.
  *
- * - Set $wgImgAuthDetails = true if you want the reason the access was denied messages to
- *       be displayed instead of just the 403 error (doesn't work on IE anyway),
- *       otherwise it will only appear in error logs.
- *
- *  For security reasons, you usually don't want your user to know *why* access was denied,
- *  just that it was. If you want to change this, you can set $wgImgAuthDetails to 'true'
- *  in localsettings.php and it will give the user the reason why access was denied.
- *
- * Your server needs to support REQUEST_URI or PATH_INFO; CGI-based
- * configurations sometimes don't.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- * http://www.gnu.org/copyleft/gpl.html
+ * License:
+ * This program is free software under the GNU General Public License.
  *
  * @file
  * @ingroup entrypoint
+ * @author Chenhao Liu
  */
 
 define( 'MW_NO_OUTPUT_COMPRESSION', 1 );

@@ -9,7 +9,7 @@ Options -Indexes
 # VisualEditor support
 RewriteRule ^/?w/rest.php/ - [L]
 
-# Image authorization support
+# Redirects requests to canasta_img.php for handling image authorization in Canasta.
 RewriteRule ^/?w/canasta_img.php/ - [L]
 
 # Redirect / to Main Page

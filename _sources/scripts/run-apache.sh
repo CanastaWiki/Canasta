@@ -94,14 +94,14 @@ fi
 
 run_maintenance_scripts() {
   # Iterate through all the .sh files in /maintenance-scripts/ directory
-  for maintenance_script in $(find /maintenance-scripts/ -maxdepth 1 -mindepth 1 -type f -name "*.sh" | sort); do
+  for maintenance_script in $(find /maintenance-scripts/ -maxdepth 1 -mindepth 1 -type f -name "*.sh"); do
     script_name=$(basename "$maintenance_script")
 
-    # If the script's name starts with a number followed by "_mw", run it with the run_mw_script function
-    if [[ "$script_name" =~ ^[0-9]+_mw ]]; then
+    # If the script's name starts with "mw_", run it with the run_mw_script function
+    if [[ "$script_name" == mw* ]]; then
       run_mw_script "$script_name" &
     else
-      # If the script's name doesn't start with a number and "_mw", run it with the runuser function
+      # If the script's name doesn't start with "mw"
       echo "Running $script_name with user $WWW_USER..."
       nice -n 20 runuser -c "/maintenance-scripts/$script_name" -s /bin/bash "$WWW_USER" &
     fi
@@ -118,9 +118,7 @@ run_mw_script() {
 
   # Process the script name and create the corresponding enable variable
   local script_name="$1"
-  # Remove the numerical prefix from the script name
-  local script_name_no_prefix="${script_name#*_}"
-  script_name_no_ext="${script_name_no_prefix%.*}"
+  script_name_no_ext="${script_name%.*}"
   script_name_upper=$(basename "$script_name_no_ext" | tr '[:lower:]' '[:upper:]')
   local MW_ENABLE_VAR="${script_name_upper/_/_ENABLE_}"
 
