@@ -588,9 +588,9 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/WhoIsWatching \
 	&& git checkout -q 836a31018e26ab7c993088c4cca31a89efec2ee5 \
 	# WhosOnline
-	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-WhosOnline $MW_HOME/extensions/WhosOnline \
+	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-WhosOnline $MW_HOME/extensions/WhosOnline \
 	&& cd $MW_HOME/extensions/WhosOnline \
-	&& git checkout -q bb1765d2eb5c88ca10dc8a0be19f35fcffdccdae \
+	&& git checkout -q d3d63faa08b89c429a7803b283e9bb685a51b9a0 \
 	# Widgets
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Widgets $MW_HOME/extensions/Widgets \
 	&& cd $MW_HOME/extensions/Widgets \
