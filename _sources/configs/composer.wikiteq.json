@@ -11,7 +11,8 @@
 		"mediawiki/semantic-scribunto": "2.2.0",
 		"mediawiki/simple-batch-upload": "1.9.0",
 		"mediawiki/sub-page-list": "2.0.2",
-		"mediawiki/maps": "10.0.0"
+		"mediawiki/maps": "10.0.0",
+		"mediawiki/semantic-watchlist": "1.3.0"
 	},
 	"extra": {
 		"merge-plugin": {

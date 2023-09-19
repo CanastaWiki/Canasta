@@ -173,6 +173,7 @@ const DOCKER_EXTENSIONS = [
 	'SemanticQueryInterface',
 	'SemanticResultFormats',
 	'SemanticScribunto',
+	'SemanticWatchlist',
 	'Sentry',
 	'ShowMe',
 	'SimpleBatchUpload',
