@@ -460,7 +460,7 @@ RUN set -x; \
 	# MsUpload
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/MsUpload $MW_HOME/extensions/MsUpload \
 	&& cd $MW_HOME/extensions/MsUpload \
-	&& git checkout -q dac2376a2fac6ddf4b2038db9b4bc06092ecaa15 \
+	&& git checkout -q 8c2403b09186f5f25f0c28369e6aff3c285047df \
 	# MyVariables
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/MyVariables $MW_HOME/extensions/MyVariables \
 	&& cd $MW_HOME/extensions/MyVariables \
