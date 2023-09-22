@@ -633,7 +633,7 @@ RUN set -x; \
 # SemanticWatchlist
 COPY _sources/patches/SemanticWatchList.417851c22c25f3e33fb654f4138c760c53051b9a.patch /tmp/SemanticWatchList.417851c22c25f3e33fb654f4138c760c53051b9a.patch
 RUN set -x; \
-    cd $MW_HOME/extensions/SemanticWatchList \
+    cd $MW_HOME/extensions/SemanticWatchlist \
     && git apply /tmp/SemanticWatchList.417851c22c25f3e33fb654f4138c760c53051b9a.patch
 
 # Composer dependencies
