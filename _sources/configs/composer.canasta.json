@@ -22,6 +22,7 @@
 				"extensions/SemanticBreadcrumbLinks/composer.json",
 				"extensions/SemanticMediaWiki/composer.json",
 				"extensions/SemanticResultFormats/composer.json",
+				"extensions/SemanticWatchlist/composer.json",
 				"extensions/WSOAuth/composer.json",
 				"skins/Chameleon/composer.json"
 			]
