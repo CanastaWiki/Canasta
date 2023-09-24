@@ -23,7 +23,8 @@
 				"extensions/SemanticMediaWiki/composer.json",
 				"extensions/SemanticResultFormats/composer.json",
 				"extensions/WSOAuth/composer.json",
-				"skins/Chameleon/composer.json"
+				"skins/Chameleon/composer.json",
+				"extensions/Sentry/composer.json"
 			]
 		}
 	}
