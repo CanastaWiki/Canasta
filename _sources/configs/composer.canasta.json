@@ -25,7 +25,8 @@
 				"extensions/SemanticWatchlist/composer.json",
 				"extensions/WSOAuth/composer.json",
 				"skins/Chameleon/composer.json",
-				"extensions/Flow/composer.json"
+				"extensions/Flow/composer.json",
+				"extensions/Sentry/composer.json"
 			]
 		}
 	}
