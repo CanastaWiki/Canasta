@@ -491,10 +491,14 @@ RUN set -x; \
 	&& git clone https://github.com/WikiTeq/SemanticTasks.git $MW_HOME/extensions/SemanticTasks \
 	&& cd $MW_HOME/extensions/SemanticTasks \
 	&& git checkout -q 70ddd8cf6090139ce5ee6fdf1e7f3a9f2c68d5d3 \
+	# Sentry (WikiTeq fork that uses sentry/sentry 3.x)
+	&& git clone --single-branch -b master https://github.com/WikiTeq/mediawiki-extensions-Sentry.git $MW_HOME/extensions/Sentry \
+	&& cd $MW_HOME/extensions/Sentry \
+	&& git checkout -q 9d9162d83f921b66f6c14ed354d20607ecafa030 \
 	# SimpleBatchUpload (v. 2.0.0)
 	&& git clone https://github.com/ProfessionalWiki/SimpleBatchUpload $MW_HOME/extensions/SimpleBatchUpload \
 	&& cd $MW_HOME/extensions/SimpleBatchUpload \
-	&& git checkout -q 3b9e248b49d7fbeb81d7da32078db7040809e724 \		
+	&& git checkout -q 3b9e248b49d7fbeb81d7da32078db7040809e724 \
 	# SimpleChanges
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-SimpleChanges $MW_HOME/extensions/SimpleChanges \
 	&& cd $MW_HOME/extensions/SimpleChanges \
