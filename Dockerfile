@@ -167,6 +167,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-BreadCrumbs2 $MW_HOME/extensions/BreadCrumbs2 \
 	&& cd $MW_HOME/extensions/BreadCrumbs2 \
 	&& git checkout -q d53357a6839e94800a617de4fc451b6c64d0a1c8 \
+	# Buggy
+	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Buggy.git $MW_HOME/extensions/Buggy \
+	&& cd $MW_HOME/extensions/Buggy \
+	&& git checkout -q 768d2ec62de692ab62fc0c9f1820e22058d09d4b \
 	# Cargo (v. 3.4.2)
 	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-Cargo $MW_HOME/extensions/Cargo \
 	&& cd $MW_HOME/extensions/Cargo \
