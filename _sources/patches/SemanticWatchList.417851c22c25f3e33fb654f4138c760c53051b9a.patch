@@ -1,0 +1,14 @@
+diff --git a/composer.json b/composer.json
+index 1f05843..6ccb6b7 100644
+--- a/composer.json
++++ b/composer.json
+@@ -26,8 +26,7 @@
+ 	},
+ 	"require": {
+ 		"php": ">=7.3",
+-		"composer/installers": "1.*,>=1.0.1",
+-		"mediawiki/semantic-media-wiki": "~3.0|~4.0"
++		"composer/installers": "1.*,>=1.0.1"
+ 	},
+ 	"extra": {
+ 		"branch-alias": {
