@@ -70,6 +70,7 @@ const DOCKER_EXTENSIONS = [
 	'ContactPage',
 	'ContributionScores',
 	'CookieWarning',
+	'Cloudflare',
 	'DataTransfer',
 	'DebugMode',
 	'DeleteBatch',

@@ -33,7 +33,8 @@
 				"extensions/OpenIDConnect/composer.json",
 				"extensions/WSOAuth/composer.json",
 				"extensions/GoogleLogin/composer.json",
-				"extensions/JWTAuth/composer.json"
+				"extensions/JWTAuth/composer.json",
+				"extensions/Cloudflare/composer.json"
 			]
 		}
 	},
