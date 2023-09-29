@@ -147,6 +147,18 @@ run_autoupdate () {
     echo "Auto-update completed"
 }
 
+config_subdir_wikis() {
+    echo "Configuring subdirectory wikis..."
+    /config-subdir-wikis.sh
+    echo "Configured subdirectory wikis..."
+}
+
+create_storage_dirs() {
+    echo "Creating cache and images dirs..."
+    /create-storage-dirs.sh
+    echo "Created cache and images dirs..."
+}
+
 check_mount_points () {
   # Check for $MW_HOME/user-extensions presence and bow out if it's not in place
   if [ ! -d "$MW_HOME/user-extensions" ]; then
@@ -176,14 +188,19 @@ cd "$MW_HOME" || exit
 
 ########## Run maintenance scripts ##########
 echo "Checking for LocalSettings..."
-if [ -e "$MW_VOLUME/config/LocalSettings.php"  ]; then
+if [ -e "$MW_VOLUME/config/LocalSettings.php" ] || [ -e "$MW_VOLUME/config/CommonSettings.php" ]; then
   # Run auto-update
   run_autoupdate
+  if [ -e "$MW_VOLUME/config/wikis.yaml" ]; then
+    config_subdir_wikis
+    create_storage_dirs
+  fi
 fi
 
 echo "Starting services..."
 
 run_maintenance_scripts &
+inotifywait &
 
 # Running php-fpm
 /run-php-fpm.sh &
