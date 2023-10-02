@@ -24,7 +24,7 @@
 				"extensions/SemanticResultFormats/composer.json",
 				"extensions/SemanticWatchlist/composer.json",
 				"extensions/WSOAuth/composer.json",
-				"skins/Chameleon/composer.json",
+				"skins/chameleon/composer.json",
 				"extensions/Flow/composer.json",
 				"extensions/Sentry/composer.json"
 			]
