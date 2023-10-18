@@ -4,7 +4,7 @@ LABEL maintainers="pavel@wikiteq.com,alexey@wikiteq.com"
 LABEL org.opencontainers.image.source=https://github.com/WikiTeq/Taqasta
 
 ENV MW_VERSION=REL1_39 \
-	MW_CORE_VERSION=1.39.2 \
+	MW_CORE_VERSION=1.39.5 \
 	WWW_ROOT=/var/www/mediawiki \
 	MW_HOME=/var/www/mediawiki/w \
 	MW_LOG=/var/log/mediawiki \
@@ -230,7 +230,7 @@ RUN set -x; \
 	# CheckUser
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/CheckUser $MW_HOME/extensions/CheckUser \
 	&& cd $MW_HOME/extensions/CheckUser \
-	&& git checkout -q 9e2b6d3e928855247700146273d8131e025de918 \
+	&& git checkout -q a52a5265d8e0cc70231b9591419e23d22c60fab7 \
 	# CirrusSearch
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/CirrusSearch $MW_HOME/extensions/CirrusSearch \
 	&& cd $MW_HOME/extensions/CirrusSearch \
@@ -356,7 +356,7 @@ RUN set -x; \
 	# GoogleAnalyticsMetrics
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/GoogleAnalyticsMetrics $MW_HOME/extensions/GoogleAnalyticsMetrics \
 	&& cd $MW_HOME/extensions/GoogleAnalyticsMetrics \
-	&& git checkout -q 82a08cc63ec58698f144be7c2fb1a6f861cb57bd \
+	&& git checkout -q e1a2ebeec21e67fdafed7730a53cfaf2eccd5852 \
 	# GoogleDocCreator
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/GoogleDocCreator $MW_HOME/extensions/GoogleDocCreator \
 	&& cd $MW_HOME/extensions/GoogleDocCreator \
