@@ -1,0 +1,49 @@
+From beddf0a709a074831759b0ce8161b1a014fb6e65 Mon Sep 17 00:00:00 2001
+From: Daniel Scherzer <daniel@wikiteq.com>
+Date: Sat, 21 Oct 2023 21:04:01 -0400
+Subject: [PATCH] SkinPerPage: fix handling of invalid skin names
+
+Avoid using Skin::normalizeKey(), which will fallback to a valid skin
+if the given one is invalid; implement the case-insensitive skin
+matching manually. If the skin is unknown, return after reporting
+that so that the request skin is not changed.
+---
+ includes/SkinPerPage.php | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/includes/SkinPerPage.php b/includes/SkinPerPage.php
+index 5a12e65..b7bef44 100644
+--- a/includes/SkinPerPage.php
++++ b/includes/SkinPerPage.php
+@@ -39,10 +39,18 @@ class SkinPerPage {
+ 	public static function onOutputPageParserOutput( OutputPage $out, ParserOutput $parserOutput ) {
+ 		$key = $parserOutput->getExtensionData( 'spp_skin' );
+ 		if ( $key !== null ) {
+-			$key = Skin::normalizeKey( strtolower( trim( $key ) ) );
++			$key = strtolower( trim( $key ) );
++			// Do *not* use Skin::normalizeKey() because if the requested skin
++			// is invalid we want to say so; partial implementation of the
++			// logic from normalizeKey() but without the fallback to
++			// $wgDefaultSkin or $wgFallbackSkin, and no support for the
++			// numeric settings '0' and '2' for the default or for cologneblue.
+ 			$skinFactory = MediaWikiServices::getInstance()->getSkinFactory();
+ 
+ 			$allowedSkins = $skinFactory->getAllowedSkins();
++			// Make keys lowercase for case-insensitive matching.
++			$allowedSkins = array_change_key_case( $allowedSkins, CASE_LOWER );
++
+ 			if ( !array_key_exists( $key, $allowedSkins ) ) {
+ 				$out->addHTML(
+ 					Html::element(
+@@ -53,6 +61,8 @@ class SkinPerPage {
+ 							->text()
+ 					)
+ 				);
++				// Don't try and set the request skin
++				return true;
+ 			}
+ 
+ 			$skin = $skinFactory->makeSkin( $key );
+-- 
+2.42.0.windows.2
+
