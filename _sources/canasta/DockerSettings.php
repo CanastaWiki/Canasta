@@ -185,7 +185,6 @@ const DOCKER_EXTENSIONS = [
 	'SkinPerPage',
 	'Skinny',
 	'SmiteSpam',
-	'SoundManager2Button',
 	'SpamBlacklist', # bundled
 	'SubPageList',
 	'Survey',

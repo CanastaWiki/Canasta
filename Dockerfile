@@ -840,10 +840,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SkinPerNamespace $MW_HOME/extensions/SkinPerNamespace \
 	&& cd $MW_HOME/extensions/SkinPerNamespace \
 	&& git checkout -q 14762eadecd791904886aa15fa5a2f845dc005f0 \
-	# SoundManager2Button
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SoundManager2Button $MW_HOME/extensions/SoundManager2Button \
-	&& cd $MW_HOME/extensions/SoundManager2Button \
-	&& git checkout -q 89b477d952cad892792263f3097077111d1b7844 \
 	# Survey
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Survey $MW_HOME/extensions/Survey \
 	&& cd $MW_HOME/extensions/Survey \
