@@ -242,7 +242,7 @@ RUN set -x; \
 	# Echo
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Echo $MW_HOME/extensions/Echo \
 	&& cd $MW_HOME/extensions/Echo \
-	&& git checkout -q fdbc2cafdc412dc60d4345511defe9ee393efecf \
+	&& git checkout -q 7ae3c1059a5f4fd1f96f23fa8674bb1705f5e10d \
 	# EditAccount
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-EditAccount.git $MW_HOME/extensions/EditAccount \
 	&& cd $MW_HOME/extensions/EditAccount \
