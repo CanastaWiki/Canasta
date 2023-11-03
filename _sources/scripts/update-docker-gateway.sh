@@ -42,7 +42,7 @@ if [ -n "$WG_SITE_SERVER" ]; then
     elif [[ $MW_SITE_HOST =~ ^[0-9]+.[0-9]+.[0-9]+.[0-9]+$ ]]; then
         echo "MW_SITE_HOST is IP address '$MW_SITE_HOST'"
     else
-        echo "Add MW_SITE_HOST '$DOCKER_GATEWAY $MW_SITE_HOST' to /etc/hosts"
+        echo "Adding MW_SITE_HOST '$DOCKER_GATEWAY $MW_SITE_HOST' to /etc/hosts"
         echo "$DOCKER_GATEWAY $MW_SITE_HOST # MW_SITE_HOST" >> ~/hosts.new
     fi
 fi
