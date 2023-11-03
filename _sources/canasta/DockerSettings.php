@@ -551,15 +551,6 @@ if ( $emulateLocalSettingsDoesNotExists ) {
 	die();
 }
 
-# Include all php files in config/settings directory
-foreach ( glob( getenv( 'MW_CONFIG_DIR' ) . '/settings/*.php' ) as $filename ) {
-	if ( is_readable( $filename ) ) {
-		require_once $filename;
-	} else {
-		MWDebug::warning( 'Cannot read file: $filename' );
-	}
-}
-
 # Flow https://www.mediawiki.org/wiki/Extension:Flow
 if ( isset( $dockerLoadExtensions['Flow'] ) ) {
 	$flowNamespaces = getenv( 'MW_FLOW_NAMESPACES' );
@@ -615,4 +606,13 @@ if ( isset( $_REQUEST['forceprofile'] ) ) {
 	$wgProfiler['output'] = [ 'ProfilerOutputText' ];
 	$wgProfiler['visible'] = false;
 	$wgUseCdn = false; // make sure profile is not cached
+}
+
+# Include all php files in config/settings directory
+foreach ( glob( getenv( 'MW_CONFIG_DIR' ) . '/settings/*.php' ) as $filename ) {
+	if ( is_readable( $filename ) ) {
+		require_once $filename;
+	} else {
+		MWDebug::warning( 'Cannot read file: $filename' );
+	}
 }
