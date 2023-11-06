@@ -579,10 +579,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-VoteNY $MW_HOME/extensions/VoteNY \
 	&& cd $MW_HOME/extensions/VoteNY \
 	&& git checkout -q 11c103f4b9167a8d8d5e850d8a781c6f49b249c1 \
-	# WatchAnalytics (v. 4.1.0)
+	# WatchAnalytics (v. 4.1.2)
 	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-WatchAnalytics $MW_HOME/extensions/WatchAnalytics \
 	&& cd $MW_HOME/extensions/WatchAnalytics \
-	&& git checkout -q 793a03b21992c63bc431e3bf0835351958315fb8 \
+	&& git checkout -q 72b70a667a26bbde0a3cf93fc79747aae08fca32 \
 	# WhoIsWatching
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-WhoIsWatching $MW_HOME/extensions/WhoIsWatching \
 	&& cd $MW_HOME/extensions/WhoIsWatching \
