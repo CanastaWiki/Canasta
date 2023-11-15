@@ -262,7 +262,7 @@ RUN set -x; \
 	# ContributionScores
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/ContributionScores $MW_HOME/extensions/ContributionScores \
 	&& cd $MW_HOME/extensions/ContributionScores \
-	&& git checkout -q e307850555ef313f623dde6e2f1d5d2a43663730 \
+	&& git checkout -q 0c08d338a1150c76e74ae490cd4d5f5b9f6daa5f \
 	# CookieWarning
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/CookieWarning $MW_HOME/extensions/CookieWarning \
 	&& cd $MW_HOME/extensions/CookieWarning \
