@@ -6,6 +6,9 @@ RedirectMatch 404 /\.git
 # Disable directory indexing
 Options -Indexes
 
+# Artificial robots.txt file WIK-1297
+RewriteRule ^robots\.txt$ /robots.php [NC,L]
+
 # VisualEditor support
 RewriteRule ^/?w/rest.php/ - [L]
 
