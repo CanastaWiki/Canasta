@@ -79,6 +79,7 @@ const DOCKER_EXTENSIONS = [
 	'DiscussionTools',
 	'DismissableSiteNotice',
 	'DisplayTitle',
+	'DynamicPageList3',
 	'Echo',
 	'EditAccount',
 	'Editcount',

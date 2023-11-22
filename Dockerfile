@@ -298,7 +298,10 @@ RUN set -x; \
 	# DisplayTitle
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/DisplayTitle $MW_HOME/extensions/DisplayTitle \
 	&& cd $MW_HOME/extensions/DisplayTitle \
-	&& git checkout -q f5de9daf9db92d4fa74a6991269525266f2a857b
+	&& git checkout -q f5de9daf9db92d4fa74a6991269525266f2a857b \
+	&& git clone --single-branch -b $MW_VERSION https://github.com/Universal-Omega/DynamicPageList3.git $MW_HOME/extensions/DynamicPageList3 \
+	&& cd $MW_HOME/extensions/DynamicPageList3 \
+	&& git checkout -q e4faf608b0f5a77c4a4c3576a2a28216c7d2bbbf
 
 # E
 RUN set -x; \
