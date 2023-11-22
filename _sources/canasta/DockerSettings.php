@@ -85,7 +85,6 @@ const DOCKER_EXTENSIONS = [
 	'Elastica',
 	'EmailAuthorization',
 	'EmbedVideo',
-	'EncryptedUploads',
 	'EventLogging',
 	'EventStreamConfig',
 	'ExternalData',

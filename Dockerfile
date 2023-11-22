@@ -716,11 +716,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/EditAccount $MW_HOME/extensions/EditAccount \
 	&& cd $MW_HOME/extensions/EditAccount \
 	&& git checkout -q a9a0d7002483d2165300afd108a8f4b3c2c485ff \
-	# EncryptedUploads
-	&& cd $MW_HOME/extensions \
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/EncryptedUploads \
-	&& cd EncryptedUploads \
-	&& git checkout -q bbb538554c3b4358703c726b7b48ca9da8a64113 \
 	# Flow
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Flow $MW_HOME/extensions/Flow \
 	&& cd $MW_HOME/extensions/Flow \
