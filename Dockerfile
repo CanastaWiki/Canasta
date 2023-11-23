@@ -657,10 +657,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/WhoIsWatching $MW_HOME/extensions/WhoIsWatching \
 	&& cd $MW_HOME/extensions/WhoIsWatching \
 	&& git checkout -q 836a31018e26ab7c993088c4cca31a89efec2ee5 \
-	# WhosOnline
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/WhosOnline $MW_HOME/extensions/WhosOnline \
-	&& cd $MW_HOME/extensions/WhosOnline \
-	&& git checkout -q bb1765d2eb5c88ca10dc8a0be19f35fcffdccdae \
 	# Widgets
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Widgets $MW_HOME/extensions/Widgets \
 	&& cd $MW_HOME/extensions/Widgets \

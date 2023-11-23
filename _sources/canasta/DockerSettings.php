@@ -217,7 +217,6 @@ const DOCKER_EXTENSIONS = [
 	'WatchAnalytics',
 	'WSOAuth',
 	'WhoIsWatching',
-	'WhosOnline',
 	'Widgets',
 	'WikiEditor', # bundled
 	'WikiForum',
