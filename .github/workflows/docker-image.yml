@@ -83,22 +83,20 @@ jobs:
           # Strip "v" prefix from tag name if it's a tag
           # [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
 
-          # Use Docker `latest` tag convention if it's a master branch build
-          [ "$VERSION" == "master" ] && VERSION=latest
-
-          # Compose REGISTRY_TAGS variable
-          REGISTRY_TAGS=$IMAGE_ID:$VERSION
-
-          # For master branch also supply an extra tag: <MW_VERSION>-latest,<MW_VERSION>-<DATE>-<SHA>
-          [ "$VERSION" == "latest" ] && REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:$CANASTA_VERSION,$IMAGE_ID:$MEDIAWIKI_MAJOR_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-$BDATE-$(git rev-parse --short HEAD)
-
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
-          echo REGISTRY_TAGS=$REGISTRY_TAGS
-          echo headref=${{ github.head_ref }}
+          # Use Docker `latest` tag convention if it's a `wikiteq` branch build
+          [ "$VERSION" == "wikiteq" ] && VERSION=stable
           
           SHA_SHORT=${{ github.sha }}
           [ "${{ github.event_name }}" == "pull_request" ] && SHA_SHORT=$(echo ${{ github.event.pull_request.head.sha }} | cut -c1-8)
+          
+          # Compose REGISTRY_TAGS variable
+          REGISTRY_TAGS=$IMAGE_ID:wikiteq-$SHA_SHORT
+
+          # Special case for wikiteq branch
+          [ "$VERSION" == "stable" ] && REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:wikiteq-stable
+          
+          echo IMAGE_ID=$IMAGE_ID
+          echo REGISTRY_TAGS=$REGISTRY_TAGS
         
           echo "Final image tag to be pushed:"
           echo $REGISTRY_TAGS
