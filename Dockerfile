@@ -786,4 +786,6 @@ WORKDIR $MW_HOME
 HEALTHCHECK --interval=1m --timeout=10s \
 	CMD wget -q --method=HEAD localhost/w/api.php
 
+# test
+
 CMD ["/run-apache.sh"]
