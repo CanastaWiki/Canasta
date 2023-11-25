@@ -92,6 +92,14 @@ else
   chmod -R g=rwX $APACHE_LOG_DIR
 fi
 
+echo "Checking permissions of $MW_VOLUME/sitemap..."
+if dir_is_writable "$MW_VOLUME/sitemap"; then
+  echo "Permissions are OK!"
+else
+  chown -R "$WWW_GROUP":"$WWW_GROUP" $MW_VOLUME/sitemap
+  chmod -R g=rwX $MW_VOLUME/sitemap
+fi
+
 run_maintenance_scripts() {
   # Iterate through all the .sh files in /maintenance-scripts/ directory
   for maintenance_script in $(find /maintenance-scripts/ -maxdepth 1 -mindepth 1 -type f -name "*.sh"); do
