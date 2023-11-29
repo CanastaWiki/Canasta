@@ -92,6 +92,14 @@ else
   chmod -R g=rwX $APACHE_LOG_DIR
 fi
 
+echo "Checking permissions of $MW_VOLUME/sitemap..."
+if dir_is_writable "$MW_VOLUME/sitemap"; then
+  echo "Permissions are OK!"
+else
+  chown -R "$WWW_GROUP":"$WWW_GROUP" $MW_VOLUME/sitemap
+  chmod -R g=rwX $MW_VOLUME/sitemap
+fi
+
 run_maintenance_scripts() {
   # Iterate through all the .sh files in /maintenance-scripts/ directory
   for maintenance_script in $(find /maintenance-scripts/ -maxdepth 1 -mindepth 1 -type f -name "*.sh"); do
@@ -110,7 +118,7 @@ run_maintenance_scripts() {
 
 # Naming convention:
 # Scripts with names starting with "mw_" have corresponding enable variables.
-# The enable variable is formed by converting the script's name to uppercase and replacing the first underscore with "_ENABLE_". 
+# The enable variable is formed by converting the script's name to uppercase and replacing the first underscore with "_ENABLE_".
 # For example, the enable variable for "mw_sitemap_generator.sh" would be "MW_ENABLE_SITEMAP_GENERATOR".
 
 run_mw_script() {
