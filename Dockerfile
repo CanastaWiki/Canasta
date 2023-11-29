@@ -317,6 +317,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-HTMLTags $MW_HOME/extensions/HTMLTags \
 	&& cd $MW_HOME/extensions/HTMLTags \
 	&& git checkout -q b8cb3131c5e76f5c037c8474fe14e51f2e877f03 \
+	# JWTAuth (v. 2.0.0)
+	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-JWTAuth $MW_HOME/extensions/JWTAuth \
+	&& cd $MW_HOME/extensions/JWTAuth \
+	&& git checkout -q a61d2c62e55b70d4442d0397c04ba8f429ae1c7d \
 	# LabeledSectionTransclusion
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-LabeledSectionTransclusion $MW_HOME/extensions/LabeledSectionTransclusion \
 	&& cd $MW_HOME/extensions/LabeledSectionTransclusion \
