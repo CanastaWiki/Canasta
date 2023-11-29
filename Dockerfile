@@ -156,7 +156,7 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/Arrays \
 	&& git checkout -q 338f661bf0ab377f70e029079f2c5c5b370219df \
 	# AWS (v. 0.12.0)
-	&& git clone --single-branch -b master https://github.com/edwardspec/mediawiki-aws-s3 AWS \
+	&& git clone --single-branch -b master https://github.com/edwardspec/mediawiki-aws-s3 $MW_HOME/extensions/AWS \
 	&& cd $MW_HOME/extensions/AWS \
 	&& git checkout -q d75873a1f594ac3777b17047c9905b2521debb8b \
 	# BetaFeatures
