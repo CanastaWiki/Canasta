@@ -400,7 +400,7 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/MobileFrontend \
 	&& git checkout -q 8c2403b09186f5f25f0c28369e6aff3c285047df \
 	# MsUpload
-	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MsUpload $MW_HOME/extensions/MsUpload \
+	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-MsUpload $MW_HOME/extensions/MsUpload \
 	&& cd $MW_HOME/extensions/MsUpload \
 	&& git checkout -q dac2376a2fac6ddf4b2038db9b4bc06092ecaa15 \
 	# MyVariables
