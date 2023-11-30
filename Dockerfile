@@ -398,7 +398,7 @@ RUN set -x; \
 	# MobileFrontend
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MobileFrontend $MW_HOME/extensions/MobileFrontend \
 	&& cd $MW_HOME/extensions/MobileFrontend \
-	&& git checkout -q f0bed5588f76b827038fb9af73fb9677e5804077 \
+	&& git checkout -q 8c2403b09186f5f25f0c28369e6aff3c285047df \
 	# MsUpload
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MsUpload $MW_HOME/extensions/MsUpload \
 	&& cd $MW_HOME/extensions/MsUpload \
