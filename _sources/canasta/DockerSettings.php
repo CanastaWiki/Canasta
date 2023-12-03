@@ -579,11 +579,17 @@ switch( getenv( 'MW_SEARCH_TYPE' ) ) {
 if ( isEnvTrue('MW_ENABLE_SITEMAP_GENERATOR') ) {
 	$wgHooks['BeforePageDisplay'][] = function ( $out, $skin ) {
 		global $wgScriptPath;
+		$subdir = getenv( 'MW_SITEMAP_SUBDIR' );
+		# Adds slash to sitemap dir if it's not empty and has no starting slash
+		if ( $subdir && $subdir[0] !== '/' ) {
+			$subdir = '/' . $subdir;
+		}
+		$identifier = getenv( 'MW_SITEMAP_IDENTIFIER' );
 		$out->addLink( [
 			'rel' => 'sitemap',
 			'type' => 'application/xml',
 			'title' => 'Sitemap',
-			'href' => $wgScriptPath . '/sitemap/sitemap-index-mediawiki.xml'
+			'href' => "$wgScriptPath/sitemap$subdir/sitemap-index-$identifier.xml",
 		] );
 	};
 }
