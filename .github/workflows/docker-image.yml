@@ -139,6 +139,7 @@ jobs:
           platforms: linux/amd64, linux/arm64
           secrets: |
             COMPOSER_TOKEN=${{ secrets.GITHUB_TOKEN }}
+            ACCESS_TOKEN=${{ secrets.ACCESS_TOKEN }}
           push: true
           tags: ${{ steps.generate.outputs.REGISTRY_TAGS }}
           cache-from: type=gha
