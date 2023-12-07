@@ -400,9 +400,9 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/MobileFrontend \
 	&& git checkout -q f0bed5588f76b827038fb9af73fb9677e5804077 \
 	# MsUpload
-	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MsUpload $MW_HOME/extensions/MsUpload \
+	&& git clone https://github.com/wikimedia/mediawiki-extensions-MsUpload $MW_HOME/extensions/MsUpload \
 	&& cd $MW_HOME/extensions/MsUpload \
-	&& git checkout -q dac2376a2fac6ddf4b2038db9b4bc06092ecaa15 \
+	&& git checkout -q 8c2403b09186f5f25f0c28369e6aff3c285047df \
 	# MyVariables
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MyVariables $MW_HOME/extensions/MyVariables \
 	&& cd $MW_HOME/extensions/MyVariables \
@@ -502,7 +502,7 @@ RUN set -x; \
 	# SimpleBatchUpload (v. 2.0.0)
 	&& git clone https://github.com/ProfessionalWiki/SimpleBatchUpload $MW_HOME/extensions/SimpleBatchUpload \
 	&& cd $MW_HOME/extensions/SimpleBatchUpload \
-	&& git checkout -q 3b9e248b49d7fbeb81d7da32078db7040809e724 \		
+	&& git checkout -q 3b9e248b49d7fbeb81d7da32078db7040809e724 \
 	# SimpleChanges
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-SimpleChanges $MW_HOME/extensions/SimpleChanges \
 	&& cd $MW_HOME/extensions/SimpleChanges \
