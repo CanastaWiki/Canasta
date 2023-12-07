@@ -499,6 +499,10 @@ RUN set -x; \
 	&& git clone https://github.com/WikiTeq/SemanticTasks.git $MW_HOME/extensions/SemanticTasks \
 	&& cd $MW_HOME/extensions/SemanticTasks \
 	&& git checkout -q 70ddd8cf6090139ce5ee6fdf1e7f3a9f2c68d5d3 \
+	# SemanticWatchlist (v. 1.3.0)
+	&& git clone https://github.com/SemanticMediaWiki/SemanticWatchlist.git $MW_HOME/extensions/SemanticWatchlist \
+	&& cd $MW_HOME/extensions/SemanticWatchlist \
+	&& git checkout -q 417851c22c25f3e33fb654f4138c760c53051b9a \
 	# SimpleBatchUpload (v. 2.0.0)
 	&& git clone https://github.com/ProfessionalWiki/SimpleBatchUpload $MW_HOME/extensions/SimpleBatchUpload \
 	&& cd $MW_HOME/extensions/SimpleBatchUpload \
@@ -633,6 +637,12 @@ COPY _sources/patches/semantic-result-formats-composer-reqs.patch /tmp/semantic-
 RUN set -x; \
 	cd $MW_HOME/extensions/SemanticResultFormats \
 	&& git apply /tmp/semantic-result-formats-composer-reqs.patch
+
+# SemanticWatchlist
+COPY _sources/patches/SemanticWatchList.417851c22c25f3e33fb654f4138c760c53051b9a.patch /tmp/SemanticWatchList.417851c22c25f3e33fb654f4138c760c53051b9a.patch
+RUN set -x; \
+    cd $MW_HOME/extensions/SemanticWatchlist \
+    && git apply /tmp/SemanticWatchList.417851c22c25f3e33fb654f4138c760c53051b9a.patch
 
 # Composer dependencies
 COPY _sources/configs/composer.canasta.json $MW_HOME/composer.local.json
