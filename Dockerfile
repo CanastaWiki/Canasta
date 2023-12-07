@@ -61,6 +61,7 @@ RUN set x; \
 	php7.4-zip \
 	php7.4-fpm \
 	libapache2-mod-fcgid \
+	libfcgi-bin \
 	&& aptitude clean \
 	&& rm -rf /var/lib/apt/lists/*
 
