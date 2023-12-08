@@ -503,7 +503,7 @@ RUN set -x; \
 	# SemanticWatchlist (v. 1.3.0)
 	&& git clone https://github.com/SemanticMediaWiki/SemanticWatchlist.git $MW_HOME/extensions/SemanticWatchlist \
 	&& cd $MW_HOME/extensions/SemanticWatchlist \
-	&& git checkout -q 417851c22c25f3e33fb654f4138c760c53051b9a \
+	&& git checkout -q ecea17097874d16cd240ce35bd20692a67c5064b \
 	# Sentry (WikiTeq fork that uses sentry/sentry 3.x)
 	&& git clone --single-branch -b master https://github.com/WikiTeq/mediawiki-extensions-Sentry.git $MW_HOME/extensions/Sentry \
 	&& cd $MW_HOME/extensions/Sentry \
