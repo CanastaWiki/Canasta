@@ -531,6 +531,10 @@ RUN set -x; \
 	&& git clone https://github.com/ProfessionalWiki/SubPageList $MW_HOME/extensions/SubPageList \
 	&& cd $MW_HOME/extensions/SubPageList \
 	&& git checkout -q c016dcdb7866f20319731e6497b48fd43756505e \
+	# TemplateSandbox
+	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-TemplateSandbox $MW_HOME/extensions/TemplateSandbox \
+	&& cd $MW_HOME/extensions/TemplateSandbox \
+	&& git checkout -q 8af94cedc41cbe6c54614714ced6ce4128555ce4 \
 	# TemplateStyles
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-TemplateStyles $MW_HOME/extensions/TemplateStyles \
 	&& cd $MW_HOME/extensions/TemplateStyles \
