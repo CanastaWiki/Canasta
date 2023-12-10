@@ -735,6 +735,11 @@ ENV MW_ENABLE_JOB_RUNNER=true \
 	PHP_MAX_INPUT_VARS=1000 \
 	PHP_MAX_EXECUTION_TIME=60 \
 	PHP_MAX_INPUT_TIME=60 \
+	PM_MAX_CHILDREN=25 \
+	PM_START_SERVERS=10 \
+	PM_MIN_SPARE_SERVERS=5 \
+	PM_MAX_SPARE_SERVERS=15 \
+	PM_MAX_REQUESTS=2500 \
 	LOG_FILES_COMPRESS_DELAY=3600 \
 	LOG_FILES_REMOVE_OLDER_THAN_DAYS=10
 
@@ -745,6 +750,7 @@ COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_fi
 COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/7.4/fpm/conf.d/
 COPY _sources/configs/php_max_input_vars.ini _sources/configs/php_max_input_vars.ini /etc/php/7.4/fpm/conf.d/
 COPY _sources/configs/php_timeouts.ini /etc/php/7.4/fpm/conf.d/
+COPY _sources/configs/php-fpm-www.conf /etc/php/7.4/fpm/pool.d/www.conf
 COPY _sources/scripts/*.sh /
 COPY _sources/scripts/maintenance-scripts/*.sh /maintenance-scripts/
 COPY _sources/scripts/*.php $MW_HOME/maintenance/
