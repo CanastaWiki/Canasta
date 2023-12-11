@@ -4,7 +4,7 @@ LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
 
 ENV MW_VERSION=REL1_39 \
-	MW_CORE_VERSION=1.39.1 \
+	MW_CORE_VERSION=1.39.5 \
 	WWW_ROOT=/var/www/mediawiki \
 	MW_HOME=/var/www/mediawiki/w \
 	MW_ORIGIN_FILES=/mw_origin_files \
@@ -654,16 +654,7 @@ RUN set -x; \
 COPY _sources/configs/composer.canasta.json $MW_HOME/composer.local.json
 RUN set -x; \
 	cd $MW_HOME \
-	&& composer update --no-dev \
-    # Fix up future use of canasta-extensions directory for composer autoload
-    && sed -i 's/extensions/canasta-extensions/g' $MW_HOME/vendor/composer/autoload_static.php \
-    && sed -i 's/extensions/canasta-extensions/g' $MW_HOME/vendor/composer/autoload_files.php \
-    && sed -i 's/extensions/canasta-extensions/g' $MW_HOME/vendor/composer/autoload_classmap.php \
-    && sed -i 's/extensions/canasta-extensions/g' $MW_HOME/vendor/composer/autoload_psr4.php \
-    && sed -i 's/skins/canasta-skins/g' $MW_HOME/vendor/composer/autoload_static.php \
-    && sed -i 's/skins/canasta-skins/g' $MW_HOME/vendor/composer/autoload_files.php \
-    && sed -i 's/skins/canasta-skins/g' $MW_HOME/vendor/composer/autoload_classmap.php \
-    && sed -i 's/skins/canasta-skins/g' $MW_HOME/vendor/composer/autoload_psr4.php
+	&& composer update --no-dev
 
 # Other patches
 
