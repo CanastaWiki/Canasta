@@ -5,13 +5,15 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
 
-require_once "$IP/CanastaUtils.php";
+require_once "{$IP}/CanastaUtils.php";
 
 $canastaLocalSettingsFilePath = getenv( 'MW_VOLUME' ) . '/config/LocalSettings.php';
+$canastaCommonSettingsFilePath = getenv( 'MW_VOLUME' ) . '/config/CommonSettings.php';
+
 if ( defined( 'MW_CONFIG_CALLBACK' ) ) {
 	// Called from WebInstaller or similar entry point
 
-	if ( !file_exists( $canastaLocalSettingsFilePath ) ) {
+	if ( !file_exists( $canastaLocalSettingsFilePath ) && !file_exists( $canastaCommonSettingsFilePath ) ) {
 		// Remove all variables, WebInstaller should decide that "$IP/LocalSettings.php" does not exist.
 		$vars = array_keys( get_defined_vars() );
 		foreach ( $vars as $v => $k ) {
@@ -24,7 +26,7 @@ if ( defined( 'MW_CONFIG_CALLBACK' ) ) {
 // WebStart entry point
 
 // Check that user's LocalSettings.php exists
-if ( !is_readable( $canastaLocalSettingsFilePath ) ) {
+if ( !is_readable( $canastaLocalSettingsFilePath ) && !is_readable( $canastaCommonSettingsFilePath ) ) {
 	// Emulate that "$IP/LocalSettings.php" does not exist
 
 	// Set CANASTA_CONFIG_FILE for NoLocalSettings template work correctly in includes/CanastaNoLocalSettings.php
@@ -70,10 +72,27 @@ $wgCdnServersNoPurge[] = '10.0.0.0/8';     // 10.0.0.0 – 10.255.255.255
 $wgCdnServersNoPurge[] = '172.16.0.0/12';  // 172.16.0.0 – 172.31.255.255
 $wgCdnServersNoPurge[] = '192.168.0.0/16'; // 192.168.0.0 – 192.168.255.255
 
-# Include user defined LocalSettings.php file
-require_once "$canastaLocalSettingsFilePath";
+# Include user defined CommonSettings.php file
+if ( file_exists( $canastaCommonSettingsFilePath ) ) {
+	require_once "$canastaCommonSettingsFilePath";
+}
 
-# Include all php files in config/settings directory
-foreach (glob(getenv( 'MW_VOLUME' ) . '/config/settings/*.php') as $filename) {
-	require_once $filename;
+# Include user defined LocalSettings.php file
+if ( file_exists( $canastaLocalSettingsFilePath ) ) {
+	require_once "$canastaLocalSettingsFilePath";
+}
+
+$filenames = glob( getenv( 'MW_VOLUME' ) . '/config/settings/*.php' );
+
+if ( $filenames !== false && is_array( $filenames ) ) {
+	sort( $filenames );
+
+	foreach ( $filenames as $filename ) {
+		require_once "$filename";
+	}
+}
+
+# Include the FarmConfig
+if ( file_exists( getenv( 'MW_VOLUME' ) . '/config/wikis.yaml' ) ) {
+	require_once "$IP/FarmConfigLoader.php";
 }

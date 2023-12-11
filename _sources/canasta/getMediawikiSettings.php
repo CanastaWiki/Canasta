@@ -4,7 +4,7 @@ use MediaWiki\MediaWikiServices;
 
 $mwHome = getenv( 'MW_HOME' );
 
-if ( !defined( 'MW_CONFIG_FILE' ) && !file_exists( "$mwHome/LocalSettings.php" ) ) {
+if ( !defined( 'MW_CONFIG_FILE' ) && !file_exists( "$mwHome/LocalSettings.php" ) && !file_exists( "$mwHome/CommonSettings.php" ) ) {
 	return;
 }
 
