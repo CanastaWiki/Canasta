@@ -35,7 +35,8 @@
 				"extensions/GoogleLogin/composer.json",
 				"extensions/JWTAuth/composer.json",
 				"extensions/Cloudflare/composer.json",
-				"extensions/FHIR/composer.json"
+				"extensions/FHIR/composer.json",
+				"extensions/CLEAR/composer.json"
 			]
 		}
 	},
