@@ -353,7 +353,7 @@ RUN --mount=type=secret,id=ACCESS_TOKEN \
     # FHIR
     git clone -b master https://WikiteqMachine:$(cat /run/secrets/ACCESS_TOKEN)@github.com/WikiTeq/mediawiki-extension-FHIR.git $MW_HOME/extensions/FHIR \
     && cd $MW_HOME/extensions/FHIR \
-    && git checkout -q 6cde9bb755655cdbe59f185617e3e3a5e6539d7d
+    && git checkout -q d65ef30f8c2f483a55d96a2bc9b07300ac28dc06
 
 RUN --mount=type=secret,id=ACCESS_TOKEN \
     # CLEAR
