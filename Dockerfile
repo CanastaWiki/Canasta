@@ -359,7 +359,7 @@ RUN --mount=type=secret,id=ACCESS_TOKEN \
     # CLEAR
     git clone -b master https://WikiteqMachine:$(cat /run/secrets/ACCESS_TOKEN)@github.com/WikiTeq/mediawiki-extension-CLEAR.git $MW_HOME/extensions/CLEAR \
     && cd $MW_HOME/extensions/CLEAR \
-    && git checkout -q 15ba9661a1349b4d6ac88605e52cb40d0305a422
+    && git checkout -q f5e020867790eee79c7ccc2e04f608514d5931c6
 
 # G
 RUN set -x; \
