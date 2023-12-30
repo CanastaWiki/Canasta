@@ -475,7 +475,7 @@ RUN set -x; \
 	# MobileFrontend
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/MobileFrontend $MW_HOME/extensions/MobileFrontend \
 	&& cd $MW_HOME/extensions/MobileFrontend \
-	&& git checkout -q f0bed5588f76b827038fb9af73fb9677e5804077 \
+	&& git checkout -q 7f9ecd976796d02988b40dff4a790c315d4651e6 \
 	# MsUpload
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/MsUpload $MW_HOME/extensions/MsUpload \
 	&& cd $MW_HOME/extensions/MsUpload \
