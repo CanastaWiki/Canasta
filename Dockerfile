@@ -1,4 +1,4 @@
-FROM debian:11.7 as base
+FROM debian:12.4 as base
 
 LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
@@ -47,21 +47,21 @@ RUN set x; \
 	poppler-utils \
 	&& aptitude update \
 	&& aptitude install -y \
-	php7.4 \
-	php7.4-mysql \
-	php7.4-cli \
-	php7.4-gd \
-	php7.4-mbstring \
-	php7.4-xml \
-	php7.4-mysql \
-	php7.4-intl \
-	php7.4-opcache \
-	php7.4-apcu \
-	php7.4-redis \
-	php7.4-curl \
-	php7.4-zip \
-	php7.4-fpm \
-	php7.4-yaml \
+	php \
+	php-mysql \
+	php-cli \
+	php-gd \
+	php-mbstring \
+	php-xml \
+	php-mysql \
+	php-intl \
+	php-opcache \
+	php-apcu \
+	php-redis \
+	php-curl \
+	php-zip \
+	php-fpm \
+	php-yaml \
 	libapache2-mod-fcgid \
 	&& aptitude clean \
 	&& rm -rf /var/lib/apt/lists/*
@@ -75,8 +75,9 @@ RUN set -x; \
 	# Enable rewrite module
     && a2enmod rewrite \
 	# enabling mpm_event and php-fpm
+	&& a2dismod php8.2 \
 	&& a2dismod mpm_prefork \
-	&& a2enconf php7.4-fpm \
+	&& a2enconf php8.2-fpm \
 	&& a2enmod mpm_event \
 	&& a2enmod proxy_fcgi \
     # Create directories
@@ -739,11 +740,11 @@ ENV MW_ENABLE_JOB_RUNNER=true \
 COPY _sources/configs/msmtprc /etc/
 COPY _sources/configs/mediawiki.conf /etc/apache2/sites-enabled/
 COPY _sources/configs/status.conf /etc/apache2/mods-available/
-COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/7.4/cli/conf.d/
-COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/7.4/fpm/conf.d/
-COPY _sources/configs/php_max_input_vars.ini _sources/configs/php_max_input_vars.ini /etc/php/7.4/fpm/conf.d/
-COPY _sources/configs/php_timeouts.ini /etc/php/7.4/fpm/conf.d/
-COPY _sources/configs/php-fpm-www.conf /etc/php/7.4/fpm/pool.d/www.conf
+COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/8.2/cli/conf.d/
+COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/8.2/fpm/conf.d/
+COPY _sources/configs/php_max_input_vars.ini _sources/configs/php_max_input_vars.ini /etc/php/8.2/fpm/conf.d/
+COPY _sources/configs/php_timeouts.ini /etc/php/8.2/fpm/conf.d/
+COPY _sources/configs/php-fpm-www.conf /etc/php/8.2/fpm/pool.d/www.conf
 COPY _sources/scripts/*.sh /
 COPY _sources/scripts/maintenance-scripts/*.sh /maintenance-scripts/
 COPY _sources/scripts/*.php $MW_HOME/maintenance/
@@ -773,7 +774,7 @@ RUN set -x; \
 	&& a2enmod expires \
 	&& a2disconf other-vhosts-access-log \
 	# Enable environment variables for FPM workers
-	&& sed -i '/clear_env/s/^;//' /etc/php/7.4/fpm/pool.d/www.conf
+	&& sed -i '/clear_env/s/^;//' /etc/php/8.2/fpm/pool.d/www.conf
 
 COPY _sources/images/Powered-by-Canasta.png /var/www/mediawiki/w/resources/assets/
 
