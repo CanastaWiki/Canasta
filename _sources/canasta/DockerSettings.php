@@ -510,6 +510,9 @@ if ( $wgDebugMode ) {
 # Deep category searching requires SPARQL (like wikidata), should be disabled by default for non Wikimedia wikis
 $wgAdvancedSearchDeepcatEnabled = false;
 
+# Enable the "Did You Mean" feature, see WIK-1275
+$wgCirrusSearchPhraseSuggestUseOpeningText = true;
+
 ######################### Custom Settings ##########################
 $canastaLocalSettingsFilePath = getenv( 'MW_CONFIG_DIR' ) . '/LocalSettings.php';
 $emulateLocalSettingsDoesNotExists = false;
