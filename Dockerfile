@@ -893,7 +893,7 @@ RUN set -x; \
    	# GoogleLogin
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/GoogleLogin $MW_HOME/extensions/GoogleLogin \
 	&& cd $MW_HOME/extensions/GoogleLogin \
-	&& git checkout -q 01fa815e2f858c1d31f8d4d0c34b355c73a34e1b
+	&& git checkout -q 3fec50489daa23fb9eeeb3872a6d2f8c3957e7b0
 
 # V
 RUN set -x; \
