@@ -4,7 +4,7 @@ LABEL maintainers="pavel@wikiteq.com,alexey@wikiteq.com"
 LABEL org.opencontainers.image.source=https://github.com/WikiTeq/Taqasta
 
 ENV MW_VERSION=REL1_39 \
-	MW_CORE_VERSION=1.39.5 \
+	MW_CORE_VERSION=1.39.6 \
 	WWW_ROOT=/var/www/mediawiki \
 	MW_HOME=/var/www/mediawiki/w \
 	MW_LOG=/var/log/mediawiki \
@@ -182,7 +182,7 @@ RUN set -x; \
 	# AdminLinks (v. 0.6.1)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/AdminLinks $MW_HOME/extensions/AdminLinks \
 	&& cd $MW_HOME/extensions/AdminLinks \
-	&& git checkout -q 3e2671c21fd4b8644552069ee60220035b6e96f5 \
+	&& git checkout -q 60eda7201636218b80d83a637b70e5c753900e41 \
 	# AdvancedSearch
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/AdvancedSearch $MW_HOME/extensions/AdvancedSearch \
 	&& cd $MW_HOME/extensions/AdvancedSearch \
@@ -909,7 +909,7 @@ RUN set -x; \
 	# JWTAuth
 	&& git clone --single-branch -b main https://github.com/jeffw16/JWTAuth.git $MW_HOME/extensions/JWTAuth \
 	&& cd $MW_HOME/extensions/JWTAuth \
-	&& git checkout -q 6c6e0474ce38e0c261c9c14a119c5c7f25b81d48
+	&& git checkout -q 1068e920f735c5af6f616fba2bdd8dd453e8d014
 
 # WikiTeq removes/fixes the extensions with issues in Canasta docker image, remove it if fixed in Canasta
 RUN set -x; \
