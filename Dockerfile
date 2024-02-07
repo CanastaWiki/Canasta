@@ -528,7 +528,7 @@ RUN set -x; \
 	# PluggableAuth
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/PluggableAuth $MW_HOME/extensions/PluggableAuth \
 	&& cd $MW_HOME/extensions/PluggableAuth \
-	&& git checkout -q 4be1e402e1862d165a4feb003c492ddc9525057e \
+	&& git checkout -q b7d246d3e0820e46a67ea019a03e054dc2703f5d \
 	# Popups
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Popups $MW_HOME/extensions/Popups \
 	&& cd $MW_HOME/extensions/Popups \
