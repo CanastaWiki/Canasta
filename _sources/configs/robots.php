@@ -5,6 +5,8 @@
 ini_set( 'display_errors', 0 );
 error_reporting( 0 );
 
+header( 'Content-Type: text/plain' );
+
 $enableSitemapEnv = getenv( 'MW_ENABLE_SITEMAP_GENERATOR');
 // match the value check to the isTrue function at _sources/scripts/functions.sh
 if ( !empty( $enableSitemapEnv ) && in_array( $enableSitemapEnv, [ 'true', 'True', 'TRUE', '1' ] ) ) {
