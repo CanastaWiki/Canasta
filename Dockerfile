@@ -755,7 +755,7 @@ COPY _sources/configs/php-fpm-www.conf /etc/php/7.4/fpm/pool.d/www.conf
 COPY _sources/scripts/*.sh /
 COPY _sources/scripts/maintenance-scripts/*.sh /maintenance-scripts/
 COPY _sources/scripts/*.php $MW_HOME/maintenance/
-COPY _sources/configs/robots.txt $WWW_ROOT/
+COPY _sources/configs/robots.txt _sources/configs/robots.php $WWW_ROOT/
 COPY _sources/configs/.htaccess $WWW_ROOT/
 COPY _sources/images/favicon.ico $WWW_ROOT/
 COPY _sources/canasta/LocalSettings.php _sources/canasta/CanastaDefaultSettings.php $MW_HOME/
