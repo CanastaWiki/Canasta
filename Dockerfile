@@ -28,6 +28,7 @@ RUN set x; \
 	apt-transport-https \
 	ca-certificates \
 	wget \
+	lsb-release \
 	imagemagick  \
 	librsvg2-bin \
 	python3-pygments \
@@ -45,24 +46,26 @@ RUN set x; \
 	rsync \
 	lynx \
 	poppler-utils \
+	&& wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \
+	&& echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list \
 	&& aptitude update \
 	&& aptitude install -y \
-	php7.4 \
-	php7.4-mysql \
-	php7.4-cli \
-	php7.4-gd \
-	php7.4-mbstring \
-	php7.4-xml \
-	php7.4-mysql \
-	php7.4-intl \
-	php7.4-opcache \
-	php7.4-apcu \
-	php7.4-redis \
-	php7.4-curl \
-	php7.4-zip \
-	php7.4-fpm \
-	php7.4-yaml \
 	libapache2-mod-fcgid \
+	php8.1 \
+	php8.1-mysql \
+	php8.1-cli \
+	php8.1-gd \
+	php8.1-mbstring \
+	php8.1-xml \
+	php8.1-mysql \
+	php8.1-intl \
+	php8.1-opcache \
+	php8.1-apcu \
+	php8.1-redis \
+	php8.1-curl \
+	php8.1-zip \
+	php8.1-fpm \
+	php8.1-yaml \
 	&& aptitude clean \
 	&& rm -rf /var/lib/apt/lists/*
 
@@ -76,7 +79,7 @@ RUN set -x; \
     && a2enmod rewrite \
 	# enabling mpm_event and php-fpm
 	&& a2dismod mpm_prefork \
-	&& a2enconf php7.4-fpm \
+	&& a2enconf php8.1-fpm \
 	&& a2enmod mpm_event \
 	&& a2enmod proxy_fcgi \
     # Create directories
@@ -739,11 +742,11 @@ ENV MW_ENABLE_JOB_RUNNER=true \
 COPY _sources/configs/msmtprc /etc/
 COPY _sources/configs/mediawiki.conf /etc/apache2/sites-enabled/
 COPY _sources/configs/status.conf /etc/apache2/mods-available/
-COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/7.4/cli/conf.d/
-COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/7.4/fpm/conf.d/
-COPY _sources/configs/php_max_input_vars.ini _sources/configs/php_max_input_vars.ini /etc/php/7.4/fpm/conf.d/
-COPY _sources/configs/php_timeouts.ini /etc/php/7.4/fpm/conf.d/
-COPY _sources/configs/php-fpm-www.conf /etc/php/7.4/fpm/pool.d/www.conf
+COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/8.1/cli/conf.d/
+COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/8.1/fpm/conf.d/
+COPY _sources/configs/php_max_input_vars.ini _sources/configs/php_max_input_vars.ini /etc/php/8.1/fpm/conf.d/
+COPY _sources/configs/php_timeouts.ini /etc/php/8.1/fpm/conf.d/
+COPY _sources/configs/php-fpm-www.conf /etc/php/8.1/fpm/pool.d/www.conf
 COPY _sources/scripts/*.sh /
 COPY _sources/scripts/maintenance-scripts/*.sh /maintenance-scripts/
 COPY _sources/scripts/*.php $MW_HOME/maintenance/
@@ -773,7 +776,7 @@ RUN set -x; \
 	&& a2enmod expires \
 	&& a2disconf other-vhosts-access-log \
 	# Enable environment variables for FPM workers
-	&& sed -i '/clear_env/s/^;//' /etc/php/7.4/fpm/pool.d/www.conf
+	&& sed -i '/clear_env/s/^;//' /etc/php/8.1/fpm/pool.d/www.conf
 
 COPY _sources/images/Powered-by-Canasta.png /var/www/mediawiki/w/resources/assets/
 
