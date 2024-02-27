@@ -790,6 +790,13 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/Mpdf \
 	&& git checkout -q fb6ff534526f3b9a554cc4172db6e3715adfef36
 
+# O
+RUN --mount=type=secret,id=ACCESS_TOKEN \
+    # OneTimePassword
+    git clone -b master https://WikiteqMachine:$(cat /run/secrets/ACCESS_TOKEN)@github.com/WikiTeq/mediawiki-extension-OneTimePassword.git $MW_HOME/extensions/OneTimePassword \
+    && cd $MW_HOME/extensions/OneTimePassword \
+    && git checkout -q e05e2d16a30201b1c774cb97b3e708802758f91d
+
 # P
 RUN set -x; \
 	cd $MW_HOME/extensions \
