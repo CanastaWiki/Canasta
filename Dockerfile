@@ -528,7 +528,7 @@ RUN set -x; \
 	# PluggableAuth
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/PluggableAuth $MW_HOME/extensions/PluggableAuth \
 	&& cd $MW_HOME/extensions/PluggableAuth \
-	&& git checkout -q 4be1e402e1862d165a4feb003c492ddc9525057e \
+	&& git checkout -q b7d246d3e0820e46a67ea019a03e054dc2703f5d \
 	# Popups
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Popups $MW_HOME/extensions/Popups \
 	&& cd $MW_HOME/extensions/Popups \
@@ -789,6 +789,13 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Mpdf.git $MW_HOME/extensions/Mpdf \
 	&& cd $MW_HOME/extensions/Mpdf \
 	&& git checkout -q fb6ff534526f3b9a554cc4172db6e3715adfef36
+
+# O
+RUN --mount=type=secret,id=ACCESS_TOKEN \
+    # OneTimePassword
+    git clone -b master https://WikiteqMachine:$(cat /run/secrets/ACCESS_TOKEN)@github.com/WikiTeq/mediawiki-extension-OneTimePassword.git $MW_HOME/extensions/OneTimePassword \
+    && cd $MW_HOME/extensions/OneTimePassword \
+    && git checkout -q e05e2d16a30201b1c774cb97b3e708802758f91d
 
 # P
 RUN set -x; \

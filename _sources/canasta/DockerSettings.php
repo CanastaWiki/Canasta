@@ -142,6 +142,7 @@ const DOCKER_EXTENSIONS = [
 	'Nuke', # bundled
 	'NumerAlpha',
 	'OATHAuth', # bundled
+	'OneTimePassword',
 	'OpenGraphMeta',
 	'OpenIDConnect',
 	'PDFEmbed',
