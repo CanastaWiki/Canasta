@@ -349,18 +349,6 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/FlexDiagrams \
 	&& git checkout -q eefc9e29aedfc6d8ffaf4f4e50043b390ebd7adc
 
-RUN --mount=type=secret,id=ACCESS_TOKEN \
-    # FHIR
-    git clone -b master https://WikiteqMachine:$(cat /run/secrets/ACCESS_TOKEN)@github.com/WikiTeq/mediawiki-extension-FHIR.git $MW_HOME/extensions/FHIR \
-    && cd $MW_HOME/extensions/FHIR \
-    && git checkout -q 349eb682788fca11aa8aedc9cd46aba2a86fdeba
-
-RUN --mount=type=secret,id=ACCESS_TOKEN \
-    # CLEAR
-    git clone -b master https://WikiteqMachine:$(cat /run/secrets/ACCESS_TOKEN)@github.com/WikiTeq/mediawiki-extension-CLEAR.git $MW_HOME/extensions/CLEAR \
-    && cd $MW_HOME/extensions/CLEAR \
-    && git checkout -q 19045d9d4859c1eb02b59946e9bfaadfe18cf349
-
 # G
 RUN set -x; \
 	cd $MW_HOME/extensions \
@@ -790,13 +778,6 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/Mpdf \
 	&& git checkout -q fb6ff534526f3b9a554cc4172db6e3715adfef36
 
-# O
-RUN --mount=type=secret,id=ACCESS_TOKEN \
-    # OneTimePassword
-    git clone -b master https://WikiteqMachine:$(cat /run/secrets/ACCESS_TOKEN)@github.com/WikiTeq/mediawiki-extension-OneTimePassword.git $MW_HOME/extensions/OneTimePassword \
-    && cd $MW_HOME/extensions/OneTimePassword \
-    && git checkout -q e05e2d16a30201b1c774cb97b3e708802758f91d
-
 # P
 RUN set -x; \
 	cd $MW_HOME/extensions \
@@ -978,6 +959,7 @@ COPY --from=extensions $MW_HOME/extensions $MW_HOME/extensions
 # Composer dependencies
 COPY _sources/configs/composer.wikiteq.json $MW_HOME/composer.local.json
 # Run with secret mounted to /run/secrets/COMPOSER_TOKEN
+# This is needed to bypass rate limits
 RUN --mount=type=secret,id=COMPOSER_TOKEN cd $MW_HOME \
 	&& cp composer.json composer.json.bak \
 	&& cat composer.json.bak | jq '. + {"minimum-stability": "dev"}' > composer.json \
