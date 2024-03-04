@@ -783,4 +783,4 @@ WORKDIR $MW_HOME
 HEALTHCHECK --interval=1m --timeout=10s \
 	CMD wget -q --method=HEAD localhost/w/api.php
 
-CMD ["/setup-all.sh"]
+CMD ["/run-all.sh"]
