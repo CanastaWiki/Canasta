@@ -613,10 +613,6 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Widgets $MW_HOME/extensions/Widgets \
 	&& cd $MW_HOME/extensions/Widgets \
 	&& git checkout -q 197d429f971b2aebbce29b7a91a194e1f8181e64 \
-	# WikiForum
-	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-WikiForum $MW_HOME/extensions/WikiForum \
-	&& cd $MW_HOME/extensions/WikiForum \
-	&& git checkout -q a2685b60af86890f199a5f3b6581918369e6a571 \
 	# WikiSEO
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-WikiSEO $MW_HOME/extensions/WikiSEO \
 	&& cd $MW_HOME/extensions/WikiSEO \
