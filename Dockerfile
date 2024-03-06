@@ -375,7 +375,7 @@ RUN set -x; \
  	# Maps
 # TODO, return to upstream repo when the PR merged https://github.com/ProfessionalWiki/Maps/pull/773
 #    	&& git clone --single-branch -b master https://github.com/ProfessionalWiki/Maps $MW_HOME/extensions/Maps \
-	&& git clone --single-branch -b IEEE23-28/fix-for-ve https://github.com/ProfessionalWiki/Maps $MW_HOME/extensions/Maps \
+	&& git clone --single-branch -b IEEE23-28/fix-for-ve https://github.com/WikiTeq/Maps.git $MW_HOME/extensions/Maps \
 	&& cd $MW_HOME/extensions/Maps \
 	&& git checkout -q bea8bb01bfacdc119690fffd0db20b896e428f84 \
 	# MassMessage
