@@ -19,11 +19,7 @@ for user_extension_path in $(find $MW_HOME/user-extensions/ -maxdepth 1 -mindept
 do
   user_extension_id=$(basename $user_extension_path)
   extension_symlink_path="$MW_HOME/extensions/$user_extension_id"
-  if [[ -e "$extension_symlink_path" ]]
-  then
-    rm "$extension_symlink_path"
-  fi
-  ln -s $MW_HOME/user-extensions/$user_extension_id/ $MW_HOME/extensions/$user_extension_id
+  ln -sf $MW_HOME/user-extensions/$user_extension_id/ $MW_HOME/extensions/$user_extension_id
 done
 
 echo "Symlinking user skins and overwriting any redundant bundled skins..."
@@ -31,9 +27,5 @@ for user_skin_path in $(find $MW_HOME/user-skins/ -maxdepth 1 -mindepth 1 -type 
 do
   user_skin_id=$(basename $user_skin_path)
   skin_symlink_path="$MW_HOME/skins/$user_skin_id"
-  if [[ -e "$skin_symlink_path" ]]
-  then
-    rm "$skin_symlink_path"
-  fi
-  ln -s $MW_HOME/user-skins/$user_skin_id/ $MW_HOME/skins/$user_skin_id
+  ln -sf $MW_HOME/user-skins/$user_skin_id/ $MW_HOME/skins/$user_skin_id
 done
