@@ -376,7 +376,7 @@ RUN set -x; \
  	# Maps
 	&& git clone --single-branch -b master https://github.com/ProfessionalWiki/Maps $MW_HOME/extensions/Maps \
 	&& cd $MW_HOME/extensions/Maps \
-	&& git checkout -q 5c87d702b30bb132d89ec03d24b7c19a9805db87 \
+	&& git checkout -q 9b01a6bbd8e0d4277c152b7343efccae28b54d1c \
 	# MassMessage
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MassMessage $MW_HOME/extensions/MassMessage \
 	&& cd $MW_HOME/extensions/MassMessage \
