@@ -373,11 +373,9 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/MagicNoCache \
 	&& git checkout -q 93534c12dac0e821c46c94b21053d274a6e557de \
  	# Maps
-# TODO, return to upstream repo when the PR merged https://github.com/ProfessionalWiki/Maps/pull/773
-#    	&& git clone --single-branch -b master https://github.com/ProfessionalWiki/Maps $MW_HOME/extensions/Maps \
-	&& git clone --single-branch -b IEEE23-28/fix-for-ve https://github.com/WikiTeq/Maps.git $MW_HOME/extensions/Maps \
+	&& git clone --single-branch -b master https://github.com/ProfessionalWiki/Maps $MW_HOME/extensions/Maps \
 	&& cd $MW_HOME/extensions/Maps \
-	&& git checkout -q bea8bb01bfacdc119690fffd0db20b896e428f84 \
+	&& git checkout -q 9b01a6bbd8e0d4277c152b7343efccae28b54d1c \
 	# MassMessage
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MassMessage $MW_HOME/extensions/MassMessage \
 	&& cd $MW_HOME/extensions/MassMessage \
