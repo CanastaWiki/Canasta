@@ -727,8 +727,12 @@ COPY --from=source $MW_ORIGIN_FILES $MW_ORIGIN_FILES
 
 # Default values
 ENV MW_AUTOUPDATE=true \
+	MW_MAINTENANCE_UPDATE=0 \
+	MW_MAINTENANCE_CIRRUSSEARCH_UPDATECONFIG=2 \
+	MW_MAINTENANCE_CIRRUSSEARCH_FORCEINDEX=2 \
 	MW_ENABLE_JOB_RUNNER=true \
 	MW_JOB_RUNNER_PAUSE=2 \
+	MW_JOB_RUNNER_MEMORY_LIMIT=512M \
 	MW_ENABLE_TRANSCODER=true \
 	MW_JOB_TRANSCODER_PAUSE=60 \
 	MW_MAP_DOMAIN_TO_DOCKER_GATEWAY=true \
@@ -769,7 +773,7 @@ COPY _sources/configs/mpm_event.conf /etc/apache2/mods-available/mpm_event.conf
 
 RUN set -x; \
 	chmod -v +x /*.sh \
-	# Sitemap directory \
+	# Sitemap directory
 	&& mkdir -p $MW_ORIGIN_FILES/sitemap \
 	&& ln -s $MW_VOLUME/sitemap $MW_HOME/sitemap \
 	# Comment out ErrorLog and CustomLog parameters, we use rotatelogs in mediawiki.conf for the log files
@@ -783,9 +787,9 @@ RUN set -x; \
 	&& a2enmod expires remoteip \
 	&& a2disconf other-vhosts-access-log \
 	# For Widgets extension
-	&& mkdir -p $MW_ORIGIN_FILES/extensions/Widgets \
-	&& mv $MW_HOME/extensions/Widgets/compiled_templates $MW_ORIGIN_FILES/extensions/Widgets/ \
-	&& ln -s $MW_VOLUME/extensions/Widgets/compiled_templates $MW_HOME/extensions/Widgets/compiled_templates \
+	&& mkdir -p $MW_ORIGIN_FILES/canasta-extensions/Widgets \
+	&& mv $MW_HOME/canasta-extensions/Widgets/compiled_templates $MW_ORIGIN_FILES/canasta-extensions/Widgets/ \
+	&& ln -s $MW_VOLUME/canasta-extensions/Widgets/compiled_templates $MW_HOME/canasta-extensions/Widgets/compiled_templates \
 	# Enable environment variables for FPM workers
 	&& sed -i '/clear_env/s/^;//' /etc/php/7.4/fpm/pool.d/www.conf
 
