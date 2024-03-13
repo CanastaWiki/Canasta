@@ -30,6 +30,7 @@ waitdatabase() {
 
     if [ "$WG_DB_TYPE" != "mysql" ]; then
         echo >&2 "Unsupported database type ($WG_DB_TYPE)"
+        rm "$WWW_ROOT/.maintenance"
         exit 123
     fi
 
