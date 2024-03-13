@@ -238,13 +238,14 @@ if [ -e "$MW_VOLUME/config/LocalSettings.php" ] || [ -e "$MW_VOLUME/config/Commo
   run_maintenance_scripts
 else
     rm "$WWW_ROOT/.maintenance"
+    set +x
     echo "There is no LocalSettings.php/CommonSettings.php file"
     while [ ! -e "$MW_VOLUME/config/LocalSettings.php" ] && [ ! -e "$MW_VOLUME/config/CommonSettings.php" ]; do
         echo -n "#"
         sleep 10
     done
     echo "Found LocalSettings.php/CommonSettings.php file"
-
+    set -x
     # reload variables
     WG_DB_TYPE=$(get_mediawiki_variable wgDBtype)
     WG_DB_SERVER=$(get_mediawiki_variable wgDBserver)
