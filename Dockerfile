@@ -7,11 +7,13 @@ ENV MW_VERSION=REL1_39 \
 	MW_CORE_VERSION=1.39.6 \
 	WWW_ROOT=/var/www/mediawiki \
 	MW_HOME=/var/www/mediawiki/w \
+	MW_LOG=/var/log/mediawiki \
 	MW_ORIGIN_FILES=/mw_origin_files \
 	MW_VOLUME=/mediawiki \
 	WWW_USER=www-data \
-    WWW_GROUP=www-data \
-    APACHE_LOG_DIR=/var/log/apache2
+	WWW_GROUP=www-data \
+	PHP_LOG_DIR=/var/log/php-fpm \
+	APACHE_LOG_DIR=/var/log/apache2
 
 # System setup
 RUN set x; \
@@ -72,21 +74,23 @@ RUN set -x; \
 	&& rm /etc/apache2/sites-available/000-default.conf \
 	&& rm -rf /var/www/html \
 	# Enable rewrite module
-    && a2enmod rewrite \
+	&& a2enmod rewrite \
 	# enabling mpm_event and php-fpm
 	&& a2dismod mpm_prefork \
 	&& a2enconf php7.4-fpm \
 	&& a2enmod mpm_event \
 	&& a2enmod proxy_fcgi \
-    # Create directories
-    && mkdir -p $MW_HOME \
-    && mkdir -p $MW_ORIGIN_FILES \
-    && mkdir -p $MW_VOLUME
+	# Create directories
+	&& mkdir -p $MW_HOME \
+	&& mkdir -p $MW_LOG \
+	&& mkdir -p $PHP_LOG_DIR \
+	&& mkdir -p $MW_ORIGIN_FILES \
+	&& mkdir -p $MW_VOLUME
 
 # Composer
 RUN set -x; \
 	curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && composer self-update 2.1.3
+	&& composer self-update 2.1.3
 
 FROM base as source
 
@@ -102,7 +106,7 @@ RUN set -x; \
 RUN set -x; \
 	cd $MW_HOME/skins \
  	# Chameleon (v. 4.2.1)
-  	&& git clone https://github.com/ProfessionalWiki/chameleon $MW_HOME/skins/chameleon \
+	&& git clone https://github.com/ProfessionalWiki/chameleon $MW_HOME/skins/chameleon \
 	&& cd $MW_HOME/skins/chameleon \
 	&& git checkout -q f34a56528ada14ac07e1b03beda41f775ef27606 \
 	# CologneBlue
@@ -722,7 +726,8 @@ COPY --from=source $MW_HOME $MW_HOME
 COPY --from=source $MW_ORIGIN_FILES $MW_ORIGIN_FILES
 
 # Default values
-ENV MW_ENABLE_JOB_RUNNER=true \
+ENV MW_AUTOUPDATE=true \
+	MW_ENABLE_JOB_RUNNER=true \
 	MW_JOB_RUNNER_PAUSE=2 \
 	MW_ENABLE_TRANSCODER=true \
 	MW_JOB_TRANSCODER_PAUSE=60 \
@@ -758,7 +763,7 @@ COPY _sources/scripts/*.php $MW_HOME/maintenance/
 COPY _sources/configs/robots.txt _sources/configs/robots.php $WWW_ROOT/
 COPY _sources/configs/.htaccess $WWW_ROOT/
 COPY _sources/images/favicon.ico $WWW_ROOT/
-COPY _sources/canasta/LocalSettings.php _sources/canasta/CanastaDefaultSettings.php $MW_HOME/
+COPY _sources/canasta/LocalSettings.php _sources/canasta/CanastaDefaultSettings.php _sources/canasta/FarmConfigLoader.php $MW_HOME/
 COPY _sources/canasta/getMediawikiSettings.php /
 COPY _sources/configs/mpm_event.conf /etc/apache2/mods-available/mpm_event.conf
 
