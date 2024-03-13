@@ -1,10 +1,11 @@
 <?php
 
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Settings\SettingsBuilder;
 
 $mwHome = getenv( 'MW_HOME' );
 
-if ( !defined( 'MW_CONFIG_FILE' ) && !file_exists( "$mwHome/LocalSettings.php" ) ) {
+if ( !defined( 'MW_CONFIG_FILE' ) && !file_exists( "$mwHome/LocalSettings.php" ) && !file_exists( "$mwHome/CommonSettings.php" ) ) {
 	return;
 }
 
@@ -139,8 +140,8 @@ class GetMediawikiSettings extends Maintenance {
 	 * (for example they can check user and etc..)
 	 * but this script can be used for getting parameters when database is not initialized yet
 	 */
-	public function finalSetup() {
-		parent::finalSetup();
+	public function finalSetup( SettingsBuilder $settingsBuilder = null ) {
+		parent::finalSetup( $settingsBuilder );
 
 		global $wgShowExceptionDetails, $wgHooks;
 

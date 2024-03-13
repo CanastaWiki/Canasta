@@ -249,6 +249,8 @@ else
         fi
         sleep 10
     done
+
+    echo
     echo "Found LocalSettings.php/CommonSettings.php file"
     set -x
     # reload variables
