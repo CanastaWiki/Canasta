@@ -13,8 +13,6 @@ WG_DB_NAME=$(get_mediawiki_variable wgDBname)
 WG_DB_USER=$(get_mediawiki_variable wgDBuser)
 WG_DB_PASSWORD=$(get_mediawiki_variable wgDBpassword)
 WG_SQLITE_DATA_DIR=$(get_mediawiki_variable wgSQLiteDataDir)
-WG_LANG_CODE=$(get_mediawiki_variable wgLanguageCode)
-WG_SITE_NAME=$(get_mediawiki_variable wgSitename)
 WG_SEARCH_TYPE=$(get_mediawiki_variable wgSearchType)
 WG_CIRRUS_SEARCH_SERVER=$(get_hostname_with_port "$(get_mediawiki_variable wgCirrusSearchServers first)" 9200)
 VERSION_HASH=$(php /getMediawikiSettings.php --versions --format=md5)
@@ -240,8 +238,15 @@ else
     rm "$WWW_ROOT/.maintenance"
     set +x
     echo "There is no LocalSettings.php/CommonSettings.php file"
+    n=6
     while [ ! -e "$MW_VOLUME/config/LocalSettings.php" ] && [ ! -e "$MW_VOLUME/config/CommonSettings.php" ]; do
         echo -n "#"
+        if [ $n -eq 0 ]; then
+            echo " There is no LocalSettings.php/CommonSettings.php file..."
+            n=6
+        else
+            ((n--))
+        fi
         sleep 10
     done
     echo "Found LocalSettings.php/CommonSettings.php file"
@@ -253,8 +258,6 @@ else
     WG_DB_USER=$(get_mediawiki_variable wgDBuser)
     WG_DB_PASSWORD=$(get_mediawiki_variable wgDBpassword)
     WG_SQLITE_DATA_DIR=$(get_mediawiki_variable wgSQLiteDataDir)
-    WG_LANG_CODE=$(get_mediawiki_variable wgLanguageCode)
-    WG_SITE_NAME=$(get_mediawiki_variable wgSitename)
     WG_SEARCH_TYPE=$(get_mediawiki_variable wgSearchType)
     WG_CIRRUS_SEARCH_SERVER=$(get_hostname_with_port "$(get_mediawiki_variable wgCirrusSearchServers first)" 9200)
     VERSION_HASH=$(php /getMediawikiSettings.php --versions --format=md5)
