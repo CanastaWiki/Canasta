@@ -5,4 +5,4 @@ set -x
 echo "starting php-fpm"
 # Running php-fpm
 mkdir -p /run/php
-exec /usr/sbin/php-fpm7.4 
+exec /usr/sbin/php-fpm8.1
