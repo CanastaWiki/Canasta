@@ -176,10 +176,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-BreadCrumbs2 $MW_HOME/extensions/BreadCrumbs2 \
 	&& cd $MW_HOME/extensions/BreadCrumbs2 \
 	&& git checkout -q d53357a6839e94800a617de4fc451b6c64d0a1c8 \
-	# Cargo (v. 3.4.2)
+	# Cargo (v. 3.5.1)
 	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-Cargo $MW_HOME/extensions/Cargo \
 	&& cd $MW_HOME/extensions/Cargo \
-	&& git checkout -q 7e8ea881cdb41e79687d059670fc68872a6a892c \
+	&& git checkout -q a2865938165c1389d852df762f8c85073859e5dd \
 	# CharInsert
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-CharInsert $MW_HOME/extensions/CharInsert \
 	&& cd $MW_HOME/extensions/CharInsert \
@@ -432,10 +432,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-PageExchange $MW_HOME/extensions/PageExchange \
 	&& cd $MW_HOME/extensions/PageExchange \
 	&& git checkout -q 28482410564e38d2b97ab7321e99c4281c6e5877 \
-	# PageForms (v. 5.6.1)
+	# PageForms (v. 5.7)
 	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-PageForms $MW_HOME/extensions/PageForms \
 	&& cd $MW_HOME/extensions/PageForms \
-	&& git checkout -q f90d67ecc2c111e82db454c71592c83384ff9704 \
+	&& git checkout -q 3fde7fa31f2bf64ac7905e179a57f9848cfdaa2c \
 	# PluggableAuth
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-PluggableAuth $MW_HOME/extensions/PluggableAuth \
 	&& cd $MW_HOME/extensions/PluggableAuth \
@@ -488,10 +488,10 @@ RUN set -x; \
 	&& git clone https://github.com/SemanticMediaWiki/SemanticFormsSelect.git $MW_HOME/extensions/SemanticFormsSelect \
 	&& cd $MW_HOME/extensions/SemanticFormsSelect \
 	&& git checkout -q 4b56baa752401b4ff9fe555fd57fc5c3309601d4 \
-	# SemanticMediaWiki (v. 4.1.2)
+	# SemanticMediaWiki (v. 4.1.3)
 	&& git clone https://github.com/SemanticMediaWiki/SemanticMediaWiki $MW_HOME/extensions/SemanticMediaWiki \
 	&& cd $MW_HOME/extensions/SemanticMediaWiki \
-	&& git checkout -q 5c94879171d5f741b896828c25a9f2bb07a03dff \
+	&& git checkout -q b5e2afe11991fe21a335cb90426de24b85bc9fe7 \
 	# SemanticResultFormats (v. 4.0.2)
 	&& git clone https://github.com/SemanticMediaWiki/SemanticResultFormats $MW_HOME/extensions/SemanticResultFormats \
 	&& cd $MW_HOME/extensions/SemanticResultFormats \
@@ -584,10 +584,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-UserMerge $MW_HOME/extensions/UserMerge \
 	&& cd $MW_HOME/extensions/UserMerge \
 	&& git checkout -q 183bb7a8f78cbe365bec0fbd4b3ecdd4fae1a359 \
-	# UserPageViewTracker (v. 0.7)
+	# UserPageViewTracker (v. 0.8)
 	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-UserPageViewTracker $MW_HOME/extensions/UserPageViewTracker \
 	&& cd $MW_HOME/extensions/UserPageViewTracker \
-	&& git checkout -q f4b7c20c372165541164d449c12df1e74e98ed0b \
+	&& git checkout -q 276ead8fb0ecaa4c77b587267aa52e17de81c542 \
 	# Variables
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Variables $MW_HOME/extensions/Variables \
 	&& cd $MW_HOME/extensions/Variables \
