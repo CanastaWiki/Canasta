@@ -500,7 +500,7 @@ RUN set -x; \
 	# OpenIDConnect
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/OpenIDConnect $MW_HOME/extensions/OpenIDConnect \
 	&& cd $MW_HOME/extensions/OpenIDConnect \
-	&& git checkout -q 5049dddd596e56b0c97f5632ab5f3ccdfe486ec6
+	&& git checkout -q 4712c8277fc3efc1769a21645f95ca270e514c16
 
 # P
 RUN set -x; \
@@ -516,7 +516,7 @@ RUN set -x; \
 	# PluggableAuth
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/PluggableAuth $MW_HOME/extensions/PluggableAuth \
 	&& cd $MW_HOME/extensions/PluggableAuth \
-	&& git checkout -q b7d246d3e0820e46a67ea019a03e054dc2703f5d \
+	&& git checkout -q 1884a127cd5947ad7484d3b55711db3f6515d439 \
 	# Popups
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Popups $MW_HOME/extensions/Popups \
 	&& cd $MW_HOME/extensions/Popups \
