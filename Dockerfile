@@ -28,6 +28,7 @@ RUN set x; \
 	apt-transport-https \
 	ca-certificates \
 	wget \
+	lsb-release \
 	imagemagick  \
 	librsvg2-bin \
 	python3-pygments \
@@ -45,24 +46,26 @@ RUN set x; \
 	rsync \
 	lynx \
 	poppler-utils \
+	&& wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \
+	&& echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list \
 	&& aptitude update \
 	&& aptitude install -y \
-	php7.4 \
-	php7.4-mysql \
-	php7.4-cli \
-	php7.4-gd \
-	php7.4-mbstring \
-	php7.4-xml \
-	php7.4-mysql \
-	php7.4-intl \
-	php7.4-opcache \
-	php7.4-apcu \
-	php7.4-redis \
-	php7.4-curl \
-	php7.4-zip \
-	php7.4-fpm \
-	php7.4-yaml \
 	libapache2-mod-fcgid \
+	php8.1 \
+	php8.1-mysql \
+	php8.1-cli \
+	php8.1-gd \
+	php8.1-mbstring \
+	php8.1-xml \
+	php8.1-mysql \
+	php8.1-intl \
+	php8.1-opcache \
+	php8.1-apcu \
+	php8.1-redis \
+	php8.1-curl \
+	php8.1-zip \
+	php8.1-fpm \
+	php8.1-yaml \
 	&& aptitude clean \
 	&& rm -rf /var/lib/apt/lists/*
 
@@ -76,7 +79,7 @@ RUN set -x; \
     && a2enmod rewrite \
 	# enabling mpm_event and php-fpm
 	&& a2dismod mpm_prefork \
-	&& a2enconf php7.4-fpm \
+	&& a2enconf php8.1-fpm \
 	&& a2enmod mpm_event \
 	&& a2enmod proxy_fcgi \
     # Create directories
@@ -173,10 +176,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-BreadCrumbs2 $MW_HOME/extensions/BreadCrumbs2 \
 	&& cd $MW_HOME/extensions/BreadCrumbs2 \
 	&& git checkout -q d53357a6839e94800a617de4fc451b6c64d0a1c8 \
-	# Cargo (v. 3.4.2)
+	# Cargo (v. 3.5.1)
 	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-Cargo $MW_HOME/extensions/Cargo \
 	&& cd $MW_HOME/extensions/Cargo \
-	&& git checkout -q 7e8ea881cdb41e79687d059670fc68872a6a892c \
+	&& git checkout -q a2865938165c1389d852df762f8c85073859e5dd \
 	# CharInsert
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-CharInsert $MW_HOME/extensions/CharInsert \
 	&& cd $MW_HOME/extensions/CharInsert \
@@ -429,10 +432,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-PageExchange $MW_HOME/extensions/PageExchange \
 	&& cd $MW_HOME/extensions/PageExchange \
 	&& git checkout -q 28482410564e38d2b97ab7321e99c4281c6e5877 \
-	# PageForms (v. 5.6.1)
+	# PageForms (v. 5.7.1)
 	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-PageForms $MW_HOME/extensions/PageForms \
 	&& cd $MW_HOME/extensions/PageForms \
-	&& git checkout -q f90d67ecc2c111e82db454c71592c83384ff9704 \
+	&& git checkout -q 3fce054289526b3018ec0eb0557867da8be84ffc \
 	# PluggableAuth
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-PluggableAuth $MW_HOME/extensions/PluggableAuth \
 	&& cd $MW_HOME/extensions/PluggableAuth \
@@ -485,10 +488,10 @@ RUN set -x; \
 	&& git clone https://github.com/SemanticMediaWiki/SemanticFormsSelect.git $MW_HOME/extensions/SemanticFormsSelect \
 	&& cd $MW_HOME/extensions/SemanticFormsSelect \
 	&& git checkout -q 4b56baa752401b4ff9fe555fd57fc5c3309601d4 \
-	# SemanticMediaWiki (v. 4.1.2)
+	# SemanticMediaWiki (v. 4.1.3)
 	&& git clone https://github.com/SemanticMediaWiki/SemanticMediaWiki $MW_HOME/extensions/SemanticMediaWiki \
 	&& cd $MW_HOME/extensions/SemanticMediaWiki \
-	&& git checkout -q 5c94879171d5f741b896828c25a9f2bb07a03dff \
+	&& git checkout -q b5e2afe11991fe21a335cb90426de24b85bc9fe7 \
 	# SemanticResultFormats (v. 4.0.2)
 	&& git clone https://github.com/SemanticMediaWiki/SemanticResultFormats $MW_HOME/extensions/SemanticResultFormats \
 	&& cd $MW_HOME/extensions/SemanticResultFormats \
@@ -581,10 +584,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-UserMerge $MW_HOME/extensions/UserMerge \
 	&& cd $MW_HOME/extensions/UserMerge \
 	&& git checkout -q 183bb7a8f78cbe365bec0fbd4b3ecdd4fae1a359 \
-	# UserPageViewTracker (v. 0.7)
+	# UserPageViewTracker (v. 0.8)
 	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-UserPageViewTracker $MW_HOME/extensions/UserPageViewTracker \
 	&& cd $MW_HOME/extensions/UserPageViewTracker \
-	&& git checkout -q f4b7c20c372165541164d449c12df1e74e98ed0b \
+	&& git checkout -q 276ead8fb0ecaa4c77b587267aa52e17de81c542 \
 	# Variables
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Variables $MW_HOME/extensions/Variables \
 	&& cd $MW_HOME/extensions/Variables \
@@ -735,11 +738,11 @@ ENV MW_ENABLE_JOB_RUNNER=true \
 COPY _sources/configs/msmtprc /etc/
 COPY _sources/configs/mediawiki.conf /etc/apache2/sites-enabled/
 COPY _sources/configs/status.conf /etc/apache2/mods-available/
-COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/7.4/cli/conf.d/
-COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/7.4/fpm/conf.d/
-COPY _sources/configs/php_max_input_vars.ini _sources/configs/php_max_input_vars.ini /etc/php/7.4/fpm/conf.d/
-COPY _sources/configs/php_timeouts.ini /etc/php/7.4/fpm/conf.d/
-COPY _sources/configs/php-fpm-www.conf /etc/php/7.4/fpm/pool.d/www.conf
+COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/8.1/cli/conf.d/
+COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/8.1/fpm/conf.d/
+COPY _sources/configs/php_max_input_vars.ini _sources/configs/php_max_input_vars.ini /etc/php/8.1/fpm/conf.d/
+COPY _sources/configs/php_timeouts.ini /etc/php/8.1/fpm/conf.d/
+COPY _sources/configs/php-fpm-www.conf /etc/php/8.1/fpm/pool.d/www.conf
 COPY _sources/scripts/*.sh /
 COPY _sources/scripts/maintenance-scripts/*.sh /maintenance-scripts/
 COPY _sources/scripts/*.php $MW_HOME/maintenance/
@@ -769,7 +772,7 @@ RUN set -x; \
 	&& a2enmod expires \
 	&& a2disconf other-vhosts-access-log \
 	# Enable environment variables for FPM workers
-	&& sed -i '/clear_env/s/^;//' /etc/php/7.4/fpm/pool.d/www.conf
+	&& sed -i '/clear_env/s/^;//' /etc/php/8.1/fpm/pool.d/www.conf
 
 COPY _sources/images/Powered-by-Canasta.png /var/www/mediawiki/w/resources/assets/
 
