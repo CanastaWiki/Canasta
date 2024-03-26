@@ -1,4 +1,4 @@
-commands:
+extensions:
   - AdminLinks:
       repository: https://github.com/wikimedia/mediawiki-extensions-AdminLinks
       branch: master
@@ -329,10 +329,14 @@ commands:
       repository: https://github.com/SemanticMediaWiki/SemanticBreadcrumbLinks
       branch: master
       commit: 87a69003743f1de52338f4717cfcf5218ca5a743
+      patches:
+        - semantic-breadcrumb-links-composer-reqs.patch
   - SemanticCompoundQueries:
       repository: https://github.com/SemanticMediaWiki/SemanticCompoundQueries
       branch: master
       commit: eeb514393fdf2e80ae7084839d8803ee32ae3da4
+      patches:
+        - semantic-compound-queries-autoload.patch
   - SemanticDependencyUpdater:
       repository: https://github.com/gesinn-it/SemanticDependencyUpdater
       branch: master
@@ -354,16 +358,22 @@ commands:
   - SemanticResultFormats:
       repository: https://github.com/SemanticMediaWiki/SemanticResultFormats
       commit: d5196722a56f9b65475be68d1e97063d7b975cb9
+      patches:
+        - semantic-result-formats-composer-reqs.patch
   - SemanticScribunto:
       repository: https://github.com/SemanticMediaWiki/SemanticScribunto
       branch: master
       commit: 1c616a4c4da443b3433000d6870bb92c184236fa
+      patches:
+        - semantic-scribunto-autoload.patch
   - SemanticTasks:
       repository: https://github.com/WikiTeq/SemanticTasks.git
       commit: 70ddd8cf6090139ce5ee6fdf1e7f3a9f2c68d5d3
   - SemanticWatchlist:
       repository: https://github.com/SemanticMediaWiki/SemanticWatchlist.git
       commit: ecea17097874d16cd240ce35bd20692a67c5064b
+      patches:
+        - SemanticWatchList.417851c22c25f3e33fb654f4138c760c53051b9a.patch
   - SimpleBatchUpload:
       repository: https://github.com/ProfessionalWiki/SimpleBatchUpload
       commit: 3b9e248b49d7fbeb81d7da32078db7040809e724

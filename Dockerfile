@@ -125,6 +125,8 @@ RUN set -x; \
 	&& cd $MW_HOME/skins/Refreshed \
 	&& git checkout -q 86f33620f25335eb62289aa18d342ff3b980d8b8
 
+COPY _sources/patches/* /tmp/
+
 # Extensions
 # The following extensions are bundled into MediaWiki and do not need to be separately installed:
 # AbuseFilter, CategoryTree, Cite, CiteThisPage, CodeEditor, ConfirmEdit, Gadgets, ImageMap, InputBox, Interwiki,
@@ -133,35 +135,20 @@ RUN set -x; \
 # VisualEditor, WikiEditor.
 # The following extensions are downloaded via Composer and also do not need to be downloaded here:
 # Bootstrap, DataValues (and related extensions like DataValuesCommon), ParserHooks.
-COPY _sources/scripts/extension-setup.py /tmp/extension-setup.py
+COPY _sources/scripts/extension-setup.sh /tmp/extension-setup.sh
 COPY _sources/configs/extensions.yaml /tmp/extensions.yaml
+RUN wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+RUN chmod a+x /usr/local/bin/yq
 RUN set -x; \
-	pip3 install pyyaml \
-	&& python3 /tmp/extension-setup.py
+	apt-get update \
+	&& apt-get install -y jq \
+	&& chmod +x /tmp/extension-setup.sh 
+
+RUN /tmp/extension-setup.sh
 
 # Patch composer
 RUN set -x; \
     sed -i 's="monolog/monolog": "2.2.0",="monolog/monolog": "^2.2",=g' $MW_HOME/composer.json
-
-# Patch some SMW-based extensions' composer.json files to avoid Composer-based downloading of SMW.
-
-# SemanticBreadcrumbLinks
-COPY _sources/patches/semantic-breadcrumb-links-composer-reqs.patch /tmp/semantic-breadcrumb-links-composer-reqs.patch
-RUN set -x; \
-	cd $MW_HOME/extensions/SemanticBreadcrumbLinks \
-	&& git apply /tmp/semantic-breadcrumb-links-composer-reqs.patch
-
-# SemanticResultFormats
-COPY _sources/patches/semantic-result-formats-composer-reqs.patch /tmp/semantic-result-formats-composer-reqs.patch
-RUN set -x; \
-	cd $MW_HOME/extensions/SemanticResultFormats \
-	&& git apply /tmp/semantic-result-formats-composer-reqs.patch
-
-# SemanticWatchlist
-COPY _sources/patches/SemanticWatchList.417851c22c25f3e33fb654f4138c760c53051b9a.patch /tmp/SemanticWatchList.417851c22c25f3e33fb654f4138c760c53051b9a.patch
-RUN set -x; \
-    cd $MW_HOME/extensions/SemanticWatchlist \
-    && git apply /tmp/SemanticWatchList.417851c22c25f3e33fb654f4138c760c53051b9a.patch
 
 # Composer dependencies
 COPY _sources/configs/composer.canasta.json $MW_HOME/composer.local.json
@@ -170,18 +157,6 @@ RUN set -x; \
 	&& composer update --no-dev
 
 # Other patches
-
-# Add autoloading to several extensions' extension.json file, which normally require
-# Composer autoloading
-COPY _sources/patches/semantic-compound-queries-autoload.patch /tmp/semantic-compound-queries-autoload.patch
-RUN set -x; \
-	cd $MW_HOME/extensions/SemanticCompoundQueries \
-	&& git apply /tmp/semantic-compound-queries-autoload.patch
-
-COPY _sources/patches/semantic-scribunto-autoload.patch /tmp/semantic-scribunto-autoload.patch
-RUN set -x; \
-	cd $MW_HOME/extensions/SemanticScribunto \
-	&& git apply /tmp/semantic-scribunto-autoload.patch
 
 # Cleanup all .git leftovers
 RUN set -x; \
