@@ -21,8 +21,6 @@ RUN set x; \
 	&& aptitude -y upgrade \
 	&& aptitude install -y \
 	git \
-	python3 \
-	python3-pip \
 	inotify-tools \
 	apache2 \
 	software-properties-common \
