@@ -441,6 +441,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Popups $MW_HOME/extensions/Popups \
 	&& cd $MW_HOME/extensions/Popups \
 	&& git checkout -q ff4d2156e1f7f4c11f7396cb0cd70d387abd8187 \
+	# QuickInstantCommons
+	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-QuickInstantCommons $MW_HOME/extensions/QuickInstantCommons \
+	&& cd $MW_HOME/extensions/QuickInstantCommons \
+	&& git checkout -q 53993ae77f30332dee14ec2e358a630d158a9935 \
 	# RegularTooltips
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-RegularTooltips $MW_HOME/extensions/RegularTooltips \
 	&& cd $MW_HOME/extensions/RegularTooltips \
