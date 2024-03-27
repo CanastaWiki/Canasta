@@ -70,6 +70,34 @@ $wgCdnServersNoPurge[] = '10.0.0.0/8';     // 10.0.0.0 – 10.255.255.255
 $wgCdnServersNoPurge[] = '172.16.0.0/12';  // 172.16.0.0 – 172.31.255.255
 $wgCdnServersNoPurge[] = '192.168.0.0/16'; // 192.168.0.0 – 192.168.255.255
 
+/**
+ * Returns boolean value from environment variable
+ * Must return the same result as isTrue function in run-apache.sh file
+ * @param $value
+ * @return bool
+ */
+function isEnvTrue( $name ): bool {
+	$value = getenv( $name );
+	switch ( $value ) {
+		case "True":
+		case "TRUE":
+		case "true":
+		case "1":
+			return true;
+	}
+	return false;
+}
+
+$DOCKER_MW_VOLUME = getenv( 'MW_VOLUME' );
+
+## Set $wgCacheDirectory to a writable directory on the web server
+## to make your wiki go slightly faster. The directory should not
+## be publicly accessible from the web.
+$wgCacheDirectory = isEnvTrue( 'MW_USE_CACHE_DIRECTORY' ) ? "$DOCKER_MW_VOLUME/l10n_cache" : false;
+
+# SemanticMediaWiki
+$smwgConfigFileDir = "$DOCKER_MW_VOLUME/extensions/SemanticMediaWiki/config";
+
 # Include user defined CommonSettings.php file
 if ( file_exists( $canastaCommonSettingsFilePath ) ) {
 	require_once "$canastaCommonSettingsFilePath";

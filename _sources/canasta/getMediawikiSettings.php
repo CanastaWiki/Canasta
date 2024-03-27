@@ -86,6 +86,8 @@ class GetMediawikiSettings extends Maintenance {
 				SemanticMediaWiki::onExtensionFunction();
 				$smwId = SMW\Site::id();
 				$return = $GLOBALS['smw.json'][$smwId]['upgrade_key'] ?? '';
+			} else {
+				$return = 'SMW_not_installed';
 			}
 		} elseif ( $this->hasOption( 'SWMIncompleteSetupTasks' ) ) {
 			$extThings = self::getExtensionsThings();

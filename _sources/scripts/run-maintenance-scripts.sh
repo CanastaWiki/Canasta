@@ -153,6 +153,12 @@ run_autoupdate () {
             echo >&2 "An error occurred when auto-update script was running"
             return $?
         }
+    # The SMW upgrade key can be changes after running update.php
+    NEW_SMW_UPGRADE_KEY=$(php /getMediawikiSettings.php --SMWUpgradeKey)
+    if [ "$SMW_UPGRADE_KEY" != "$NEW_SMW_UPGRADE_KEY" ]; then
+        # update the key without running the maintenance script
+        run_maintenance_script_if_needed 'maintenance_update' "$MW_VERSION-$MW_CORE_VERSION-$MW_MAINTENANCE_UPDATE-$VERSION_HASH-$SMW_UPGRADE_KEY"
+    fi
 
     # Run incomplete SemanticMediawiki setup tasks
     SMW_INCOMPLETE_TASKS=$(php /getMediawikiSettings.php --SWMIncompleteSetupTasks --format=space)
