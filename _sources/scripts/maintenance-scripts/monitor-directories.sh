@@ -29,9 +29,9 @@ inotifywait -m -e create,moved_to,delete,moved_from --format '%e:%f' -- "$usersk
 	while IFS=: read -r event file; do
 		case $event in
 			CREATE,ISDIR|MOVED_TO,ISDIR)
-				ln -rsft skins -- "$userskins"/"$file" ;;
+				ln -rsft "$skins" -- "$userskins"/"$file" ;;
 			DELETE,ISDIR|MOVED_FROM,ISDIR)
 				echo "event: ${event} file: ${file}";
-				ln -rsft skins -- "$canskins"/"$file" || rm -- "$file";
+				ln -rsft "$skins" -- "$canskins"/"$file" || rm -- "$file";
 		esac
 	done
