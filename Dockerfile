@@ -773,6 +773,7 @@ COPY _sources/configs/mpm_event.conf /etc/apache2/mods-available/mpm_event.conf
 
 RUN set -x; \
 	chmod -v +x /*.sh \
+	&& chmod -v +x /maintenance-scripts/*.sh \
 	# Sitemap directory
 	&& mkdir -p $MW_ORIGIN_FILES/sitemap \
 	&& ln -s $MW_VOLUME/sitemap $MW_HOME/sitemap \

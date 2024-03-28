@@ -156,6 +156,7 @@ run_autoupdate () {
     # The SMW upgrade key can be changes after running update.php
     NEW_SMW_UPGRADE_KEY=$(php /getMediawikiSettings.php --SMWUpgradeKey)
     if [ "$SMW_UPGRADE_KEY" != "$NEW_SMW_UPGRADE_KEY" ]; then
+        SMW_UPGRADE_KEY="$NEW_SMW_UPGRADE_KEY"
         # update the key without running the maintenance script
         run_maintenance_script_if_needed 'maintenance_update' "$MW_VERSION-$MW_CORE_VERSION-$MW_MAINTENANCE_UPDATE-$VERSION_HASH-$SMW_UPGRADE_KEY"
     fi
