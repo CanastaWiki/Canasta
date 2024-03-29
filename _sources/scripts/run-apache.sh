@@ -97,6 +97,10 @@ check_mount_points
 sleep 1
 cd "$MW_HOME" || exit
 
+# Check and update permissions of wiki images in background.
+# It can take a long time and should not block Apache from starting.
+/update-images-permissions.sh &
+
 # Run maintenance scripts in background.
 touch "$WWW_ROOT/.maintenance"
 /run-maintenance-scripts.sh &
