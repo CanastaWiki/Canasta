@@ -101,6 +101,8 @@ cd "$MW_HOME" || exit
 # It can take a long time and should not block Apache from starting.
 /update-images-permissions.sh &
 
+/monitor-directories.sh &
+
 # Run maintenance scripts in background.
 touch "$WWW_ROOT/.maintenance"
 /run-maintenance-scripts.sh &
