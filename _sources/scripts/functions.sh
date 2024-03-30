@@ -46,6 +46,13 @@ get_hostname_with_port() {
     port=$(echo "$1" | grep ":" | cut -d":" -f2)
     echo "$1:${port:-$2}"
 }
+get_mediawiki_cirrus_search_server() {
+    server=$(get_mediawiki_variable wgCirrusSearchServers first)
+    if [ -z "$server" ]; then
+        server=$(php /getMediawikiSettings.php --variable=wgCirrusSearchClusters --variableArrayIndex="[\"default\",0]" --format=string)
+    fi
+    get_hostname_with_port "$server" 9200
+}
 
 make_dir_writable() {
     find "$@" '(' -type f -o -type d ')' \

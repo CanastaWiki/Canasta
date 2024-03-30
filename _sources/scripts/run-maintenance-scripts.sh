@@ -14,7 +14,7 @@ WG_DB_USER=$(get_mediawiki_db_var wgDBuser)
 WG_DB_PASSWORD=$(get_mediawiki_db_var wgDBpassword)
 WG_SQLITE_DATA_DIR=$(get_mediawiki_variable wgSQLiteDataDir)
 WG_SEARCH_TYPE=$(get_mediawiki_variable wgSearchType)
-WG_CIRRUS_SEARCH_SERVER=$(get_hostname_with_port "$(get_mediawiki_variable wgCirrusSearchServers first)" 9200)
+WG_CIRRUS_SEARCH_SERVER=$(get_mediawiki_cirrus_search_server)
 VERSION_HASH=$(php /getMediawikiSettings.php --versions --format=md5)
 
 waitdatabase() {
@@ -269,7 +269,7 @@ else
     WG_DB_PASSWORD=$(get_mediawiki_db_var wgDBpassword)
     WG_SQLITE_DATA_DIR=$(get_mediawiki_variable wgSQLiteDataDir)
     WG_SEARCH_TYPE=$(get_mediawiki_variable wgSearchType)
-    WG_CIRRUS_SEARCH_SERVER=$(get_hostname_with_port "$(get_mediawiki_variable wgCirrusSearchServers first)" 9200)
+    WG_CIRRUS_SEARCH_SERVER=$(get_mediawiki_cirrus_search_server)
     VERSION_HASH=$(php /getMediawikiSettings.php --versions --format=md5)
 
     run_maintenance_scripts
