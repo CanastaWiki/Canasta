@@ -4,29 +4,29 @@ get_mediawiki_variable() {
 }
 
 get_mediawiki_db_var() {
-    VALUE=$(get_mediawiki_variable "$1")
+    case $1 in
+        "wgDBtype")
+            I="type"
+            ;;
+        "wgDBserver")
+            I="host"
+            ;;
+        "wgDBname")
+            I="dbname"
+            ;;
+        "wgDBuser")
+            I="user"
+            ;;
+        "wgDBpassword")
+            I="password"
+            ;;
+        *)
+            echo "Unexpected variable name passed to the get_mediawiki_db_var() function: $1"
+            return
+    esac
+    VALUE=$(php /getMediawikiSettings1.php --variable=wgDBservers --variableArrayIndex="[0,\"$I\"]" --format=string)
     if [ -z "$VALUE" ]; then
-        case $1 in
-            "wgDBtype")
-                I="type"
-                ;;
-            "wgDBserver")
-                I="host"
-                ;;
-            "wgDBname")
-                I="dbname"
-                ;;
-            "wgDBuser")
-                I="user"
-                ;;
-            "wgDBpassword")
-                I="password"
-                ;;
-            *)
-                echo "Unexpected variable name passed to the get_mediawiki_db_var() function: $1"
-                return
-        esac
-        VALUE=$(php /getMediawikiSettings1.php --variable=wgDBservers --variableArrayIndex="[0,\"$I\"]" --format=string)
+        VALUE=$(get_mediawiki_variable "$1")
     fi
     echo "$VALUE"
 }
