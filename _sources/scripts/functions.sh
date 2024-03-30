@@ -24,7 +24,7 @@ get_mediawiki_db_var() {
             echo "Unexpected variable name passed to the get_mediawiki_db_var() function: $1"
             return
     esac
-    VALUE=$(php /getMediawikiSettings1.php --variable=wgDBservers --variableArrayIndex="[0,\"$I\"]" --format=string)
+    VALUE=$(php /getMediawikiSettings.php --variable=wgDBservers --variableArrayIndex="[0,\"$I\"]" --format=string)
     if [ -z "$VALUE" ]; then
         VALUE=$(get_mediawiki_variable "$1")
     fi
