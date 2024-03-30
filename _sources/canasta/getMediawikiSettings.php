@@ -22,6 +22,12 @@ class GetMediawikiSettings extends Maintenance {
 			true
 		);
 		$this->addOption(
+			'variableArrayIndex',
+			'',
+			false,
+			true
+		);
+		$this->addOption(
 			'versions',
 			'',
 			false,
@@ -51,11 +57,26 @@ class GetMediawikiSettings extends Maintenance {
 		$return = null;
 		if ( $this->hasOption( 'variable' ) ) {
 			$variableName = $this->getOption( 'variable' );
+			if ( $this->hasOption( 'variableArrayIndex' ) ) {
+				$variableArrayIndex = FormatJson::encode( $this->getOption( 'variableArrayIndex' ) );
+				if ( $variableArrayIndex === false ) {
+					$this->output( 'The variableArrayIndex parameter must be formatted as valid JSON string' );
+					$variableArrayIndex = [];
+				} else {
+					$variableArrayIndex = (array)$variableArrayIndex;
+				}
+			} else {
+				$variableArrayIndex = [];
+			}
 			$config = MediaWikiServices::getInstance()->getMainConfig();
 			if ( $config->has( $variableName ) ) {
 				$return = $config->get( $variableName );
-			} else { // the last chance to fetch a value from global variable
+			} else {
+				// the last chance to fetch a value from global variable
 				$return = $GLOBALS[$variableName] ?? '';
+			}
+			foreach ( $variableArrayIndex as $i ) {
+				$return = $return[$i] ?? '';
 			}
 		} elseif ( $this->hasOption( 'versions' ) ) {
 			$return = [
@@ -127,7 +148,8 @@ class GetMediawikiSettings extends Maintenance {
 		} elseif ( is_array( $return ) || strcasecmp( $format, 'json' ) === 0 ) {
 			// return json format by default for an array
 			$this->output( FormatJson::encode( $return ) );
-		} else { // string
+		} else {
+			// string
 			$this->output( $return );
 		}
 	}

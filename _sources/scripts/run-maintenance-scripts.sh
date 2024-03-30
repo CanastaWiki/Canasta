@@ -7,11 +7,11 @@ set -x
 
 . /functions.sh
 
-WG_DB_TYPE=$(get_mediawiki_variable wgDBtype)
-WG_DB_SERVER=$(get_mediawiki_variable wgDBserver)
-WG_DB_NAME=$(get_mediawiki_variable wgDBname)
-WG_DB_USER=$(get_mediawiki_variable wgDBuser)
-WG_DB_PASSWORD=$(get_mediawiki_variable wgDBpassword)
+WG_DB_TYPE=$(get_mediawiki_db_var wgDBtype)
+WG_DB_SERVER=$(get_mediawiki_db_var wgDBserver)
+WG_DB_NAME=$(get_mediawiki_db_var wgDBname)
+WG_DB_USER=$(get_mediawiki_db_var wgDBuser)
+WG_DB_PASSWORD=$(get_mediawiki_db_var wgDBpassword)
 WG_SQLITE_DATA_DIR=$(get_mediawiki_variable wgSQLiteDataDir)
 WG_SEARCH_TYPE=$(get_mediawiki_variable wgSearchType)
 WG_CIRRUS_SEARCH_SERVER=$(get_hostname_with_port "$(get_mediawiki_variable wgCirrusSearchServers first)" 9200)
@@ -262,11 +262,11 @@ else
     echo "Found LocalSettings.php/CommonSettings.php file"
     set -x
     # reload variables
-    WG_DB_TYPE=$(get_mediawiki_variable wgDBtype)
-    WG_DB_SERVER=$(get_mediawiki_variable wgDBserver)
-    WG_DB_NAME=$(get_mediawiki_variable wgDBname)
-    WG_DB_USER=$(get_mediawiki_variable wgDBuser)
-    WG_DB_PASSWORD=$(get_mediawiki_variable wgDBpassword)
+    WG_DB_TYPE=$(get_mediawiki_db_var wgDBtype)
+    WG_DB_SERVER=$(get_mediawiki_db_var wgDBserver)
+    WG_DB_NAME=$(get_mediawiki_db_var wgDBname)
+    WG_DB_USER=$(get_mediawiki_db_var wgDBuser)
+    WG_DB_PASSWORD=$(get_mediawiki_db_var wgDBpassword)
     WG_SQLITE_DATA_DIR=$(get_mediawiki_variable wgSQLiteDataDir)
     WG_SEARCH_TYPE=$(get_mediawiki_variable wgSearchType)
     WG_CIRRUS_SEARCH_SERVER=$(get_hostname_with_port "$(get_mediawiki_variable wgCirrusSearchServers first)" 9200)
