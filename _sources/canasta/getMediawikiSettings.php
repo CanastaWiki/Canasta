@@ -58,7 +58,7 @@ class GetMediawikiSettings extends Maintenance {
 		if ( $this->hasOption( 'variable' ) ) {
 			$variableName = $this->getOption( 'variable' );
 			if ( $this->hasOption( 'variableArrayIndex' ) ) {
-				$variableArrayIndex = FormatJson::encode( $this->getOption( 'variableArrayIndex' ) );
+				$variableArrayIndex = FormatJson::decode( $this->getOption( 'variableArrayIndex' ) );
 				if ( $variableArrayIndex === false ) {
 					$this->output( 'The variableArrayIndex parameter must be formatted as valid JSON string' );
 					$variableArrayIndex = [];
