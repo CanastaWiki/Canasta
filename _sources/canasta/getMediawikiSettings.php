@@ -1,10 +1,11 @@
 <?php
 
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Settings\SettingsBuilder;
 
 $mwHome = getenv( 'MW_HOME' );
 
-if ( !defined( 'MW_CONFIG_FILE' ) && !file_exists( "$mwHome/LocalSettings.php" ) ) {
+if ( !defined( 'MW_CONFIG_FILE' ) && !file_exists( "$mwHome/LocalSettings.php" ) && !file_exists( "$mwHome/CommonSettings.php" ) ) {
 	return;
 }
 
@@ -16,6 +17,12 @@ class GetMediawikiSettings extends Maintenance {
 		parent::__construct();
 		$this->addOption(
 			'variable',
+			'',
+			false,
+			true
+		);
+		$this->addOption(
+			'variableArrayIndex',
 			'',
 			false,
 			true
@@ -50,11 +57,26 @@ class GetMediawikiSettings extends Maintenance {
 		$return = null;
 		if ( $this->hasOption( 'variable' ) ) {
 			$variableName = $this->getOption( 'variable' );
+			if ( $this->hasOption( 'variableArrayIndex' ) ) {
+				$variableArrayIndex = FormatJson::decode( $this->getOption( 'variableArrayIndex' ) );
+				if ( $variableArrayIndex === false ) {
+					$this->output( 'The variableArrayIndex parameter must be formatted as valid JSON string' );
+					$variableArrayIndex = [];
+				} else {
+					$variableArrayIndex = (array)$variableArrayIndex;
+				}
+			} else {
+				$variableArrayIndex = [];
+			}
 			$config = MediaWikiServices::getInstance()->getMainConfig();
 			if ( $config->has( $variableName ) ) {
 				$return = $config->get( $variableName );
-			} else { // the last chance to fetch a value from global variable
+			} else {
+				// the last chance to fetch a value from global variable
 				$return = $GLOBALS[$variableName] ?? '';
+			}
+			foreach ( $variableArrayIndex as $i ) {
+				$return = $return[$i] ?? '';
 			}
 		} elseif ( $this->hasOption( 'versions' ) ) {
 			$return = [
@@ -85,6 +107,8 @@ class GetMediawikiSettings extends Maintenance {
 				SemanticMediaWiki::onExtensionFunction();
 				$smwId = SMW\Site::id();
 				$return = $GLOBALS['smw.json'][$smwId]['upgrade_key'] ?? '';
+			} else {
+				$return = 'SMW_not_installed';
 			}
 		} elseif ( $this->hasOption( 'SWMIncompleteSetupTasks' ) ) {
 			$extThings = self::getExtensionsThings();
@@ -124,7 +148,8 @@ class GetMediawikiSettings extends Maintenance {
 		} elseif ( is_array( $return ) || strcasecmp( $format, 'json' ) === 0 ) {
 			// return json format by default for an array
 			$this->output( FormatJson::encode( $return ) );
-		} else { // string
+		} else {
+			// string
 			$this->output( $return );
 		}
 	}
@@ -139,8 +164,8 @@ class GetMediawikiSettings extends Maintenance {
 	 * (for example they can check user and etc..)
 	 * but this script can be used for getting parameters when database is not initialized yet
 	 */
-	public function finalSetup() {
-		parent::finalSetup();
+	public function finalSetup( SettingsBuilder $settingsBuilder = null ) {
+		parent::finalSetup( $settingsBuilder );
 
 		global $wgShowExceptionDetails, $wgHooks;
 
