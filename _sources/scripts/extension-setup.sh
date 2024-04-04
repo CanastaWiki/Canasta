@@ -11,7 +11,7 @@ echo "$commands" | jq -r '.extensions' | jq -c '.[]' | while read -r obj; do
     branch=$(echo "$obj" | jq -r ".$extension_name.branch")
 
     git_clone_cmd="git clone "
-    if [ ! -z "$branch" ]; then
+    if [ "$branch" != "null" ]; then
         if [ "$branch" = "MW_VERSION" ]; then
             branch=$MW_VERSION
         fi
@@ -22,7 +22,7 @@ echo "$commands" | jq -r '.extensions' | jq -c '.[]' | while read -r obj; do
 
     eval "$git_clone_cmd && $git_checkout_cmd"
     patches=$(echo "$obj" | jq -r ".$extension_name.patches")
-    if [ ! -z $patches ]; then
+    if [ "$patches" != "null" ]; then
         echo "$patches" | jq -c '.[]' | while read -r patch; do
             git_apply_cmd="cd $MW_HOME/extensions/$extension_name && git apply /tmp/$patch"
             eval "$git_apply_cmd"
