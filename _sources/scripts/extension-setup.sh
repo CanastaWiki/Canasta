@@ -11,13 +11,13 @@ echo "$commands" | jq -r '.extensions' | jq -c '.[]' | while read -r obj; do
     branch=$(echo "$obj" | jq -r ".$extension_name.branch")
 
     git_clone_cmd="git clone "
-    if [ "$branch" != "null" ]; then
-        if [ "$branch" = "MW_VERSION" ]; then
-            branch=$MW_VERSION
-        fi
-        git_clone_cmd="$git_clone_cmd --single-branch -b $branch "
+    if [ "$repository" == "null" ]; then
+        repository="https://github.com/wikimedia/mediawiki-extensions-$extension_name" 
     fi
-    git_clone_cmd="$git_clone_cmd $repository $MW_HOME/extensions/$extension_name"
+    if [ "$branch" == "null" ]; then
+        branch=$MW_VERSION
+    fi
+    git_clone_cmd="$git_clone_cmd --single-branch -b $branch $repository $MW_HOME/extensions/$extension_name"
     git_checkout_cmd="cd $MW_HOME/extensions/$extension_name && git checkout -q $commit"
 
     eval "$git_clone_cmd && $git_checkout_cmd"
