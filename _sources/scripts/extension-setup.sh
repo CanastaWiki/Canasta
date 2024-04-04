@@ -2,6 +2,7 @@
 
 MW_HOME="$MW_HOME"
 MW_VERSION="$MW_VERSION"
+# Since yq cannot process data from variables, a conversion is made to JSON format to utilise jq.
 commands=$(yq eval '. | to_json' extensions.yaml)
 echo "$commands" | jq -r '.extensions' | jq -c '.[]' | while read -r obj; do
     extension_name=$(echo "$obj" | jq -r 'keys_unsorted[]')
@@ -23,7 +24,8 @@ echo "$commands" | jq -r '.extensions' | jq -c '.[]' | while read -r obj; do
     patches=$(echo "$obj" | jq -r ".$extension_name.patches")
     if [ ! -z $patches ]; then
         echo "$patches" | jq -c '.[]' | while read -r patch; do
-            git_checkout_cmd="cd $MW_HOME/extensions/$extension_name && git apply /tmp/$patch"
+            git_apply_cmd="cd $MW_HOME/extensions/$extension_name && git apply /tmp/$patch"
+            eval "$git_apply_cmd"
         done
     fi
 done
