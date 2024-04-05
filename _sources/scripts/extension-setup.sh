@@ -5,11 +5,9 @@ MW_VERSION="$MW_VERSION"
 # Since yq cannot process data from variables, a conversion is made to JSON format to utilise jq.
 commands=$(yq eval '. | to_json' extensions.yaml)
 echo "$commands" | jq -r '.extensions' | jq -c '.[]' | while read -r obj; do
-    extension_name=$(echo "$obj" | jq -r 'keys_unsorted[]')
-    repository=$(echo "$obj" | jq -r ".$extension_name.repository")
-    commit=$(echo "$obj" | jq -r ".$extension_name.commit")
-    branch=$(echo "$obj" | jq -r ".$extension_name.branch")
-
+    extension_data=$(echo "$obj" | jq -r 'keys_unsorted[] as $key | select(has($key)) | "\($key) \(.[$key].repository) \(.[$key].commit) \(.[$key].branch)"')
+    read -r extension_name repository commit branch <<< "$extension_data"
+    
     git_clone_cmd="git clone "
     if [ "$repository" == "null" ]; then
         repository="https://github.com/wikimedia/mediawiki-extensions-$extension_name" 
