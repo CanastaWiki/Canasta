@@ -498,10 +498,9 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/OpenGraphMeta \
 	&& git checkout -q d319702cd4ceda1967c233ef8e021b67b3fc355f \
 	# OpenIDConnect
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/OpenIDConnect $MW_HOME/extensions/OpenIDConnect \
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/OpenIDConnect $MW_HOME/extensions/OpenIDConnect \
 	&& cd $MW_HOME/extensions/OpenIDConnect \
-	&& git checkout -q 4712c8277fc3efc1769a21645f95ca270e514c16
-
+	&& git checkout -q 30eb344a6911065716f976a56b13e304c756c1f6 \
 # P
 RUN set -x; \
 	cd $MW_HOME/extensions \
