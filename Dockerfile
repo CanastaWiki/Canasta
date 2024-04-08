@@ -432,7 +432,7 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-PageExchange $MW_HOME/extensions/PageExchange \
 	&& cd $MW_HOME/extensions/PageExchange \
 	&& git checkout -q 28482410564e38d2b97ab7321e99c4281c6e5877 \
-	# PageForms (v. 5.7.1)
+	# PageForms (v. 5.7.2)
 	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-PageForms $MW_HOME/extensions/PageForms \
 	&& cd $MW_HOME/extensions/PageForms \
 	&& git checkout -q 3fce054289526b3018ec0eb0557867da8be84ffc \
