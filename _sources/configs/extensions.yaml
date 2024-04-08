@@ -1,7 +1,11 @@
+# Canasta YAML file for extensions for MediaWiki 1.39.
+# Where the repository is not specified, the Wikimedia Git repository for the
+# extension with that name is used, and the default branch used is REL1_39.
+# Where the repository *is* specified, the default branch used is master.
 extensions:
   - AdminLinks:
       branch: master
-      commit: 3e2671c21fd4b8644552069ee60220035b6e96f5
+      commit: 3e2671c21fd4b8644552069ee60220035b6e96f5 # v. 0.6.1
   - AdvancedSearch:
       commit: 1a44eafc93a17938333b74a37cb4deff2192e50a
   - AJAXPoll:
@@ -10,21 +14,19 @@ extensions:
       commit: 01cf89a678d5bab6610d24e07d3534356a5880cb
   - ApprovedRevs:
       branch: master
-      commit: 53b67bf7e1e8ac3d20c2fd41ad2ab1c708c045a6
+      commit: 53b67bf7e1e8ac3d20c2fd41ad2ab1c708c045a6 # v. 1.8.2
   - Arrays:
       commit: 338f661bf0ab377f70e029079f2c5c5b370219df
   - AWS:
       repository: https://github.com/edwardspec/mediawiki-aws-s3
-      branch: master
-      commit: d75873a1f594ac3777b17047c9905b2521debb8b
+      commit: d75873a1f594ac3777b17047c9905b2521debb8b # v. 0.12.0
   - BetaFeatures:
       commit: 09cca44341f9695446c4e9fc9e8fec3fdcb197b0
   - BootstrapComponents:
       repository: https://github.com/oetterer/BootstrapComponents
-      branch: master
-      commit: 665c3dee1d9e3f4bcb18dd1920fe27b70e334574
+      commit: 665c3dee1d9e3f4bcb18dd1920fe27b70e334574 # v. 5.1.0
   - BreadCrumbs2:
-      commit: d53357a6839e94800a617de4fc451b6c64d0a1c8
+      commit: d53357a6839e94800a617de4fc451b6c64d0a1c8 # v. 3.4.2
   - Cargo:
       branch: master
       commit: 7e8ea881cdb41e79687d059670fc68872a6a892c
@@ -74,7 +76,6 @@ extensions:
       commit: 2016da1b354f741d89b5dc207d4a84e11ffe9bce
   - EmbedVideo:
       repository: https://github.com/StarCitizenWiki/mediawiki-extensions-EmbedVideo.git
-      branch: master
       commit: 5c03c031070981730a0e01aa3cbc3e5cbd1b88c1
   - EventLogging:
       commit: 2740dbcd139be279ca2a4db039739b4f796b4178
@@ -82,10 +83,10 @@ extensions:
       commit: 1aae8cb6c312e49f0126091a59a453cb224657f9
   - ExternalData:
       branch: master
-      commit: 5d30e60a65ca53a3fb5b39826deb2e6917892e22
+      commit: 5d30e60a65ca53a3fb5b39826deb2e6917892e22 # v. 3.2
   - FlexDiagrams:
       branch: master
-      commit: eefc9e29aedfc6d8ffaf4f4e50043b390ebd7adc
+      commit: eefc9e29aedfc6d8ffaf4f4e50043b390ebd7adc # v. 0.5
   - GlobalNotice:
       commit: 15a40bff4641f00a5a8dda3d36795b1c659c19a7
   - GoogleAnalyticsMetrics:
@@ -97,7 +98,6 @@ extensions:
       commit: 9c229eafdf406c95a4a666a6b7f2a9d0d3d682e4
   - GTag:
       repository: https://github.com/SkizNet/mediawiki-GTag
-      branch: master
       commit: d45f54085d003166aa032363408b8dbef7dd3628
   - HeaderFooter:
       branch: MW_REL1_39_Compat
@@ -109,7 +109,7 @@ extensions:
       commit: b8cb3131c5e76f5c037c8474fe14e51f2e877f03
   - JWTAuth:
       branch: master
-      commit: a61d2c62e55b70d4442d0397c04ba8f429ae1c7d
+      commit: a61d2c62e55b70d4442d0397c04ba8f429ae1c7d # v. 2.0.0
   - LabeledSectionTransclusion:
       commit: 187abfeaafbad35eed4254f7a7ee0638980e932a
   - LDAPAuthentication2:
@@ -138,7 +138,6 @@ extensions:
       commit: 93534c12dac0e821c46c94b21053d274a6e557de
   - Maps:
       repository: https://github.com/ProfessionalWiki/Maps
-      branch: master
       commit: 9b01a6bbd8e0d4277c152b7343efccae28b54d1c
   - MassMessage:
       commit: d6a86291bb975c3dc7778f370006f1145cc834bd
@@ -148,8 +147,7 @@ extensions:
       commit: 1edd91c506c1c0319e7b9a3e71d639130760b1fd
   - Mermaid:
       repository: https://github.com/SemanticMediaWiki/Mermaid
-      branch: master
-      commit: fd792683fef3c84a7cdd56f8f474c4da0dd630f2
+      commit: fd792683fef3c84a7cdd56f8f474c4da0dd630f2 # v. 3.1.0
   - MintyDocs:
       branch: master
       commit: 4496e33ce71d2c364b16599619c961a1a330bf14
@@ -171,7 +169,7 @@ extensions:
       commit: 28482410564e38d2b97ab7321e99c4281c6e5877
   - PageForms:
       branch: master
-      commit: f90d67ecc2c111e82db454c71592c83384ff9704
+      commit: f90d67ecc2c111e82db454c71592c83384ff9704 # v. 5.6.1
   - PluggableAuth:
       commit: 4be1e402e1862d165a4feb003c492ddc9525057e
   - Popups:
@@ -182,7 +180,6 @@ extensions:
       commit: 3cae51a322a5ca0f359e83efcb5fac38e73e346e
   - RottenLinks:
       repository: https://github.com/miraheze/RottenLinks.git
-      branch: master
       commit: a96e99d0a61a42d59587a67db0720ce245a7ee46
   - SandboxLink:
       commit: 9ab23288a010c3894c59cd5ba3096d93d57c15c5
@@ -190,42 +187,37 @@ extensions:
       commit: 1e819e2fff7fad6999bafe71d866c3af50836c42
   - SemanticBreadcrumbLinks:
       repository: https://github.com/SemanticMediaWiki/SemanticBreadcrumbLinks
-      branch: master
       commit: 87a69003743f1de52338f4717cfcf5218ca5a743
       patches:
         - semantic-breadcrumb-links-composer-reqs.patch
   - SemanticCompoundQueries:
       repository: https://github.com/SemanticMediaWiki/SemanticCompoundQueries
-      branch: master
-      commit: eeb514393fdf2e80ae7084839d8803ee32ae3da4
+      commit: eeb514393fdf2e80ae7084839d8803ee32ae3da4 # v. 2.2.0
       patches:
         - semantic-compound-queries-autoload.patch
   - SemanticDependencyUpdater:
       repository: https://github.com/gesinn-it/SemanticDependencyUpdater
-      branch: master
-      commit: e8a483dd54de6a069854789ae6c702aab98a89ab
+      commit: e8a483dd54de6a069854789ae6c702aab98a89ab # v. 2.0.2
   - SemanticDrilldown:
       repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/SemanticDrilldown
       commit: e960979ec5a3b1e662b3742cee7e7ef4056f9a46
   - SemanticExtraSpecialProperties:
       repository: https://github.com/SemanticMediaWiki/SemanticExtraSpecialProperties
-      branch: master
-      commit: e449633082a4bf7dcae119b6a6d0bfeec8e3cfe8
+      commit: e449633082a4bf7dcae119b6a6d0bfeec8e3cfe8 # v. 3.0.4
   - SemanticFormsSelect:
       repository: https://github.com/SemanticMediaWiki/SemanticFormsSelect.git
       commit: 4b56baa752401b4ff9fe555fd57fc5c3309601d4
   - SemanticMediaWiki:
       repository: https://github.com/SemanticMediaWiki/SemanticMediaWiki
-      commit: 5c94879171d5f741b896828c25a9f2bb07a03dff
+      commit: 5c94879171d5f741b896828c25a9f2bb07a03dff # v. 4.1.2
   - SemanticResultFormats:
       repository: https://github.com/SemanticMediaWiki/SemanticResultFormats
-      commit: d5196722a56f9b65475be68d1e97063d7b975cb9
+      commit: d5196722a56f9b65475be68d1e97063d7b975cb9 # v. 4.0.2
       patches:
         - semantic-result-formats-composer-reqs.patch
   - SemanticScribunto:
       repository: https://github.com/SemanticMediaWiki/SemanticScribunto
-      branch: master
-      commit: 1c616a4c4da443b3433000d6870bb92c184236fa
+      commit: 1c616a4c4da443b3433000d6870bb92c184236fa # v. 2.2.0
       patches:
         - semantic-scribunto-autoload.patch
   - SemanticTasks:
@@ -233,12 +225,12 @@ extensions:
       commit: 70ddd8cf6090139ce5ee6fdf1e7f3a9f2c68d5d3
   - SemanticWatchlist:
       repository: https://github.com/SemanticMediaWiki/SemanticWatchlist.git
-      commit: ecea17097874d16cd240ce35bd20692a67c5064b
+      commit: ecea17097874d16cd240ce35bd20692a67c5064b # v. 1.3.0
       patches:
         - SemanticWatchList.417851c22c25f3e33fb654f4138c760c53051b9a.patch
   - SimpleBatchUpload:
       repository: https://github.com/ProfessionalWiki/SimpleBatchUpload
-      commit: 3b9e248b49d7fbeb81d7da32078db7040809e724
+      commit: 3b9e248b49d7fbeb81d7da32078db7040809e724 # v. 2.0.0
   - SimpleChanges:
       commit: 5352de89dfaf043f646a44582b26f07822f02be7
   - SimpleMathJax:
@@ -252,7 +244,7 @@ extensions:
       commit: 74fcf9bead948ec0419eea10800c9331bcc1273e
   - SubPageList:
       repository: https://github.com/ProfessionalWiki/SubPageList
-      commit: c016dcdb7866f20319731e6497b48fd43756505e
+      commit: c016dcdb7866f20319731e6497b48fd43756505e # v. 3.0.0
   - TemplateSandbox:
       commit: 8af94cedc41cbe6c54614714ced6ce4128555ce4
   - TemplateStyles:
@@ -279,17 +271,17 @@ extensions:
       commit: 183bb7a8f78cbe365bec0fbd4b3ecdd4fae1a359
   - UserPageViewTracker:
       branch: master
-      commit: f4b7c20c372165541164d449c12df1e74e98ed0b
+      commit: f4b7c20c372165541164d449c12df1e74e98ed0b # v. 0.7
   - Variables:
       commit: b4a9063f16a928567e3b6788cda9246c2e94797f
   - VEForAll:
       branch: master
-      commit: cffa12abb85200e90b1cbc636325b1ec1a89a6af
+      commit: cffa12abb85200e90b1cbc636325b1ec1a89a6af # v. 0.5
   - VoteNY:
       commit: 11c103f4b9167a8d8d5e850d8a781c6f49b249c1
   - WatchAnalytics:
       branch: master
-      commit: 72b70a667a26bbde0a3cf93fc79747aae08fca32
+      commit: 72b70a667a26bbde0a3cf93fc79747aae08fca32 # v. 4.1.2
   - WhoIsWatching:
       commit: 836a31018e26ab7c993088c4cca31a89efec2ee5
   - WhosOnline:
