@@ -26,10 +26,10 @@ extensions:
       repository: https://github.com/oetterer/BootstrapComponents
       commit: 665c3dee1d9e3f4bcb18dd1920fe27b70e334574 # v. 5.1.0
   - BreadCrumbs2:
-      commit: d53357a6839e94800a617de4fc451b6c64d0a1c8 # v. 3.4.2
+      commit: d53357a6839e94800a617de4fc451b6c64d0a1c8
   - Cargo:
       branch: master
-      commit: 7e8ea881cdb41e79687d059670fc68872a6a892c
+      commit: 7e8ea881cdb41e79687d059670fc68872a6a892c # v. 3.4.2
   - CharInsert:
       commit: 54c0f0ca9119a3ce791fb5d53edd4ec32035a5c5
   - CheckUser:
@@ -150,7 +150,7 @@ extensions:
       commit: fd792683fef3c84a7cdd56f8f474c4da0dd630f2 # v. 3.1.0
   - MintyDocs:
       branch: master
-      commit: 4496e33ce71d2c364b16599619c961a1a330bf14
+      commit: 4496e33ce71d2c364b16599619c961a1a330bf14 # 1.0
   - MobileFrontend:
       commit: 7f9ecd976796d02988b40dff4a790c315d4651e6
   - MsUpload:
