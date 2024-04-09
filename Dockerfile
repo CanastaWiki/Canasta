@@ -435,7 +435,7 @@ RUN set -x; \
 	# PageForms (v. 5.7.2)
 	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-PageForms $MW_HOME/extensions/PageForms \
 	&& cd $MW_HOME/extensions/PageForms \
-	&& git checkout -q 3fce054289526b3018ec0eb0557867da8be84ffc \
+	&& git checkout -q b3be227fa9650f1a165ab1cc549100f643646714 \
 	# PluggableAuth
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-PluggableAuth $MW_HOME/extensions/PluggableAuth \
 	&& cd $MW_HOME/extensions/PluggableAuth \
