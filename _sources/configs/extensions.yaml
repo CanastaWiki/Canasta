@@ -104,7 +104,7 @@ extensions:
       commit: 8b7e15ca013af371c7f37b0d955ed2039a5e2fbf
   - HeaderTabs:
       branch: master
-      commit: 42aaabf1deeb0a228fc99e578ff7ec925e560dd7
+      commit: 42aaabf1deeb0a228fc99e578ff7ec925e560dd7 # v2.2
   - HTMLTags:
       commit: b8cb3131c5e76f5c037c8474fe14e51f2e877f03
   - JWTAuth:
