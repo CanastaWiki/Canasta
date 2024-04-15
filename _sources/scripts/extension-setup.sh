@@ -3,7 +3,7 @@
 MW_HOME="$MW_HOME"
 MW_VERSION="$MW_VERSION"
 # Since yq cannot process data from variables, a conversion is made to JSON format to utilise jq.
-commands=$(yq eval '. | to_json' extensions.yaml)
+commands=$(yq eval '. | to_json' /tmp/extensions.yaml)
 echo "$commands" | jq -r '.extensions' | jq -c '.[]' | while read -r obj; do
     extension_data=$(echo "$obj" | jq -r 'keys_unsorted[] as $key | select(has($key)) | "\($key) \(.[$key].repository) \(.[$key].commit) \(.[$key].branch)"')
     read -r extension_name repository commit branch <<< "$extension_data"
