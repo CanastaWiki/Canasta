@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 MW_HOME="$MW_HOME"
 MW_VERSION="$MW_VERSION"
