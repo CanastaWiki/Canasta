@@ -1,4 +1,4 @@
-FROM debian:11.7 as base
+FROM debian:12.5 as base
 
 LABEL maintainers="pavel@wikiteq.com,alexey@wikiteq.com"
 LABEL org.opencontainers.image.source=https://github.com/WikiTeq/Taqasta
@@ -46,24 +46,27 @@ RUN set x; \
 	rsync \
 	lynx \
 	poppler-utils \
+	lsb-release \
+	&& wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \
+	&& echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list \
 	&& aptitude update \
 	&& aptitude install -y \
-	php7.4 \
-	php7.4-mysql \
-	php7.4-cli \
-	php7.4-gd \
-	php7.4-mbstring \
-	php7.4-xml \
-	php7.4-mysql \
-	php7.4-intl \
-	php7.4-opcache \
-	php7.4-apcu \
-	php7.4-redis \
-	php7.4-curl \
-	php7.4-tidy \
-	php7.4-zip \
+	php8.1 \
+	php8.1-mysql \
+	php8.1-cli \
+	php8.1-gd \
+	php8.1-mbstring \
+	php8.1-xml \
+	php8.1-mysql \
+	php8.1-intl \
+	php8.1-opcache \
+	php8.1-apcu \
+	php8.1-redis \
+	php8.1-curl \
+	php8.1-tidy \
+	php8.1-zip \
 	php-luasandbox \
-	php-tideways \
+	php8.1-tideways \
 	monit \
 	zip \
 	weasyprint \
@@ -79,6 +82,14 @@ RUN set x; \
 #    lilypond \ + 301 MB
 	&& aptitude clean \
 	&& rm -rf /var/lib/apt/lists/*
+
+# FORCE USING PHP 8.1 (same for phar)
+# For some reason sury provides other versions, see
+# https://github.com/oerdnj/deb.sury.org/wiki/Frequently-Asked-Questions
+RUN set -x; \
+	update-alternatives --set php /usr/bin/php8.1 \
+	&& update-alternatives --set phar /usr/bin/phar8.1 \
+	&& update-alternatives --set phar.phar /usr/bin/phar.phar8.1
 
 # Post install configuration
 RUN set -x; \
@@ -1031,10 +1042,10 @@ COPY _sources/configs/msmtprc /etc/
 COPY _sources/configs/mediawiki.conf /etc/apache2/sites-enabled/
 COPY _sources/configs/status.conf /etc/apache2/mods-available/
 COPY _sources/configs/scan.conf /etc/clamd.d/scan.conf
-COPY _sources/configs/php_xdebug.ini _sources/configs/php_memory_limit.ini _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/7.4/cli/conf.d/
-COPY _sources/configs/php_xdebug.ini _sources/configs/php_memory_limit.ini _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/7.4/apache2/conf.d/
-COPY _sources/configs/php_max_input_vars.ini _sources/configs/php_max_input_vars.ini /etc/php/7.4/apache2/conf.d/
-COPY _sources/configs/php_timeouts.ini /etc/php/7.4/apache2/conf.d/
+COPY _sources/configs/php_xdebug.ini _sources/configs/php_memory_limit.ini _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/8.1/cli/conf.d/
+COPY _sources/configs/php_xdebug.ini _sources/configs/php_memory_limit.ini _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/8.1/apache2/conf.d/
+COPY _sources/configs/php_max_input_vars.ini _sources/configs/php_max_input_vars.ini /etc/php/8.1/apache2/conf.d/
+COPY _sources/configs/php_timeouts.ini /etc/php/8.1/apache2/conf.d/
 COPY _sources/scripts/*.sh /
 COPY _sources/scripts/*.php $MW_HOME/maintenance/
 COPY _sources/configs/robots.php $WWW_ROOT/
