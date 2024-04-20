@@ -103,28 +103,16 @@ RUN set -x; \
 # Skins
 # The Minerva Neue, MonoBook, Timeless, Vector and Vector 2022 skins are bundled into MediaWiki and do not need to be
 # separately installed.
+COPY _sources/scripts/skin-setup.sh /tmp/skin-setup.sh
+COPY _sources/configs/skins.yaml /tmp/skins.yaml
+RUN wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+RUN chmod a+x /usr/local/bin/yq
 RUN set -x; \
-	cd $MW_HOME/skins \
- 	# Chameleon (v. 4.2.1)
-  	&& git clone https://github.com/ProfessionalWiki/chameleon $MW_HOME/skins/chameleon \
-	&& cd $MW_HOME/skins/chameleon \
-	&& git checkout -q f34a56528ada14ac07e1b03beda41f775ef27606 \
-	# CologneBlue
-	&& git clone -b $MW_VERSION --single-branch https://github.com/wikimedia/mediawiki-skins-CologneBlue $MW_HOME/skins/CologneBlue \
-	&& cd $MW_HOME/skins/CologneBlue \
-	&& git checkout -q 4d588eb78d7e64e574f631c5897579537305437d \
-	# Modern
-	&& git clone -b $MW_VERSION --single-branch https://github.com/wikimedia/mediawiki-skins-Modern $MW_HOME/skins/Modern \
-	&& cd $MW_HOME/skins/Modern \
-	&& git checkout -q fb6c2831b5f150e9b82d98d661710695a2d0f8f2 \
-	# Pivot
-	&& git clone -b v2.3.0 https://github.com/wikimedia/mediawiki-skins-Pivot $MW_HOME/skins/pivot \
-	&& cd $MW_HOME/skins/pivot \
-	&& git checkout -q d79af7514347eb5272936243d4013118354c85c1 \
-	# Refreshed
-	&& git clone -b $MW_VERSION --single-branch https://github.com/wikimedia/mediawiki-skins-Refreshed $MW_HOME/skins/Refreshed \
-	&& cd $MW_HOME/skins/Refreshed \
-	&& git checkout -q 86f33620f25335eb62289aa18d342ff3b980d8b8
+	apt-get update \
+	&& apt-get install -y jq \
+	&& chmod +x /tmp/skin-setup.sh
+
+RUN /tmp/skin-setup.sh
 
 COPY _sources/patches/* /tmp/
 
@@ -138,12 +126,8 @@ COPY _sources/patches/* /tmp/
 # Bootstrap, DataValues (and related extensions like DataValuesCommon), ParserHooks.
 COPY _sources/scripts/extension-setup.sh /tmp/extension-setup.sh
 COPY _sources/configs/extensions.yaml /tmp/extensions.yaml
-RUN wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-RUN chmod a+x /usr/local/bin/yq
 RUN set -x; \
-	apt-get update \
-	&& apt-get install -y jq \
-	&& chmod +x /tmp/extension-setup.sh 
+	chmod +x /tmp/extension-setup.sh 
 
 RUN /tmp/extension-setup.sh
 
