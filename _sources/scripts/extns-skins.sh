@@ -2,11 +2,11 @@
 
 MW_HOME="$MW_HOME"
 MW_VERSION="$MW_VERSION"
-path=$1
-if [ "$path" == "/tmp/extensions.yaml" ]; then
-    type="extensions"
-elif [ "$path" == "/tmp/skins.yaml" ]; then
-    type="skins"
+type=$1
+if [ "$type" == "extensions" ]; then
+    path="/tmp/extensions.yaml"
+elif [ "$type" == "skins" ]; then
+    path="/tmp/skins.yaml"
 fi
 # Since yq cannot process data from variables, a conversion is made to JSON format to utilise jq.
 commands=$(yq eval '. | to_json' $path)
