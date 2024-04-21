@@ -103,17 +103,17 @@ RUN set -x; \
 # Skins
 # The Minerva Neue, MonoBook, Timeless, Vector and Vector 2022 skins are bundled into MediaWiki and do not need to be
 # separately installed.
-COPY _sources/scripts/extns-skins.sh /tmp/extns-skins.sh
+COPY _sources/scripts/extensions-skins.sh /tmp/extensions-skins.sh
 COPY _sources/patches/* /tmp/
 RUN wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
 RUN chmod a+x /usr/local/bin/yq
 RUN set -x; \
 	apt-get update \
 	&& apt-get install -y jq \
-	&& chmod +x /tmp/extns-skins.sh
+	&& chmod +x /tmp/extensions-skins.sh
 
 COPY _sources/configs/skins.yaml /tmp/skins.yaml
-RUN /tmp/extns-skins.sh "skins"
+RUN /tmp/extensions-skins.sh "skins" "/tmp/skins.yaml"
 
 # Extensions
 # The following extensions are bundled into MediaWiki and do not need to be separately installed:
@@ -124,7 +124,7 @@ RUN /tmp/extns-skins.sh "skins"
 # The following extensions are downloaded via Composer and also do not need to be downloaded here:
 # Bootstrap, DataValues (and related extensions like DataValuesCommon), ParserHooks.
 COPY _sources/configs/extensions.yaml /tmp/extensions.yaml
-RUN /tmp/extns-skins.sh "extensions"
+RUN /tmp/extensions-skins.sh "extensions" "/tmp/extensions.yaml"
 
 # Patch composer
 RUN set -x; \

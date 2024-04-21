@@ -3,11 +3,7 @@
 MW_HOME="$MW_HOME"
 MW_VERSION="$MW_VERSION"
 type=$1
-if [ "$type" == "extensions" ]; then
-    path="/tmp/extensions.yaml"
-elif [ "$type" == "skins" ]; then
-    path="/tmp/skins.yaml"
-fi
+path=$2
 # Since yq cannot process data from variables, a conversion is made to JSON format to utilise jq.
 commands=$(yq eval '. | to_json' $path)
 echo "$commands" | jq -r ".$type" | jq -c '.[]' | while read -r obj; do
