@@ -138,7 +138,7 @@ extensions:
       commit: 93534c12dac0e821c46c94b21053d274a6e557de
   - Maps:
       repository: https://github.com/ProfessionalWiki/Maps
-      commit: 9b01a6bbd8e0d4277c152b7343efccae28b54d1c
+      commit: 7175b47e3b2cbbfcd55c6bd896f4e8403dc03d33
   - MassMessage:
       commit: d6a86291bb975c3dc7778f370006f1145cc834bd
   - MassMessageEmail:
