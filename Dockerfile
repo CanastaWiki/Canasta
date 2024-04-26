@@ -66,6 +66,7 @@ RUN set x; \
 	php8.1-fpm \
 	php8.1-yaml \
 	libapache2-mod-fcgid \
+	libfcgi-bin \
 	&& aptitude clean \
 	&& rm -rf /var/lib/apt/lists/*
 
