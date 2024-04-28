@@ -113,11 +113,11 @@ extensions:
   - LabeledSectionTransclusion:
       commit: 187abfeaafbad35eed4254f7a7ee0638980e932a
   - LDAPAuthentication2:
-      commit: 6bc584893d3157d5180e0e3ed93c3dbbc5b93056
+      commit: 125b09a026274bea480967f6ac04882abdc65ca2
   - LDAPAuthorization:
       commit: e6815d29c22f4b4eb85f868372a729ad49d7d3c8
   - LDAPProvider:
-      commit: 80f8cc8156b0cd250d0dfacd9378ed0db7c2091d
+      commit: 12bd83836c2337ea6569317be98c0cf82a924930
   - Lingo:
       commit: a291fa25822097a4a2aefff242a876edadb535a4
   - LinkSuggest:
@@ -164,14 +164,14 @@ extensions:
   - OpenGraphMeta:
       commit: d319702cd4ceda1967c233ef8e021b67b3fc355f
   - OpenIDConnect:
-      commit: 0824f3cf3800f63e930abf0f03baf1a7c755a270
+      commit: f193befe9d66249e694fcdaa7b1b2afbf4a2ffde
   - PageExchange:
       commit: 28482410564e38d2b97ab7321e99c4281c6e5877
   - PageForms:
       branch: master
       commit: b3be227fa9650f1a165ab1cc549100f643646714 # v. 5.7.2
   - PluggableAuth:
-      commit: 4be1e402e1862d165a4feb003c492ddc9525057e
+      commit: 1884a127cd5947ad7484d3b55711db3f6515d439
   - Popups:
       commit: ff4d2156e1f7f4c11f7396cb0cd70d387abd8187
   - RegularTooltips:
@@ -292,4 +292,4 @@ extensions:
   - WikiSEO:
       commit: 610cffa3345333b53d4dda7b55b2012fbfcee9de
   - WSOAuth:
-      commit: 3c54c4899dd63989bc3214273bf1c5807c7ac5db
+      commit: e549b520c2916322323fe83f6b792c013043f61d
