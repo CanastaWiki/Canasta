@@ -65,8 +65,12 @@ RUN set x; \
 	php8.1-curl \
 	php8.1-tidy \
 	php8.1-zip \
-	php-luasandbox \
 	php8.1-tideways \
+# Lua sandbox
+	php-pear \
+	php8.1-dev \
+	liblua5.1-0 \
+	liblua5.1-0-dev \
 	monit \
 	zip \
 	weasyprint \
@@ -80,6 +84,8 @@ RUN set x; \
 	jq \
 #    xvfb \ + 14.9 MB
 #    lilypond \ + 301 MB
+	&& pecl -d php_suffix=8.1 install luasandbox \
+	&& aptitude -y remove php-pear php8.1-dev liblua5.1-0-dev \
 	&& aptitude clean \
 	&& rm -rf /var/lib/apt/lists/*
 
@@ -1043,10 +1049,8 @@ COPY _sources/configs/msmtprc /etc/
 COPY _sources/configs/mediawiki.conf /etc/apache2/sites-enabled/
 COPY _sources/configs/status.conf /etc/apache2/mods-available/
 COPY _sources/configs/scan.conf /etc/clamd.d/scan.conf
-COPY _sources/configs/php_xdebug.ini _sources/configs/php_memory_limit.ini _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/8.1/cli/conf.d/
-COPY _sources/configs/php_xdebug.ini _sources/configs/php_memory_limit.ini _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/8.1/apache2/conf.d/
-COPY _sources/configs/php_max_input_vars.ini _sources/configs/php_max_input_vars.ini /etc/php/8.1/apache2/conf.d/
-COPY _sources/configs/php_timeouts.ini /etc/php/8.1/apache2/conf.d/
+COPY _sources/configs/php_*.ini /etc/php/8.1/cli/conf.d/
+COPY _sources/configs/php_*.ini /etc/php/8.1/apache2/conf.d/
 COPY _sources/scripts/*.sh /
 COPY _sources/scripts/*.php $MW_HOME/maintenance/
 COPY _sources/configs/robots.php $WWW_ROOT/
