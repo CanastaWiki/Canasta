@@ -182,6 +182,7 @@ const DOCKER_EXTENSIONS = [
 	'SimpleChanges',
 	'SimpleMathJax',
 	'SimpleTooltip',
+	'SimpleTippy',
 	'SkinPerNamespace',
 	'SkinPerPage',
 	'Skinny',

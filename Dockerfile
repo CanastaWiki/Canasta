@@ -842,6 +842,10 @@ RUN set -x; \
 	&& git clone https://github.com/Universal-Omega/SimpleTooltip.git $MW_HOME/extensions/SimpleTooltip \
 	&& cd $MW_HOME/extensions/SimpleTooltip \
 	&& git checkout -b $MW_VERSION a918f4a6f095e9d8cc9fde0efad7acef472d2e94 \
+	# SimpleTippy
+	&& git clone https://github.com/vedmaka/mediawiki-extension-SimpleTippy.git $MW_HOME/extensions/SimpleTippy \
+	&& cd $MW_HOME/extensions/SimpleTippy \
+	&& git checkout -b $MW_VERSION 271d5e3340e63627058081acc641ec2623eee9dd \
 	# Skinny
 	&& git clone https://github.com/tinymighty/skinny.git $MW_HOME/extensions/Skinny \
 	&& cd $MW_HOME/extensions/Skinny \
