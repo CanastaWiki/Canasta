@@ -1,4 +1,7 @@
-<!-- PHP script is used instead of sh script since it is more convenient for parsing and is much cleaner for this task. -->
+<!-- It is much easier to do parsing of YAML in PHP than in .sh; the standard way to do YAML parsing
+in a shell script is to call yq, but yq requires different executables for different architectures. 
+Given that the YAML parsing is already in PHP, it seemed easier to do the whole thing in PHP rather 
+than split the work between two scripts -->
 <?php
 
 $MW_HOME = getenv("MW_HOME");
