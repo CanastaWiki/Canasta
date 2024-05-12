@@ -1,3 +1,4 @@
+<!-- PHP script is used instead of sh script since it is more convenient for parsing and is much cleaner for this task. -->
 <?php
 
 $MW_HOME = getenv("MW_HOME");
