@@ -272,9 +272,9 @@ $wgDBuser = getenv( 'MW_DB_USER' );
 $wgDBpassword = getenv( 'MW_DB_PASS' );
 if ( !$wgDBpassword ) {
 	if ( is_readable( '/run/secrets/db_password' ) ) {
-		$wgDBpassword = file_get_contents( '/run/secrets/db_password' );
+		$wgDBpassword = rtrim( file_get_contents( '/run/secrets/db_password' ) );
 	} elseif ( is_readable( '/run/secrets/db_root_password' ) ) {
-		$wgDBpassword = file_get_contents( '/run/secrets/db_root_password' );
+		$wgDBpassword = rtrim( file_get_contents( '/run/secrets/db_root_password' ) );
 	}
 }
 
