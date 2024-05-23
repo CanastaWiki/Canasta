@@ -236,10 +236,10 @@ RUN set -x; \
 # C
 RUN set -x; \
 	cd $MW_HOME/extensions \
-	# Cargo (v. 3.4.2)
+	# Cargo (v. 3.5.1)
 	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/Cargo $MW_HOME/extensions/Cargo \
 	&& cd $MW_HOME/extensions/Cargo \
-	&& git checkout -q 7e8ea881cdb41e79687d059670fc68872a6a892c \
+	&& git checkout -q a2865938165c1389d852df762f8c85073859e5dd \
 	# CharInsert
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/CharInsert $MW_HOME/extensions/CharInsert \
 	&& cd $MW_HOME/extensions/CharInsert \
