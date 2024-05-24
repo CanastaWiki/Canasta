@@ -11,7 +11,7 @@
 		"mediawiki/semantic-scribunto": "2.2.0",
 		"mediawiki/simple-batch-upload": "1.9.0",
 		"mediawiki/sub-page-list": "2.0.2",
-		"mediawiki/maps": "10.0.0",
+		"mediawiki/maps": "10.2.0",
 		"mediawiki/semantic-watchlist": "dev-master#8080e3e8d6f4689beeca6ab57ed9255502e175b2"
 	},
 	"extra": {
