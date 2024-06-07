@@ -28,3 +28,12 @@ if ( !empty( $enableSitemapEnv ) && in_array( $enableSitemapEnv, [ 'true', 'True
 }
 
 readfile( 'robots.txt' );
+
+// If the file `extra-robots.txt` is created under the name
+// `/var/www/mediawiki/extra-robots.txt` then its contents get appended to the
+// default `robots.txt` - see MW-312
+if ( file_exists( 'extra-robots.txt' ) && is_readable( 'extra-robots.txt' ) ) {
+	// Extra line to separate the files so that rules don't combine
+	echo "\n";
+	readfile( 'extra-robots.txt' );
+}
