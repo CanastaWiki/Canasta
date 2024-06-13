@@ -10,6 +10,7 @@ ENV MW_VERSION=REL1_39 \
 	MW_LOG=/var/log/mediawiki \
 	MW_ORIGIN_FILES=/mw_origin_files \
 	MW_VOLUME=/mediawiki \
+	MW_IMPORT_VOLUME=/import \
 	WWW_USER=www-data \
 	WWW_GROUP=www-data \
 	APACHE_LOG_DIR=/var/log/apache2

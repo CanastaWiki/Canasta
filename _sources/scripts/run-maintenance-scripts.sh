@@ -360,12 +360,38 @@ run_autoupdate () {
     echo >&2 "Auto-update completed"
 }
 
+run_import () {
+    # Import dumps if any
+    if mountpoint -q -- "$MW_IMPORT_VOLUME"; then
+        echo "Found $MW_IMPORT_VOLUME, checking for XML dump presence.."
+        local FILES_IMPORTED=0
+        for filename in $MW_IMPORT_VOLUME/*.xml; do
+            echo "Found $filename file, importing.."
+            php maintenance/importDump.php \
+                --username-prefix="" \
+                --memory-limit=max \
+                --report 1 \
+                "$filename"
+            FILES_IMPORTED=$((FILES_IMPORTED + 1))
+        done
+        if [ "$FILES_IMPORTED" -gt "0" ]; then
+            echo "Running post-import maintenance scripts.."
+            php maintenance/rebuildrecentchanges.php
+            php maintenance/initSiteStats.php
+        fi
+        echo "Imported $FILES_IMPORTED files!"
+    fi
+}
+
 ########## Run maintenance scripts ##########
 if isTrue "$MW_AUTOUPDATE"; then
     run_autoupdate
 else
     echo "Auto update script is disabled, MW_AUTOUPDATE is $MW_AUTOUPDATE";
 fi
+
+# Run import after install and update are completed
+run_import
 
 jobrunner &
 transcoder &
