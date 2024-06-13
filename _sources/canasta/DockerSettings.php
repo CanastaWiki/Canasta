@@ -217,6 +217,7 @@ const DOCKER_EXTENSIONS = [
 	'VoteNY',
 	'WatchAnalytics',
 	'WSOAuth',
+	'WSSlots',
 	'WhoIsWatching',
 	'Widgets',
 	'WikiEditor', # bundled

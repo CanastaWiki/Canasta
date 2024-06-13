@@ -908,6 +908,14 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/VariablesLua \
 	&& git checkout -q dced585ef5ddcfbaa49c510c49c3b398ecc6f1c6
 
+# W
+RUN set -x; \
+    cd $MW_HOME/extensions \
+    # WSSlots
+    && git clone --single-branch -b master https://github.com/Open-CSP/WSSlots.git $MW_HOME/extensions/WSSlots \
+    && cd $MW_HOME/extensions/WSSlots \
+    && git checkout -q dfdcd6adea3fae512c4469704ef93accff83937f
+
 # J
 RUN set -x; \
 	cd $MW_HOME/extensions \
