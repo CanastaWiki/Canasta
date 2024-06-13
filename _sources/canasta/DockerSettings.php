@@ -72,7 +72,6 @@ const DOCKER_EXTENSIONS = [
 	'CookieWarning',
 	'Cloudflare',
 	'DataTransfer',
-	'DebugMode',
 	'DeleteBatch',
 	'Description2',
 	'Disambiguator',
@@ -498,21 +497,6 @@ if ( $tmpProxy ) {
 				->createMultiClient()->runMulti( [ $baseReq ] );
 		}
 	};
-}
-
-# Debug mode
-$MW_DEBUG_MODE = getenv( 'MW_DEBUG_MODE' );
-if ( $MW_DEBUG_MODE === 'true' ) {
-	$wgDebugMode = true;
-} elseif ( is_numeric( $MW_DEBUG_MODE ) ) {
-	$wgDebugMode = intval( $MW_DEBUG_MODE );
-} else {
-	$wgDebugMode = false;
-}
-if ( $wgDebugMode ) {
-	if ( isset( $wgDebugModeForIP ) && $_SERVER['REMOTE_ADDR'] == $wgDebugModeForIP ) {
-		wfLoadExtension( 'DebugMode' );
-	}
 }
 
 # AdvancedSearch

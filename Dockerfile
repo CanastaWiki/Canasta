@@ -567,7 +567,7 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/SaveSpinner \
 	&& git checkout -q 1e819e2fff7fad6999bafe71d866c3af50836c42 \
 	# SemanticDependencyUpdater (WikiTeq fork)
-	&& git clone --single-branch -b master https://github.com/WikiTeq/SemanticDependencyUpdater.git $MW_HOME/extensions/SemanticDependencyUpdater \
+	&& git clone --single-branch -b old-master https://github.com/WikiTeq/SemanticDependencyUpdater.git $MW_HOME/extensions/SemanticDependencyUpdater \
 	&& cd $MW_HOME/extensions/SemanticDependencyUpdater \
 	&& git checkout -q 3eedd54d4b4d4bfb6f15c2f56162b38095ebdb4c \
 	# SemanticDrilldown
@@ -716,10 +716,6 @@ RUN set -x; \
 # D
 RUN set -x; \
 	cd $MW_HOME/extensions \
-   	# DebugMode, see https://www.mediawiki.org/wiki/Extension:DebugMode
-	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-DebugMode.git $MW_HOME/extensions/DebugMode \
-	&& cd $MW_HOME/extensions/DebugMode \
-	&& git checkout -q 5e2dc96feeb441c9bd6199321e52073128a629c7 \
 	# DiscussionTools
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/DiscussionTools $MW_HOME/extensions/DiscussionTools \
 	&& cd $MW_HOME/extensions/DiscussionTools \
@@ -1047,7 +1043,6 @@ ENV MW_AUTOUPDATE=true \
 	LOG_FILES_COMPRESS_DELAY=3600 \
 	LOG_FILES_REMOVE_OLDER_THAN_DAYS=10 \
 	MEDIAWIKI_MAINTENANCE_AUTO_ENABLED=false \
-	MW_DEBUG_MODE=false \
 	MW_SENTRY_DSN="" \
 	MW_USE_CACHE_DIRECTORY=1 \
 	APACHE_REMOTE_IP_HEADER=X-Forwarded-For
