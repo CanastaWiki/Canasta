@@ -453,7 +453,11 @@ RUN set -x; \
 	# Loops
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Loops $MW_HOME/extensions/Loops \
 	&& cd $MW_HOME/extensions/Loops \
-	&& git checkout -q 0eb05a81b9b53f5381eefb4f8b6959b6dcdec1d8
+	&& git checkout -q 0eb05a81b9b53f5381eefb4f8b6959b6dcdec1d8 \
+    # LuaCache
+    && git clone --single-branch -b master https://github.com/HydraWiki/LuaCache.git $MW_HOME/extensions/LuaCache \
+    && cd $MW_HOME/extensions/LuaCache \
+    && git checkout -q c654dacff3ae177d8ffc3dfd8c4f5e1e1ca7cb2f
 
 # M
 RUN set -x; \
