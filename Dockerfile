@@ -7,10 +7,12 @@ ENV MW_VERSION=REL1_39 \
 	MW_CORE_VERSION=1.39.7 \
 	WWW_ROOT=/var/www/mediawiki \
 	MW_HOME=/var/www/mediawiki/w \
+	MW_LOG=/var/log/mediawiki \
 	MW_ORIGIN_FILES=/mw_origin_files \
 	MW_VOLUME=/mediawiki \
 	WWW_USER=www-data \
     WWW_GROUP=www-data \
+	PHP_LOG_DIR=/var/log/php-fpm \
     APACHE_LOG_DIR=/var/log/apache2
 
 # System setup
@@ -84,6 +86,8 @@ RUN set -x; \
 	&& a2enmod proxy_fcgi \
     # Create directories
     && mkdir -p $MW_HOME \
+	&& mkdir -p $MW_LOG \
+	&& mkdir -p $PHP_LOG_DIR \
     && mkdir -p $MW_ORIGIN_FILES \
     && mkdir -p $MW_VOLUME
 
@@ -175,7 +179,8 @@ COPY --from=source $MW_HOME $MW_HOME
 COPY --from=source $MW_ORIGIN_FILES $MW_ORIGIN_FILES
 
 # Default values
-ENV MW_ENABLE_JOB_RUNNER=true \
+ENV MW_AUTOUPDATE=true \
+	MW_ENABLE_JOB_RUNNER=true \
 	MW_JOB_RUNNER_PAUSE=2 \
 	MW_ENABLE_TRANSCODER=true \
 	MW_JOB_TRANSCODER_PAUSE=60 \

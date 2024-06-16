@@ -2,53 +2,15 @@
 
 set -x
 
-isTrue() {
-    case $1 in
-        "True" | "TRUE" | "true" | 1)
-            return 0
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-}
+. /functions.sh
 
-isFalse() {
-    case $1 in
-        "True" | "TRUE" | "true" | 1)
-            return 1
-            ;;
-        *)
-            return 0
-            ;;
-    esac
-}
-
-dir_is_writable() {
-  # Use -L to get information about the target of a symlink,
-  # not the link itself, as pointed out in the comments
-  INFO=( $(stat -L -c "0%a %G %U" "$1") )
-  PERM=${INFO[0]}
-  GROUP=${INFO[1]}
-  OWNER=${INFO[2]}
-
-  if (( ($PERM & 0002) != 0 )); then
-      # Everyone has write access
-      return 0
-  elif (( ($PERM & 0020) != 0 )); then
-      # Some group has write access.
-      # Is user in that group?
-      if [[ $GROUP == $WWW_GROUP ]]; then
-          return 0
-      fi
-  elif (( ($PERM & 0200) != 0 )); then
-      # The owner has write access.
-      # Does the user own the file?
-      [[ $WWW_USER == $OWNER ]] && return 0
-  fi
-
-  return 1
-}
+if ! mountpoint -q -- "$MW_VOLUME"; then
+    echo "Folder $MW_VOLUME contains important data and must be mounted to persistent storage!"
+    if ! isTrue "$MW_ALLOW_UNMOUNTED_VOLUME"; then
+        exit 1
+    fi
+    echo "You allowed to continue because MW_ALLOW_UNMOUNTED_VOLUME is set as true"
+fi
 
 # Symlink all extensions and skins (both bundled and user)
 /create-symlinks.sh
@@ -59,12 +21,14 @@ dir_is_writable() {
 # $MW_VOLUME (./extensions, ./skins, ./config, ./images),
 # note that this command will also set all the necessary permissions
 echo "Syncing files..."
-rsync -ah --inplace --ignore-existing --remove-source-files \
-  -og --chown=$WWW_GROUP:$WWW_USER --chmod=Fg=rw,Dg=rwx \
+rsync -ah --inplace --ignore-existing \
+  -og --chown="$WWW_GROUP:$WWW_USER" --chmod=Fg=rw,Dg=rwx \
   "$MW_ORIGIN_FILES"/ "$MW_VOLUME"/
 
-# We don't need it anymore
-rm -rf "$MW_ORIGIN_FILES"
+# Create needed directories
+#TODO check below command need
+mkdir -p "$MW_VOLUME"/extensions/SemanticMediaWiki/config
+mkdir -p "$MW_VOLUME"/l10n_cache
 
 /update-docker-gateway.sh
 
@@ -76,76 +40,31 @@ rm -rf "$MW_ORIGIN_FILES"
 # hence it does not perform any recursive checks and may lead to files
 # or directories down the tree having incorrect permissions left untouched
 
-echo "Checking permissions of $MW_VOLUME..."
-if dir_is_writable $MW_VOLUME; then
-  echo "Permissions are OK!"
+# Write log files to $MW_VOLUME/log directory if target folders are not mounted
+echo "Checking permissions of Apache log dir $APACHE_LOG_DIR..."
+if ! mountpoint -q -- "$APACHE_LOG_DIR/"; then
+    mkdir -p "$MW_VOLUME/log/httpd"
+    rsync -avh --ignore-existing "$APACHE_LOG_DIR/" "$MW_VOLUME/log/httpd/"
+    mv "$APACHE_LOG_DIR" "${APACHE_LOG_DIR}_old"
+    ln -s "$MW_VOLUME/log/httpd" "$APACHE_LOG_DIR"
 else
-  chown -R "$WWW_GROUP":"$WWW_GROUP" "$MW_VOLUME"
-  chmod -R g=rwX "$MW_VOLUME"
+    chgrp -R "$WWW_GROUP" "$APACHE_LOG_DIR"
+    chmod -R g=rwX "$APACHE_LOG_DIR"
 fi
 
-echo "Checking permissions of $APACHE_LOG_DIR..."
-if dir_is_writable $APACHE_LOG_DIR; then
-  echo "Permissions are OK!"
+echo "Checking permissions of PHP-FPM log dir $PHP_LOG_DIR..."
+if ! mountpoint -q -- "$PHP_LOG_DIR/"; then
+    mkdir -p "$MW_VOLUME/log/php-fpm"
+    rsync -avh --ignore-existing "$PHP_LOG_DIR/" "$MW_VOLUME/log/php-fpm/"
+    mv "$PHP_LOG_DIR" "${PHP_LOG_DIR}_old"
+    ln -s "$MW_VOLUME/log/php-fpm" "$PHP_LOG_DIR"
 else
-  chown -R "$WWW_GROUP":"$WWW_GROUP" $APACHE_LOG_DIR
-  chmod -R g=rwX $APACHE_LOG_DIR
+    chgrp -R "$WWW_GROUP" "$PHP_LOG_DIR"
+    chmod -R g=rwX "$PHP_LOG_DIR"
 fi
 
-run_maintenance_scripts() {
-  # Iterate through all the .sh files in /maintenance-scripts/ directory
-  for maintenance_script in $(find /maintenance-scripts/ -maxdepth 1 -mindepth 1 -type f -name "*.sh"); do
-    script_name=$(basename "$maintenance_script")
-
-    # If the script's name starts with "mw_", run it with the run_mw_script function
-    if [[ "$script_name" == mw* ]]; then
-      run_mw_script "$script_name" &
-    else
-      # If the script's name doesn't start with "mw"
-      echo "Running $script_name with user $WWW_USER..."
-      nice -n 20 runuser -c "/maintenance-scripts/$script_name" -s /bin/bash "$WWW_USER" &
-    fi
-  done
-}
-
-# Naming convention:
-# Scripts with names starting with "mw_" have corresponding enable variables.
-# The enable variable is formed by converting the script's name to uppercase and replacing the first underscore with "_ENABLE_".
-# For example, the enable variable for "mw_sitemap_generator.sh" would be "MW_ENABLE_SITEMAP_GENERATOR".
-
-run_mw_script() {
-  sleep 3
-
-  # Process the script name and create the corresponding enable variable
-  local script_name="$1"
-  script_name_no_ext="${script_name%.*}"
-  script_name_upper=$(basename "$script_name_no_ext" | tr '[:lower:]' '[:upper:]')
-  local MW_ENABLE_VAR="${script_name_upper/_/_ENABLE_}"
-
-  if isTrue "${!MW_ENABLE_VAR}"; then
-    echo "Running $script_name with user $WWW_USER..."
-    nice -n 20 runuser -c "/maintenance-scripts/$script_name" -s /bin/bash "$WWW_USER"
-  else
-    echo >&2 "$script_name is disabled."
-  fi
-}
-
-
-waitdatabase() {
-  if isFalse "$USE_EXTERNAL_DB"; then
-    /wait-for-it.sh -t 60 db:3306
-  fi
-}
-
-#waitelastic() {
-#  ./wait-for-it.sh -t 60 elasticsearch:9200
-#}
-
-run_autoupdate () {
-    echo "Running auto-update..."
-    runuser -c "php maintenance/update.php --quick" -s /bin/bash "$WWW_USER"
-    echo "Auto-update completed"
-}
+echo "Checking permissions of Mediawiki volume dir $MW_VOLUME except $MW_VOLUME/images..."
+make_dir_writable "$MW_VOLUME" -not '(' -path "$MW_VOLUME/images" -prune ')'
 
 config_subdir_wikis() {
     echo "Configuring subdirectory wikis..."
@@ -182,27 +101,20 @@ check_mount_points
 sleep 1
 cd "$MW_HOME" || exit
 
-########## Run maintenance scripts ##########
-echo "Checking for LocalSettings..."
-if [ -e "$MW_VOLUME/config/LocalSettings.php" ] || [ -e "$MW_VOLUME/config/CommonSettings.php" ]; then
-  # Run auto-update
-  run_autoupdate
-  if [ -e "$MW_VOLUME/config/wikis.yaml" ]; then
-    config_subdir_wikis
-    create_storage_dirs
-  fi
-fi
+# Run maintenance scripts in background.
+touch "$WWW_ROOT/.maintenance"
+/run-maintenance-scripts.sh &
 
-echo "Starting services..."
-
-run_maintenance_scripts &
-
-echo "Checking permissions of $MW_VOLUME/sitemap..."
-if dir_is_writable "$MW_VOLUME/sitemap"; then
-  echo "Permissions are OK!"
+echo "Checking permissions of Mediawiki log dir $MW_LOG..."
+if ! mountpoint -q -- "$MW_LOG"; then
+    mkdir -p "$MW_VOLUME/log/mediawiki"
+    rsync -avh --ignore-existing "$MW_LOG/" "$MW_VOLUME/log/mediawiki/"
+    mv "$MW_LOG" "${MW_LOG}_old"
+    ln -s "$MW_VOLUME/log/mediawiki" "$MW_LOG"
+    chmod -R o=rwX "$MW_VOLUME/log/mediawiki"
 else
-  chown -R "$WWW_GROUP":"$WWW_GROUP" $MW_VOLUME/sitemap
-  chmod -R g=rwX $MW_VOLUME/sitemap
+    chgrp -R "$WWW_GROUP" "$MW_LOG"
+    chmod -R go=rwX "$MW_LOG"
 fi
 
 # Running php-fpm
@@ -214,4 +126,5 @@ fi
 # if it thinks it is already running.
 rm -rf /run/apache2/* /tmp/apache2*
 
+printf "\n\n==================================================================================\n\n\n"
 exec /usr/sbin/apachectl -DFOREGROUND
