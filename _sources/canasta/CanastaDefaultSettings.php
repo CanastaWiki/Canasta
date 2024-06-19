@@ -97,9 +97,6 @@ $DOCKER_MW_VOLUME = getenv( 'MW_VOLUME' );
 ## be publicly accessible from the web.
 $wgCacheDirectory = isEnvTrue( 'MW_USE_CACHE_DIRECTORY' ) ? "$DOCKER_MW_VOLUME/l10n_cache" : false;
 
-# SemanticMediaWiki
-$smwgConfigFileDir = "$DOCKER_MW_VOLUME/extensions/SemanticMediaWiki/config";
-
 # Include user defined CommonSettings.php file
 if ( file_exists( $canastaCommonSettingsFilePath ) ) {
 	require_once "$canastaCommonSettingsFilePath";
