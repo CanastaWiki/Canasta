@@ -4,14 +4,6 @@ set -x
 
 . /functions.sh
 
-if ! mountpoint -q -- "$MW_VOLUME"; then
-    echo "Folder $MW_VOLUME contains important data and must be mounted to persistent storage!"
-    if ! isTrue "$MW_ALLOW_UNMOUNTED_VOLUME"; then
-        exit 1
-    fi
-    echo "You allowed to continue because MW_ALLOW_UNMOUNTED_VOLUME is set as true"
-fi
-
 # Symlink all extensions and skins (both bundled and user)
 /create-symlinks.sh
 
@@ -24,11 +16,6 @@ echo "Syncing files..."
 rsync -ah --inplace --ignore-existing \
   -og --chown="$WWW_GROUP:$WWW_USER" --chmod=Fg=rw,Dg=rwx \
   "$MW_ORIGIN_FILES"/ "$MW_VOLUME"/
-
-# Create needed directories
-#TODO check below command need
-mkdir -p "$MW_VOLUME"/extensions/SemanticMediaWiki/config
-mkdir -p "$MW_VOLUME"/l10n_cache
 
 /update-docker-gateway.sh
 
