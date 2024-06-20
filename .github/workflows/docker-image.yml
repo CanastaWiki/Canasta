@@ -97,7 +97,7 @@ jobs:
           echo REGISTRY_TAGS=$REGISTRY_TAGS
           echo headref=${{ github.head_ref }}
           
-          SHA_SHORT=${{ github.sha }}
+          SHA_SHORT=$(echo ${{ github.sha }} | cut -c1-8)
           [ "${{ github.event_name }}" == "pull_request" ] && SHA_SHORT=$(echo ${{ github.event.pull_request.head.sha }} | cut -c1-8)
         
           echo "Final image tag to be pushed:"
