@@ -231,7 +231,7 @@ RUN set -x; \
 	&& sed -i '/<Directory \/var\/www\/>/i RewriteCond %{THE_REQUEST} \\s(.*?)\\s\nRewriteRule ^ - [E=ORIGINAL_URL:%{REQUEST_SCHEME}://%{HTTP_HOST}%1]' /etc/apache2/apache2.conf \
 	&& echo "Alias /w/images/ /var/www/mediawiki/w/canasta_img.php/" >> /etc/apache2/apache2.conf \
     && echo "Alias /w/images /var/www/mediawiki/w/canasta_img.php" >> /etc/apache2/apache2.conf \
-	&& a2enmod expires \
+	&& a2enmod expires remoteip\
 	&& a2disconf other-vhosts-access-log \
 	# Enable environment variables for FPM workers
 	&& sed -i '/clear_env/s/^;//' /etc/php/8.1/fpm/pool.d/www.conf
