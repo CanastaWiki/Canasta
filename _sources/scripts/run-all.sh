@@ -2,6 +2,8 @@
 
 set -x
 
+WG_CIRRUS_SEARCH_SERVER=$(get_mediawiki_cirrus_search_server)
+
 isTrue() {
     case $1 in
         "True" | "TRUE" | "true" | 1)
@@ -137,9 +139,36 @@ waitdatabase() {
   fi
 }
 
-#waitelastic() {
-#  ./wait-for-it.sh -t 60 elasticsearch:9200
-#}
+waitelastic() {
+    if [ -n "$es_started" ]; then
+        return 0; # already started
+    fi
+
+    echo >&2 'Waiting for elasticsearch to start'
+    /wait-for-it.sh -t 60 "$WG_CIRRUS_SEARCH_SERVER"
+
+    for i in {300..0}; do
+        result=0
+        output=$(wget --timeout=1 -q -O - "http://$WG_CIRRUS_SEARCH_SERVER/_cat/health") || result=$?
+        if [[ "$result" = 0 && $(echo "$output"|awk '{ print $4 }') = "green" ]]; then
+            break
+        fi
+        if [ "$result" = 0 ]; then
+            echo >&2 "Waiting for elasticsearch health status changed from [$(echo "$output"|awk '{ print $4 }')] to [green]..."
+        else
+            echo >&2 'Waiting for elasticsearch to start...'
+        fi
+        sleep 1
+    done
+    if [ "$i" = 0 ]; then
+        echo >&2 'Elasticsearch is not ready for use'
+        echo "$output"
+        return 1
+    fi
+    echo >&2 'Elasticsearch started successfully'
+    es_started="1"
+    return 0
+}
 
 run_autoupdate () {
     echo "Running auto-update..."
@@ -175,6 +204,9 @@ check_mount_points () {
 
 # Wait db
 waitdatabase
+
+# Wait elastic
+waitelastic
 
 # Check for `user-` prefixed mounts and bow out if not found
 check_mount_points
