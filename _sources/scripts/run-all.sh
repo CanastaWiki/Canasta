@@ -24,31 +24,13 @@ isFalse() {
     esac
 }
 
-dir_is_writable() {
-  # Use -L to get information about the target of a symlink,
-  # not the link itself, as pointed out in the comments
-  INFO=( $(stat -L -c "0%a %G %U" "$1") )
-  PERM=${INFO[0]}
-  GROUP=${INFO[1]}
-  OWNER=${INFO[2]}
-
-  if (( ($PERM & 0002) != 0 )); then
-      # Everyone has write access
-      return 0
-  elif (( ($PERM & 0020) != 0 )); then
-      # Some group has write access.
-      # Is user in that group?
-      if [[ $GROUP == $WWW_GROUP ]]; then
-          return 0
-      fi
-  elif (( ($PERM & 0200) != 0 )); then
-      # The owner has write access.
-      # Does the user own the file?
-      [[ $WWW_USER == $OWNER ]] && return 0
-  fi
-
-  return 1
-}
+if ! mountpoint -q -- "$MW_VOLUME"; then
+    echo "Folder $MW_VOLUME contains important data and must be mounted to persistent storage!"
+    if ! isTrue "$MW_ALLOW_UNMOUNTED_VOLUME"; then
+        exit 1
+    fi
+    echo "You allowed to continue because MW_ALLOW_UNMOUNTED_VOLUME is set as true"
+fi
 
 # Symlink all extensions and skins (both bundled and user)
 /create-symlinks.sh
@@ -63,8 +45,10 @@ rsync -ah --inplace --ignore-existing --remove-source-files \
   -og --chown=$WWW_GROUP:$WWW_USER --chmod=Fg=rw,Dg=rwx \
   "$MW_ORIGIN_FILES"/ "$MW_VOLUME"/
 
-# We don't need it anymore
-rm -rf "$MW_ORIGIN_FILES"
+# Create needed directories
+#TODO check below command need
+mkdir -p "$MW_VOLUME"/extensions/SemanticMediaWiki/config
+mkdir -p "$MW_VOLUME"/l10n_cache
 
 /update-docker-gateway.sh
 

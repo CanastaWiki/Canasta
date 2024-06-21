@@ -72,6 +72,9 @@ $wgCdnServersNoPurge[] = '10.0.0.0/8';     // 10.0.0.0 – 10.255.255.255
 $wgCdnServersNoPurge[] = '172.16.0.0/12';  // 172.16.0.0 – 172.31.255.255
 $wgCdnServersNoPurge[] = '192.168.0.0/16'; // 192.168.0.0 – 192.168.255.255
 
+# SemanticMediaWiki
+$smwgConfigFileDir = "$DOCKER_MW_VOLUME/extensions/SemanticMediaWiki/config";
+
 # Include user defined CommonSettings.php file
 if ( file_exists( $canastaCommonSettingsFilePath ) ) {
 	require_once "$canastaCommonSettingsFilePath";
