@@ -205,7 +205,7 @@ check_mount_points () {
 # Wait db
 waitdatabase
 
-# Wait elastic
+# Pause setup until ElasticSearch starts running
 waitelastic
 
 # Check for `user-` prefixed mounts and bow out if not found
