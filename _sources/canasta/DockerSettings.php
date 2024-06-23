@@ -451,7 +451,7 @@ switch ( getenv( 'MW_MAIN_CACHE_TYPE' ) ) {
 	case 'CACHE_REDIS':
 		$wgObjectCaches['redis'] = [
 			'class' => 'RedisBagOStuff',
-			'servers' => ['redis:6379']
+			'servers' => explode( ',', getenv( 'MW_REDIS_SERVERS' ) ),
 		];
 		$wgMainCacheType = 'redis';
 		$wgSessionCacheType = CACHE_DB;
