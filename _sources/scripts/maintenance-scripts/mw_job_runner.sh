@@ -22,13 +22,13 @@ if [ -f "$MW_VOLUME/config/wikis.yaml" ]; then
             while true; do
                 # Job types that need to be run ASAP no matter how many of them are in the queue
                 # Those jobs should be very "cheap" to run
-                php $RJ --type="enotifNotify" --server="https://$wiki_url" --wiki="$wiki_id" 
+                php $RJ --memory-limit="$MW_JOB_RUNNER_MEMORY_LIMIT" --type="enotifNotify" --server="https://$wiki_url" --wiki="$wiki_id" 
                 sleep 1
-                php $RJ --type="createPage" --server="https://$wiki_url" --wiki="$wiki_id" 
+                php $RJ --memory-limit="$MW_JOB_RUNNER_MEMORY_LIMIT" --type="createPage" --server="https://$wiki_url" --wiki="$wiki_id" 
                 sleep 1
-                php $RJ --type="refreshLinks" --server="https://$wiki_url" --wiki="$wiki_id" 
+                php $RJ --memory-limit="$MW_JOB_RUNNER_MEMORY_LIMIT" --type="refreshLinks" --server="https://$wiki_url" --wiki="$wiki_id" 
                 sleep 1
-                php $RJ --type="htmlCacheUpdate" --maxjobs=500 --server="https://$wiki_url" --wiki="$wiki_id" 
+                php $RJ --memory-limit="$MW_JOB_RUNNER_MEMORY_LIMIT" --type="htmlCacheUpdate" --maxjobs=500 --server="https://$wiki_url" --wiki="$wiki_id" 
                 sleep 1
                 # Everything else, limit the number of jobs on each batch
                 # The --wait parameter will pause the execution here until new jobs are added,
