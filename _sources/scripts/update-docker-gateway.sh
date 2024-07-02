@@ -2,25 +2,7 @@
 
 set -x
 
-# read variables from LocalSettings.php
-get_mediawiki_variable () {
-    php /getMediawikiSettings.php --variable="$1" --format="${2:-string}"
-}
-
-get_docker_gateway () {
-  getent hosts "gateway.docker.internal" | awk '{ print $1 }'
-}
-
-isTrue() {
-    case $1 in
-        "True" | "TRUE" | "true" | 1)
-            return 0
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-}
+. /functions.sh
 
 # Try to fetch gateway IP from extra host
 DOCKER_GATEWAY=$(get_docker_gateway)
