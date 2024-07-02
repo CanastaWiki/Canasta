@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sleep 0.02
-printf "\n\n===== run-maintenance-script.sh =====\n\n\n"
+printf "\n\n===== run-maintenance-scripts.sh =====\n\n\n"
 
 set -x
 
@@ -277,4 +277,4 @@ else
 fi
 
 sleep 4
-printf "\n\n>>>>> run-maintenance-script.sh <<<<<\n\n\n"
+printf "\n\n>>>>> run-maintenance-scripts.sh <<<<<\n\n\n"
