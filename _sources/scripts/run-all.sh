@@ -78,6 +78,10 @@ check_mount_points
 sleep 1
 cd "$MW_HOME" || exit
 
+# Check and update permissions of wiki images in background.
+# It can take a long time and should not block Apache from starting.
+/update-images-permissions.sh &
+
 ########## Run maintenance scripts ##########
 echo "Checking for LocalSettings..."
 if [ -e "$MW_VOLUME/config/LocalSettings.php" ] || [ -e "$MW_VOLUME/config/CommonSettings.php" ]; then
@@ -102,6 +106,9 @@ else
   chown -R "$WWW_GROUP":"$WWW_GROUP" $MW_VOLUME/sitemap
   chmod -R g=rwX $MW_VOLUME/sitemap
 fi
+
+echo "Checking permissions of Mediawiki volume dir $MW_VOLUME except $MW_VOLUME/images..."
+make_dir_writable "$MW_VOLUME" -not '(' -path "$MW_VOLUME/images" -prune ')'
 
 # Running php-fpm
 /run-php-fpm.sh &
