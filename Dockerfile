@@ -191,7 +191,7 @@ RUN set -x; \
 	# CirrusSearch
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-CirrusSearch $MW_HOME/extensions/CirrusSearch \
 	&& cd $MW_HOME/extensions/CirrusSearch \
-	&& git checkout -q 8296300873aaffe815800cf05c84fa04c8cbd2c0 \
+	&& git checkout -q 3ef5274b13f84cf7090f09107e2f243bdc0feeac \
 	# CodeMirror
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-CodeMirror $MW_HOME/extensions/CodeMirror \
 	&& cd $MW_HOME/extensions/CodeMirror \
@@ -263,7 +263,7 @@ RUN set -x; \
 	# Elastica
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Elastica $MW_HOME/extensions/Elastica \
 	&& cd $MW_HOME/extensions/Elastica \
-	&& git checkout -q e4ead38b71ed4f3df8dc689fe448b749771b4ed4 \
+	&& git checkout -q ab0fa8b6cc74c4258633e2c97a07b8c975f8f0a9 \
 	# EmailAuthorization
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-EmailAuthorization $MW_HOME/extensions/EmailAuthorization \
 	&& cd $MW_HOME/extensions/EmailAuthorization \
@@ -351,7 +351,7 @@ RUN set -x; \
 	# LinkTarget
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-LinkTarget $MW_HOME/extensions/LinkTarget \
 	&& cd $MW_HOME/extensions/LinkTarget \
-	&& git checkout -q e5d592dcc72a00e06604ee3f65dfb8f99977c156 \
+	&& git checkout -q ce3c5dff93db555b77213b2918522c7236723084 \
 	# Linter
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Linter $MW_HOME/extensions/Linter \
 	&& cd $MW_HOME/extensions/Linter \
@@ -376,10 +376,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MagicNoCache $MW_HOME/extensions/MagicNoCache \
 	&& cd $MW_HOME/extensions/MagicNoCache \
 	&& git checkout -q 93534c12dac0e821c46c94b21053d274a6e557de \
- 	# Maps
+	# Maps 10.2.0
 	&& git clone --single-branch -b master https://github.com/ProfessionalWiki/Maps $MW_HOME/extensions/Maps \
 	&& cd $MW_HOME/extensions/Maps \
-	&& git checkout -q 7175b47e3b2cbbfcd55c6bd896f4e8403dc03d33 \
+	&& git checkout -q a6288d7fd295412a3589956804a44a0f4bb5b930 \
 	# MassMessage
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MassMessage $MW_HOME/extensions/MassMessage \
 	&& cd $MW_HOME/extensions/MassMessage \
@@ -411,7 +411,7 @@ RUN set -x; \
 	# MyVariables
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MyVariables $MW_HOME/extensions/MyVariables \
 	&& cd $MW_HOME/extensions/MyVariables \
-	&& git checkout -q 8b45be10c9b0a484824c55d8cc48399290384260 \
+	&& git checkout -q 07837942c13b0ddfafad4dd38c1b60627b76599f \
 	# NewUserMessage
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-NewUserMessage $MW_HOME/extensions/NewUserMessage \
 	&& cd $MW_HOME/extensions/NewUserMessage \
@@ -488,14 +488,14 @@ RUN set -x; \
 	&& git clone https://github.com/SemanticMediaWiki/SemanticFormsSelect.git $MW_HOME/extensions/SemanticFormsSelect \
 	&& cd $MW_HOME/extensions/SemanticFormsSelect \
 	&& git checkout -q 4b56baa752401b4ff9fe555fd57fc5c3309601d4 \
-	# SemanticMediaWiki (v. 4.1.2)
+	# SemanticMediaWiki (v. 4.1.3)
 	&& git clone https://github.com/SemanticMediaWiki/SemanticMediaWiki $MW_HOME/extensions/SemanticMediaWiki \
 	&& cd $MW_HOME/extensions/SemanticMediaWiki \
-	&& git checkout -q 5c94879171d5f741b896828c25a9f2bb07a03dff \
-	# SemanticResultFormats (v. 4.0.2)
+	&& git checkout -q b5e2afe11991fe21a335cb90426de24b85bc9fe7 \
+	# SemanticResultFormats (v. 4.2.1)
 	&& git clone https://github.com/SemanticMediaWiki/SemanticResultFormats $MW_HOME/extensions/SemanticResultFormats \
 	&& cd $MW_HOME/extensions/SemanticResultFormats \
-	&& git checkout -q d5196722a56f9b65475be68d1e97063d7b975cb9 \
+	&& git checkout -q c0dd4bb99fe2ba4ce939eb74a42ec5d4579afb80 \
 	# SemanticScribunto (v. 2.2.0)
 	&& git clone --single-branch -b master https://github.com/SemanticMediaWiki/SemanticScribunto $MW_HOME/extensions/SemanticScribunto \
 	&& cd $MW_HOME/extensions/SemanticScribunto \
@@ -583,7 +583,7 @@ RUN set -x; \
 	# UserMerge
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-UserMerge $MW_HOME/extensions/UserMerge \
 	&& cd $MW_HOME/extensions/UserMerge \
-	&& git checkout -q 183bb7a8f78cbe365bec0fbd4b3ecdd4fae1a359 \
+	&& git checkout -q 724604213f24a3adf8e0af631f51a7314e40024a \
 	# UserPageViewTracker (v. 0.7)
 	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-UserPageViewTracker $MW_HOME/extensions/UserPageViewTracker \
 	&& cd $MW_HOME/extensions/UserPageViewTracker \
@@ -623,7 +623,7 @@ RUN set -x; \
 	# WikiSEO
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-WikiSEO $MW_HOME/extensions/WikiSEO \
 	&& cd $MW_HOME/extensions/WikiSEO \
-	&& git checkout -q 610cffa3345333b53d4dda7b55b2012fbfcee9de \
+	&& git checkout -q dd2658e82e042bbbbe5cce14c6fc0e9eaef48f69 \
 	# WSOAuth
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-WSOAuth $MW_HOME/extensions/WSOAuth \
 	&& cd $MW_HOME/extensions/WSOAuth \
