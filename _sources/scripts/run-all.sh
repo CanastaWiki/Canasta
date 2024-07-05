@@ -80,7 +80,13 @@ cd "$MW_HOME" || exit
 
 # Check and update permissions of wiki images in background.
 # It can take a long time and should not block Apache from starting.
-/update-images-permissions.sh &
+sleep 0.01
+printf "\n\n===== update-images-permissions.sh =====\n\n\n"
+
+. /functions.sh
+
+echo "Checking permissions of images in Mediawiki volume dir $MW_VOLUME/images..."
+make_dir_writable "$MW_VOLUME/images"
 
 ########## Run maintenance scripts ##########
 echo "Checking for LocalSettings..."
