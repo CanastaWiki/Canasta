@@ -80,9 +80,7 @@ cd "$MW_HOME" || exit
 
 # Check and update permissions of wiki images in background.
 # It can take a long time and should not block Apache from starting.
-
-echo "Checking permissions of images in MediaWiki volume dir $MW_VOLUME/images..."
-make_dir_writable "$MW_VOLUME/images"
+/update-images-permissions.sh &
 
 ########## Run maintenance scripts ##########
 echo "Checking for LocalSettings..."
@@ -109,7 +107,7 @@ else
   chmod -R g=rwX $MW_VOLUME/sitemap
 fi
 
-echo "Checking permissions of Mediawiki volume dir $MW_VOLUME except $MW_VOLUME/images..."
+echo "Checking permissions of MediaWiki volume dir $MW_VOLUME except $MW_VOLUME/images..."
 make_dir_writable "$MW_VOLUME" -not '(' -path "$MW_VOLUME/images" -prune ')'
 
 # Running php-fpm
