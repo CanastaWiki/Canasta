@@ -589,7 +589,7 @@ RUN set -x; \
 	# SkinPerPage
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SkinPerPage $MW_HOME/extensions/SkinPerPage \
 	&& cd $MW_HOME/extensions/SkinPerPage \
-	&& git checkout -q 2793602b37c33aa4c769834feac0b88f385ccef9 \
+	&& git checkout -q 31ecd2d0d4515d44cbef540ce219fb8d019bb6b1 \
 	# SmiteSpam
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SmiteSpam $MW_HOME/extensions/SmiteSpam \
 	&& cd $MW_HOME/extensions/SmiteSpam \
@@ -966,12 +966,6 @@ COPY _sources/patches/flow-conversion-utils.patch /tmp/flow-conversion-utils.pat
 RUN set -x; \
 	cd $MW_HOME/extensions/Flow \
 	&& git apply /tmp/flow-conversion-utils.patch
-
-# Fix SkinPerPage handling of invalid skin names, DEMO-99
-COPY _sources/patches/SkinPerPage-handle-invalid.patch /tmp/SkinPerPage-handle-invalid.patch
-RUN set -x; \
-	cd $MW_HOME/extensions/SkinPerPage \
-	&& git apply /tmp/SkinPerPage-handle-invalid.patch
 
 # Cleanup all .git leftovers
 RUN set -x; \
