@@ -6,7 +6,30 @@ A full-featured MediaWiki stack for easy deployment of enterprise-ready MediaWik
 
 Note: This repo is a fork of the MediaWiki application Docker image included in the Canasta stack.
 For complete documentation on the overall Canasta tech stack, including installation instructions,
-please visit https://github.com/CanastaWiki/Canasta-Documentation.
+please visit https://github.com/CanastaWiki/Canasta-Documentation. Note,
+however, that parts of that documentation do not apply to using Taqasta.
+
+# Differences from Canasta
+
+While this repo is a fork of Canasta and shares substantial similarities, there
+are a number of places where Taqasta's behavior differents from Canasta's
+
+* Taqasta bundles a lot more extensions and skins, allowing you to enable them
+on your wiki without needing to download them separately.
+* Taqasta does not support running multiple wikis at the same time as a farm.
+* Taqasta makes much greater use of environmental variables to read
+configuration, which can be used for everything from enabling email and upload
+to adding extensions and skins.
+* Taqasta also uses environmental variables to allow configuring the admin and
+database accounts, allowing the installer to run as part of the container
+setup rather than needing to install the wiki manually - with Canasta, you
+need to manually go through the MediaWiki installation process, while Taqasta
+will perform it automatically. This is especially helpful if you want to copy
+the configuration of an existing wiki.
+
+Note that the WikiTeq team, which maintains Taqasta, also maintains a dedicated
+branch of Canasta that is much more closely aligned with Canasta but includes
+various extensions and other tweaks that the WikiTeq team uses.
 
 # Submitting changes back to Canasta
 
