@@ -1,4 +1,4 @@
-FROM debian:11.7 as base
+FROM debian:12.5 as base
 
 LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
