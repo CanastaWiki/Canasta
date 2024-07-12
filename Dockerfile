@@ -4,7 +4,7 @@ LABEL maintainers="pavel@wikiteq.com,alexey@wikiteq.com"
 LABEL org.opencontainers.image.source=https://github.com/WikiTeq/Taqasta
 
 ENV MW_VERSION=REL1_39 \
-	MW_CORE_VERSION=1.39.7 \
+	MW_CORE_VERSION=1.39.8 \
 	WWW_ROOT=/var/www/mediawiki \
 	MW_HOME=/var/www/mediawiki/w \
 	MW_LOG=/var/log/mediawiki \
@@ -522,7 +522,7 @@ RUN set -x; \
 	# OpenIDConnect
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/OpenIDConnect $MW_HOME/extensions/OpenIDConnect \
 	&& cd $MW_HOME/extensions/OpenIDConnect \
-	&& git checkout -q f193befe9d66249e694fcdaa7b1b2afbf4a2ffde \
+	&& git checkout -q f193befe9d66249e694fcdaa7b1b2afbf4a2ffde
 # P
 RUN set -x; \
 	cd $MW_HOME/extensions \
