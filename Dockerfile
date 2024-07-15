@@ -136,10 +136,10 @@ RUN set -x; \
 # Bootstrap, DataValues (and related extensions like DataValuesCommon), ParserHooks.
 RUN set -x; \
 	cd $MW_HOME/extensions \
-	# AdminLinks (v. 0.6.1)
+	# AdminLinks (v. 0.6.2)
 	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-AdminLinks $MW_HOME/extensions/AdminLinks \
 	&& cd $MW_HOME/extensions/AdminLinks \
-	&& git checkout -q 3e2671c21fd4b8644552069ee60220035b6e96f5 \
+	&& git checkout -q cb2065f7dc67475ce36210f3098d2fbab93ebd29 \
 	# AdvancedSearch
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-AdvancedSearch $MW_HOME/extensions/AdvancedSearch \
 	&& cd $MW_HOME/extensions/AdvancedSearch \
@@ -219,7 +219,7 @@ RUN set -x; \
 	# ContributionScores
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-ContributionScores $MW_HOME/extensions/ContributionScores \
 	&& cd $MW_HOME/extensions/ContributionScores \
-	&& git checkout -q e307850555ef313f623dde6e2f1d5d2a43663730 \
+	&& git checkout -q 0c08d338a1150c76e74ae490cd4d5f5b9f6daa5f \
 	# CookieWarning
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-CookieWarning $MW_HOME/extensions/CookieWarning \
 	&& cd $MW_HOME/extensions/CookieWarning \
@@ -251,7 +251,7 @@ RUN set -x; \
 	# Echo
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Echo $MW_HOME/extensions/Echo \
 	&& cd $MW_HOME/extensions/Echo \
-	&& git checkout -q 7ad986ac9dd4ab961f4ab7eccafa41fa2f486b75 \
+	&& git checkout -q 7ae3c1059a5f4fd1f96f23fa8674bb1705f5e10d \
 	# EditAccount
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-EditAccount.git $MW_HOME/extensions/EditAccount \
 	&& cd $MW_HOME/extensions/EditAccount \
@@ -340,10 +340,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-LDAPProvider $MW_HOME/extensions/LDAPProvider \
 	&& cd $MW_HOME/extensions/LDAPProvider \
 	&& git checkout -q 80f8cc8156b0cd250d0dfacd9378ed0db7c2091d \
-	# Lingo
-	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Lingo $MW_HOME/extensions/Lingo \
+	# Lingo TODO (update back to $MW_VERSION in MW > REL1_39), see MFAM-194
+	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-Lingo $MW_HOME/extensions/Lingo \
 	&& cd $MW_HOME/extensions/Lingo \
-	&& git checkout -q a291fa25822097a4a2aefff242a876edadb535a4 \
+	&& git checkout -q 173efe9bf715988f9aa4b95ea401613f72774f2a \
 	# LinkSuggest
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-LinkSuggest $MW_HOME/extensions/LinkSuggest \
 	&& cd $MW_HOME/extensions/LinkSuggest \
