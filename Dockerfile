@@ -11,6 +11,7 @@ ENV MW_VERSION=REL1_39 \
 	MW_VOLUME=/mediawiki \
 	WWW_USER=www-data \
     WWW_GROUP=www-data \
+	PHP_LOG_DIR=/var/log/php-fpm \
     APACHE_LOG_DIR=/var/log/apache2
 
 # System setup
@@ -84,6 +85,7 @@ RUN set -x; \
 	&& a2enmod proxy_fcgi \
     # Create directories
     && mkdir -p $MW_HOME \
+	&& mkdir -p $PHP_LOG_DIR \
     && mkdir -p $MW_ORIGIN_FILES \
     && mkdir -p $MW_VOLUME
 
@@ -205,7 +207,7 @@ ENV MW_AUTOUPDATE=true \
 COPY _sources/configs/msmtprc /etc/
 COPY _sources/configs/mediawiki.conf /etc/apache2/sites-enabled/
 COPY _sources/configs/status.conf /etc/apache2/mods-available/
-COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/8.1/cli/conf.d/
+COPY _sources/configs/php_cli_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/8.1/cli/conf.d/
 COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/8.1/fpm/conf.d/
 COPY _sources/configs/php_max_input_vars.ini _sources/configs/php_max_input_vars.ini /etc/php/8.1/fpm/conf.d/
 COPY _sources/configs/php_timeouts.ini /etc/php/8.1/fpm/conf.d/
