@@ -4,6 +4,14 @@ set -x
 
 . /functions.sh
 
+if ! mountpoint -q -- "$MW_VOLUME"; then
+    echo "Folder $MW_VOLUME contains important data and must be mounted to persistent storage!"
+    if ! isTrue "$MW_ALLOW_UNMOUNTED_VOLUME"; then
+        exit 1
+    fi
+    echo "You allowed to continue because MW_ALLOW_UNMOUNTED_VOLUME is set as true"
+fi
+
 # Symlink all extensions and skins (both bundled and user)
 /create-symlinks.sh
 
@@ -13,8 +21,8 @@ set -x
 # $MW_VOLUME (./extensions, ./skins, ./config, ./images),
 # note that this command will also set all the necessary permissions
 echo "Syncing files..."
-rsync -ah --inplace --ignore-existing --remove-source-files \
-  -og --chown=$WWW_GROUP:$WWW_USER --chmod=Fg=rw,Dg=rwx \
+rsync -ah --inplace --ignore-existing \
+  -og --chown="$WWW_GROUP:$WWW_USER" --chmod=Fg=rw,Dg=rwx \
   "$MW_ORIGIN_FILES"/ "$MW_VOLUME"/
 
 # We don't need it anymore
@@ -30,20 +38,27 @@ rm -rf "$MW_ORIGIN_FILES"
 # hence it does not perform any recursive checks and may lead to files
 # or directories down the tree having incorrect permissions left untouched
 
-echo "Checking permissions of $MW_VOLUME..."
-if dir_is_writable $MW_VOLUME; then
-  echo "Permissions are OK!"
+# Write log files to $MW_VOLUME/log directory if target folders are not mounted
+echo "Checking permissions of Apache log dir $APACHE_LOG_DIR..."
+if ! mountpoint -q -- "$APACHE_LOG_DIR/"; then
+    mkdir -p "$MW_VOLUME/log/httpd"
+    rsync -avh --ignore-existing "$APACHE_LOG_DIR/" "$MW_VOLUME/log/httpd/"
+    mv "$APACHE_LOG_DIR" "${APACHE_LOG_DIR}_old"
+    ln -s "$MW_VOLUME/log/httpd" "$APACHE_LOG_DIR"
 else
-  chown -R "$WWW_GROUP":"$WWW_GROUP" "$MW_VOLUME"
-  chmod -R g=rwX "$MW_VOLUME"
+    chgrp -R "$WWW_GROUP" "$APACHE_LOG_DIR"
+    chmod -R g=rwX "$APACHE_LOG_DIR"
 fi
 
-echo "Checking permissions of $APACHE_LOG_DIR..."
-if dir_is_writable $APACHE_LOG_DIR; then
-  echo "Permissions are OK!"
+echo "Checking permissions of PHP-FPM log dir $PHP_LOG_DIR..."
+if ! mountpoint -q -- "$PHP_LOG_DIR/"; then
+    mkdir -p "$MW_VOLUME/log/php-fpm"
+    rsync -avh --ignore-existing "$PHP_LOG_DIR/" "$MW_VOLUME/log/php-fpm/"
+    mv "$PHP_LOG_DIR" "${PHP_LOG_DIR}_old"
+    ln -s "$MW_VOLUME/log/php-fpm" "$PHP_LOG_DIR"
 else
-  chown -R "$WWW_GROUP":"$WWW_GROUP" $APACHE_LOG_DIR
-  chmod -R g=rwX $APACHE_LOG_DIR
+    chgrp -R "$WWW_GROUP" "$PHP_LOG_DIR"
+    chmod -R g=rwX "$PHP_LOG_DIR"
 fi
 
 config_subdir_wikis() {
@@ -99,12 +114,16 @@ echo "Starting services..."
 touch "$WWW_ROOT/.maintenance"
 /run-maintenance-scripts.sh &
 
-echo "Checking permissions of $MW_VOLUME/sitemap..."
-if dir_is_writable "$MW_VOLUME/sitemap"; then
-  echo "Permissions are OK!"
+echo "Checking permissions of Mediawiki log dir $MW_LOG..."
+if ! mountpoint -q -- "$MW_LOG"; then
+    mkdir -p "$MW_VOLUME/log/mediawiki"
+    rsync -avh --ignore-existing "$MW_LOG/" "$MW_VOLUME/log/mediawiki/"
+    mv "$MW_LOG" "${MW_LOG}_old"
+    ln -s "$MW_VOLUME/log/mediawiki" "$MW_LOG"
+    chmod -R o=rwX "$MW_VOLUME/log/mediawiki"
 else
-  chown -R "$WWW_GROUP":"$WWW_GROUP" $MW_VOLUME/sitemap
-  chmod -R g=rwX $MW_VOLUME/sitemap
+    chgrp -R "$WWW_GROUP" "$MW_LOG"
+    chmod -R go=rwX "$MW_LOG"
 fi
 
 echo "Checking permissions of MediaWiki volume dir $MW_VOLUME except $MW_VOLUME/images..."

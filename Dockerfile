@@ -7,6 +7,7 @@ ENV MW_VERSION=REL1_39 \
 	MW_CORE_VERSION=1.39.8 \
 	WWW_ROOT=/var/www/mediawiki \
 	MW_HOME=/var/www/mediawiki/w \
+	MW_LOG=/var/log/mediawiki \
 	MW_ORIGIN_FILES=/mw_origin_files \
 	MW_VOLUME=/mediawiki \
 	WWW_USER=www-data \
@@ -84,6 +85,7 @@ RUN set -x; \
 	&& a2enmod proxy_fcgi \
     # Create directories
     && mkdir -p $MW_HOME \
+	&& mkdir -p $MW_LOG \
     && mkdir -p $MW_ORIGIN_FILES \
     && mkdir -p $MW_VOLUME
 
@@ -223,6 +225,7 @@ COPY _sources/configs/mpm_event.conf /etc/apache2/mods-available/mpm_event.conf
 
 RUN set -x; \
 	chmod -v +x /*.sh \
+	&& chmod -v +x /maintenance-scripts/*.sh \
 	# Sitemap directory
 	&& ln -s $MW_VOLUME/sitemap $MW_HOME/sitemap \
 	# Comment out ErrorLog and CustomLog parameters, we use rotatelogs in mediawiki.conf for the log files
