@@ -1,4 +1,4 @@
-FROM debian:11.7 as base
+FROM debian:11.7 AS base
 
 LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
@@ -7,6 +7,7 @@ ENV MW_VERSION=REL1_39 \
 	MW_CORE_VERSION=1.39.7 \
 	WWW_ROOT=/var/www/mediawiki \
 	MW_HOME=/var/www/mediawiki/w \
+	MW_LOG=/var/log/mediawiki \
 	MW_ORIGIN_FILES=/mw_origin_files \
 	MW_VOLUME=/mediawiki \
 	WWW_USER=www-data \
@@ -84,6 +85,7 @@ RUN set -x; \
 	&& a2enmod proxy_fcgi \
     # Create directories
     && mkdir -p $MW_HOME \
+	&& mkdir -p $MW_LOG \
     && mkdir -p $MW_ORIGIN_FILES \
     && mkdir -p $MW_VOLUME
 
@@ -92,7 +94,7 @@ RUN set -x; \
 	curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && composer self-update 2.1.3
 
-FROM base as source
+FROM base AS source
 
 # MediaWiki core
 RUN set -x; \
@@ -169,7 +171,7 @@ RUN set -x; \
     mkdir $MW_HOME/extensions/ \
     && mkdir $MW_HOME/skins/
 
-FROM base as final
+FROM base AS final
 
 COPY --from=source $MW_HOME $MW_HOME
 COPY --from=source $MW_ORIGIN_FILES $MW_ORIGIN_FILES
@@ -223,6 +225,7 @@ COPY _sources/configs/mpm_event.conf /etc/apache2/mods-available/mpm_event.conf
 
 RUN set -x; \
 	chmod -v +x /*.sh \
+	&& chmod -v +x /maintenance-scripts/*.sh \
 	# Sitemap directory
 	&& ln -s $MW_VOLUME/sitemap $MW_HOME/sitemap \
 	# Comment out ErrorLog and CustomLog parameters, we use rotatelogs in mediawiki.conf for the log files
