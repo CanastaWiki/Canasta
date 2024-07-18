@@ -1,4 +1,4 @@
-FROM debian:11.7 AS base
+FROM debian:11.7 as base
 
 LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
@@ -94,7 +94,7 @@ RUN set -x; \
 	curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && composer self-update 2.1.3
 
-FROM base AS source
+FROM base as source
 
 # MediaWiki core
 RUN set -x; \
@@ -171,7 +171,7 @@ RUN set -x; \
     mkdir $MW_HOME/extensions/ \
     && mkdir $MW_HOME/skins/
 
-FROM base AS final
+FROM base as final
 
 COPY --from=source $MW_HOME $MW_HOME
 COPY --from=source $MW_ORIGIN_FILES $MW_ORIGIN_FILES
