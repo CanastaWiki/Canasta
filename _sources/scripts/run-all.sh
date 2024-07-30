@@ -25,8 +25,9 @@ rsync -ah --inplace --ignore-existing \
   -og --chown="$WWW_GROUP:$WWW_USER" --chmod=Fg=rw,Dg=rwx \
   "$MW_ORIGIN_FILES"/ "$MW_VOLUME"/
 
-# We don't need it anymore
-rm -rf "$MW_ORIGIN_FILES"
+# Create needed directories
+mkdir -p "$MW_VOLUME"/extensions/SemanticMediaWiki/config
+mkdir -p "$MW_VOLUME"/l10n_cache
 
 /update-docker-gateway.sh
 

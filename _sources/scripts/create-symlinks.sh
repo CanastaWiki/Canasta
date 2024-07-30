@@ -1,5 +1,8 @@
 #!/bin/bash
 
+rm -f "$MW_HOME"/extensions/*
+rm -f "$MW_HOME"/skins/*
+
 echo "Symlinking bundled extensions..."
 for bundled_extension_path in $(find $MW_HOME/canasta-extensions/ -maxdepth 1 -mindepth 1 -type d)
 do

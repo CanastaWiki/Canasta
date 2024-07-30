@@ -289,6 +289,8 @@ extensions:
       commit: d3d63faa08b89c429a7803b283e9bb685a51b9a0
   - Widgets:
       commit: 197d429f971b2aebbce29b7a91a194e1f8181e64
+      persistent-directories:
+        - compiled_templates
   - WikiSEO:
       commit: 610cffa3345333b53d4dda7b55b2012fbfcee9de
   - WSOAuth:
