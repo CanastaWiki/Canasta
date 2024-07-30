@@ -247,7 +247,7 @@ RUN set -x; \
 	# DisplayTitle
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-DisplayTitle $MW_HOME/extensions/DisplayTitle \
 	&& cd $MW_HOME/extensions/DisplayTitle \
-	&& git checkout -q a14c406cc273c73a12957b55a27c095ad98d1795 \
+	&& git checkout -q c485a2a89a1fd9cb6a4eda4f821de86b2a034f70 \
 	# Echo
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Echo $MW_HOME/extensions/Echo \
 	&& cd $MW_HOME/extensions/Echo \
