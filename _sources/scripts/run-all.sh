@@ -26,7 +26,6 @@ rsync -ah --inplace --ignore-existing \
   "$MW_ORIGIN_FILES"/ "$MW_VOLUME"/
 
 # Create needed directories
-mkdir -p "$MW_VOLUME"/extensions/SemanticMediaWiki/config
 mkdir -p "$MW_VOLUME"/l10n_cache
 
 /update-docker-gateway.sh
