@@ -227,6 +227,7 @@ RUN set -x; \
 	chmod -v +x /*.sh \
 	&& chmod -v +x /maintenance-scripts/*.sh \
 	# Sitemap directory
+	&& mkdir -p $MW_ORIGIN_FILES/sitemap \
 	&& ln -s $MW_VOLUME/sitemap $MW_HOME/sitemap \
 	# Comment out ErrorLog and CustomLog parameters, we use rotatelogs in mediawiki.conf for the log files
 	&& sed -i 's/^\(\s*ErrorLog .*\)/# \1/g' /etc/apache2/apache2.conf \

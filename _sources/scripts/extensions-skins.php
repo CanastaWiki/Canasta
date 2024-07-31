@@ -6,6 +6,8 @@ than split the work between two scripts -->
 
 $MW_HOME = getenv("MW_HOME");
 $MW_VERSION = getenv("MW_VERSION");
+$MW_VOLUME = getenv("MW_VOLUME");
+$MW_ORIGIN_FILES = getenv("MW_ORIGIN_FILES");
 $type = $argv[1];
 $path = $argv[2];
 
@@ -19,6 +21,15 @@ foreach ($yamlData[$type] as $obj) {
     $commit = $data['commit'] ?? null;
     $branch = $data['branch'] ?? null;
     $patches = $data['patches'] ?? null;
+    $persistentDirectories = $data['persistent-directories'] ?? null;
+
+    if ($persistentDirectories !== null) {
+        exec("mkdir -p $MW_ORIGIN_FILES/canasta-$type/$name");
+        foreach ($directory as $persistentDirectories) {
+            exec("mv $MW_HOME/canasta-$type/$name/$directory $MW_ORIGIN_FILES/canasta-$type/$name/");
+            exec("ln -s $MW_VOLUME/canasta-$type/$name/$directory $MW_HOME/canasta-$type/$name/$directory");
+        }
+    }
     
     $gitCloneCmd = "git clone ";
     
