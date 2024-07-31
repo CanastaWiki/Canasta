@@ -995,7 +995,9 @@ RUN --mount=type=secret,id=COMPOSER_TOKEN cd $MW_HOME \
 	# configure auth
 	&& if [ -f "/run/secrets/COMPOSER_TOKEN" ]; then composer config -g github-oauth.github.com $(cat /run/secrets/COMPOSER_TOKEN); fi \
 	&& composer update --no-dev --with-dependencies \
-	&& composer clear-cache
+	&& composer clear-cache \
+    # deauth
+    && composer config -g --unset github-oauth.github.com
 
 # Move files around
 RUN set -x; \
