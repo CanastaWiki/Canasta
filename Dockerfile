@@ -472,10 +472,10 @@ RUN set -x; \
 	&& git clone --single-branch -b master https://github.com/SemanticMediaWiki/SemanticCompoundQueries $MW_HOME/extensions/SemanticCompoundQueries \
 	&& cd $MW_HOME/extensions/SemanticCompoundQueries \
 	&& git checkout -q eeb514393fdf2e80ae7084839d8803ee32ae3da4 \
-	# SemanticDependencyUpdater (v. 2.0.2)
+	# SemanticDependencyUpdater (v. 3.0.3)
 	&& git clone --single-branch -b master https://github.com/gesinn-it/SemanticDependencyUpdater $MW_HOME/extensions/SemanticDependencyUpdater \
 	&& cd $MW_HOME/extensions/SemanticDependencyUpdater \
-	&& git checkout -q e8a483dd54de6a069854789ae6c702aab98a89ab \
+	&& git checkout -q b2c4db817bfb31c2ad10d27aeebb955f938d7b4f \
 	# SemanticDrilldown
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SemanticDrilldown $MW_HOME/extensions/SemanticDrilldown \
 	&& cd $MW_HOME/extensions/SemanticDrilldown \
