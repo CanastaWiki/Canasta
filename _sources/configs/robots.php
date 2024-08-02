@@ -25,6 +25,7 @@ if ( !empty( $enableSitemapEnv ) && in_array( $enableSitemapEnv, [ 'true', 'True
 	$siteMapUrl = "$server$script/sitemap$subdir/sitemap-index-$identifier.xml";
 
 	echo "Sitemap: $siteMapUrl\n";
+    echo "\n# Content of the robots.txt file:\n";
 }
 
 readfile( 'robots-main.txt' );
