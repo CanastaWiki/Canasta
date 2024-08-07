@@ -1,9 +1,11 @@
 ---
 name: Feature request
-about: Propose an idea for Canasta (does not include requests to add/update/remove bundled extensions or skins)
+about: Propose an idea for Canasta (does not include requests to add/update/remove
+  bundled extensions or skins)
 title: ''
 labels: enhancement
 assignees: ''
+
 ---
 
 ## The current situation
