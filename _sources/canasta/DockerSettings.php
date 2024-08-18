@@ -148,6 +148,7 @@ const DOCKER_EXTENSIONS = [
 	'PageExchange',
 //	'PageForms',   must be enabled manually after enableSemantics()
 	'PageImages', # bundled
+	'PagePort',
 	'PageSchemas',
 	'ParserFunctions', # bundled
 	'PdfHandler', # bundled
