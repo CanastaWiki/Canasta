@@ -170,6 +170,8 @@ extensions:
   - PageForms:
       branch: master
       commit: b3be227fa9650f1a165ab1cc549100f643646714 # v. 5.7.2
+  - PageSchemas:
+      commit: 4632411bb66bdc14117b4582a9ae885e6478261f
   - PluggableAuth:
       commit: 1884a127cd5947ad7484d3b55711db3f6515d439
   - Popups:
