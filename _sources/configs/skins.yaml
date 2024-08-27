@@ -3,7 +3,7 @@
 # skins with that name is used, and the default branch used is REL1_39.
 # Where the repository *is* specified, the default branch used is master.
 skins:
-  - Chameleon:
+  - chameleon:
       commit: f34a56528ada14ac07e1b03beda41f775ef27606 # v. 4.2.1
       repository: https://github.com/ProfessionalWiki/chameleon
   - CologneBlue:
