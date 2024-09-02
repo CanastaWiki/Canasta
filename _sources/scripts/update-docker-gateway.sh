@@ -4,6 +4,10 @@ set -x
 
 . /functions.sh
 
+get_docker_gateway () {
+  getent hosts "gateway.docker.internal" | awk '{ print $1 }'
+}
+
 # Try to fetch gateway IP from extra host
 DOCKER_GATEWAY=$(get_docker_gateway)
 

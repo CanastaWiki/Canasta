@@ -101,6 +101,7 @@ cd "$MW_HOME" || exit
 echo "Checking for LocalSettings..."
 if [ -e "$MW_VOLUME/config/LocalSettings.php" ] || [ -e "$MW_VOLUME/config/CommonSettings.php" ]; then
   # Run auto-update
+  . /run-maintenance-scripts.sh
   run_autoupdate
   if [ -e "$MW_VOLUME/config/wikis.yaml" ]; then
     config_subdir_wikis

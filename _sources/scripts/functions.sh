@@ -24,7 +24,7 @@ get_mediawiki_db_var() {
             echo "Unexpected variable name passed to the get_mediawiki_db_var() function: $1"
             return
     esac
-    VALUE=$(php /getMediawikiSettings.php --variable=wgDBservers --variableArrayIndex="[0,\"$I\"]" --format=string)
+    VALUE=$(php /getMediawikiSettings.php --variable=wgDBservers --format=string)
     if [ -z "$VALUE" ]; then
         VALUE=$(get_mediawiki_variable "$1")
     fi
@@ -50,7 +50,7 @@ get_hostname_with_port() {
 get_mediawiki_cirrus_search_server() {
     server=$(get_mediawiki_variable wgCirrusSearchServers first)
     if [ -z "$server" ]; then
-        server=$(php /getMediawikiSettings.php --variable=wgCirrusSearchClusters --variableArrayIndex="[\"default\",0]" --format=string)
+        server=$(php /getMediawikiSettings.php --variable=wgCirrusSearchClusters --format=string)
     fi
     get_hostname_with_port "$server" 9200
 }
