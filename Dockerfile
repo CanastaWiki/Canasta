@@ -488,10 +488,10 @@ RUN set -x; \
 	&& git clone https://github.com/SemanticMediaWiki/SemanticFormsSelect.git $MW_HOME/extensions/SemanticFormsSelect \
 	&& cd $MW_HOME/extensions/SemanticFormsSelect \
 	&& git checkout -q 4b56baa752401b4ff9fe555fd57fc5c3309601d4 \
-	# SemanticMediaWiki (v. 4.1.3)
+	# SemanticMediaWiki (v. 4.2.0)
 	&& git clone https://github.com/SemanticMediaWiki/SemanticMediaWiki $MW_HOME/extensions/SemanticMediaWiki \
 	&& cd $MW_HOME/extensions/SemanticMediaWiki \
-	&& git checkout -q b5e2afe11991fe21a335cb90426de24b85bc9fe7 \
+	&& git checkout -q 0a8af7546b81f6dcab3f336f14023c8e7aea3805 \
 	# SemanticResultFormats (v. 4.2.1)
 	&& git clone https://github.com/SemanticMediaWiki/SemanticResultFormats $MW_HOME/extensions/SemanticResultFormats \
 	&& cd $MW_HOME/extensions/SemanticResultFormats \
