@@ -589,9 +589,9 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/UserPageViewTracker \
 	&& git checkout -q f4b7c20c372165541164d449c12df1e74e98ed0b \
 	# Variables
-	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Variables $MW_HOME/extensions/Variables \
+	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-Variables $MW_HOME/extensions/Variables \
 	&& cd $MW_HOME/extensions/Variables \
-	&& git checkout -q b4a9063f16a928567e3b6788cda9246c2e94797f \
+	&& git checkout -q fe29b81db571c7ae640096b09dbdd535c05a966d \
 	# VEForAll (v. 0.5)
 	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-VEForAll $MW_HOME/extensions/VEForAll \
 	&& cd $MW_HOME/extensions/VEForAll \
