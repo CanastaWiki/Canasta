@@ -361,25 +361,16 @@ run_autoupdate () {
 }
 
 run_import () {
-    # Import dumps if any
+    # Import PagePort dumps if any
     if mountpoint -q -- "$MW_IMPORT_VOLUME"; then
-        echo "Found $MW_IMPORT_VOLUME, checking for XML dump presence.."
-        local FILES_IMPORTED=0
-        for filename in $MW_IMPORT_VOLUME/*.xml; do
-            echo "Found $filename file, importing.."
-            php maintenance/importDump.php \
-                --username-prefix="" \
-                --memory-limit=max \
-                --report 1 \
-                "$filename"
-            FILES_IMPORTED=$((FILES_IMPORTED + 1))
-        done
-        if [ "$FILES_IMPORTED" -gt "0" ]; then
-            echo "Running post-import maintenance scripts.."
-            php maintenance/rebuildrecentchanges.php
-            php maintenance/initSiteStats.php
+        echo "Found $MW_IMPORT_VOLUME, running PagePort import.."
+        XML_TEST=($(find $MW_IMPORT_VOLUME -maxdepth 1 -name "*.xml"))
+        if [ ${#XML_TEST[@]} -gt 0 ]; then
+        	echo "WARNING! The directory contains XML files, did you forget to migrate the dump to PagePort?"
+        	return
         fi
-        echo "Imported $FILES_IMPORTED files!"
+        php extensions/PagePort/maintenance/importPages.php --source "$MW_IMPORT_VOLUME" --user 'Maintenance script'
+        echo "Imported completed!"
     fi
 }
 
@@ -391,7 +382,9 @@ else
 fi
 
 # Run import after install and update are completed
-run_import
+if isTrue "$MW_AUTO_IMPORT"; then
+	run_import
+fi
 
 jobrunner &
 transcoder &

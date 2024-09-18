@@ -546,7 +546,7 @@ RUN set -x; \
 	# PagePort
 	&& git clone --single-branch -b master https://github.com/WikiTeq/PagePort.git $MW_HOME/extensions/PagePort \
 	&& cd $MW_HOME/extensions/PagePort \
-	&& git checkout -q a6b800c9b3f58c151cdda4ec2f1aa396536c3a7d
+	&& git checkout -q 65cb6908c852c5483efa5f8022b8bb97b5adb208
 
 # R
 RUN set -x; \
@@ -1059,7 +1059,8 @@ ENV MW_AUTOUPDATE=true \
 	MEDIAWIKI_MAINTENANCE_AUTO_ENABLED=false \
 	MW_SENTRY_DSN="" \
 	MW_USE_CACHE_DIRECTORY=1 \
-	APACHE_REMOTE_IP_HEADER=X-Forwarded-For
+	APACHE_REMOTE_IP_HEADER=X-Forwarded-For \
+	MW_AUTO_IMPORT=1
 
 COPY _sources/configs/msmtprc /etc/
 COPY _sources/configs/mediawiki.conf /etc/apache2/sites-enabled/

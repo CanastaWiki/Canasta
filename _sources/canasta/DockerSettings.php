@@ -606,6 +606,10 @@ if ( isset( $_REQUEST['forceprofile'] ) ) {
 	$wgUseCdn = false; // make sure profile is not cached
 }
 
+if ( getenv( 'MW_AUTO_IMPORT' ) ) {
+	wfLoadExtension( 'PagePort' );
+}
+
 # Include all php files in config/settings directory
 foreach ( glob( getenv( 'MW_CONFIG_DIR' ) . '/settings/*.php' ) as $filename ) {
 	if ( is_readable( $filename ) ) {
