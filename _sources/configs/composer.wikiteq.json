@@ -1,6 +1,6 @@
 {
 	"require": {
-		"mediawiki/semantic-media-wiki": "4.1.1",
+		"mediawiki/semantic-media-wiki": "4.2.0",
 		"mediawiki/chameleon-skin": "4.2.1",
 		"mediawiki/bootstrap-components": "5.0.0",
 		"mediawiki/mermaid": "3.1.0",
