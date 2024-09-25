@@ -9,7 +9,7 @@
 		"mediawiki/semantic-extra-special-properties": "3.0.2",
 		"mediawiki/semantic-result-formats": "4.0.2",
 		"mediawiki/semantic-scribunto": "2.2.0",
-		"mediawiki/simple-batch-upload": "1.9.0",
+		"mediawiki/simple-batch-upload": "2.0.1",
 		"mediawiki/sub-page-list": "2.0.2",
 		"mediawiki/maps": "10.2.0",
 		"mediawiki/semantic-watchlist": "dev-master#8080e3e8d6f4689beeca6ab57ed9255502e175b2"
