@@ -148,10 +148,11 @@ class GetMediawikiSettings extends Maintenance {
 		global $wgShowExceptionDetails, $wgHooks;
 
 		$wgShowExceptionDetails = true;
-		$wgHooks['SetupAfterCache'][] = function () {
+		$wgHooks['SetupAfterCache'] = [ function () {
 			global $wgExtensionFunctions;
 			$wgExtensionFunctions = [];
-		};
+			return false;
+		} ];
 	}
 
 	private static function getExtensionsThings() {
