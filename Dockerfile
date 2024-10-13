@@ -728,7 +728,7 @@ RUN set -x; \
 	# DiscussionTools
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/DiscussionTools $MW_HOME/extensions/DiscussionTools \
 	&& cd $MW_HOME/extensions/DiscussionTools \
-	&& git checkout -q 472ceb15288844e610d5f09c872dcc86dd624f7d
+	&& git checkout -q c667c3c020a61010a7598438a8122f015678b242
 
 # E
 RUN set -x; \
