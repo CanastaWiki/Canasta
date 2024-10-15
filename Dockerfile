@@ -67,6 +67,7 @@ RUN set x; \
 	php8.1-tidy \
 	php8.1-zip \
 	php8.1-tideways \
+	logrotate \
 # Lua sandbox
 	php-pear \
 	php8.1-dev \
@@ -86,6 +87,7 @@ RUN set x; \
 #    xvfb \ + 14.9 MB
 #    lilypond \ + 301 MB
 	&& pecl -d php_suffix=8.1 install luasandbox \
+	&& pecl -d php_suffix=8.1 install excimer \
 	&& aptitude -y remove php-pear php8.1-dev liblua5.1-0-dev \
 	&& aptitude clean \
 	&& rm -rf /var/lib/apt/lists/*
@@ -111,6 +113,9 @@ RUN set -x; \
 	&& mkdir -p $MW_LOG \
 	&& mkdir -p $MW_ORIGIN_FILES \
 	&& mkdir -p $MW_VOLUME
+# Enable excimer 
+RUN echo "extension=excimer.so" > /etc/php/8.1/apache2/conf.d/30-excimer.ini \
+    && echo "extension=excimer.so" > /etc/php/8.1/cli/conf.d/30-excimer.ini
 
 # Composer
 RUN set -x; \
@@ -1076,6 +1081,7 @@ COPY _sources/images/favicon.ico $WWW_ROOT/
 COPY _sources/canasta/DockerSettings.php $MW_HOME/
 COPY _sources/canasta/getMediawikiSettings.php /
 COPY _sources/configs/mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
+COPY _sources/configs/excimer_logrotate.conf /etc/logrotate.d/excimer
 
 RUN set -x; \
 	chmod -v +x /*.sh \
