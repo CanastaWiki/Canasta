@@ -1,4 +1,4 @@
-FROM debian:12.5 as base
+FROM debian:12.5 AS base
 
 LABEL maintainers="pavel@wikiteq.com,alexey@wikiteq.com"
 LABEL org.opencontainers.image.source=https://github.com/WikiTeq/Taqasta
@@ -67,7 +67,6 @@ RUN set x; \
 	php8.1-tidy \
 	php8.1-zip \
 	php8.1-tideways \
-	logrotate \
 # Lua sandbox
 	php-pear \
 	php8.1-dev \
@@ -113,16 +112,13 @@ RUN set -x; \
 	&& mkdir -p $MW_LOG \
 	&& mkdir -p $MW_ORIGIN_FILES \
 	&& mkdir -p $MW_VOLUME
-# Enable excimer 
-RUN echo "extension=excimer.so" > /etc/php/8.1/apache2/conf.d/30-excimer.ini \
-    && echo "extension=excimer.so" > /etc/php/8.1/cli/conf.d/30-excimer.ini
 
 # Composer
 RUN set -x; \
 	curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
 	&& composer self-update 2.1.3
 
-FROM base as core
+FROM base AS core
 # MediaWiki core
 RUN set -x; \
 	git clone --depth 1 -b $MW_CORE_VERSION https://gerrit.wikimedia.org/r/mediawiki/core.git $MW_HOME \
@@ -144,7 +140,7 @@ RUN set -x; \
 	cd $MW_HOME \
 	&& find . \( -name ".git" -o -name ".gitignore" -o -name ".gitmodules" -o -name ".gitattributes" \) -exec rm -rf -- {} +
 
-FROM base as skins
+FROM base AS skins
 # Skins
 # The Minerva Neue, MonoBook, Timeless, Vector and Vector 2022 skins are bundled into MediaWiki and do not need to be
 # separately installed.
@@ -184,7 +180,7 @@ RUN set -x; \
 	cd $MW_HOME/skins \
 	&& find . \( -name ".git" -o -name ".gitignore" -o -name ".gitmodules" -o -name ".gitattributes" \) -exec rm -rf -- {} +
 
-FROM base as extensions
+FROM base AS extensions
 # Extensions
 #
 # The following extensions are bundled into MediaWiki and do not need to be separately installed (though in some cases
@@ -981,7 +977,7 @@ RUN set -x; \
 	cd $MW_HOME/extensions \
 	&& find . \( -name ".git" -o -name ".gitignore" -o -name ".gitmodules" -o -name ".gitattributes" \) -exec rm -rf -- {} +
 
-FROM base as composer
+FROM base AS composer
 
 # Copy core, skins and extensions
 COPY --from=core $MW_HOME $MW_HOME
@@ -1016,7 +1012,7 @@ RUN set -x; \
 	&& ln -s $MW_VOLUME/images $MW_HOME/images \
 	&& ln -s $MW_VOLUME/cache $MW_HOME/cache
 
-FROM base as final
+FROM base AS final
 
 COPY --from=composer $MW_HOME $MW_HOME
 COPY --from=composer $MW_ORIGIN_FILES $MW_ORIGIN_FILES
@@ -1081,7 +1077,6 @@ COPY _sources/images/favicon.ico $WWW_ROOT/
 COPY _sources/canasta/DockerSettings.php $MW_HOME/
 COPY _sources/canasta/getMediawikiSettings.php /
 COPY _sources/configs/mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
-COPY _sources/configs/excimer_logrotate.conf /etc/logrotate.d/excimer
 
 RUN set -x; \
 	chmod -v +x /*.sh \
