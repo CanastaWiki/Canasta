@@ -1,10 +1,10 @@
-FROM debian:12.5 as base
+FROM debian:12.5 AS base
 
 LABEL maintainers="pavel@wikiteq.com,alexey@wikiteq.com"
 LABEL org.opencontainers.image.source=https://github.com/WikiTeq/Taqasta
 
 ENV MW_VERSION=REL1_39 \
-	MW_CORE_VERSION=1.39.10 \
+	MW_CORE_VERSION=1.39.8 \
 	WWW_ROOT=/var/www/mediawiki \
 	MW_HOME=/var/www/mediawiki/w \
 	MW_LOG=/var/log/mediawiki \
@@ -117,7 +117,7 @@ RUN set -x; \
 	curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
 	&& composer self-update 2.1.3
 
-FROM base as core
+FROM base AS core
 # MediaWiki core
 RUN set -x; \
 	git clone --depth 1 -b $MW_CORE_VERSION https://gerrit.wikimedia.org/r/mediawiki/core.git $MW_HOME \
@@ -139,7 +139,7 @@ RUN set -x; \
 	cd $MW_HOME \
 	&& find . \( -name ".git" -o -name ".gitignore" -o -name ".gitmodules" -o -name ".gitattributes" \) -exec rm -rf -- {} +
 
-FROM base as skins
+FROM base AS skins
 # Skins
 # The Minerva Neue, MonoBook, Timeless, Vector and Vector 2022 skins are bundled into MediaWiki and do not need to be
 # separately installed.
@@ -179,7 +179,7 @@ RUN set -x; \
 	cd $MW_HOME/skins \
 	&& find . \( -name ".git" -o -name ".gitignore" -o -name ".gitmodules" -o -name ".gitattributes" \) -exec rm -rf -- {} +
 
-FROM base as extensions
+FROM base AS extensions
 # Extensions
 #
 # The following extensions are bundled into MediaWiki and do not need to be separately installed (though in some cases
@@ -976,7 +976,7 @@ RUN set -x; \
 	cd $MW_HOME/extensions \
 	&& find . \( -name ".git" -o -name ".gitignore" -o -name ".gitmodules" -o -name ".gitattributes" \) -exec rm -rf -- {} +
 
-FROM base as composer
+FROM base AS composer
 
 # Copy core, skins and extensions
 COPY --from=core $MW_HOME $MW_HOME
@@ -1011,7 +1011,7 @@ RUN set -x; \
 	&& ln -s $MW_VOLUME/images $MW_HOME/images \
 	&& ln -s $MW_VOLUME/cache $MW_HOME/cache
 
-FROM base as final
+FROM base AS final
 
 COPY --from=composer $MW_HOME $MW_HOME
 COPY --from=composer $MW_ORIGIN_FILES $MW_ORIGIN_FILES
