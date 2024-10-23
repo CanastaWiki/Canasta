@@ -357,6 +357,14 @@ run_autoupdate () {
             'extensions/CirrusSearch/maintenance/ForceSearchIndex.php --skipParse'
     fi
 
+    ### GoogleLogin
+    GoogleLoginVersion=$(php /getMediawikiSettings.php --version GoogleLogin)
+    # TODO ideally we should run the maintenance script if the PublicSuffixArray does not exist
+    if  [ -n "$GoogleLoginVersion" ]; then
+        wgGLAllowedDomainsMD5=$(get_mediawiki_variable wgGLAllowedDomains md5)
+        run_maintenance_script_if_needed 'maintenance_GoogleLogin_updatePublicSuffixArray' "${GoogleLoginVersion}${wgGLAllowedDomainsMD5}" 'extensions/GoogleLogin/maintenance/updatePublicSuffixArray.php'
+    fi
+
     echo >&2 "Auto-update completed"
 }
 

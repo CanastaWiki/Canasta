@@ -393,6 +393,9 @@ $wgPygmentizePath = '/usr/bin/pygmentize';
 # SemanticMediaWiki
 $smwgConfigFileDir = "$DOCKER_MW_VOLUME/extensions/SemanticMediaWiki/config";
 
+# GoogleLogin, WIK-1434
+$wgGLPublicSuffixArrayDir = "$DOCKER_MW_VOLUME/extensions/GoogleLogin/cache";
+
 // Scribunto https://www.mediawiki.org/wiki/Extension:Scribunto
 $wgScribuntoDefaultEngine = 'luasandbox';
 $wgScribuntoEngineConf['luasandbox']['cpuLimit'] = '120';
