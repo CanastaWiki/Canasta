@@ -275,7 +275,8 @@ extensions:
       branch: master
       commit: 276ead8fb0ecaa4c77b587267aa52e17de81c542 # v. 0.8
   - Variables:
-      commit: b4a9063f16a928567e3b6788cda9246c2e94797f
+      branch: master
+      commit: fe29b81db571c7ae640096b09dbdd535c05a966d
   - VEForAll:
       branch: master
       commit: cffa12abb85200e90b1cbc636325b1ec1a89a6af # v. 0.5
