@@ -289,7 +289,7 @@ RUN set -x; \
 	# Cloudflare
 	&& git clone --single-branch -b master https://github.com/harugon/mediawiki-extensions-cloudflare.git $MW_HOME/extensions/Cloudflare \
 	&& cd $MW_HOME/extensions/Cloudflare \
-	&& git checkout -q fc17309a510b4d9b2eb5cc215b83b258958c8ada
+	&& git checkout -q 9df89f3f5e0ace26b07d146167bab72540082fc8
 
 # D
 RUN set -x; \
