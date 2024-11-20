@@ -41,7 +41,7 @@ extensions:
   - Collection:
       commit: e00e70c6fcec963c8876e410e52c83c75ed60827
   - CommentStreams:
-      commit: 274bb10bc2d39fd137650dbc0dfc607c766d1aaa
+      commit: 8347a7e4f2624aab398721533878cb0bd4bfaa3f
   - CommonsMetadata:
       commit: 8ee30de3b1cabbe55c484839127493fd5fa5d076
   - ConfirmAccount:
