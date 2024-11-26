@@ -257,8 +257,6 @@ extensions:
       commit: 03b6a52f263604c819e69b78c157f6ef5adb053e
   - TimedMediaHandler:
       commit: 2e64302c68e58693650e91b7869fa5aecf1aaf23
-  - TinyMCE:
-      commit: 06436ec3a53c6cd53c458e4e8ab3ec8d1a23029b
   - TitleIcon:
       commit: 7c6c83f4859642542393612ad961a258378e0cac
   - UniversalLanguageSelector:
