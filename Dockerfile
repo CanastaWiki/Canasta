@@ -324,6 +324,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-HTMLTags $MW_HOME/extensions/HTMLTags \
 	&& cd $MW_HOME/extensions/HTMLTags \
 	&& git checkout -q b8cb3131c5e76f5c037c8474fe14e51f2e877f03 \
+	# JsonConfig (required for Graph)
+	&& git clone --single-branch -b REL1_39 https://github.com/wikimedia/mediawiki-extensions-JsonConfig.git $MW_HOME/extensions/JsonConfig \
+	&& cd $MW_HOME/extensions/JsonConfig \
+	&& git checkout -q 62a7c8ad741152e5719408aae969944591b600cf \
 	# LabeledSectionTransclusion
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-LabeledSectionTransclusion $MW_HOME/extensions/LabeledSectionTransclusion \
 	&& cd $MW_HOME/extensions/LabeledSectionTransclusion \
