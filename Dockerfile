@@ -591,7 +591,7 @@ RUN set -x; \
 	# SimpleMathJax
 	&& git clone --single-branch https://github.com/jmnote/SimpleMathJax.git $MW_HOME/extensions/SimpleMathJax \
 	&& cd $MW_HOME/extensions/SimpleMathJax \
-	&& git checkout -q 3757e9b1cf235b2e2c62e7d208d52206e185b28e \
+	&& git checkout -q fab35e6ac66e1f5abd3c91a57719f8180dd346ef \
 	# SkinPerPage
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SkinPerPage $MW_HOME/extensions/SkinPerPage \
 	&& cd $MW_HOME/extensions/SkinPerPage \
@@ -941,11 +941,6 @@ RUN set -x; \
 	cd $MW_HOME/extensions/CommentStreams \
 	&& git fetch \
 	&& git checkout -q 567178f0eac7172536aac4aea20f4cd97b8ad891 \
-	# SimpleMathJax add Fix path to ext.SimpleMathJax.js in ResourceModules \
-	&& rm -fr $MW_HOME/extensions/SimpleMathJax \
-	&& git clone --single-branch -b master https://github.com/WikiTeq/SimpleMathJax.git $MW_HOME/extensions/SimpleMathJax \
-	&& cd $MW_HOME/extensions/SimpleMathJax \
-	&& git checkout -q 1ef413553dca4143294842fac99b56425d815396 \
 	# does not work? see WIK-702?focusedCommentId=41955
 	&& rm -fr $MW_HOME/extensions/TimedMediaHandler \
 	# missed in Canasta
