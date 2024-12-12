@@ -22,7 +22,7 @@ foreach ($yamlData[$type] as $obj) {
     $branch = $data['branch'] ?? null;
     $patches = $data['patches'] ?? null;
     $persistentDirectories = $data['persistent-directories'] ?? null;
-    $composerUpdate = $data['composer'] ?? null;
+    $additionalSteps = $data['additional steps'] ?? null;
     $bundled = $data['bundled'] ?? null;
 
     if ($persistentDirectories !== null) {
@@ -33,7 +33,7 @@ foreach ($yamlData[$type] as $obj) {
         }
     }
     
-    if ($bundled === null) {
+    if ($bundled) {
         $gitCloneCmd = "git clone ";
         
         if ($repository === null) {
@@ -58,9 +58,13 @@ foreach ($yamlData[$type] as $obj) {
         }
     }
 
-    if ($composerUpdate !== null && $composerUpdate === true) {
-        $composerUpdateCmd = "cd $MW_HOME/$type/$name && composer update --no-dev";
-        exec($composerUpdateCmd);
+    if ($additionalSteps !== null) {
+        foreach ($steps as $additionalSteps) {
+            if ($steps === "composer update"){
+                $composerUpdateCmd = "cd $MW_HOME/$type/$name && composer update --no-dev";
+                exec($composerUpdateCmd);
+            }
+        }
     }
 }
 
