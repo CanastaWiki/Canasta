@@ -23,7 +23,7 @@ foreach ($yamlData[$type] as $obj) {
     $patches = $data['patches'] ?? null;
     $persistentDirectories = $data['persistent-directories'] ?? null;
     $composerUpdate = $data['composer'] ?? null;
-    $blunded = $data['blunded'] ?? null;
+    $bundled = $data['bundled'] ?? null;
 
     if ($persistentDirectories !== null) {
         exec("mkdir -p $MW_ORIGIN_FILES/canasta-$type/$name");
@@ -33,7 +33,7 @@ foreach ($yamlData[$type] as $obj) {
         }
     }
     
-    if ($blunded === null) {
+    if ($bundled === null) {
         $gitCloneCmd = "git clone ";
         
         if ($repository === null) {
