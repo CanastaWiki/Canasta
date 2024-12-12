@@ -3,6 +3,8 @@
 # extension with that name is used, and the default branch used is REL1_39.
 # Where the repository *is* specified, the default branch used is master.
 extensions:
+  - AbuseFilter:
+      blunded: true
   - AdminLinks:
       branch: master
       commit: 3e2671c21fd4b8644552069ee60220035b6e96f5 # v. 0.6.1
@@ -12,6 +14,7 @@ extensions:
       commit: 8429d8d4cba5be6df04e3fec17b0daabbf10cfa7
   - AntiSpoof:
       commit: 01cf89a678d5bab6610d24e07d3534356a5880cb
+      composer: true
   - ApprovedRevs:
       branch: master
       commit: 53b67bf7e1e8ac3d20c2fd41ad2ab1c708c045a6 # v. 1.8.2
@@ -25,6 +28,7 @@ extensions:
   - BootstrapComponents:
       repository: https://github.com/oetterer/BootstrapComponents
       commit: 665c3dee1d9e3f4bcb18dd1920fe27b70e334574 # v. 5.1.0
+      composer: true
   - BreadCrumbs2:
       commit: d53357a6839e94800a617de4fc451b6c64d0a1c8
   - Cargo:
@@ -36,6 +40,7 @@ extensions:
       commit: 9e2b6d3e928855247700146273d8131e025de918
   - CirrusSearch:
       commit: 8296300873aaffe815800cf05c84fa04c8cbd2c0
+      composer: true
   - CodeMirror:
       commit: 27efed79972ca181a194d17f4a94f4192fd5a493
   - Collection:
@@ -54,6 +59,7 @@ extensions:
       commit: bc991e93133bd69fe45e07b3d4554225decc7dae
   - DataTransfer:
       commit: 2f9f949f71f0bb7d1bd8b6b97c795b9428bb1c71
+      composer: true
   - DeleteBatch:
       commit: 82078d60fc59a718f429ddebe5e99de8a8734413
   - Description2:
@@ -72,6 +78,7 @@ extensions:
       commit: 41544ffceb1356f91575dc6772a48b172751d7cc
   - Elastica:
       commit: e4ead38b71ed4f3df8dc689fe448b749771b4ed4
+      composer: true
   - EmailAuthorization:
       commit: 2016da1b354f741d89b5dc207d4a84e11ffe9bce
   - EmbedVideo:
@@ -92,6 +99,7 @@ extensions:
   - GoogleAnalyticsMetrics:
       branch: master
       commit: 82a08cc63ec58698f144be7c2fb1a6f861cb57bd
+      composer: true
   - GoogleDocCreator:
       commit: 9e53ecfa4149688a2352a7898c2a2005632e1b7d
   - Graph:
@@ -139,10 +147,12 @@ extensions:
   - Maps:
       repository: https://github.com/ProfessionalWiki/Maps
       commit: 7175b47e3b2cbbfcd55c6bd896f4e8403dc03d33
+      composer: true
   - MassMessage:
       commit: d6a86291bb975c3dc7778f370006f1145cc834bd
   - MassMessageEmail:
       commit: bd1f3413dbe8242b4294892a7f9803ea22364eae
+      composer: true
   - MediaUploader:
       commit: 1edd91c506c1c0319e7b9a3e71d639130760b1fd
   - Mermaid:
@@ -161,10 +171,13 @@ extensions:
       commit: 206f32880fa7bf70b191d33ed80b8626bca39efe
   - NumerAlpha:
       commit: 93c0869735581006a3f510096738e262d49f4107
+  - OATHAuth:
+      blunded: true
   - OpenGraphMeta:
       commit: d319702cd4ceda1967c233ef8e021b67b3fc355f
   - OpenIDConnect:
       commit: f193befe9d66249e694fcdaa7b1b2afbf4a2ffde
+      composer: true
   - PageExchange:
       commit: 28482410564e38d2b97ab7321e99c4281c6e5877
   - PageForms:
@@ -190,6 +203,7 @@ extensions:
       commit: 87a69003743f1de52338f4717cfcf5218ca5a743
       patches:
         - semantic-breadcrumb-links-composer-reqs.patch
+      composer: true
   - SemanticCompoundQueries:
       repository: https://github.com/SemanticMediaWiki/SemanticCompoundQueries
       commit: eeb514393fdf2e80ae7084839d8803ee32ae3da4 # v. 2.2.0
@@ -212,11 +226,13 @@ extensions:
       commit: b5e2afe11991fe21a335cb90426de24b85bc9fe7 # v. 4.1.3
       persistent-directories:
         - config
+      composer: true
   - SemanticResultFormats:
       repository: https://github.com/SemanticMediaWiki/SemanticResultFormats
       commit: d5196722a56f9b65475be68d1e97063d7b975cb9 # v. 4.0.2
       patches:
         - semantic-result-formats-composer-reqs.patch
+      composer: true
   - SemanticScribunto:
       repository: https://github.com/SemanticMediaWiki/SemanticScribunto
       commit: 1c616a4c4da443b3433000d6870bb92c184236fa # v. 2.2.0
@@ -230,6 +246,7 @@ extensions:
       commit: ecea17097874d16cd240ce35bd20692a67c5064b # v. 1.3.0
       patches:
         - SemanticWatchList.417851c22c25f3e33fb654f4138c760c53051b9a.patch
+      composer: true
   - SimpleBatchUpload:
       repository: https://github.com/ProfessionalWiki/SimpleBatchUpload
       commit: 3b9e248b49d7fbeb81d7da32078db7040809e724 # v. 2.0.0
@@ -251,12 +268,14 @@ extensions:
       commit: 8af94cedc41cbe6c54614714ced6ce4128555ce4
   - TemplateStyles:
       commit: 2a93b56e370ab8b8e020ed29c507104b56f1d11a
+      composer: true
   - TemplateWizard:
       commit: d486e3475f84118fd9b5c77d60254daa2f56f654
   - Thanks:
       commit: 03b6a52f263604c819e69b78c157f6ef5adb053e
   - TimedMediaHandler:
       commit: 2e64302c68e58693650e91b7869fa5aecf1aaf23
+      composer: true
   - TinyMCE:
       commit: 06436ec3a53c6cd53c458e4e8ab3ec8d1a23029b
   - TitleIcon:
@@ -294,7 +313,9 @@ extensions:
       commit: 197d429f971b2aebbce29b7a91a194e1f8181e64
       persistent-directories:
         - compiled_templates
+      composer: true
   - WikiSEO:
       commit: 610cffa3345333b53d4dda7b55b2012fbfcee9de
   - WSOAuth:
       commit: e549b520c2916322323fe83f6b792c013043f61d
+      composer: true
