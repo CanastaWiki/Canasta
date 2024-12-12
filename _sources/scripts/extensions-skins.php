@@ -33,7 +33,7 @@ foreach ($yamlData[$type] as $obj) {
         }
     }
     
-    if ($bundled) {
+    if (!$bundled) {
         $gitCloneCmd = "git clone ";
         
         if ($repository === null) {
@@ -60,7 +60,7 @@ foreach ($yamlData[$type] as $obj) {
 
     if ($additionalSteps !== null) {
         foreach ($steps as $additionalSteps) {
-            if ($steps === "composer update"){
+            if ($steps === "composer update") {
                 $composerUpdateCmd = "cd $MW_HOME/$type/$name && composer update --no-dev";
                 exec($composerUpdateCmd);
             }
