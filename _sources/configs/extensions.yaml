@@ -5,6 +5,7 @@
 extensions:
   - AbuseFilter:
       bundled: true
+      composer: true
   - AdminLinks:
       branch: master
       commit: 3e2671c21fd4b8644552069ee60220035b6e96f5 # v. 0.6.1
@@ -173,6 +174,7 @@ extensions:
       commit: 93c0869735581006a3f510096738e262d49f4107
   - OATHAuth:
       bundled: true
+      composer: true
   - OpenGraphMeta:
       commit: d319702cd4ceda1967c233ef8e021b67b3fc355f
   - OpenIDConnect:
