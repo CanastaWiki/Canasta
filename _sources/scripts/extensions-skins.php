@@ -23,7 +23,7 @@ foreach ($yamlData[$type] as $obj) {
     $patches = $data['patches'] ?? null;
     $persistentDirectories = $data['persistent-directories'] ?? null;
     $additionalSteps = $data['additional steps'] ?? null;
-    $bundled = $data['bundled'] ?? null;
+    $bundled = $data['bundled'] ?? false;
 
     if ($persistentDirectories !== null) {
         exec("mkdir -p $MW_ORIGIN_FILES/canasta-$type/$name");
