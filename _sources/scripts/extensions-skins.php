@@ -59,6 +59,8 @@ foreach ($yamlData[$type] as $obj) {
     }
 
     if ($additionalSteps !== null) {
+        // The below implementation is faster than using the composer-merge plugin, despite calling `composer update` n times.
+        // TODO: Consider refactoring approach so `composer update` is only called once after the composer.json is dynamically built.
         foreach ($steps as $additionalSteps) {
             if ($steps === "composer update") {
                 $composerUpdateCmd = "cd $MW_HOME/$type/$name && composer update --no-dev";
