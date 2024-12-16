@@ -126,12 +126,6 @@ RUN php /tmp/extensions-skins.php "extensions" "/tmp/extensions.yaml"
 RUN set -x; \
     sed -i 's="monolog/monolog": "2.2.0",="monolog/monolog": "^2.2",=g' $MW_HOME/composer.json
 
-# Composer dependencies
-COPY _sources/configs/composer.canasta.json $MW_HOME/composer.local.json
-RUN set -x; \
-	cd $MW_HOME \
-	&& composer update --no-dev
-
 # Other patches
 
 # Cleanup all .git leftovers

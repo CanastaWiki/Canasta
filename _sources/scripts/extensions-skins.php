@@ -22,6 +22,8 @@ foreach ($yamlData[$type] as $obj) {
     $branch = $data['branch'] ?? null;
     $patches = $data['patches'] ?? null;
     $persistentDirectories = $data['persistent-directories'] ?? null;
+    $additionalSteps = $data['additional steps'] ?? null;
+    $bundled = $data['bundled'] ?? false;
 
     if ($persistentDirectories !== null) {
         exec("mkdir -p $MW_ORIGIN_FILES/canasta-$type/$name");
@@ -31,26 +33,37 @@ foreach ($yamlData[$type] as $obj) {
         }
     }
     
-    $gitCloneCmd = "git clone ";
-    
-    if ($repository === null) {
-        $repository = "https://github.com/wikimedia/mediawiki-$type-$name";
-        if ($branch === null) {
-            $branch = $MW_VERSION;
-            $gitCloneCmd .= "--single-branch -b $branch ";
+    if (!$bundled) {
+        $gitCloneCmd = "git clone ";
+        
+        if ($repository === null) {
+            $repository = "https://github.com/wikimedia/mediawiki-$type-$name";
+            if ($branch === null) {
+                $branch = $MW_VERSION;
+                $gitCloneCmd .= "--single-branch -b $branch ";
+            }
+        }
+        
+        $gitCloneCmd .= "$repository $MW_HOME/$type/$name";
+        $gitCheckoutCmd = "cd $MW_HOME/$type/$name && git checkout -q $commit";
+
+        exec($gitCloneCmd);
+        exec($gitCheckoutCmd);
+
+        if ($patches !== null) {
+            foreach ($patches as $patch) {
+                $gitApplyCmd = "cd $MW_HOME/$type/$name && git apply /tmp/$patch";
+                exec($gitApplyCmd);
+            }
         }
     }
-    
-    $gitCloneCmd .= "$repository $MW_HOME/$type/$name";
-    $gitCheckoutCmd = "cd $MW_HOME/$type/$name && git checkout -q $commit";
 
-    exec($gitCloneCmd);
-    exec($gitCheckoutCmd);
-
-    if ($patches !== null) {
-        foreach ($patches as $patch) {
-            $gitApplyCmd = "cd $MW_HOME/$type/$name && git apply /tmp/$patch";
-            exec($gitApplyCmd);
+    if ($additionalSteps !== null) {
+        foreach ($steps as $additionalSteps) {
+            if ($steps === "composer update") {
+                $composerUpdateCmd = "cd $MW_HOME/$type/$name && composer update --no-dev";
+                exec($composerUpdateCmd);
+            }
         }
     }
 }
