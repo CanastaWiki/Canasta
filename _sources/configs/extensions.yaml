@@ -131,7 +131,7 @@ extensions:
   - LDAPAuthentication2:
       commit: 125b09a026274bea480967f6ac04882abdc65ca2
   - LDAPAuthorization:
-      commit: e6815d29c22f4b4eb85f868372a729ad49d7d3c8
+      commit: a7f10e46e0c8a6d1cf3419ea0fb784eaf2470173 # v2.0.10
   - LDAPProvider:
       commit: 12bd83836c2337ea6569317be98c0cf82a924930
   - Lingo:
