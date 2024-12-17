@@ -104,19 +104,12 @@ RUN set -x; \
 	&& git submodule update --init --recursive
 
 # Skins
-# The Minerva Neue, MonoBook, Timeless, Vector and Vector 2022 skins are bundled into MediaWiki and do not need to be
-# separately installed.
 COPY _sources/scripts/extensions-skins.php /tmp/extensions-skins.php
 COPY _sources/patches/* /tmp/
 COPY _sources/configs/skins.yaml /tmp/skins.yaml
 RUN php /tmp/extensions-skins.php "skins" "/tmp/skins.yaml"
 
 # Extensions
-# The following extensions are bundled into MediaWiki and do not need to be separately installed:
-# AbuseFilter, CategoryTree, Cite, CiteThisPage, CodeEditor, ConfirmEdit, Gadgets, ImageMap, InputBox, Interwiki,
-# Math, MultimediaViewer, Nuke, OATHAuth, PageImages, ParserFunctions, PdfHandler, Poem, Renameuser, Replace Text,
-# Scribunto, SecureLinkFixer, SpamBlacklist, SyntaxHighlight, TemplateData, TextExtracts, TitleBlacklist,
-# VisualEditor, WikiEditor.
 # The following extensions are downloaded via Composer and also do not need to be downloaded here:
 # Bootstrap, DataValues (and related extensions like DataValuesCommon), ParserHooks.
 COPY _sources/configs/extensions.yaml /tmp/extensions.yaml
