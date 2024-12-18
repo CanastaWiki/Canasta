@@ -38,6 +38,8 @@ extensions:
   - Cargo:
       branch: master
       commit: a2865938165c1389d852df762f8c85073859e5dd # v. 3.5.1
+  - CategoryTree:
+      bundled: true
   - CharInsert:
       commit: 54c0f0ca9119a3ce791fb5d53edd4ec32035a5c5
   - CheckUser:
@@ -46,6 +48,12 @@ extensions:
       commit: 8296300873aaffe815800cf05c84fa04c8cbd2c0
       additional steps:
         - composer update
+  - Cite:
+      bundled: true
+  - CiteThisPage:
+      bundled: true
+  - CodeEditor:
+      bundled: true
   - CodeMirror:
       commit: 27efed79972ca181a194d17f4a94f4192fd5a493
   - Collection:
@@ -56,6 +64,8 @@ extensions:
       commit: 8ee30de3b1cabbe55c484839127493fd5fa5d076
   - ConfirmAccount:
       commit: c06d5dfb43811a2dee99099476c57af2b6d762c4
+  - ConfirmEdit:
+      bundled: true
   - ContactPage:
       commit: f509796056ae1fc597b6e3c3c268fac35bf66636
   - ContributionScores:
@@ -101,6 +111,8 @@ extensions:
   - FlexDiagrams:
       branch: master
       commit: eefc9e29aedfc6d8ffaf4f4e50043b390ebd7adc # v. 0.5
+  - Gadgets:
+      bundled: true
   - GlobalNotice:
       commit: 15a40bff4641f00a5a8dda3d36795b1c659c19a7
   - GoogleAnalyticsMetrics:
@@ -123,6 +135,12 @@ extensions:
       commit: 42aaabf1deeb0a228fc99e578ff7ec925e560dd7 # v2.2
   - HTMLTags:
       commit: b8cb3131c5e76f5c037c8474fe14e51f2e877f03
+  - ImageMap:
+      bundled: true
+  - InputBox:
+      bundled: true
+  - Interwiki:
+      bundled: true
   - JWTAuth:
       branch: master
       commit: a61d2c62e55b70d4442d0397c04ba8f429ae1c7d # v. 2.0.0
@@ -163,6 +181,8 @@ extensions:
       commit: bd1f3413dbe8242b4294892a7f9803ea22364eae
       additional steps:
         - composer update
+  - Math:
+      bundled: true
   - MediaUploader:
       commit: 1edd91c506c1c0319e7b9a3e71d639130760b1fd
   - Mermaid:
@@ -175,10 +195,14 @@ extensions:
       commit: 7f9ecd976796d02988b40dff4a790c315d4651e6
   - MsUpload:
       commit: 8c2403b09186f5f25f0c28369e6aff3c285047df
+  - MultimediaViewer:
+      bundled: true
   - MyVariables:
       commit: 8b45be10c9b0a484824c55d8cc48399290384260
   - NewUserMessage:
       commit: 206f32880fa7bf70b191d33ed80b8626bca39efe
+  - Nuke:
+      bundled: true
   - NumerAlpha:
       commit: 93c0869735581006a3f510096738e262d49f4107
   - OATHAuth:
@@ -196,12 +220,24 @@ extensions:
   - PageForms:
       branch: master
       commit: b3be227fa9650f1a165ab1cc549100f643646714 # v. 5.7.2
+  - PageImages:
+      bundled: true
+  - ParserFunctions:
+      bundled: true
+  - PdfHandler:
+      bundled: true
   - PluggableAuth:
       commit: 1884a127cd5947ad7484d3b55711db3f6515d439
+  - Poem:
+      bundled: true
   - Popups:
       commit: ff4d2156e1f7f4c11f7396cb0cd70d387abd8187
   - RegularTooltips:
       commit: 1af807bb6d5cfbd1e471e38bf70d6a392fb7eda2
+  - Renameuser:
+      bundled: true
+  - ReplaceText:
+      bundled: true
   - RevisionSlider:
       commit: 3cae51a322a5ca0f359e83efcb5fac38e73e346e
   - RottenLinks:
@@ -211,6 +247,10 @@ extensions:
       commit: 9ab23288a010c3894c59cd5ba3096d93d57c15c5
   - SaveSpinner:
       commit: 1e819e2fff7fad6999bafe71d866c3af50836c42
+  - Scribunto:
+      bundled: true
+  - SecureLinkFixer:
+      bundled: true
   - SemanticBreadcrumbLinks:
       repository: https://github.com/SemanticMediaWiki/SemanticBreadcrumbLinks
       commit: 87a69003743f1de52338f4717cfcf5218ca5a743
@@ -278,9 +318,15 @@ extensions:
       commit: 268f212b7e366711d8e7b54c7faf5b750fa014ad
   - SocialProfile:
       commit: 74fcf9bead948ec0419eea10800c9331bcc1273e
+  - SpamBlacklist:
+      bundled: true
   - SubPageList:
       repository: https://github.com/ProfessionalWiki/SubPageList
       commit: c016dcdb7866f20319731e6497b48fd43756505e # v. 3.0.0
+  - SyntaxHighlight:
+      bundled: true
+  - TemplateData:
+      bundled: true
   - TemplateSandbox:
       commit: 8af94cedc41cbe6c54614714ced6ce4128555ce4
   - TemplateStyles:
@@ -289,6 +335,8 @@ extensions:
         - composer update
   - TemplateWizard:
       commit: d486e3475f84118fd9b5c77d60254daa2f56f654
+  - TextExtracts:
+      bundled: true
   - Thanks:
       commit: 03b6a52f263604c819e69b78c157f6ef5adb053e
   - TimedMediaHandler:
@@ -297,6 +345,8 @@ extensions:
         - composer update
   - TinyMCE:
       commit: 06436ec3a53c6cd53c458e4e8ab3ec8d1a23029b
+  - TitleBlacklist:
+      bundled: true
   - TitleIcon:
       commit: 7c6c83f4859642542393612ad961a258378e0cac
   - UniversalLanguageSelector:
@@ -318,6 +368,8 @@ extensions:
   - VEForAll:
       branch: master
       commit: cffa12abb85200e90b1cbc636325b1ec1a89a6af # v. 0.5
+  - VisualEditor:
+      bundled: true
   - VoteNY:
       commit: 11c103f4b9167a8d8d5e850d8a781c6f49b249c1
   - WatchAnalytics:
@@ -334,6 +386,8 @@ extensions:
         - compiled_templates
       additional steps:
         - composer update
+  - WikiEditor:
+      bundled: true
   - WikiSEO:
       commit: 610cffa3345333b53d4dda7b55b2012fbfcee9de
   - WSOAuth:
