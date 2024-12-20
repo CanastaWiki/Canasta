@@ -1,5 +1,21 @@
 #!/bin/bash
 
+date=$(date -u +%Y%m%d_%H%M%S)
+BOOTSTRAP_LOGFILE="$MW_LOG/_bootstrap_$date.log"
+export BOOTSTRAP_LOGFILE
+
+echo "==== STARTING $date ===="
+echo "See Bash XTrace in the $BOOTSTRAP_LOGFILE file"
+
+# Open file descriptor 3 for logging xtrace output
+exec 3> >(stdbuf -oL tee -a "$BOOTSTRAP_LOGFILE" >/dev/null)
+
+# Redirect stdout and stderr to the log file using tee,
+# with stdbuf to handle buffering issues
+exec > >(stdbuf -oL tee -a "$BOOTSTRAP_LOGFILE") 2>&1
+
+# Enable xtrace and Redirect the xtrace output to log file only
+BASH_XTRACEFD=3
 set -x
 
 . /functions.sh
@@ -26,6 +42,17 @@ rsync -ah --inplace --ignore-existing \
 mkdir -p "$MW_VOLUME"/extensions/SemanticMediaWiki/config
 mkdir -p "$MW_VOLUME"/extensions/GoogleLogin/cache
 mkdir -p "$MW_VOLUME"/l10n_cache
+
+printf "\nCheck wiki settings for errors... "
+if ! php /getMediawikiSettings.php --version MediaWiki; then
+    printf "\n===================================== ERROR ======================================\n\n"
+    echo "An error occurred while checking the wiki settings."
+    echo "There is an error in the wiki settings files, or you missed to run the \"git submodule update --init --recursive\" command"
+    printf "\n==================================================================================\n\n"
+    exit 1
+else
+    printf " OK\n\n"
+fi
 
 /update-docker-gateway.sh
 
