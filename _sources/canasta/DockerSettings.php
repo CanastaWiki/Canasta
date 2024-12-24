@@ -39,11 +39,13 @@ const DOCKER_EXTENSIONS = [
 	'SemanticMediaWiki', // keep it at the top to be enabled first, because some Semantic extension don't work in other case.
 	'AJAXPoll',
 	'AbuseFilter',
+	'AddMessages',
 	'AdminLinks',
 	'AdvancedSearch',
 	'AntiSpoof',
 	'ApprovedRevs',
 	'Arrays',
+	'Auth_remoteuser',
 	'BetaFeatures',
 	'Bootstrap',
 	'BootstrapComponents',
@@ -75,11 +77,11 @@ const DOCKER_EXTENSIONS = [
 	'DeleteBatch',
 	'Description2',
 	'Disambiguator',
-	'DiscussionTools',
+	'DiscussionTools', # bundled
 	'DismissableSiteNotice',
 	'DisplayTitle',
 	'DynamicPageList3',
-	'Echo',
+	'Echo', # bundled
 	'EditAccount',
 	'Editcount',
 	'Elastica',
@@ -97,7 +99,6 @@ const DOCKER_EXTENSIONS = [
 	'GoogleDocCreator',
 	'GoogleDocTag',
 	'GoogleLogin',
-	'Graph',
 	'HTMLTags',
 	'HeadScript',
 	'HeaderFooter',
@@ -115,10 +116,11 @@ const DOCKER_EXTENSIONS = [
 	'Lingo',
 	'LinkSuggest',
 	'LinkTarget',
-	'Linter',
+	'Linter', # bundled
 	'LiquidThreads',
 	'LockAuthor',
 	'Lockdown',
+	'LoginNotify', # bundled
 	'LookupUser',
 	'Loops',
 	'LuaCache',
@@ -158,7 +160,6 @@ const DOCKER_EXTENSIONS = [
 	'PubmedParser',
 	'RegularTooltips',
 	'RemoteWiki',
-	'Renameuser', # bundled
 	'ReplaceText', # bundled
 	'RevisionSlider',
 	'RottenLinks',
@@ -170,7 +171,6 @@ const DOCKER_EXTENSIONS = [
 	'SelectCategory',
 	'SemanticCompoundQueries',
 	'SemanticDependencyUpdater', //  must be enabled after SemanticMediaWiki
-	'SemanticDrilldown',
 	'SemanticExtraSpecialProperties',
 //	'SemanticMediaWiki', moved the top to be enabled first, because some Semantic extension don't work in other case.
 	'SemanticQueryInterface',
@@ -199,7 +199,7 @@ const DOCKER_EXTENSIONS = [
 	'TemplateStyles',
 	'TemplateWizard',
 	'TextExtracts', # bundled
-	'Thanks',
+	'Thanks', # bundled
 	'TinyMCE',
 	'TitleBlacklist', # bundled
 	'TitleIcon',

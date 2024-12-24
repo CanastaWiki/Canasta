@@ -1,0 +1,134 @@
+From 966f65a9b2ee9ca0a21b6fcadcb527f18f2d0b5f Mon Sep 17 00:00:00 2001
+From: Daniel Scherzer <daniel@wikiteq.com>
+Date: Thu, 31 Oct 2024 11:16:20 +0100
+Subject: [PATCH 1/2] Apply gerrit change
+ Idf805512cbf66411969536c9c4e7344ab0ab3348
+
+> Fix for the Flow extension
+
+> Faced on MW 1.39.8, when maintenance/update.php is runnig, the Flow
+> extension calls User::newSystemUser() the function calls in the chain
+> GoogleLogin\GoogleIdProvider->getFromUser(), which throws the error
+> because it tries to select from the db table is not created yet
+
+See https://gerrit.wikimedia.org/r/c/mediawiki/extensions/GoogleLogin/+/1070987
+---
+ includes/GoogleIdProvider.php | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/includes/GoogleIdProvider.php b/includes/GoogleIdProvider.php
+index d58fca6..2709bc7 100644
+--- a/includes/GoogleIdProvider.php
++++ b/includes/GoogleIdProvider.php
+@@ -21,6 +21,10 @@ class GoogleIdProvider {
+ 			return [];
+ 		}
+ 		$db = $this->loadBalancer->getConnection( DB_PRIMARY );
++		if ( !$db->tableExists( 'user_google_user', __METHOD__ ) ) {
++			// Table has not been created yet, don't break
++			return [];
++		}
+ 
+ 		$result = $db->select(
+ 			'user_google_user',
+-- 
+2.43.0.windows.1
+
+
+From caef46c1954ce9ff146d59ba94503c51e6058746 Mon Sep 17 00:00:00 2001
+From: Daniel Scherzer <daniel@wikiteq.com>
+Date: Thu, 31 Oct 2024 11:18:26 +0100
+Subject: [PATCH 2/2] Apply gerrit change
+ Iddb344d99176a4250619093d4df137af44bdd3f2
+
+> Add GLPublicSuffixArrayDir variable to set the writable directory
+
+> Writing to the extension directory is not a good idea for security reasons.
+> Let's at least allow to set another.
+---
+ extension.json                          |  3 ++-
+ includes/AllowedDomains/EmailDomain.php | 18 +++++++++++++++++-
+ maintenance/updatePublicSuffixArray.php |  5 +++--
+ 3 files changed, 22 insertions(+), 4 deletions(-)
+
+diff --git a/extension.json b/extension.json
+index 553c9ba..e51e880 100644
+--- a/extension.json
++++ b/extension.json
+@@ -124,7 +124,8 @@
+ 		"GLAllowedDomainsDB": false,
+ 		"GLAPIKey": "",
+ 		"GLEnableEchoEvents": true,
+-		"GLAuthoritativeMode": false
++		"GLAuthoritativeMode": false,
++		"GLPublicSuffixArrayDir": ""
+ 	},
+ 	"ServiceWiringFiles": [
+ 		"includes/ServiceWiring.php"
+diff --git a/includes/AllowedDomains/EmailDomain.php b/includes/AllowedDomains/EmailDomain.php
+index 7debbfe..b3f75a7 100644
+--- a/includes/AllowedDomains/EmailDomain.php
++++ b/includes/AllowedDomains/EmailDomain.php
+@@ -3,6 +3,7 @@
+ namespace GoogleLogin\AllowedDomains;
+ 
+ use GoogleLogin\Constants;
++use MediaWiki\MediaWikiServices;
+ 
+ /**
+  * Represents a single E-Mail address.
+@@ -99,7 +100,7 @@ class EmailDomain {
+ 	 * @return array
+ 	 */
+ 	private function getPublicSuffixArray() {
+-		$file = __DIR__ . '/../../' . Constants::PUBLIC_SUFFIX_ARRAY_FILE;
++		$file = self::getPublicSuffixArrayFilePath();
+ 		if ( !file_exists( $file ) ) {
+ 			throw new \UnexpectedValueException( 'The public suffix array file does not exist at'
+ 				. ' the expecte dlocation: ' . $file . '. Have you forgotten to run the '
+@@ -112,4 +113,19 @@ class EmailDomain {
+ 		}
+ 		return array_flip( $content );
+ 	}
++
++	/**
++	 * @return string
++	 */
++	public static function getPublicSuffixArrayFilePath() {
++		$config = MediaWikiServices::getInstance()->getMainConfig();
++		$dir = $config->get( 'GLPublicSuffixArrayDir' );
++
++		if ( !$dir ) {
++			$dir = __DIR__ . '/../../';
++		} elseif ( $dir[-1] !== '/' ) {
++			$dir .= '/';
++		}
++		return $dir . Constants::PUBLIC_SUFFIX_ARRAY_FILE;
++	}
+ }
+diff --git a/maintenance/updatePublicSuffixArray.php b/maintenance/updatePublicSuffixArray.php
+index accf5bc..776e5bf 100644
+--- a/maintenance/updatePublicSuffixArray.php
++++ b/maintenance/updatePublicSuffixArray.php
+@@ -23,7 +23,8 @@ class UpdatePublicSuffixArray extends Maintenance {
+ 	}
+ 
+ 	public function execute() {
+-		$arrayDirectory = __DIR__ . '/../';
++		$filename = \GoogleLogin\AllowedDomains\EmailDomain::getPublicSuffixArrayFilePath();
++		$arrayDirectory = dirname( $filename );
+ 		if ( !is_writable( $arrayDirectory ) ) {
+ 			throw new MWException( $arrayDirectory . ' is not writeable!' );
+ 		}
+@@ -57,7 +58,7 @@ class UpdatePublicSuffixArray extends Maintenance {
+ 		}
+ 
+ 		file_put_contents(
+-			$arrayDirectory . \GoogleLogin\Constants::PUBLIC_SUFFIX_ARRAY_FILE,
++			$filename,
+ 			"<?php\n" . 'return [ "' . implode( "\",\n\"", $publicSuffixes ) . '" ];'
+ 		);
+ 	}
+-- 
+2.43.0.windows.1
+
