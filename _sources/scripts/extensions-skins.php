@@ -59,10 +59,13 @@ foreach ($yamlData[$type] as $obj) {
     }
 
     if ($additionalSteps !== null) {
-        foreach ($steps as $additionalSteps) {
+        foreach ($additionalSteps as $steps) {
             if ($steps === "composer update") {
                 $composerUpdateCmd = "cd $MW_HOME/$type/$name && composer update --no-dev";
                 exec($composerUpdateCmd);
+            } elseif ($steps === "git submodule update") {
+                $submoduleUpdateCmd = "cd $MW_HOME/$type/$name && git submodule update --init";
+                exec($submoduleUpdateCmd);
             }
         }
     }
