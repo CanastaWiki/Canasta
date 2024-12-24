@@ -98,6 +98,8 @@ extensions:
         - composer update
   - EmailAuthorization:
       commit: 2016da1b354f741d89b5dc207d4a84e11ffe9bce
+      additional steps:
+        - git submodule update
   - EmbedVideo:
       repository: https://github.com/StarCitizenWiki/mediawiki-extensions-EmbedVideo.git
       commit: 5c03c031070981730a0e01aa3cbc3e5cbd1b88c1
