@@ -378,7 +378,7 @@ run_autoupdate () {
 
 run_import () {
     # Import PagePort dumps if any
-    if mountpoint -q -- "$MW_IMPORT_VOLUME"; then
+    if [ -d "$MW_IMPORT_VOLUME" ]; then
         echo "Found $MW_IMPORT_VOLUME, running PagePort import.."
         XML_TEST=($(find $MW_IMPORT_VOLUME -maxdepth 1 -name "*.xml"))
         if [ ${#XML_TEST[@]} -gt 0 ]; then
