@@ -133,6 +133,13 @@ make_dir_writable "$MW_VOLUME" -not '(' -path "$MW_VOLUME/images" -prune ')'
 # Running php-fpm
 /run-php-fpm.sh &
 
+echo "root: $EMAIL" >> /etc/aliases
+echo "$MAILNAME" >> /etc/mailname
+echo "[$SMTP_DOMAIN]:$SMTP_PORT $EMAIL:$EMAIL_PASSWORD" >> /etc/postfix/sasl_passwd
+chmod 0600 /etc/postfix/sasl_passwd
+postmap /etc/postfix/sasl_passwd
+service postfix start
+
 ############### Run Apache ###############
 # Make sure we're not confused by old, incompletely-shutdown httpd
 # context after restarting the container.  httpd won't start correctly
