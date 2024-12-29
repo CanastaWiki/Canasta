@@ -98,7 +98,7 @@ RUN set -x; \
 RUN set -x; \
 	# Preconfigure Postfix to avoid the interactive prompt
 	echo "postfix postfix/main_mailer_type select Internet Site" | debconf-set-selections \
-    && echo "postfix postfix/mailname string smtp.gmail.com" | debconf-set-selections \
+    && echo "postfix postfix/mailname string $SMTP_DOMAIN" | debconf-set-selections \
 	&& apt-get update \
 	&& apt-get install -y mailutils \
 	&& apt install -y postfix 
