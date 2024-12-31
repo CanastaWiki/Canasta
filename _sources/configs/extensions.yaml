@@ -124,8 +124,6 @@ extensions:
         - composer update
   - GoogleDocCreator:
       commit: 9e53ecfa4149688a2352a7898c2a2005632e1b7d
-  - Graph:
-      commit: 9c229eafdf406c95a4a666a6b7f2a9d0d3d682e4
   - GTag:
       repository: https://github.com/SkizNet/mediawiki-GTag
       commit: d45f54085d003166aa032363408b8dbef7dd3628
