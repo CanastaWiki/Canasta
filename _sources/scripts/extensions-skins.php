@@ -13,62 +13,60 @@ $path = $argv[1];
 $yamlData = yaml_parse_file($path);
 
 foreach (["skins", "extensions"] as $type) {
-    if (isset($yamlData[$type])) {
-        foreach ($yamlData[$type] as $obj) {
-            $name = key($obj);
-            $data = $obj[$name];
+    foreach ($yamlData[$type] as $obj) {
+        $name = key($obj);
+        $data = $obj[$name];
+        
+        $repository = $data['repository'] ?? null;
+        $commit = $data['commit'] ?? null;
+        $branch = $data['branch'] ?? null;
+        $patches = $data['patches'] ?? null;
+        $persistentDirectories = $data['persistent-directories'] ?? null;
+        $additionalSteps = $data['additional steps'] ?? null;
+        $bundled = $data['bundled'] ?? false;
+
+        if (!$bundled) {
+            $gitCloneCmd = "git clone ";
             
-            $repository = $data['repository'] ?? null;
-            $commit = $data['commit'] ?? null;
-            $branch = $data['branch'] ?? null;
-            $patches = $data['patches'] ?? null;
-            $persistentDirectories = $data['persistent-directories'] ?? null;
-            $additionalSteps = $data['additional steps'] ?? null;
-            $bundled = $data['bundled'] ?? false;
-
-            if (!$bundled) {
-                $gitCloneCmd = "git clone ";
-                
-                if ($repository === null) {
-                    $repository = "https://github.com/wikimedia/mediawiki-$type-$name";
-                    if ($branch === null) {
-                        $branch = $MW_VERSION;
-                        $gitCloneCmd .= "--single-branch -b $branch ";
-                    }
-                }
-                
-                $gitCloneCmd .= "$repository $MW_HOME/$type/$name";
-                $gitCheckoutCmd = "cd $MW_HOME/$type/$name && git checkout -q $commit";
-
-                exec($gitCloneCmd);
-                exec($gitCheckoutCmd);
-
-                if ($patches !== null) {
-                    foreach ($patches as $patch) {
-                        $gitApplyCmd = "cd $MW_HOME/$type/$name && git apply /tmp/$patch";
-                        exec($gitApplyCmd);
-                    }
+            if ($repository === null) {
+                $repository = "https://github.com/wikimedia/mediawiki-$type-$name";
+                if ($branch === null) {
+                    $branch = $MW_VERSION;
+                    $gitCloneCmd .= "--single-branch -b $branch ";
                 }
             }
+            
+            $gitCloneCmd .= "$repository $MW_HOME/$type/$name";
+            $gitCheckoutCmd = "cd $MW_HOME/$type/$name && git checkout -q $commit";
 
-            if ($additionalSteps !== null) {
-                foreach ($additionalSteps as $step) {
-                    if ($step === "composer update") {
-                        $composerUpdateCmd = "cd $MW_HOME/$type/$name && composer update --no-dev";
-                        exec($composerUpdateCmd);
-                    } elseif ($step === "git submodule update") {
-                        $submoduleUpdateCmd = "cd $MW_HOME/$type/$name && git submodule update --init";
-                        exec($submoduleUpdateCmd);
-                    }
+            exec($gitCloneCmd);
+            exec($gitCheckoutCmd);
+
+            if ($patches !== null) {
+                foreach ($patches as $patch) {
+                    $gitApplyCmd = "cd $MW_HOME/$type/$name && git apply /tmp/$patch";
+                    exec($gitApplyCmd);
                 }
             }
+        }
 
-            if ($persistentDirectories !== null) {
-                exec("mkdir -p $MW_ORIGIN_FILES/canasta-$type/$name");
-                foreach ($directory as $persistentDirectories) {
-                    exec("mv $MW_HOME/canasta-$type/$name/$directory $MW_ORIGIN_FILES/canasta-$type/$name/");
-                    exec("ln -s $MW_VOLUME/canasta-$type/$name/$directory $MW_HOME/canasta-$type/$name/$directory");
+        if ($additionalSteps !== null) {
+            foreach ($additionalSteps as $step) {
+                if ($step === "composer update") {
+                    $composerUpdateCmd = "cd $MW_HOME/$type/$name && composer update --no-dev";
+                    exec($composerUpdateCmd);
+                } elseif ($step === "git submodule update") {
+                    $submoduleUpdateCmd = "cd $MW_HOME/$type/$name && git submodule update --init";
+                    exec($submoduleUpdateCmd);
                 }
+            }
+        }
+
+        if ($persistentDirectories !== null) {
+            exec("mkdir -p $MW_ORIGIN_FILES/canasta-$type/$name");
+            foreach ($directory as $persistentDirectories) {
+                exec("mv $MW_HOME/canasta-$type/$name/$directory $MW_ORIGIN_FILES/canasta-$type/$name/");
+                exec("ln -s $MW_VOLUME/canasta-$type/$name/$directory $MW_HOME/canasta-$type/$name/$directory");
             }
         }
     }
