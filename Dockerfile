@@ -113,18 +113,6 @@ RUN set -x; \
 	&& cd $MW_HOME \
 	&& git submodule update --init --recursive
 
-# Skins
-COPY _sources/scripts/extensions-skins.php /tmp/extensions-skins.php
-COPY _sources/patches/* /tmp/
-COPY _sources/configs/skins.yaml /tmp/skins.yaml
-RUN php /tmp/extensions-skins.php "skins" "/tmp/skins.yaml"
-
-# Extensions
-# The following extensions are downloaded via Composer and also do not need to be downloaded here:
-# Bootstrap, DataValues (and related extensions like DataValuesCommon), ParserHooks.
-COPY _sources/configs/extensions.yaml /tmp/extensions.yaml
-RUN php /tmp/extensions-skins.php "extensions" "/tmp/extensions.yaml"
-
 # Patch composer
 RUN set -x; \
     sed -i 's="monolog/monolog": "2.2.0",="monolog/monolog": "^2.2",=g' $MW_HOME/composer.json
@@ -140,8 +128,6 @@ RUN set -x; \
 RUN set -x; \
 	cd $MW_HOME/extensions \
 	&& for i in $(ls -d */); do echo "#wfLoadExtension('${i%%/}');"; done > $MW_ORIGIN_FILES/installedExtensions.txt \
-    # Dirty hack for Semantic MediaWiki
-    && sed -i "s/#wfLoadExtension('SemanticMediaWiki');/#enableSemantics('localhost');/g" $MW_ORIGIN_FILES/installedExtensions.txt \
     && cd $MW_HOME/skins \
 	&& for i in $(ls -d */); do echo "#wfLoadSkin('${i%%/}');"; done > $MW_ORIGIN_FILES/installedSkins.txt \
     # Load Vector skin by default in the sample file
