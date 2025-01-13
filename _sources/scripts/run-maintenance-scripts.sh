@@ -14,7 +14,6 @@ WG_DB_USER=$(get_mediawiki_db_var wgDBuser)
 WG_DB_PASSWORD=$(get_mediawiki_db_var wgDBpassword)
 WG_SQLITE_DATA_DIR=$(get_mediawiki_variable wgSQLiteDataDir)
 WG_SEARCH_TYPE=$(get_mediawiki_variable wgSearchType)
-WG_CIRRUS_SEARCH_SERVER=$(get_mediawiki_cirrus_search_server)
 VERSION_HASH=$(php /getMediawikiSettings.php --versions --format=md5)
 
 waitdatabase() {
@@ -55,38 +54,6 @@ waitdatabase() {
     return 0
 }
 
-# Pause setup until ElasticSearch starts running
-waitelastic() {
-    if [ -n "$es_started" ]; then
-        return 0; # already started
-    fi
-
-    echo >&2 'Waiting for elasticsearch to start'
-    /wait-for-it.sh -t 60 "$WG_CIRRUS_SEARCH_SERVER"
-
-    for i in {300..0}; do
-        result=0
-        output=$(wget --timeout=1 -q -O - "http://$WG_CIRRUS_SEARCH_SERVER/_cat/health") || result=$?
-        if [[ "$result" = 0 && $(echo "$output"|awk '{ print $4 }') = "green" ]]; then
-            break
-        fi
-        if [ "$result" = 0 ]; then
-            echo >&2 "Waiting for elasticsearch health status changed from [$(echo "$output"|awk '{ print $4 }')] to [green]..."
-        else
-            echo >&2 'Waiting for elasticsearch to start...'
-        fi
-        sleep 1
-    done
-    if [ "$i" = 0 ]; then
-        echo >&2 'Elasticsearch is not ready for use'
-        echo "$output"
-        return 1
-    fi
-    echo >&2 'Elasticsearch started successfully'
-    es_started="1"
-    return 0
-}
-
 get_tables_count() {
     waitdatabase || {
         return $?
@@ -117,11 +84,6 @@ run_maintenance_script_if_needed () {
         waitdatabase || {
             return $?
         }
-        if [[ "$1" == *CirrusSearch* ]]; then
-            waitelastic || {
-                return $?
-            }
-        fi
 
         i=3
         while [ -n "${!i}" ]
@@ -148,49 +110,11 @@ run_maintenance_script_if_needed () {
 run_autoupdate () {
     echo >&2 'Check for the need to run maintenance scripts'
     ### maintenance/update.php
-    SMW_UPGRADE_KEY=$(php /getMediawikiSettings.php --SMWUpgradeKey)
-    run_maintenance_script_if_needed 'maintenance_update' "$MW_VERSION-$MW_CORE_VERSION-$MW_MAINTENANCE_UPDATE-$VERSION_HASH-$SMW_UPGRADE_KEY" \
+    run_maintenance_script_if_needed 'maintenance_update' "$MW_VERSION-$MW_CORE_VERSION-$MW_MAINTENANCE_UPDATE-$VERSION_HASH" \
         'maintenance/update.php --quick' || {
             echo >&2 "An error occurred when auto-update script was running"
             return $?
         }
-    # The SMW upgrade key can be changes after running update.php
-    NEW_SMW_UPGRADE_KEY=$(php /getMediawikiSettings.php --SMWUpgradeKey)
-    if [ "$SMW_UPGRADE_KEY" != "$NEW_SMW_UPGRADE_KEY" ]; then
-        SMW_UPGRADE_KEY="$NEW_SMW_UPGRADE_KEY"
-        # update the key without running the maintenance script
-        run_maintenance_script_if_needed 'maintenance_update' "$MW_VERSION-$MW_CORE_VERSION-$MW_MAINTENANCE_UPDATE-$VERSION_HASH-$SMW_UPGRADE_KEY"
-    fi
-
-    # Run incomplete SemanticMediawiki setup tasks
-    SMW_INCOMPLETE_TASKS=$(php /getMediawikiSettings.php --SWMIncompleteSetupTasks --format=space)
-    for task in $SMW_INCOMPLETE_TASKS
-    do
-        case $task in
-            smw-updateentitycollation-incomplete)
-                run_maintenance_script_if_needed 'maintenance_semantic_updateEntityCollation' "always" \
-                    'extensions/SemanticMediaWiki/maintenance/updateEntityCollation.php'
-                ;;
-            smw-updateentitycountmap-incomplete)
-                run_maintenance_script_if_needed 'maintenance_semantic_updateEntityCountMap' "always" \
-                    'extensions/SemanticMediaWiki/maintenance/updateEntityCountMap.php'
-                ;;
-            *)
-                echo >&2 "######## Unknown SMW maintenance setup task - $task ########"
-                ;;
-        esac
-    done
-
-    ### CirrusSearch
-    if [ "$WG_SEARCH_TYPE" == 'CirrusSearch' ]; then
-        run_maintenance_script_if_needed 'maintenance_CirrusSearch_updateConfig' "${EXTRA_MW_MAINTENANCE_CIRRUSSEARCH_UPDATECONFIG}${MW_MAINTENANCE_CIRRUSSEARCH_UPDATECONFIG}${MW_VERSION}" \
-            'extensions/CirrusSearch/maintenance/UpdateSearchIndexConfig.php --reindexAndRemoveOk --indexIdentifier now' && \
-        run_maintenance_script_if_needed 'maintenance_CirrusSearch_forceIndex' "${EXTRA_MW_MAINTENANCE_CIRRUSSEARCH_FORCEINDEX}${MW_MAINTENANCE_CIRRUSSEARCH_FORCEINDEX}${MW_VERSION}" \
-            'extensions/CirrusSearch/maintenance/ForceSearchIndex.php --skipLinks --indexOnSkip' \
-            'extensions/CirrusSearch/maintenance/ForceSearchIndex.php --skipParse'
-    fi
-
-    echo >&2 "Auto-update completed"
 }
 
 run_maintenance_scripts() {
@@ -270,7 +194,6 @@ else
     WG_DB_PASSWORD=$(get_mediawiki_db_var wgDBpassword)
     WG_SQLITE_DATA_DIR=$(get_mediawiki_variable wgSQLiteDataDir)
     WG_SEARCH_TYPE=$(get_mediawiki_variable wgSearchType)
-    WG_CIRRUS_SEARCH_SERVER=$(get_mediawiki_cirrus_search_server)
     VERSION_HASH=$(php /getMediawikiSettings.php --versions --format=md5)
 
     run_maintenance_scripts
