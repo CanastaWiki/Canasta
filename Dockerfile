@@ -1,7 +1,7 @@
 FROM debian:12.8 AS base
 
 LABEL maintainers=""
-LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
+LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/CanastaBase
 
 ENV MW_VERSION=REL1_43 \
 	MW_CORE_VERSION=1.43.0 \
