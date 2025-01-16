@@ -115,6 +115,8 @@ run_autoupdate () {
             echo >&2 "An error occurred when auto-update script was running"
             return $?
         }
+
+    echo >&2 "Auto-update completed"
 }
 
 run_maintenance_scripts() {
