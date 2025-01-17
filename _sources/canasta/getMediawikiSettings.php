@@ -28,18 +28,6 @@ class GetMediawikiSettings extends Maintenance {
 			false
 		);
 		$this->addOption(
-			'isSMWValid',
-			''
-		);
-		$this->addOption(
-			'SMWUpgradeKey',
-			''
-		);
-		$this->addOption(
-			'SWMIncompleteSetupTasks',
-			''
-		);
-		$this->addOption(
 			'format',
 			'',
 			false,
@@ -71,31 +59,6 @@ class GetMediawikiSettings extends Maintenance {
 					$gitVersion = substr( $gitInfo->getHeadSHA1() ?: '', 0, 7 );
 					$return[$name] .= " ($gitVersion)";
 				}
-			}
-		} elseif ( $this->hasOption( 'isSMWValid' ) ) {
-			$extThings = self::getExtensionsThings();
-			if ( isset( $extThings['SemanticMediaWiki'] ) ) {
-				$this->output( SMW\Setup::isValid() ? 'true' : 'false' );
-			} else {
-				$this->output( 'SMW not installed' );
-			}
-			return;
-		} elseif ( $this->hasOption( 'SMWUpgradeKey' ) ) {
-			$extThings = self::getExtensionsThings();
-			if ( isset( $extThings['SemanticMediaWiki'] ) ) {
-				SemanticMediaWiki::onExtensionFunction();
-				$smwId = SMW\Site::id();
-				$return = $GLOBALS['smw.json'][$smwId]['upgrade_key'] ?? '';
-			} else {
-				$return = 'SMW_not_installed';
-			}
-		} elseif ( $this->hasOption( 'SWMIncompleteSetupTasks' ) ) {
-			$extThings = self::getExtensionsThings();
-			if ( isset( $extThings['SemanticMediaWiki'] ) ) {
-				SemanticMediaWiki::onExtensionFunction();
-				$SMWSetupFile = new SMW\SetupFile();
-				$SMWIncompleteTasks = $SMWSetupFile->findIncompleteTasks();
-				$return = $SMWIncompleteTasks;
 			}
 		}
 
