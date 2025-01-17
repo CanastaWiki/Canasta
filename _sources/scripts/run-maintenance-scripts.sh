@@ -89,7 +89,7 @@ run_maintenance_script_if_needed () {
         while [ -n "${!i}" ]
         do
             if [ ! -f "$(echo "${!i}" | awk '{print $1}')" ]; then
-                echo >&2 "Maintenance script does not exit: ${!i}"
+                echo >&2 "Maintenance script does not exist: ${!i}"
                 return 0;
             fi
             echo >&2 "Run maintenance script: ${!i}"
