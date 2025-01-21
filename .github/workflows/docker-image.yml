@@ -6,9 +6,10 @@ concurrency: docker_taqasta_main
 
 on:
   push:
-    # Only activate for `master` branch
+    # Only activate for `master` branch and LTS release branches
     branches:
       - master
+      - REL1_39
     # Plus for all tags
     tags:
       - '*'
@@ -88,8 +89,8 @@ jobs:
           # Compose REGISTRY_TAGS variable
           REGISTRY_TAGS=$IMAGE_ID:$VERSION
 
-          # For master branch also supply an extra tag: <MW_VERSION>-latest,<MW_VERSION>-<DATE>-<SHA>
-          [ "$VERSION" == "latest" ] && REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:$TAQASTA_VERSION,$IMAGE_ID:$MEDIAWIKI_MAJOR_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-$BDATE-$(git rev-parse --short HEAD)
+          # For REL1_39 branch also supply an extra tag: <MW_VERSION>-<DATE>-<SHA>
+          [ "$VERSION" == "REL1_39" ] && REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:$MEDIAWIKI_VERSION-$BDATE-$(git rev-parse --short HEAD)
 
           SHA_SHORT=${{ github.sha }}
           [ "${{ github.event_name }}" == "pull_request" ] && SHA_SHORT=$(echo ${{ github.event.pull_request.head.sha }} | cut -c1-8)
