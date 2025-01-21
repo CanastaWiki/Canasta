@@ -4,7 +4,7 @@ LABEL maintainers="pavel@wikiteq.com,alexey@wikiteq.com"
 LABEL org.opencontainers.image.source=https://github.com/WikiTeq/Taqasta
 
 ENV MW_VERSION=REL1_39 \
-	MW_CORE_VERSION=1.39.10 \
+	MW_CORE_VERSION=1.39.11 \
 	WWW_ROOT=/var/www/mediawiki \
 	MW_HOME=/var/www/mediawiki/w \
 	MW_LOG=/var/log/mediawiki \
@@ -231,9 +231,9 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/BetaFeatures \
 	&& git checkout -q 09cca44341f9695446c4e9fc9e8fec3fdcb197b0 \
 	# BreadCrumbs2
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/BreadCrumbs2 $MW_HOME/extensions/BreadCrumbs2 \
+	&& git clone --single-branch -b master https://gerrit.wikimedia.org/r/mediawiki/extensions/BreadCrumbs2 $MW_HOME/extensions/BreadCrumbs2 \
 	&& cd $MW_HOME/extensions/BreadCrumbs2 \
-	&& git checkout -q d53357a6839e94800a617de4fc451b6c64d0a1c8
+	&& git checkout -q 6008954939eb5da9c2a6ec45a38854fb17ae69d4
 
 # C
 RUN set -x; \
