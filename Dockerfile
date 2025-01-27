@@ -4,7 +4,7 @@ LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
 
 ENV MW_VERSION=REL1_39 \
-	MW_CORE_VERSION=1.39.10 \
+	MW_CORE_VERSION=1.39.11 \
 	WWW_ROOT=/var/www/mediawiki \
 	MW_HOME=/var/www/mediawiki/w \
 	MW_LOG=/var/log/mediawiki \
@@ -169,9 +169,9 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/BootstrapComponents \
 	&& git checkout -q 665c3dee1d9e3f4bcb18dd1920fe27b70e334574 \
 	# BreadCrumbs2
-	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-BreadCrumbs2 $MW_HOME/extensions/BreadCrumbs2 \
+	&& git clone --single-branch -b master https://github.com/wikimedia/mediawiki-extensions-BreadCrumbs2 $MW_HOME/extensions/BreadCrumbs2 \
 	&& cd $MW_HOME/extensions/BreadCrumbs2 \
-	&& git checkout -q d53357a6839e94800a617de4fc451b6c64d0a1c8 \
+	&& git checkout -q 6008954939eb5da9c2a6ec45a38854fb17ae69d4 \
 	# Buggy
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Buggy.git $MW_HOME/extensions/Buggy \
 	&& cd $MW_HOME/extensions/Buggy \
