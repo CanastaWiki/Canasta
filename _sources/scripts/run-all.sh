@@ -4,14 +4,6 @@ set -x
 
 . /functions.sh
 
-if ! mountpoint -q -- "$MW_VOLUME"; then
-    echo "Folder $MW_VOLUME contains important data and must be mounted to persistent storage!"
-    if ! isTrue "$MW_ALLOW_UNMOUNTED_VOLUME"; then
-        exit 1
-    fi
-    echo "You allowed to continue because MW_ALLOW_UNMOUNTED_VOLUME is set as true"
-fi
-
 # Symlink all extensions and skins (both bundled and user)
 /create-symlinks.sh
 
