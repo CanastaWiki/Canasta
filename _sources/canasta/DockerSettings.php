@@ -613,6 +613,52 @@ if ( getenv( 'MW_AUTO_IMPORT' ) ) {
 	wfLoadExtension( 'PagePort' );
 }
 
+# Speedscope format official excimer profiling code
+# The output files can be visualized on https://www.speedscope.app/
+# Variables
+# MW_EXCIMER_ENABLE_FOR_ + uppercase entrypoint (API, CLI, IMG_AUTH, INDEX, LOAD, OPENSEARCH_DESC, REST, THUMB, THUMB_HANDLER, UNKNOWN)
+# MW_EXCIMER_CHANCE - by default 1% (for example: 100, 10, 1, 0.1, 0.01, etc)
+# MW_EXCIMER_PERIOD - by default 10 ms
+if ( isEnvTrue( 'MW_EXCIMER_ENABLE_FOR_' . strtoupper( MW_ENTRY_POINT ) ) ) {
+	$chancePercentage = (float)getenv( 'MW_EXCIMER_CHANCE' ) ?: 1; // 1% chance by default
+	$shouldProfile = mt_rand( 1, 1000000 ) / 10000 <= $chancePercentage;
+
+	if ( $shouldProfile ) {
+		$excimer = new ExcimerProfiler();
+		$excimer->setPeriod( (float)getenv('MW_EXCIMER_PERIOD' ) ?: 0.01 ); // Keep the sampling interval at 10ms by default
+		$excimer->setEventType( EXCIMER_REAL );
+		$excimer->start();
+		register_shutdown_function( function () use ( $excimer ) {
+			$excimer->stop();
+			$data = $excimer->getLog()->getSpeedscopeData();
+			$data['profiles'][0]['name'] = $_SERVER['REQUEST_URI'] ?? 'CLI or unknown';
+
+			// Prepare the folder structure
+			$baseLogDir = getenv( 'MW_LOG' );
+			$dt = new DateTime();
+			$currentDate = $dt->format( 'Y/m/d' ); // Year/Month/Day
+			$logDir = $baseLogDir . '/' . $currentDate;
+
+			// Ensure the directories exist
+			if ( !is_dir( $logDir ) ) {
+				mkdir( $logDir, 0777, true ); // Recursive creation with full permissions
+			}
+
+			$filename = sprintf(
+				'%s/%s/speedscope-%s-%s.json',
+				getenv( 'MW_LOG' ),
+				$currentDate,
+				$dt->format( 'Y-m-d_His_v' ),
+				MW_ENTRY_POINT
+			);
+			file_put_contents(
+				$filename,
+				json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE )
+			);
+		} );
+	}
+}
+
 # Include all php files in config/settings directory
 foreach ( glob( getenv( 'MW_CONFIG_DIR' ) . '/settings/*.php' ) as $filename ) {
 	if ( is_readable( $filename ) ) {
