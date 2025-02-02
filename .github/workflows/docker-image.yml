@@ -1,0 +1,167 @@
+name: Docker build and push
+
+# limit concurrency
+# https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#examples-using-concurrency-and-the-default-behavior
+concurrency: docker_canasta_base_main
+
+on:
+  push:
+    # Only activate for `master` branch
+    branches:
+      - master
+    # Plus for all tags
+    tags:
+      - '*'
+
+  # Plus for any pull-requests
+  pull_request:
+
+env:
+  IMAGE_NAME: canasta-base
+
+jobs:
+  # Test the image Dockerfile syntax using https://github.com/replicatedhq/dockerfilelint
+  test:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v3
+      -
+        name: Run linter (hadolint)
+        uses: vedmaka/hadolint-action@master
+        with:
+          dockerfile: "Dockerfile"
+          config: "hadolint.yaml"
+
+  # Push image to GitHub Packages.
+  # The image tag pattern is:
+  # for pull-requests: <MW_CORE_VERSION>-<DATE>-<PR_NUMBER>, eg: 1.35.2-20210125-25
+  # for tags: <TAG>
+  # for `master` branch: latest + <MW_VERSION>-latest + <MW_CORE_VERSION>-<DATE>-<SHA>
+  # <MW_CORE_VERSION> being parsed from the Dockerfile
+  push:
+    needs: [test]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Generate tags
+        id: generate
+        run: |
+
+          # Image ID
+          IMAGE_ID=ghcr.io/canastawiki/$IMAGE_NAME
+
+          # Date
+          BDATE=$(date +%Y%m%d)
+
+          # Extract MW version from Dockerfile
+          MEDIAWIKI_VERSION=$(sed -nr 's/MW_CORE_VERSION\=([0-9\.]+)/\1/p' Dockerfile | sed "s/ \\\//" | sed "s/\t//")
+          # Extract MW major version (like 1.35)
+          MEDIAWIKI_MAJOR_VERSION=${MEDIAWIKI_VERSION%.*}
+
+          # Change all uppercase to lowercase, just in case
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          # Strip git ref prefix from version and use it as suffix for version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          
+          # Get the Canasta version from the "VERSION" file
+          CANASTA_VERSION=$(cat VERSION)
+
+          # For pull requests just extract the PR number
+          PR_NUMBER=""
+          [ "${{ github.event_name }}" == "pull_request" ] && VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\)/merge,\1,')
+          [ "${{ github.event_name }}" == "pull_request" ] && PR_NUMBER=$VERSION
+
+          # Append version
+          [ "${{ github.event_name }}" == "pull_request" ] && VERSION=$MEDIAWIKI_VERSION-$BDATE-$VERSION
+
+          # Strip "v" prefix from tag name if it's a tag
+          # [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+
+          # Use Docker `latest` tag convention if it's a master branch build
+          [ "$VERSION" == "master" ] && VERSION=latest
+
+          # Compose REGISTRY_TAGS variable
+          REGISTRY_TAGS=$IMAGE_ID:$VERSION
+
+          # For master branch also supply an extra tag: <MW_VERSION>-latest,<MW_VERSION>-<DATE>-<SHA>
+          [ "$VERSION" == "latest" ] && REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:$CANASTA_VERSION,$IMAGE_ID:$MEDIAWIKI_MAJOR_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-$BDATE-$(git rev-parse --short HEAD)
+
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          echo REGISTRY_TAGS=$REGISTRY_TAGS
+          echo headref=${{ github.head_ref }}
+          
+          SHA_SHORT=$(echo ${{ github.sha }} | cut -c1-8)
+          [ "${{ github.event_name }}" == "pull_request" ] && SHA_SHORT=$(echo ${{ github.event.pull_request.head.sha }} | cut -c1-8)
+        
+          echo "Final image tag to be pushed:"
+          echo $REGISTRY_TAGS
+          echo "REGISTRY_TAGS=$REGISTRY_TAGS" >> $GITHUB_OUTPUT
+          echo "REGISTRY_TAGS_VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "REGISTRY_TAGS_PR_NUMBER=$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "SHA_SHORT=$SHA_SHORT" >> $GITHUB_OUTPUT
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          install: true
+      -
+        name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      -
+        name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          platforms: linux/amd64, linux/arm64
+          push: true
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+          tags: ${{ steps.generate.outputs.REGISTRY_TAGS }}
+      -
+        # https://github.com/docker/build-push-action/issues/252
+        # https://github.com/moby/buildkit/issues/1896
+        name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+      -
+        name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+      -
+        name: Image tags debug
+        run: echo ${{ steps.generate.outputs.REGISTRY_TAGS }}
+
+      -
+        name: Notify about image tag
+        if: github.event_name == 'pull_request' && steps.docker_build.outputs.digest != ''
+        uses: hasura/comment-progress@v2.2.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          number: ${{ github.event.number }}
+          id: comment
+          message: ":whale: The image based on [${{ steps.generate.outputs.SHA_SHORT }}](https://github.com/CanastaWiki/CanastaBase/pull/${{ steps.generate.outputs.REGISTRY_TAGS_PR_NUMBER }}/commits/${{ github.event.pull_request.head.sha }}) commit has been built with `${{ steps.generate.outputs.REGISTRY_TAGS_VERSION }}` tag as [${{ steps.generate.outputs.REGISTRY_TAGS }}](https://github.com/${{ github.repository }}/pkgs/container/${{ env.IMAGE_NAME }}/${{ steps.docker_build.outputs.imageid }}?tag=${{ steps.generate.outputs.REGISTRY_TAGS_VERSION }})"
+          recreate: true
+          fail: false
