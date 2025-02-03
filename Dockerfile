@@ -199,6 +199,7 @@ COPY _sources/configs/php-fpm-www.conf /etc/php/8.1/fpm/pool.d/www.conf
 COPY _sources/scripts/*.sh /
 COPY _sources/scripts/maintenance-scripts/*.sh /maintenance-scripts/
 COPY _sources/scripts/*.php $MW_HOME/maintenance/
+COPY _sources/scripts/extensions-skins.php /tmp/
 COPY _sources/configs/robots-main.txt _sources/configs/robots.php $WWW_ROOT/
 COPY _sources/configs/.htaccess $WWW_ROOT/
 COPY _sources/images/favicon.ico $WWW_ROOT/
