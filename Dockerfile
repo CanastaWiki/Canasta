@@ -495,7 +495,7 @@ RUN set -x; \
 	# MyVariables
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/MyVariables $MW_HOME/extensions/MyVariables \
 	&& cd $MW_HOME/extensions/MyVariables \
-	&& git checkout -q 8b45be10c9b0a484824c55d8cc48399290384260
+	&& git checkout -q 6351553f23956aed075d301621310f4e56f92a22
 
 # N
 RUN set -x; \
