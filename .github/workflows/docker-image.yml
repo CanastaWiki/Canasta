@@ -9,6 +9,7 @@ on:
     # Only activate for `master` branch
     branches:
       - master
+      - dbupdate
       - 1.2.x
     # Plus for all tags
     tags:
