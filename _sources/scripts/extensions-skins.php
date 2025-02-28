@@ -12,6 +12,7 @@ $type = $argv[1];
 $path = $argv[2];
 
 $yamlData = yaml_parse_file($path);
+$updateNeeded = false;
 
 foreach ($yamlData[$type] as $obj) {
     $name = key($obj);
@@ -66,9 +67,16 @@ foreach ($yamlData[$type] as $obj) {
             } elseif ($step === "git submodule update") {
                 $submoduleUpdateCmd = "cd $MW_HOME/$type/$name && git submodule update --init";
                 exec($submoduleUpdateCmd);
+            } elseif ($step === "db update") {
+                $updateNeeded = true;
             }
         }
     }
+}
+
+if ($updateNeeded) {
+    $maintenanceCmd = "php $MW_HOME/maintenance/update.php";
+    exec($maintenanceCmd);
 }
 
 ?>
