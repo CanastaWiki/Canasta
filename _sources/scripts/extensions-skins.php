@@ -12,6 +12,8 @@ $type = $argv[1];
 $path = $argv[2];
 
 $yamlData = yaml_parse_file($path);
+$updateNeeded = false;
+$extensionsToEnable = [];
 
 foreach ($yamlData[$type] as $obj) {
     $name = key($obj);
@@ -66,9 +68,29 @@ foreach ($yamlData[$type] as $obj) {
             } elseif ($step === "git submodule update") {
                 $submoduleUpdateCmd = "cd $MW_HOME/$type/$name && git submodule update --init";
                 exec($submoduleUpdateCmd);
+            } elseif ($step === "db update") {
+                $updateNeeded = true;
+                $extensionsToEnable[] = $name;
             }
         }
     }
+}
+
+if ( $updateNeeded && !empty( $extensionsToEnable ) ) {
+    $extensionsFile = "$MW_HOME/extensions-temp.php";
+
+    // Generate a temporary PHP file to enable extensions
+    $extensionCode = "<?php\n";
+    foreach ( $extensionsToEnable as $ext ) {
+        $extensionCode .= "wfLoadExtension('$ext');\n";
+    }
+    file_put_contents( $extensionsFile, $extensionCode );
+
+    // Run update.php with extensions enabled
+    exec( "MW_SETUP_MODE=true php $MW_HOME/maintenance/update.php" );
+
+    // Remove temporary extensions file to disable them
+    unlink($extensionsFile);
 }
 
 ?>
