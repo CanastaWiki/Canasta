@@ -15,6 +15,8 @@ $MW_VERSION = getenv("MW_VERSION");
 $MW_VOLUME = getenv("MW_VOLUME");
 $MW_ORIGIN_FILES = getenv("MW_ORIGIN_FILES");
 $path = $argv[1];
+$updateNeeded = false;
+$extensionsToEnable = [];
 
 $contentsData = [
     'extensions' => [],
@@ -81,10 +83,30 @@ foreach (['extensions', 'skins'] as $type) {
                 } elseif ($step === "git submodule update") {
                     $submoduleUpdateCmd = "cd $MW_HOME/$type/$name && git submodule update --init";
                     exec($submoduleUpdateCmd);
+                } elseif ($step === "database update") {
+                    $updateNeeded = true;
+                    $extensionsToEnable[] = $name;
                 }
             }
         }
     }
+}
+
+if ( $updateNeeded && !empty( $extensionsToEnable ) ) {
+    $extensionsFile = "$MW_VOLUME/config/settings/extensions-temp.php";
+
+    // Generate a temporary PHP file to enable extensions
+    $extensionCode = "<?php\n";
+    foreach ( $extensionsToEnable as $ext ) {
+        $extensionCode .= "wfLoadExtension('$ext');\n";
+    }
+    file_put_contents( $extensionsFile, $extensionCode );
+
+    // Run update.php with extensions enabled
+    exec( "MW_SETUP_MODE=true php $MW_HOME/maintenance/update.php" );
+
+    // Remove temporary extensions file to disable them
+    unlink($extensionsFile);
 }
 
 /**
