@@ -111,7 +111,7 @@ if ( $updateNeeded && !empty( $extensionsToEnable ) ) {
 
 /**
  * Recursive function to allow for loading a whole chain of YAML files (if
- * necessary), with each one defining its partent file via the "inherits"
+ * necessary), with each one defining its parent file via the "inherits"
  * field.
  *
  * This function populates the array $contentsData, with child YAML files
