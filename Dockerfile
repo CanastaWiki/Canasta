@@ -196,10 +196,12 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-CodeMirror $MW_HOME/extensions/CodeMirror \
 	&& cd $MW_HOME/extensions/CodeMirror \
 	&& git checkout -q 27efed79972ca181a194d17f4a94f4192fd5a493 \
-	# Collection
+	# Collection (patched version, see SEB2-16)
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Collection $MW_HOME/extensions/Collection \
 	&& cd $MW_HOME/extensions/Collection \
-	&& git checkout -q e00e70c6fcec963c8876e410e52c83c75ed60827 \
+	# TODO replace with checkout to a commit when the patch merged, https://gerrit.wikimedia.org/r/c/mediawiki/extensions/Collection/+/1131358
+	&& git fetch https://gerrit.wikimedia.org/r/mediawiki/extensions/Collection refs/changes/58/1131358/2 \
+	&& git reset --hard FETCH_HEAD \
 	# CommentStreams
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-CommentStreams $MW_HOME/extensions/CommentStreams \
 	&& cd $MW_HOME/extensions/CommentStreams \
