@@ -110,6 +110,9 @@ file_put_contents( $extensionsFile, $extensionCode );
 // Run update.php with extensions enabled
 exec( "MW_SETUP_MODE=true php $MW_HOME/maintenance/update.php" );
 
+// Reset extensions file to just "<?php"
+file_put_contents( $extensionsFile, "<?php" );
+
 /**
  * Recursive function to allow for loading a whole chain of YAML files (if
  * necessary), with each one defining its parent file via the "inherits"
