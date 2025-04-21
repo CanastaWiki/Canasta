@@ -7,6 +7,18 @@ export BOOTSTRAP_LOGFILE
 echo "==== STARTING $date ===="
 echo "See Bash XTrace in the $BOOTSTRAP_LOGFILE file"
 
+echo "Checking permissions of Mediawiki log dir $MW_LOG..."
+if ! mountpoint -q -- "$MW_LOG"; then
+    mkdir -p "$MW_VOLUME/log/mediawiki"
+    rsync -avh --ignore-existing "$MW_LOG/" "$MW_VOLUME/log/mediawiki/"
+    mv "$MW_LOG" "${MW_LOG}_old"
+    ln -s "$MW_VOLUME/log/mediawiki" "$MW_LOG"
+    chmod -R o=rwX "$MW_VOLUME/log/mediawiki"
+else
+    chgrp -R "$WWW_GROUP" "$MW_LOG"
+    chmod -R go=rwX "$MW_LOG"
+fi
+
 # Open file descriptor 3 for logging xtrace output
 exec 3> >(stdbuf -oL tee -a "$BOOTSTRAP_LOGFILE" >/dev/null)
 
@@ -95,18 +107,6 @@ if ! mountpoint -q -- "$PHP_LOG_DIR/"; then
 else
     chgrp -R "$WWW_GROUP" "$PHP_LOG_DIR"
     chmod -R g=rwX "$PHP_LOG_DIR"
-fi
-
-echo "Checking permissions of Mediawiki log dir $MW_LOG..."
-if ! mountpoint -q -- "$MW_LOG"; then
-    mkdir -p "$MW_VOLUME/log/mediawiki"
-    rsync -avh --ignore-existing "$MW_LOG/" "$MW_VOLUME/log/mediawiki/"
-    mv "$MW_LOG" "${MW_LOG}_old"
-    ln -s "$MW_VOLUME/log/mediawiki" "$MW_LOG"
-    chmod -R o=rwX "$MW_VOLUME/log/mediawiki"
-else
-    chgrp -R "$WWW_GROUP" "$MW_LOG"
-    chmod -R go=rwX "$MW_LOG"
 fi
 
 echo "Checking permissions of Mediawiki volume dir $MW_VOLUME except $MW_VOLUME/images..."
