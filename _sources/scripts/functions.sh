@@ -62,3 +62,7 @@ make_dir_writable() {
          ')' \
          -exec chgrp "$WWW_GROUP" {} \; -exec chmod g=rwX {} \;
 }
+
+calculate_php_error_reporting() {
+  php -r "error_reporting($1); echo error_reporting();"
+}
