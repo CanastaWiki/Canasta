@@ -4,11 +4,11 @@ use MediaWiki\MediaWikiServices;
 use MediaWiki\Settings\SettingsBuilder;
 
 $mwVolume = getenv( 'MW_VOLUME' );
-
 if ( !defined( 'MW_CONFIG_FILE' ) && !file_exists( "$mwVolume/config/LocalSettings.php" ) && !file_exists( "$mwVolume/config/LocalSettings.php" ) ) {
 	return;
 }
 
+$mwHome = getenv( 'MW_HOME' );
 require_once "$mwHome/maintenance/Maintenance.php";
 
 class GetMediawikiSettings extends Maintenance {
