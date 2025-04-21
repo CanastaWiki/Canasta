@@ -45,16 +45,13 @@ rsync -ah --inplace --ignore-existing \
 mkdir -p "$MW_VOLUME"/extensions/SemanticMediaWiki/config
 mkdir -p "$MW_VOLUME"/l10n_cache
 
-# Evaluate PHP_ERROR_REPORTING environment variable into an integer value
-if [ -n "$PHP_ERROR_REPORTING" ]; then
-    echo "PHP_ERROR_REPORTING environment variable is set to: $PHP_ERROR_REPORTING"
-    PHP_ERROR_REPORTING_CALCULATED=$(calculate_php_error_reporting "$PHP_ERROR_REPORTING")
-else
-    echo "PHP_ERROR_REPORTING environment variable is unset or empty. Defaulting to E_ALL."
-    PHP_ERROR_REPORTING_CALCULATED=$(calculate_php_error_reporting "E_ALL")
-fi
-export PHP_ERROR_REPORTING_CALCULATED
-echo "PHP_ERROR_REPORTING_CALCULATED set to: $PHP_ERROR_REPORTING_CALCULATED"
+echo "PHP_ERROR_REPORTING environment variable is set to: $PHP_ERROR_REPORTING"
+# Update PHP configuration files with error reporting settings
+# First remove any existing error_reporting line, then add the new one
+sed -i '/^error_reporting/d' /etc/php/7.4/cli/conf.d/php_cli_error_reporting.ini
+sed -i '/; error_reporting will be calculated in the run-apache.sh script and inserted below/a error_reporting = '"$PHP_ERROR_REPORTING" /etc/php/7.4/cli/conf.d/php_cli_error_reporting.ini
+sed -i '/^error_reporting/d' /etc/php/7.4/fpm/conf.d/php_error_reporting.ini
+sed -i '/; error_reporting will be calculated in the run-apache.sh script and inserted below/a error_reporting = '"$PHP_ERROR_REPORTING" /etc/php/7.4/fpm/conf.d/php_error_reporting.ini
 
 printf "\nCheck wiki settings for errors... "
 if ! php /getMediawikiSettings.php --version MediaWiki; then
