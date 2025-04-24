@@ -743,6 +743,7 @@ ENV MW_AUTOUPDATE=true \
 	MW_SITEMAP_SUBDIR="" \
 	MW_SITEMAP_IDENTIFIER="mediawiki" \
 	APACHE_REMOTE_IP_HEADER=X-Forwarded-For \
+	PHP_ERROR_REPORTING="E_ALL & ~E_USER_DEPRECATED & ~E_DEPRECATED & ~E_STRICT" \
 	PHP_UPLOAD_MAX_FILESIZE=10M \
 	PHP_POST_MAX_SIZE=10M \
 	PHP_MAX_INPUT_VARS=1000 \
@@ -759,8 +760,11 @@ ENV MW_AUTOUPDATE=true \
 COPY _sources/configs/msmtprc /etc/
 COPY _sources/configs/mediawiki.conf /etc/apache2/sites-enabled/
 COPY _sources/configs/status.conf /etc/apache2/mods-available/
+
+# UPDATE code related to PHP_ERROR_REPORTING in run-apache.sh when the paths changed
 COPY _sources/configs/php_cli_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/7.4/cli/conf.d/
 COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini /etc/php/7.4/fpm/conf.d/
+
 COPY _sources/configs/php_max_input_vars.ini _sources/configs/php_max_input_vars.ini /etc/php/7.4/fpm/conf.d/
 COPY _sources/configs/php_timeouts.ini /etc/php/7.4/fpm/conf.d/
 COPY _sources/configs/php-fpm-www.conf /etc/php/7.4/fpm/pool.d/www.conf

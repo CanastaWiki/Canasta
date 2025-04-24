@@ -3,6 +3,10 @@ get_mediawiki_variable() {
     php /getMediawikiSettings.php --variable="$1" --format="${2:-string}"
 }
 
+get_docker_gateway () {
+  getent hosts "gateway.docker.internal" | awk '{ print $1 }'
+}
+
 get_mediawiki_db_var() {
     case $1 in
         "wgDBtype")
@@ -61,4 +65,8 @@ make_dir_writable() {
            '(' -perm -o=w ')' \
          ')' \
          -exec chgrp "$WWW_GROUP" {} \; -exec chmod g=rwX {} \;
+}
+
+calculate_php_error_reporting() {
+  php -r "error_reporting($1); echo error_reporting();"
 }

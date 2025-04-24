@@ -1,5 +1,33 @@
 #!/bin/bash
 
+date=$(date -u +%Y%m%d_%H%M%S)
+BOOTSTRAP_LOGFILE="$MW_LOG/_bootstrap_$date.log"
+export BOOTSTRAP_LOGFILE
+
+echo "==== STARTING $date ===="
+echo "See Bash XTrace in the $BOOTSTRAP_LOGFILE file"
+
+echo "Checking permissions of Mediawiki log dir $MW_LOG..."
+if ! mountpoint -q -- "$MW_LOG"; then
+    mkdir -p "$MW_VOLUME/log/mediawiki"
+    rsync -avh --ignore-existing "$MW_LOG/" "$MW_VOLUME/log/mediawiki/"
+    mv "$MW_LOG" "${MW_LOG}_old"
+    ln -s "$MW_VOLUME/log/mediawiki" "$MW_LOG"
+    chmod -R o=rwX "$MW_VOLUME/log/mediawiki"
+else
+    chgrp -R "$WWW_GROUP" "$MW_LOG"
+    chmod -R go=rwX "$MW_LOG"
+fi
+
+# Open file descriptor 3 for logging xtrace output
+exec 3> >(stdbuf -oL tee -a "$BOOTSTRAP_LOGFILE" >/dev/null)
+
+# Redirect stdout and stderr to the log file using tee,
+# with stdbuf to handle buffering issues
+exec > >(stdbuf -oL tee -a "$BOOTSTRAP_LOGFILE") 2>&1
+
+# Enable xtrace and Redirect the xtrace output to log file only
+BASH_XTRACEFD=3
 set -x
 
 . /functions.sh
@@ -28,6 +56,25 @@ rsync -ah --inplace --ignore-existing \
 # Create needed directories
 mkdir -p "$MW_VOLUME"/extensions/SemanticMediaWiki/config
 mkdir -p "$MW_VOLUME"/l10n_cache
+
+echo "PHP_ERROR_REPORTING environment variable is set to: $PHP_ERROR_REPORTING"
+# Update PHP configuration files with error reporting settings
+# First remove any existing error_reporting line, then add the new one
+sed -i '/^error_reporting/d' /etc/php/7.4/cli/conf.d/php_cli_error_reporting.ini
+sed -i '/; error_reporting will be added below by the run-apache.sh script/a error_reporting = '"$PHP_ERROR_REPORTING" /etc/php/7.4/cli/conf.d/php_cli_error_reporting.ini
+sed -i '/^error_reporting/d' /etc/php/7.4/fpm/conf.d/php_error_reporting.ini
+sed -i '/; error_reporting will be added below by the run-apache.sh script/a error_reporting = '"$PHP_ERROR_REPORTING" /etc/php/7.4/fpm/conf.d/php_error_reporting.ini
+
+printf "\nCheck wiki settings for errors... "
+if ! php /getMediawikiSettings.php --version MediaWiki; then
+    printf "\n===================================== ERROR ======================================\n\n"
+    echo "An error occurred while checking the wiki settings."
+    echo "There is an error in the wiki settings files, or you missed to run the \"git submodule update --init --recursive\" command"
+    printf "\n==================================================================================\n\n"
+    exit 1
+else
+    printf " OK\n\n"
+fi
 
 /update-docker-gateway.sh
 
@@ -60,18 +107,6 @@ if ! mountpoint -q -- "$PHP_LOG_DIR/"; then
 else
     chgrp -R "$WWW_GROUP" "$PHP_LOG_DIR"
     chmod -R g=rwX "$PHP_LOG_DIR"
-fi
-
-echo "Checking permissions of Mediawiki log dir $MW_LOG..."
-if ! mountpoint -q -- "$MW_LOG"; then
-    mkdir -p "$MW_VOLUME/log/mediawiki"
-    rsync -avh --ignore-existing "$MW_LOG/" "$MW_VOLUME/log/mediawiki/"
-    mv "$MW_LOG" "${MW_LOG}_old"
-    ln -s "$MW_VOLUME/log/mediawiki" "$MW_LOG"
-    chmod -R o=rwX "$MW_VOLUME/log/mediawiki"
-else
-    chgrp -R "$WWW_GROUP" "$MW_LOG"
-    chmod -R go=rwX "$MW_LOG"
 fi
 
 echo "Checking permissions of Mediawiki volume dir $MW_VOLUME except $MW_VOLUME/images..."

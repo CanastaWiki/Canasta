@@ -3,12 +3,12 @@
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Settings\SettingsBuilder;
 
-$mwHome = getenv( 'MW_HOME' );
-
-if ( !defined( 'MW_CONFIG_FILE' ) && !file_exists( "$mwHome/LocalSettings.php" ) && !file_exists( "$mwHome/CommonSettings.php" ) ) {
+$mwVolume = getenv( 'MW_VOLUME' );
+if ( !defined( 'MW_CONFIG_FILE' ) && !file_exists( "$mwVolume/config/LocalSettings.php" ) && !file_exists( "$mwVolume/config/LocalSettings.php" ) ) {
 	return;
 }
 
+$mwHome = getenv( 'MW_HOME' );
 require_once "$mwHome/maintenance/Maintenance.php";
 
 class GetMediawikiSettings extends Maintenance {
@@ -17,37 +17,43 @@ class GetMediawikiSettings extends Maintenance {
 		parent::__construct();
 		$this->addOption(
 			'variable',
-			'',
+			'Returns the value of a variable',
 			false,
 			true
 		);
 		$this->addOption(
 			'variableArrayIndex',
-			'',
+			'JSON string, represents array index of returned value of the variable',
+			false,
+			true
+		);
+		$this->addOption(
+			'version',
+			'Returns the version of the installed extension or MediaWiki',
 			false,
 			true
 		);
 		$this->addOption(
 			'versions',
-			'',
+			'Returns the versions of all installed extensions and MediaWiki',
 			false,
 			false
 		);
 		$this->addOption(
 			'isSMWValid',
-			''
+			'Returns "true" if SMW does not require to run the update.php maintenance script',
 		);
 		$this->addOption(
 			'SMWUpgradeKey',
-			''
+			'Returns the SMW upgrading key (this key verifies that a correct upgrade)',
 		);
 		$this->addOption(
 			'SWMIncompleteSetupTasks',
-			''
+			'Returns list of the SMW maintenance tasks that should be run',
 		);
 		$this->addOption(
 			'format',
-			'',
+			'Sets the output format. By default, it returns the value as a string or JSON if the returned value is an array. Possible values: string, json, md5, first (the first valuse from the array), and imploded array with separator: semicolon, space',
 			false,
 			true
 		);
@@ -78,7 +84,7 @@ class GetMediawikiSettings extends Maintenance {
 			foreach ( $variableArrayIndex as $i ) {
 				$return = $return[$i] ?? '';
 			}
-		} elseif ( $this->hasOption( 'versions' ) ) {
+		} elseif ( $this->hasOption( 'versions' ) || $this->hasOption( 'version' ) ) {
 			$return = [
 				'MediaWiki' => SpecialVersion::getVersion( 'nodb' ),
 			];
@@ -91,6 +97,13 @@ class GetMediawikiSettings extends Maintenance {
 					$gitInfo = new GitInfo( $extensionPath );
 					$gitVersion = substr( $gitInfo->getHeadSHA1() ?: '', 0, 7 );
 					$return[$name] .= " ($gitVersion)";
+				}
+			}
+			$versionName = $this->hasOption( 'version' ) ? $this->getOption( 'version' ) : null;
+			if ( $versionName ) {
+				$return = $return[$versionName] ?? null;
+				if ( $return === '' ) {
+					$return = '-';
 				}
 			}
 		} elseif ( $this->hasOption( 'isSMWValid' ) ) {
@@ -163,6 +176,8 @@ class GetMediawikiSettings extends Maintenance {
 	 * some extensions makes requests to the database using the SetupAfterCache hook
 	 * (for example they can check user and etc..)
 	 * but this script can be used for getting parameters when database is not initialized yet
+	 *
+	 * @param SettingsBuilder|null $settingsBuilder
 	 */
 	public function finalSetup( SettingsBuilder $settingsBuilder = null ) {
 		parent::finalSetup( $settingsBuilder );
@@ -170,10 +185,11 @@ class GetMediawikiSettings extends Maintenance {
 		global $wgShowExceptionDetails, $wgHooks;
 
 		$wgShowExceptionDetails = true;
-		$wgHooks['SetupAfterCache'][] = function () {
+		$wgHooks['SetupAfterCache'] = [ function () {
 			global $wgExtensionFunctions;
 			$wgExtensionFunctions = [];
-		};
+			return false;
+		} ];
 	}
 
 	private static function getExtensionsThings() {
