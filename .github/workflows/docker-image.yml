@@ -8,8 +8,7 @@ on:
   push:
     # Only activate for `master` branch
     branches:
-      - master
-      - 1.2.x
+      - ceibal-1.39
     # Plus for all tags
     tags:
       - '*'
@@ -18,7 +17,7 @@ on:
   pull_request:
 
 env:
-  IMAGE_NAME: canasta
+  IMAGE_NAME: canasta_ceibal
 
 jobs:
   # Test the image Dockerfile syntax using https://github.com/replicatedhq/dockerfilelint
