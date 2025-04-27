@@ -95,16 +95,6 @@ RUN set -x; \
 	curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && composer self-update 2.1.3
 
-RUN set -x; \
-	# Preconfigure Postfix to avoid the interactive prompt
-	echo "postfix postfix/main_mailer_type select Internet Site" | debconf-set-selections \
-    && echo "postfix postfix/mailname string $MAILNAME" | debconf-set-selections \
-	&& apt-get update \
-	&& apt-get install -y mailutils \
-	&& apt install -y postfix 
-
-COPY main.cf /etc/postfix/main.cf
-
 FROM base AS source
 
 # MediaWiki core
