@@ -479,9 +479,9 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/SemanticDependencyUpdater \
 	&& git checkout -q b2c4db817bfb31c2ad10d27aeebb955f938d7b4f \
 	# SemanticDrilldown
-	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/SemanticDrilldown $MW_HOME/extensions/SemanticDrilldown \
+	&& git clone --single-branch -b master https://github.com/SemanticMediaWiki/SemanticDrilldown $MW_HOME/extensions/SemanticDrilldown \
 	&& cd $MW_HOME/extensions/SemanticDrilldown \
-	&& git checkout -q e960979ec5a3b1e662b3742cee7e7ef4056f9a46 \
+	&& git checkout -q 63a31ff42d0a9c04d2edd2b0e8a6614cb4f2ace1 \
 	# SemanticExtraSpecialProperties (v. 3.0.4)
 	&& git clone --single-branch -b master https://github.com/SemanticMediaWiki/SemanticExtraSpecialProperties $MW_HOME/extensions/SemanticExtraSpecialProperties \
 	&& cd $MW_HOME/extensions/SemanticExtraSpecialProperties \
