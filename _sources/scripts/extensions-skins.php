@@ -25,11 +25,12 @@ foreach ($yamlData[$type] as $obj) {
     $additionalSteps = $data['additional steps'] ?? null;
     $bundled = $data['bundled'] ?? false;
 
-    // SMW is recommending installation using their composer package
-    if ($name === 'SemanticMediaWiki') {
+    // Installation of extensions using their composer package (for SMW, etc.,)
+    if ($data['composer-name']) {
         $packageName = $data['composer-name'];
-        $packageVersion = $data['composer-version'];
-        exec("COMPOSER_HOME=$MW_HOME composer require $packageName:$packageVersion --no-interaction");
+        $packageVersion = $data['composer-version'] ?? null;
+        $packageString = $packageVersion ? "$packageName:$packageVersion" : $packageName;
+        exec("COMPOSER_HOME=$MW_HOME composer require $packageString --no-interaction");
         continue;
     }
 
