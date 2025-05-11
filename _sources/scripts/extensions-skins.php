@@ -30,6 +30,7 @@ foreach ($yamlData[$type] as $obj) {
         $packageName = $data['composer-name'] ?? 'mediawiki/semantic-media-wiki';
         $packageVersion = $data['composer-version'] ?? '5.0.1';
         exec("COMPOSER_HOME=$MW_HOME composer require $packageName:$packageVersion --no-interaction");
+        continue;
     }
 
     if ($persistentDirectories !== null) {
