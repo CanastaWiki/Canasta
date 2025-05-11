@@ -77,8 +77,8 @@ foreach (['extensions', 'skins'] as $type) {
         if ($additionalSteps !== null) {
             foreach ($additionalSteps as $step) {
                 if ($step === "composer update") {
-                    $composerUpdateCmd = "cd $MW_HOME/$type/$name && composer update --no-dev";
-                    exec($composerUpdateCmd);
+                    $composerInstallCmd = "cd $MW_HOME/$type/$name && COMPOSER_HOME=$MW_HOME composer install --no-interaction";
+                    shell_exec("$composerInstallCmd");
                 } elseif ($step === "git submodule update") {
                     $submoduleUpdateCmd = "cd $MW_HOME/$type/$name && git submodule update --init";
                     exec($submoduleUpdateCmd);
