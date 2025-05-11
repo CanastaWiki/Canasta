@@ -27,8 +27,8 @@ foreach ($yamlData[$type] as $obj) {
 
     // SMW is recommending installation using their composer package
     if ($name === 'SemanticMediaWiki') {
-        $packageName = $data['composer-name'] ?? 'mediawiki/semantic-media-wiki';
-        $packageVersion = $data['composer-version'] ?? '5.0.1';
+        $packageName = $data['composer-name'];
+        $packageVersion = $data['composer-version'];
         exec("COMPOSER_HOME=$MW_HOME composer require $packageName:$packageVersion --no-interaction");
         continue;
     }
