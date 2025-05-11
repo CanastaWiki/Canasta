@@ -25,6 +25,13 @@ foreach ($yamlData[$type] as $obj) {
     $additionalSteps = $data['additional steps'] ?? null;
     $bundled = $data['bundled'] ?? false;
 
+    // SMW is recommending installation using their composer package
+    if ($name === 'SemanticMediaWiki') {
+        $packageName = $data['composer-name'] ?? 'mediawiki/semantic-media-wiki';
+        $packageVersion = $data['composer-version'] ?? '5.0.1';
+        exec("COMPOSER_HOME=$MW_HOME composer require $packageName:$packageVersion --no-interaction");
+    }
+
     if ($persistentDirectories !== null) {
         exec("mkdir -p $MW_ORIGIN_FILES/canasta-$type/$name");
         foreach ($directory as $persistentDirectories) {
@@ -37,7 +44,7 @@ foreach ($yamlData[$type] as $obj) {
         $gitCloneCmd = "git clone ";
         
         if ($repository === null) {
-            $repository = "https://github.com/wikimedia/mediawiki-$type-$name";
+            $repository = "https://github.com/wikimedia/medi]wiki-$type-$name";
             if ($branch === null) {
                 $branch = $MW_VERSION;
                 $gitCloneCmd .= "--single-branch -b $branch ";
