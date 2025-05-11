@@ -25,6 +25,15 @@ foreach ($yamlData[$type] as $obj) {
     $additionalSteps = $data['additional steps'] ?? null;
     $bundled = $data['bundled'] ?? false;
 
+    // Installation of extensions using their composer package (for SMW, etc.,)
+    if ($data['composer-name']) {
+        $packageName = $data['composer-name'];
+        $packageVersion = $data['composer-version'] ?? null;
+        $packageString = $packageVersion ? "$packageName:$packageVersion" : $packageName;
+        exec("COMPOSER_HOME=$MW_HOME composer require $packageString --no-interaction");
+        continue;
+    }
+
     if ($persistentDirectories !== null) {
         exec("mkdir -p $MW_ORIGIN_FILES/canasta-$type/$name");
         foreach ($directory as $persistentDirectories) {
