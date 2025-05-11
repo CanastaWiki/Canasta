@@ -62,7 +62,7 @@ foreach ($yamlData[$type] as $obj) {
         foreach ($additionalSteps as $step) {
             if ($step === "composer update") {
                 $composerInstallCmd = "cd $MW_HOME/$type/$name && COMPOSER_HOME=$MW_HOME composer install --no-interaction";
-                shell_exec("$composerInstallCmd 2&>1");
+                shell_exec("$composerInstallCmd");
             } elseif ($step === "git submodule update") {
                 $submoduleUpdateCmd = "cd $MW_HOME/$type/$name && git submodule update --init";
                 exec($submoduleUpdateCmd);
