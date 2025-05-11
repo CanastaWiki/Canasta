@@ -45,7 +45,7 @@ foreach ($yamlData[$type] as $obj) {
         $gitCloneCmd = "git clone ";
         
         if ($repository === null) {
-            $repository = "https://github.com/wikimedia/medi]wiki-$type-$name";
+            $repository = "https://github.com/wikimedia/mediawiki-$type-$name";
             if ($branch === null) {
                 $branch = $MW_VERSION;
                 $gitCloneCmd .= "--single-branch -b $branch ";
