@@ -21,6 +21,8 @@ extensions:
   - ApprovedRevs:
       branch: master
       commit: 53b67bf7e1e8ac3d20c2fd41ad2ab1c708c045a6 # v. 1.8.2
+  - ArrayFunctions:
+      commit: 037d78b02545d7534bd645899542943787855082 # v. 1.15.0
   - Arrays:
       commit: 338f661bf0ab377f70e029079f2c5c5b370219df
   - AWS:
