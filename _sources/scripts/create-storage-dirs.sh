@@ -18,4 +18,4 @@ for db_name in "${ids[@]}"; do
 done
 
 # Protect Images Directory from Internet Access
-echo "Deny from All" >> $MW_VOLUME/images/.htaccess 
+echo "Deny from All" >> "$MW_VOLUME/images/.htaccess"
