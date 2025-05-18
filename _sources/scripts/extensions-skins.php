@@ -30,7 +30,7 @@ foreach ($yamlData[$type] as $obj) {
         $packageName = $data['composer-name'];
         $packageVersion = $data['composer-version'] ?? null;
         $packageString = $packageVersion ? "$packageName:$packageVersion" : $packageName;
-        exec("COMPOSER_HOME=$MW_HOME composer require $packageString --no-interaction");
+        exec("composer require $packageString --working-dir=$MW_HOME --no-interaction");
         continue;
     }
 
@@ -70,7 +70,7 @@ foreach ($yamlData[$type] as $obj) {
     if ($additionalSteps !== null) {
         foreach ($additionalSteps as $step) {
             if ($step === "composer update") {
-                $composerInstallCmd = "cd $MW_HOME/$type/$name && COMPOSER_HOME=$MW_HOME composer install --no-interaction";
+                $composerInstallCmd = "composer install --working-dir=$MW_HOME/$type/$name --no-interaction --no-dev";
                 shell_exec("$composerInstallCmd");
             } elseif ($step === "git submodule update") {
                 $submoduleUpdateCmd = "cd $MW_HOME/$type/$name && git submodule update --init";
