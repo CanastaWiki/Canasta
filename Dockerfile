@@ -221,7 +221,11 @@ RUN set -x; \
 	# Arrays
 	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Arrays $MW_HOME/extensions/Arrays \
 	&& cd $MW_HOME/extensions/Arrays \
-	&& git checkout -q f42c28848f494f5f5843fa03da73f25437d2d36b
+	&& git checkout -q f42c28848f494f5f5843fa03da73f25437d2d36b \
+    # AWS
+	&& git clone --single-branch -b master https://github.com/edwardspec/mediawiki-aws-s3.git $MW_HOME/extensions/AWS \
+	&& cd $MW_HOME/extensions/AWS \
+	&& git checkout -q 97c210475f82ed5bc86ea3cbf2726162ccbedbfe
 
 # B
 RUN set -x; \

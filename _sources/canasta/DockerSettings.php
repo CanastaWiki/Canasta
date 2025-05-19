@@ -659,6 +659,46 @@ if ( isEnvTrue( 'MW_EXCIMER_ENABLE_FOR_' . strtoupper( MW_ENTRY_POINT ) ) ) {
 	}
 }
 
+if ( !empty( getenv( 'AWS_IMAGES_BUCKET' ) ) ) {
+	// see https://github.com/edwardspec/mediawiki-aws-s3
+	wfLoadExtension( 'AWS' );
+	$wgAWSCredentials = [
+		'key' => getenv( 'AWS_IMAGES_ACCESS' ),
+		'secret' => getenv( 'AWS_IMAGES_SECRET' ),
+		'token' => false
+	];
+	$wgAWSRegion = getenv( 'AWS_IMAGES_REGION' ); #eu-west-2
+	$wgAWSBucketName = getenv( 'AWS_IMAGES_BUCKET' );
+	if ( !empty( getenv( 'AWS_IMAGES_BUCKET_DOMAIN' ) ) ) {
+		// $1.s3.eu-west-2.amazonaws.com, $1 is replaced with bucket name
+		$wgAWSBucketDomain = getenv( 'AWS_IMAGES_BUCKET_DOMAIN' );
+	}
+	$wgFileBackends['s3']['privateWiki'] = false;
+	// see https://github.com/edwardspec/mediawiki-aws-s3/blob/97c210475f82ed5bc86ea3cbf2726162ccbedbfe/s3/AmazonS3FileBackend.php#L97
+	// if true, then all S3 objects are private and uploaded with appropriate ACLs.
+	// for images to work in private mode, $wgUploadPath should point to img_auth.php
+	if ( !empty( getenv( 'AWS_IMAGES_PRIVATE' ) ) ) {
+		$wgFileBackends['s3']['privateWiki'] = true;
+	}
+	if ( !empty( getenv( 'AWS_IMAGES_ENDPOINT' ) ) ) {
+		$wgFileBackends['s3']['endpoint'] = getenv( 'AWS_IMAGES_ENDPOINT' );
+	}
+	if ( !empty( getenv( 'AWS_IMAGES_SUBDIR' ) ) ) {
+		// i.e. '/subdir'
+		$wgAWSBucketTopSubdirectory = getenv( 'AWS_IMAGES_SUBDIR' );
+	}
+
+	// some software (such as MinIO) doesn't use subdomains for buckets
+	if ( !empty( getenv( 'AWS_IMAGES_USEPATH') ) ) {
+		$wgFileBackends['s3']['use_path_style_endpoint'] = true;
+	}
+	// see https://github.com/edwardspec/mediawiki-aws-s3?tab=readme-ov-file#migrating-images
+	// this configuration resembles native images storage structure to allow
+	// for seamless migration of existing images to object storage
+	$wgAWSRepoHashLevels = 2;
+	$wgAWSRepoDeletedHashLevels = 3;
+}
+
 # Include all php files in config/settings directory
 foreach ( glob( getenv( 'MW_CONFIG_DIR' ) . '/settings/*.php' ) as $filename ) {
 	if ( is_readable( $filename ) ) {
