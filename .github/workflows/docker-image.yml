@@ -9,7 +9,7 @@ on:
     # Only activate for `master` branch
     branches:
       - master
-      - 1.2.x
+      - 1.2.2
     # Plus for all tags
     tags:
       - '*'
