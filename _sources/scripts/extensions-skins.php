@@ -107,7 +107,14 @@ foreach (['extensions', 'skins'] as $type) {
  * for any given extension or skin.
  */
 function populateContentsData($pathOrURL, &$contentsData) {
-    $dataFromFile = yaml_parse_file($pathOrURL);
+    $yamlText = file_get_contents($pathOrURL);
+    // If it's stored in, or came from, a MediaWiki wiki (such as
+    // mediawiki.org), it may have a <syntaxhighlight> tag around it.
+    if ( preg_match( '/<syntaxhighlight\s+lang=["\']yaml["\']>(.*?)<\/syntaxhighlight>/si', $yamlText, $matches ) ) {
+        $yamlText = $matches[1];
+    }
+    $dataFromFile = yaml_parse($yamlText);
+
     if (array_key_exists('inherits', $dataFromFile)) {
         populateContentsData($dataFromFile['inherits'], $contentsData);
     }
