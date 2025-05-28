@@ -162,7 +162,11 @@ sitemapgen() {
 }
 
 waitdatabase() {
-  /wait-for-it.sh -t 60 db:3306
+  WG_DB_SERVER=$(get_mediawiki_variable wgDBserver)
+  if ! [[ $WG_DB_SERVER =~ ":" ]]; then
+    WG_DB_SERVER+=":3306"
+  fi
+  /wait-for-it.sh -t 60 "WG_DB_SERVER"
 }
 
 #waitelastic() {
