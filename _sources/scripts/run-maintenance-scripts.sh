@@ -9,6 +9,9 @@ set -x
 
 WG_DB_TYPE=$(get_mediawiki_db_var wgDBtype)
 WG_DB_SERVER=$(get_mediawiki_db_var wgDBserver)
+if ! [[ $WG_DB_SERVER =~ ":" ]]; then
+  WG_DB_SERVER+=":3306"
+fi
 WG_DB_NAME=$(get_mediawiki_db_var wgDBname)
 WG_DB_USER=$(get_mediawiki_db_var wgDBuser)
 WG_DB_PASSWORD=$(get_mediawiki_db_var wgDBpassword)
@@ -34,7 +37,7 @@ waitdatabase() {
     fi
 
     echo >&2 "Waiting for database to start"
-    /wait-for-it.sh -t 86400 "$WG_DB_SERVER:3306"
+    /wait-for-it.sh -t 86400 "$WG_DB_SERVER"
 
     mysql=( mysql -h "$WG_DB_SERVER" -u"$WG_DB_USER" -p"$WG_DB_PASSWORD" )
 
