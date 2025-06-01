@@ -42,6 +42,17 @@ isTrue() {
     esac
 }
 
+isFalse() {
+    case $1 in
+        "True" | "TRUE" | "true" | 1)
+            return 1
+            ;;
+        *)
+            return 0
+            ;;
+    esac
+}
+
 get_hostname_with_port() {
     port=$(echo "$1" | grep ":" | cut -d":" -f2)
     echo "$1:${port:-$2}"
