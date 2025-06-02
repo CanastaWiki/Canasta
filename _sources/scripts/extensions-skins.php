@@ -25,7 +25,8 @@ foreach ($yamlData[$type] as $obj) {
     $additionalSteps = $data['additional steps'] ?? null;
     $bundled = $data['bundled'] ?? false;
 
-    // Installation of extensions using their composer package (for SMW, etc.,)
+    // Installation of extensions using their Composer package -
+    // this is not currently used, but it may in the future.
     if ($data['composer-name']) {
         $packageName = $data['composer-name'];
         $packageVersion = $data['composer-version'] ?? null;
