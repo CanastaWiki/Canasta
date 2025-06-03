@@ -270,8 +270,8 @@ extensions:
       repository: https://github.com/gesinn-it/SemanticDependencyUpdater
       commit: e8a483dd54de6a069854789ae6c702aab98a89ab # v. 2.0.2
   - SemanticDrilldown:
-      repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/SemanticDrilldown
-      commit: e960979ec5a3b1e662b3742cee7e7ef4056f9a46
+      repository: https://github.com/SemanticMediaWiki/SemanticDrilldown
+      commit: 7f737c3f6b1dc60e917c213c3aa2358b34b36291
   - SemanticExtraSpecialProperties:
       repository: https://github.com/SemanticMediaWiki/SemanticExtraSpecialProperties
       commit: e449633082a4bf7dcae119b6a6d0bfeec8e3cfe8 # v. 3.0.4
