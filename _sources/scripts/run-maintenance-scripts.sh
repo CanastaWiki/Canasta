@@ -9,9 +9,6 @@ set -x
 
 WG_DB_TYPE=$(get_mediawiki_db_var wgDBtype)
 WG_DB_SERVER=$(get_mediawiki_db_var wgDBserver)
-if ! [[ $WG_DB_SERVER =~ ":" ]]; then
-  WG_DB_SERVER+=":3306"
-fi
 WG_DB_NAME=$(get_mediawiki_db_var wgDBname)
 WG_DB_USER=$(get_mediawiki_db_var wgDBuser)
 WG_DB_PASSWORD=$(get_mediawiki_db_var wgDBpassword)
@@ -36,25 +33,27 @@ waitdatabase() {
         exit 123
     fi
 
-    echo >&2 "Waiting for database to start"
-    /wait-for-it.sh -t 86400 "$WG_DB_SERVER"
-
-    mysql=( mysql -h "$WG_DB_SERVER" -u"$WG_DB_USER" -p"$WG_DB_PASSWORD" )
-
-    for i in {60..0}; do
-        if echo 'SELECT 1' | "${mysql[@]}" &> /dev/null; then
-            db_started="1"
-            break
-        fi
-        echo >&2 'Waiting for database to start...'
-        sleep 1
-    done
-    if [ "$i" = 0 ]; then
-        echo >&2 'Could not connect to the database.'
-        return 1
+    if isFalse "$USE_EXTERNAL_DB"; then
+      echo >&2 "Waiting for database to start"
+      /wait-for-it.sh -t 86400 "$WG_DB_SERVER"
+  
+      mysql=( mysql -h "$WG_DB_SERVER" -u"$WG_DB_USER" -p"$WG_DB_PASSWORD" )
+  
+      for i in {60..0}; do
+          if echo 'SELECT 1' | "${mysql[@]}" &> /dev/null; then
+              db_started="1"
+              break
+          fi
+          echo >&2 'Waiting for database to start...'
+          sleep 1
+      done
+      if [ "$i" = 0 ]; then
+          echo >&2 'Could not connect to the database.'
+          return 1
+      fi
+      echo >&2 'Successfully connected to the database.'
+      return 0
     fi
-    echo >&2 'Successfully connected to the database.'
-    return 0
 }
 
 get_tables_count() {
