@@ -1,7 +1,7 @@
 FROM ghcr.io/canastawiki/canasta-base AS base
 
 LABEL maintainers=""
-LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta_1.43
+LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
 
 # Uncomment this if there are any skin or extension patches
 # COPY _sources/patches/* /tmp/
