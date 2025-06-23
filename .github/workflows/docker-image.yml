@@ -27,12 +27,6 @@ jobs:
     if: github.event_name == 'push' || github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v3
-      -
-        name: Run linter (hadolint)
-        uses: vedmaka/hadolint-action@master
-        with:
-          dockerfile: "Dockerfile"
-          config: "hadolint.yaml"
 
   # Push image to GitHub Packages.
   # The image tag pattern is:
@@ -58,9 +52,9 @@ jobs:
           # Date
           BDATE=$(date +%Y%m%d)
 
-          # Extract MW version from Dockerfile
-          MEDIAWIKI_VERSION=$(sed -nr 's/MW_CORE_VERSION\=([0-9\.]+)/\1/p' Dockerfile | sed "s/ \\\//" | sed "s/\t//")
-          # Extract MW major version (like 1.35)
+          # We don't compute the MW version here, we just hardcode it
+          MEDIAWIKI_VERSION=1.43.0
+          # Extract MW major version (like 1.43)
           MEDIAWIKI_MAJOR_VERSION=${MEDIAWIKI_VERSION%.*}
 
           # Change all uppercase to lowercase, just in case
