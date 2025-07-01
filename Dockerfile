@@ -4,7 +4,7 @@ LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/CanastaBase
 
 ENV MW_VERSION=REL1_43 \
-	MW_CORE_VERSION=1.43.0 \
+	MW_CORE_VERSION=1.43.2 \
 	WWW_ROOT=/var/www/mediawiki \
 	MW_HOME=/var/www/mediawiki/w \
 	MW_LOG=/var/log/mediawiki \
