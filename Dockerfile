@@ -160,6 +160,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Arrays $MW_HOME/extensions/Arrays \
 	&& cd $MW_HOME/extensions/Arrays \
 	&& git checkout -q 338f661bf0ab377f70e029079f2c5c5b370219df \
+	# AWS
+	&& git clone --single-branch -b master https://github.com/edwardspec/mediawiki-aws-s3.git $MW_HOME/extensions/AWS \
+	&& cd $MW_HOME/extensions/AWS \
+	&& git checkout -q 97c210475f82ed5bc86ea3cbf2726162ccbedbfe \
 	# BetaFeatures
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-BetaFeatures $MW_HOME/extensions/BetaFeatures \
 	&& cd $MW_HOME/extensions/BetaFeatures \
