@@ -26,7 +26,8 @@
 				"skins/chameleon/composer.json",
 				"extensions/Flow/composer.json",
 				"extensions/Sentry/composer.json",
-				"extensions/MassMessageEmail/composer.json"
+				"extensions/MassMessageEmail/composer.json",
+				"extensions/AWS/composer.json"
 			]
 		}
 	}
