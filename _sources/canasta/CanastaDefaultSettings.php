@@ -71,6 +71,7 @@ $wgCdnServersNoPurge[] = '172.16.0.0/12';  // 172.16.0.0 – 172.31.255.255
 $wgCdnServersNoPurge[] = '192.168.0.0/16'; // 192.168.0.0 – 192.168.255.255
 
 # Auto-configuration for AWS extension QLOUD-122
+# Note: we usually don't have auto-configuration here, but there is no better place for this on Canasta
 if ( !empty( getenv( 'AWS_IMAGES_BUCKET' ) ) ) {
 	// see https://github.com/edwardspec/mediawiki-aws-s3
 	wfLoadExtension( 'AWS' );
@@ -91,6 +92,12 @@ if ( !empty( getenv( 'AWS_IMAGES_BUCKET' ) ) ) {
 	// for images to work in private mode, $wgUploadPath should point to img_auth.php
 	if ( !empty( getenv( 'AWS_IMAGES_PRIVATE' ) ) ) {
 		$wgFileBackends['s3']['privateWiki'] = true;
+		// When private mode is enabled we MUST revok read right from anonymous users
+		// and MUST configure img_auth.php setting, see QLOUD-124
+		// NOTE: any possible overrides of these settings in any of the subsequently
+		// loaded configs (config/settings/*.php) must be REMOVED
+		$wgGroupPermissions['*']['read'] = false;
+		$wgUploadPath = "$wgScriptPath/img_auth.php";
 	}
 	if ( !empty( getenv( 'AWS_IMAGES_ENDPOINT' ) ) ) {
 		$wgFileBackends['s3']['endpoint'] = getenv( 'AWS_IMAGES_ENDPOINT' );
