@@ -1,20 +1,24 @@
-diff --git a/UploadedFile.php b/UploadedFile.php
-index dbd19b0..972d0e7 100644
---- a/UploadedFile.php
-+++ b/UploadedFile.php
-@@ -19,121 +19,122 @@ use Wikimedia\AtEase\AtEase;
+--- UploadedFile.php	2025-07-17 10:56:07.215580011 +0000
++++ UploadedFile.php	2025-07-17 10:56:36.432388011 +0000
+@@ -19,121 +19,122 @@
   */
  class UploadedFile implements UploadedFileInterface {
  
 -	/** @var array File data */
 -	private $data;
--
++        /** @var array File data */
++        private $data;
+ 
 -	/** @var bool */
 -	private $fromUpload;
--
++        /** @var bool */
++        private $fromUpload;
+ 
 -	/** @var UploadedFileStream|null */
 -	private $stream = null;
--
++        /** @var UploadedFileStream|null */
++        private $stream = null;
+ 
 -	/** @var bool Whether moveTo() was called */
 -	private $moved = false;
 -
@@ -122,15 +126,6 @@ index dbd19b0..972d0e7 100644
 -		$ret = $this->data['type'] ?? null;
 -		return $ret === '' ? null : $ret;
 -	}
-+        /** @var array File data */
-+        private $data;
-+
-+        /** @var bool */
-+        private $fromUpload;
-+
-+        /** @var UploadedFileStream|null */
-+        private $stream = null;
-+
 +        /** @var bool Whether moveTo() was called */
 +        private $moved = false;
 +
