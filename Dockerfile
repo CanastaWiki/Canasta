@@ -118,7 +118,7 @@ RUN php /tmp/extensions-skins.php "extensions" "/tmp/extensions.yaml"
 # Apply patch for UploadedFile.php
 RUN set -x; \
 	cd $MW_HOME/includes/libs/ParamValidator/Util \
-	&& git apply /tmp/uploadedFileChanges.patch
+	&& git apply /tmp/uploadedFileChanges.patch -v
 
 # Patch composer
 RUN set -x; \
