@@ -52,8 +52,7 @@ jobs:
           # Date
           BDATE=$(date +%Y%m%d)
 
-          # We don't compute the MW version here, we just hardcode it
-          MEDIAWIKI_VERSION=1.43.3
+          MEDIAWIKI_VERSION=$MW_VERSION
           # Extract MW major version (like 1.43)
           MEDIAWIKI_MAJOR_VERSION=${MEDIAWIKI_VERSION%.*}
 
