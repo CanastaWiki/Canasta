@@ -57,9 +57,6 @@ $wgResourceBasePath = $wgScriptPath;
 # SyntaxHighlight_GeSHi
 $wgPygmentizePath = '/usr/bin/pygmentize';
 
-# We use job runner instead
-$wgJobRunRate = 0;
-
 # SVG Converters
 $wgSVGConverter = 'rsvg';
 
