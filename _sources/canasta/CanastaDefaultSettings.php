@@ -64,11 +64,51 @@ $wgSVGConverter = 'rsvg';
 # Docker specific setup
 # Exclude all private IP ranges
 # see https://www.mediawiki.org/wiki/Manual:$wgCdnServersNoPurge
-$wgUseCdn = true;
 $wgCdnServersNoPurge = [];
 $wgCdnServersNoPurge[] = '10.0.0.0/8';     // 10.0.0.0 – 10.255.255.255
 $wgCdnServersNoPurge[] = '172.16.0.0/12';  // 172.16.0.0 – 172.31.255.255
 $wgCdnServersNoPurge[] = '192.168.0.0/16'; // 192.168.0.0 – 192.168.255.255
+
+# Use Varnish accelerator
+$tmpProxy = getenv( 'MW_PROXY_SERVERS' );
+if ( $tmpProxy ) {
+	# https://www.mediawiki.org/wiki/Manual:Varnish_caching
+	$wgUseCdn = true;
+	$wgCdnServers = explode( ',', $tmpProxy );
+	$wgUsePrivateIPs = true;
+	# Use HTTP protocol for internal connections like PURGE request to Varnish
+	if ( strncasecmp( $wgServer, 'https://', 8 ) === 0 ) {
+		$wgInternalServer = 'http://' . substr( $wgServer, 8 ); // Replaces HTTPS with HTTP
+	}
+	// Re-warm up varnish cache after a purge.
+	// Do this on LinksUpdate and not HTMLCacheUpdate because HTMLCacheUpdate
+	// does 100 pages at a time very quickly which can overwhelm things.
+	// WLDR-314.
+	$wgHooks['LinksUpdateComplete'][] = function ( $linksUpdate ) {
+		global $wgCdnServers;
+		$url = $linksUpdate->getTitle()->getInternalURL();
+		// Adapted from CdnCacheUpdate::naivePurge.
+		foreach( $wgCdnServers as $server ) {
+			$urlInfo = wfParseUrl( $url );
+			$urlHost = strlen( $urlInfo['port'] ?? '' )
+				? \Wikimedia\IPUtils::combineHostAndPort( $urlInfo['host'], (int)$urlInfo['port'] )
+				: $urlInfo['host'];
+			$baseReq = [
+				'method' => 'GET',
+				'url' => $url,
+				'headers' => [
+					'Host' => $urlHost,
+					'Connection' => 'Keep-Alive',
+					'Proxy-Connection' => 'Keep-Alive',
+					'User-Agent' => 'MediaWiki/' . MW_VERSION . ' LinksUpdate',
+				],
+				'proxy' => $server
+			];
+			MediaWiki\MediaWikiServices::getInstance()->getHttpRequestFactory()
+				->createMultiClient()->runMulti( [ $baseReq ] );
+		}
+	};
+}
 
 # Auto-configuration for AWS extension QLOUD-122
 # Note: we usually don't have auto-configuration here, but there is no better place for this on Canasta
