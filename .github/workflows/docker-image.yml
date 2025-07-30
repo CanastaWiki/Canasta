@@ -42,6 +42,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       -
+        name: Extract MW_VERSION from parent Docker image
+        id: extract_mw
+        run: |
+          docker build -t temp-image .
+          MW_VERSION=$(docker run --rm temp-image env | grep ^MW_CORE_VERSION= | cut -d '=' -f2-)
+          echo "MW_VERSION=$MW_VERSION"
+          echo "MW_VERSION=$MW_VERSION" >> $GITHUB_ENV
+
+      -
         name: Generate tags
         id: generate
         run: |
@@ -52,8 +61,7 @@ jobs:
           # Date
           BDATE=$(date +%Y%m%d)
 
-          # We don't compute the MW version here, we just hardcode it
-          MEDIAWIKI_VERSION=1.43.3
+          MEDIAWIKI_VERSION=${{ env.MW_VERSION }}
           # Extract MW major version (like 1.43)
           MEDIAWIKI_MAJOR_VERSION=${MEDIAWIKI_VERSION%.*}
 
