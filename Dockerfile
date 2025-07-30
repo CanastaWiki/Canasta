@@ -125,6 +125,10 @@ RUN php /tmp/extensions-skins.php "skins" "/tmp/skins.yaml"
 COPY _sources/configs/extensions.yaml /tmp/extensions.yaml
 RUN php /tmp/extensions-skins.php "extensions" "/tmp/extensions.yaml"
 
+RUN set -x; \
+	patch $MW_HOME/includes/libs/ParamValidator/Util/UploadedFile.php /tmp/uploadedFileChanges.patch \
+	&& patch $MW_HOME/includes/Rest/StringStream.php /tmp/StringStreamChanges.patch
+
 # Patch composer
 RUN set -x; \
     sed -i 's="monolog/monolog": "2.2.0",="monolog/monolog": "^2.2",=g' $MW_HOME/composer.json
