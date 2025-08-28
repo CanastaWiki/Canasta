@@ -759,7 +759,8 @@ ENV MW_AUTOUPDATE=true \
 	PM_MAX_SPARE_SERVERS=15 \
 	PM_MAX_REQUESTS=2500 \
 	LOG_FILES_COMPRESS_DELAY=3600 \
-	LOG_FILES_REMOVE_OLDER_THAN_DAYS=10
+	LOG_FILES_REMOVE_OLDER_THAN_DAYS=10 \
+	MONITOR_USER_DIRECTORIES=true
 
 COPY _sources/configs/msmtprc /etc/
 COPY _sources/configs/mediawiki.conf /etc/apache2/sites-enabled/
