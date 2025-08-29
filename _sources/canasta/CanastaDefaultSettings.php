@@ -158,6 +158,10 @@ if ( !empty( getenv( 'AWS_IMAGES_BUCKET' ) ) ) {
 	$wgAWSRepoDeletedHashLevels = 3;
 }
 
+# Make sure TimedMediaHandler jobs are excluded from the default queue, see QLOUD-147
+$wgJobTypesExcludedFromDefaultQueue[] = 'webVideoTranscode';
+$wgJobTypesExcludedFromDefaultQueue[] = 'webVideoTranscodePrioritized';
+
 /**
  * Returns boolean value from environment variable
  * Must return the same result as isTrue function in run-apache.sh file
