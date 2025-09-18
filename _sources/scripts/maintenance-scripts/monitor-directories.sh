@@ -15,23 +15,34 @@ canskins="$MW_HOME/canasta-skins"
 #    located in canasta-extensions.
 
 inotifywait -m -e create,moved_to,delete,moved_from --format '%e:%f' -- "$userexts" |
-	while IFS=: read -r event file; do
-		case $event in
-			CREATE,ISDIR|MOVED_TO,ISDIR)
-				ln -rsft "$extensions" -- "$userexts"/"$file" ;;
-			DELETE,ISDIR|MOVED_FROM,ISDIR)
-				echo "event: ${event} file: ${file}";
-				ln -rsft "$extensions" -- "$canexts"/"$file" || rm -- "$file";
-		esac
-	done
+  while IFS=: read -r event file; do
+    case $event in
+      CREATE,ISDIR|MOVED_TO,ISDIR)
+        ln -sfn -- "$userexts/$file" "$extensions/$file" ;;
+      DELETE,ISDIR|MOVED_FROM,ISDIR)
+        echo "event: ${event} file: ${file}";
+        if [ -e "$canexts/$file" ]; then
+          ln -sfn -- "$canexts/$file" "$extensions/$file"
+        else
+          rm -f -- "$extensions/$file"
+        fi
+        ;;
+    esac
+  done
 
 inotifywait -m -e create,moved_to,delete,moved_from --format '%e:%f' -- "$userskins" |
-	while IFS=: read -r event file; do
-		case $event in
-			CREATE,ISDIR|MOVED_TO,ISDIR)
-				ln -rsft "$skins" -- "$userskins"/"$file" ;;
-			DELETE,ISDIR|MOVED_FROM,ISDIR)
-				echo "event: ${event} file: ${file}";
-				ln -rsft "$skins" -- "$canskins"/"$file" || rm -- "$file";
-		esac
-	done
+  while IFS=: read -r event file; do
+    case $event in
+      CREATE,ISDIR|MOVED_TO,ISDIR)
+        ln -sfn -- "$userskins/$file" "$skins/$file" ;;
+      DELETE,ISDIR|MOVED_FROM,ISDIR)
+        echo "event: ${event} file: ${file}";
+        if [ -e "$canskins/$file" ]; then
+          ln -sfn -- "$canskins/$file" "$skins/$file"
+        else
+          rm -f -- "$skins/$file"
+        fi
+        ;;
+
+    esac
+  done
