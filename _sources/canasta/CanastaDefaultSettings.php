@@ -104,11 +104,12 @@ if ( $tmpProxy ) {
 				],
 				'proxy' => $server
 			];
-			MediaWiki\MediaWikiServices::getInstance()->getHttpRequestFactory()
+			\MediaWiki\MediaWikiServices::getInstance()->getHttpRequestFactory()
 				->createMultiClient()->runMulti( [ $baseReq ] );
 		}
 	};
 }
+unset( $tmpProxy );
 
 # Auto-configuration for AWS extension QLOUD-122
 # Note: we usually don't have auto-configuration here, but there is no better place for this on Canasta
