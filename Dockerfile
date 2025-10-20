@@ -230,6 +230,10 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-CookieWarning $MW_HOME/extensions/CookieWarning \
 	&& cd $MW_HOME/extensions/CookieWarning \
 	&& git checkout -q bc991e93133bd69fe45e07b3d4554225decc7dae \
+	# CrawlerProtection
+	&& git clone --single-branch -b main https://github.com/mywikis/CrawlerProtection $MW_HOME/extensions/CrawlerProtection \
+	&& cd $MW_HOME/extensions/CrawlerProtection \
+	&& git checkout -q 1b757313dafcb476bfeb0c0148c2a21326672c41 \
 	# DataTransfer
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-DataTransfer $MW_HOME/extensions/DataTransfer \
 	&& cd $MW_HOME/extensions/DataTransfer \
@@ -311,7 +315,7 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/GoogleDocCreator \
 	&& git checkout -q 9e53ecfa4149688a2352a7898c2a2005632e1b7d \
 	# Graph
-	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Graph $MW_HOME/extensions/Graph \
+	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Graph $MW_HOME/extensions/Graph \
 	&& cd $MW_HOME/extensions/Graph \
 	&& git checkout -q 9c229eafdf406c95a4a666a6b7f2a9d0d3d682e4 \
 	# GTag
