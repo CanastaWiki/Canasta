@@ -311,7 +311,7 @@ RUN set -x; \
 	&& cd $MW_HOME/extensions/GoogleDocCreator \
 	&& git checkout -q 9e53ecfa4149688a2352a7898c2a2005632e1b7d \
 	# Graph
-	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-Graph $MW_HOME/extensions/Graph \
+	&& git clone --single-branch -b $MW_VERSION https://gerrit.wikimedia.org/r/mediawiki/extensions/Graph $MW_HOME/extensions/Graph \
 	&& cd $MW_HOME/extensions/Graph \
 	&& git checkout -q 9c229eafdf406c95a4a666a6b7f2a9d0d3d682e4 \
 	# GTag
