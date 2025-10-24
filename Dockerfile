@@ -390,12 +390,12 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MassMessage $MW_HOME/extensions/MassMessage \
 	&& cd $MW_HOME/extensions/MassMessage \
 	&& git checkout -q d6a86291bb975c3dc7778f370006f1145cc834bd \
+	# Can be dropped once https://gerrit.wikimedia.org/r/c/mediawiki/extensions/MassMessage/+/1198560 is merged into REL1_39
+	&& git fetch https://gerrit.wikimedia.org/r/mediawiki/extensions/MassMessage refs/changes/60/1198560/1 && git checkout FETCH_HEAD \
 	# MassMessageEmail
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MassMessageEmail $MW_HOME/extensions/MassMessageEmail \
 	&& cd $MW_HOME/extensions/MassMessageEmail \
-	&& git checkout -q bd1f3413dbe8242b4294892a7f9803ea22364eae \
-	# Can be dropped once https://gerrit.wikimedia.org/r/c/mediawiki/extensions/MassMessage/+/1198560 is merged into REL1_39
-	&& git fetch https://gerrit.wikimedia.org/r/mediawiki/extensions/MassMessage refs/changes/60/1198560/1 && git checkout FETCH_HEAD \
+	&& git checkout -q bd1f3413dbe8242b4294892a7f9803ea22364eae
 	# MediaUploader
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MediaUploader $MW_HOME/extensions/MediaUploader \
 	&& cd $MW_HOME/extensions/MediaUploader \
