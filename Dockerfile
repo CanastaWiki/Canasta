@@ -395,7 +395,7 @@ RUN set -x; \
 	# MassMessageEmail
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MassMessageEmail $MW_HOME/extensions/MassMessageEmail \
 	&& cd $MW_HOME/extensions/MassMessageEmail \
-	&& git checkout -q bd1f3413dbe8242b4294892a7f9803ea22364eae
+	&& git checkout -q bd1f3413dbe8242b4294892a7f9803ea22364eae \
 	# MediaUploader
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MediaUploader $MW_HOME/extensions/MediaUploader \
 	&& cd $MW_HOME/extensions/MediaUploader \
