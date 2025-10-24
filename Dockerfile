@@ -394,6 +394,8 @@ RUN set -x; \
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MassMessageEmail $MW_HOME/extensions/MassMessageEmail \
 	&& cd $MW_HOME/extensions/MassMessageEmail \
 	&& git checkout -q bd1f3413dbe8242b4294892a7f9803ea22364eae \
+	# Can be dropped once https://gerrit.wikimedia.org/r/c/mediawiki/extensions/MassMessage/+/1198560 is merged into REL1_39
+	&& git fetch https://gerrit.wikimedia.org/r/mediawiki/extensions/MassMessage refs/changes/60/1198560/1 && git checkout FETCH_HEAD \
 	# MediaUploader
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-MediaUploader $MW_HOME/extensions/MediaUploader \
 	&& cd $MW_HOME/extensions/MediaUploader \
