@@ -9,6 +9,7 @@ on:
     # Only activate for `master` branch
     branches:
       - wikiteq
+      - wikiteq_REL1_43
 
   # Plus for any pull-requests
   pull_request:
@@ -34,7 +35,7 @@ jobs:
   # The image tag pattern is:
   # for pull-requests: <MW_CORE_VERSION>-<DATE>-<PR_NUMBER>, eg: 1.35.2-20210125-25
   # for tags: <TAG>
-  # for `master` branch: latest + <MW_VERSION>-latest + <MW_CORE_VERSION>-<DATE>-<SHA>
+  # for `wikiteq_REL1_43` branch: <MW_CORE_VERSION>-<DATE>-<SHA>
   # <MW_CORE_VERSION> being parsed from the Dockerfile
   push:
     needs: [test]
@@ -90,7 +91,9 @@ jobs:
 
           # Special case for wikiteq branch
           [ "$VERSION" == "stable" ] && REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:wikiteq-stable
-          
+
+          [ "$VERSION" == "wikiteq_REL1_43" ] && REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:wikiteq-$MEDIAWIKI_VERSION-$BDATE-$(git rev-parse --short HEAD)
+
           echo IMAGE_ID=$IMAGE_ID
           echo REGISTRY_TAGS=$REGISTRY_TAGS
         
