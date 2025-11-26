@@ -299,6 +299,362 @@ extensions:
 - Loops:
     Wikidata ID: Q21677430
     commit: dee5dd131110a73ebcb3c09cad9eec0e130f9315
+- MagicNoCache:
+    Wikidata ID: Q21677510
+    commit: 7315339c97c0eb7d528a8f6b14d055812a85fdb2
+- Maps:
+    Wikidata ID: Q21677553
+    repository: https://github.com/ProfessionalWiki/Maps
+    commit: 958b64d521732cc5ad3530cc94a09884d51bcefc # v. 12.0.0
+    additional steps:
+    - composer update
+- MassMessage:
+    Wikidata ID: Q27887618
+    commit: 798cbd5d4e1099aeba97c2c7e1b05fdb01882292
+- MassMessageEmail:
+    Wikidata ID: Q35256649
+    commit: b2d7a0441ce18e7d63532f4e46ac99a99c27718e
+    additional steps:
+    - composer update
+- Math:
+    Wikidata ID: Q21677559
+    bundled: true
+    additional steps:
+    - database update
+- MediaUploader:
+    Wikidata ID: Q123011801
+    commit: b0f6d0f231891daee3da7fa39045640fa50fa4d2
+    additional steps:
+    - database update
+- Mermaid:
+    Wikidata ID: Q47005306
+    repository: https://github.com/SemanticMediaWiki/Mermaid
+    commit: fd792683fef3c84a7cdd56f8f474c4da0dd630f2 # v. 3.1.0
+- MintyDocs:
+    Wikidata ID: Q55501601
+    branch: master
+    commit: 8300e744a12476e42f34e4571b0d6613dc9929c7 # v. 1.4.1
+- MobileFrontend:
+    Wikidata ID: Q21677641
+    commit: 52aa1f0d683d72935fc737b0e7bb0ea906289701
+- MsUpload:
+    Wikidata ID: Q21677697
+    commit: 039b6aece443d6d030e187c112ab2520a65915b2
+- MultimediaViewer:
+    Wikidata ID: Q21677703
+    bundled: true
+- MyVariables:
+    Wikidata ID: Q21677725
+    commit: 28e21be0ff6fdc1060f5e83a130faa8406d09b0f
+- NewUserMessage:
+    Wikidata ID: Q21677750
+    commit: cdc2bc20557ca97387a0be7713fcc550efd9edfe
+- Nuke:
+    Wikidata ID: Q134413238
+    bundled: true
+- NumerAlpha:
+    Wikidata ID: Q21677836
+    commit: 27660326ccaf44bbc2942e40a24e4433faaec1a7
+- OATHAuth:
+    Wikidata ID: Q21677842
+    bundled: true
+    additional steps:
+    - composer update
+    - database update
+- OAuth:
+    Wikidata ID: Q21677849
+    commit: 0d466bcb3c0146dedc44ac8dce2fea7f0d749f31
+- OpenGraphMeta:
+    Wikidata ID: Q21677897
+    commit: cb990fcea3b7827f02bcc328e367a7b2387a32a3
+- OpenIDConnect:
+    Wikidata ID: Q21677911
+    commit: 5d9cdd7690ccbb3cac552fb85ff4a8742ee8b145
+    additional steps:
+    - composer update
+    - database update
+    required extensions:
+    - PluggableAuth
+- PageExchange:
+    Wikidata ID: Q123116960
+    branch: master
+    commit: eaca8502623f3d80354cbe56571840b215f5ab67 # v. 0.8
+    additional steps:
+    - database update
+- PageForms:
+    Wikidata ID: Q21678466
+    branch: master
+    commit: 8324bdaef560ee38e64a67a404082d3893c36ead # v. 6.0.3
+- PageImages:
+    Wikidata ID: Q21677945
+    bundled: true
+- PageSchemas:
+    Wikidata ID: Q21677969
+    branch: master
+    commit: 9fe81a9904fa51adcd50c85c3ddb214ae63ce9dc # v. 1.0
+- ParserFunctions:
+    Wikidata ID: Q21677990
+    bundled: true
+- PdfHandler:
+    Wikidata ID: Q21678009
+    bundled: true
+- PluggableAuth:
+    Wikidata ID: Q21678089
+    commit: 4ef6f74c067f9ff81b78fd64b9780a82ccce97f3
+- Poem:
+    Wikidata ID: Q21678065
+    bundled: true
+- Popups:
+    Wikidata ID: Q21678087
+    commit: 7d5a9c8a62e9f0152c6c73b6d286c65bb526a291
+- QuickInstantCommons:
+    Wikidata ID: Q124302107
+    commit: 3330ce1efd4a8143ee2525ad9f48654dd84c826c
+- RandomSelection:
+    Wikidata ID: Q21678192
+    commit: d585acaeb6e35d1fc15e4d71e2271fb4c7f412a4
+- RegexFunctions:
+    Wikidata ID: Q21678262
+    commit: 444c7ad5a019d0f0ba4d8e9c3b2178588571624d
+- RegularTooltips:
+    Wikidata ID: Q124312629
+    commit: e52d009f1a01575de2abebf802c6e97b24587d9a
+- RelatedArticles:
+    Wikidata ID: Q21678282
+    commit: f5de0bc44637825149ea940d755f7b419f62be32
+- ReplaceText:
+    Wikidata ID: Q21678303
+    bundled: true
+- RevisionSlider:
+    Wikidata ID: Q24036451
+    commit: ae8986e4e67a17a8def5168645ee9afa6e6890df
+- RottenLinks:
+    Wikidata ID: Q59088472
+    repository: https://github.com/miraheze/RottenLinks
+    commit: a2019146ef7fad359ac0503bb885f651d90272cb # v. 2.1.0
+    additional steps:
+    - database update
+- RSS:
+    Wikidata ID: Q21678196
+    commit: d73982e27872a74e2fb6ba40189c96e4beada1c4
+- SandboxLink:
+    Wikidata ID: Q21678368
+    commit: 3eae08b2f34e84399e154cc78973c69d4f5c7811
+- SaveSpinner:
+    Wikidata ID: Q129440566
+    commit: 438ea79d4ba11cfe8a8c3599fba5c473b9760b91
+- Scribunto:
+    Wikidata ID: Q66562448
+    bundled: true
+- SecureLinkFixer:
+    Wikidata ID: Q55839926
+    bundled: true
+- SemanticCompoundQueries:
+    Wikidata ID: Q21678422
+    repository: https://github.com/SemanticMediaWiki/SemanticCompoundQueries
+    commit: 37872efe470a01294da9afeb4b109173665169f5 # v. 3.0.0-beta
+    required extensions:
+    - SemanticMediaWiki
+- SemanticDependencyUpdater:
+    Wikidata ID: Q25652137
+    repository: https://github.com/gesinn-it/SemanticDependencyUpdater
+    commit: 28a86f1f7267c86f7fb8200f31ec6d690745a669 # v. 4.0.0
+    required extensions:
+    - SemanticMediaWiki
+- SemanticDrilldown:
+    Wikidata ID: Q21678469
+    repository: https://github.com/SemanticMediaWiki/SemanticDrilldown
+    commit: 3f74e3f15cd53bcb2dc0027099e4a2edd7158f02 # v. 4.0.0-beta4
+    required extensions:
+    - SemanticMediaWiki
+- SemanticExtraSpecialProperties:
+    Wikidata ID: Q21678476
+    repository: https://github.com/SemanticMediaWiki/SemanticExtraSpecialProperties
+    commit: f7616bdb48210e75903392a784e91d955caa76a5 # v. 4.0.0
+    required extensions:
+    - SemanticMediaWiki
+- SemanticMediaWiki:
+    Wikidata ID: Q20728
+    repository: https://github.com/SemanticMediaWiki/SemanticMediaWiki
+    commit: 16171910b16165089d19fc6f66c414e6f62aa1eb # v. 6.0.0
+    persistent directories:
+    - config
+    additional steps:
+    - composer update
+    - database update
+- SemanticResultFormats:
+    Wikidata ID: Q21678508
+    repository: https://github.com/SemanticMediaWiki/SemanticResultFormats
+    commit: 36bed50f3df91e92fd0823245547a1525a3f3d0d # v. 5.0.0
+    additional steps:
+    - composer update
+    required extensions:
+    - SemanticMediaWiki
+- SemanticScribunto:
+    Wikidata ID: Q25662078
+    repository: https://github.com/SemanticMediaWiki/SemanticScribunto
+    commit: 9bf8857c4c199acd589f836b4b7c454e708d99ee # v. 2.3.2
+    required extensions:
+    - Scribunto
+    - SemanticMediaWiki
+- SemanticWatchlist:
+    Wikidata ID: Q21678523
+    repository: https://github.com/SemanticMediaWiki/SemanticWatchlist
+    commit: 67b2df20249f4c02103e6b8ecbd65ecc49780eb3 # v. 1.4.0-beta
+    required extensions:
+    - SemanticMediaWiki
+- SimpleBatchUpload:
+    Wikidata ID: Q25816436
+    repository: https://github.com/ProfessionalWiki/SimpleBatchUpload
+    commit: 1e53b5b50e7fbc6c96c749bfdf3b807f62836c30 # v. 2.0.1
+- SimpleChanges:
+    Wikidata ID: Q21678599
+    commit: 024aca4c80d2a6b697f3d85e99de8e198b126999
+- SimpleMathJax:
+    Wikidata ID: Q21678600
+    repository: https://github.com/jmnote/SimpleMathJax
+    commit: 7c9de84d219d15243aa153867339ac1a9c1a22e5 # v. 0.8.4
+- SkinPerPage:
+    Wikidata ID: Q21678617
+    commit: cd94d4684782457f81517d6f2692f3af300d9242
+- SmiteSpam:
+    Wikidata ID: Q21678641
+    commit: 529ad28e2953506c7216c90abb7bd17f320fb0b5
+    additional steps:
+    - database update
+- SocialProfile:
+    Wikidata ID: Q21678658
+    commit: 596821355ef2022171718f41a1109da01c6e3dbc
+- SpamBlacklist:
+    Wikidata ID: Q21678649
+    bundled: true
+- SubPageList:
+    Wikidata ID: Q21678751
+    repository: https://github.com/ProfessionalWiki/SubPageList
+    commit: c016dcdb7866f20319731e6497b48fd43756505e # v. 3.0.0
+- SyntaxHighlight:
+    Wikidata ID: Q21678766
+    bundled: true
+- TemplateData:
+    Wikidata ID: Q59283329
+    bundled: true
+- TemplateSandbox:
+    Wikidata ID: Q21678839
+    commit: db217336a3e2c455c5e24303b2e793623b80a055
+- TemplateStyles:
+    Wikidata ID: Q25916623
+    commit: 31a4bd259a921e19b4857befa700e7fc0998b6d2
+    additional steps:
+    - composer update
+- TemplateStylesExtender:
+    Wikidata ID: Q124315076
+    repository: https://github.com/octfx/mediawiki-extensions-TemplateStylesExtender
+    commit: 97a375a037d3cd5a5ead000290883925183f9bb3 # v 2.0.0
+    required extensions:
+    - TemplateStyles
+- TemplateWizard:
+    Wikidata ID: Q50368282
+    commit: f30e613579b90ff1b166ca08903037415f45471e
+- TextExtracts:
+    Wikidata ID: Q21678844
+    bundled: true
+- Thanks:
+    Wikidata ID: Q21678842
+    bundled: true
+- TimedMediaHandler:
+    Wikidata ID: Q21678857
+    commit: b223fe9d63409696b54511777b1e3619b1a7673b
+    additional steps:
+    - composer update
+    - database update
+- TitleBlacklist:
+    Wikidata ID: Q21678866
+    bundled: true
+- TitleIcon:
+    Wikidata ID: Q21678880
+    commit: 6e0b6a3ddba40c468d904d8587945092ad3f8030
+- TwoColConflict:
+    Wikidata ID: Q26991353
+    commit: 377a8f2fd7b87a89354dc08e373d4e2b6d476211
+- UniversalLanguageSelector:
+    Wikidata ID: Q21678941
+    commit: 11c95712a05fd8feee7d148c5a2b882b92984bba
+- UploadWizard:
+    Wikidata ID: Q11083660
+    commit: 0dd1f57172e82c18d7e8580c42eebe27c23e688a
+- UrlGetParameters:
+    Wikidata ID: Q21678958
+    commit: 013427509ca51a710879c8811b6f4ef04d7b2e12
+- UserFunctions:
+    Wikidata ID: Q21678996
+    commit: fe610c0a243644789afd7837b7d19a896e216822
+- UserMerge:
+    Wikidata ID: Q21678993
+    commit: f9d2664fd1af70a2b3a22a55b971c174593d38f1
+- UserPageViewTracker:
+    Wikidata ID: Q21679006
+    commit: a3009ef62873535de56e18f62d629ca3494e9d77
+    additional steps:
+    - database update
+- Variables:
+    Wikidata ID: Q21679056
+    commit: 81115fae09d0a219078d2a2511de83474fd2eb8f
+- VariablesLua:
+    Wikidata ID: Q54646197
+    repository: https://github.com/Liquipedia/VariablesLua
+    commit: 64a5776f055b33c38602e8a94f7237a6b8cb4c79 # v. 1.6.0
+    required extensions:
+    - Scribunto
+    - Variables
+- VEForAll:
+    Wikidata ID: Q51067113
+    branch: master
+    commit: 33b5fa746af51e9c6c770950a197b1c17f5ee253 # v. 0.6
+    required extensions:
+    - VisualEditor
+- VisualEditor:
+    Wikidata ID: Q21679100
+    bundled: true
+- VoteNY:
+    Wikidata ID: Q21679097
+    commit: d1d57da0ba7418c9e7f98b659a5fa2832d790c2d
+    additional steps:
+    - database update
+- WatchAnalytics:
+    Wikidata ID: Q21679202
+    branch: master
+    commit: 574e93d94e334eeccbe3a71479637b227f8be18f # v. 4.5.1
+    additional steps:
+    - database update
+- WhoIsWatching:
+    Wikidata ID: Q21679150
+    commit: ad0d721ab588c77678a33db304a77bd684724a1a
+- WhosOnline:
+    Wikidata ID: Q21679159
+    commit: e072d08f58ea013a40f27dd95ef1eef8bca364c2
+    additional steps:
+    - database update
+- Widgets:
+    Wikidata ID: Q21679156
+    commit: 50da5c66923ec5169f5606cc1d76f38f0b759d71
+    persistent directories:
+    - compiled_templates
+    additional steps:
+    - composer update
+- WikiEditor:
+    Wikidata ID: Q21679226
+    bundled: true
+- WikiSEO:
+    Wikidata ID: Q21679286
+    commit: 86611359bfc639beb1b567d7df0edf25a0441aa0
+- WSOAuth:
+    Wikidata ID: Q117027185
+    commit: 9f25fade2bcd3fae44c3236072f5ea2eb068b75c
+    additional steps:
+    - composer update
+    - database update
+    required extensions:
+    - PluggableAuth
 skins:
 - Vector:
     Wikidata ID: Q22713102
