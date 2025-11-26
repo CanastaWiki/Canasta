@@ -656,14 +656,6 @@ extensions:
     required extensions:
     - PluggableAuth
 skins:
-- chameleon:
-    Wikidata ID: Q22712965
-    repository: https://github.com/ProfessionalWiki/chameleon
-    commit: 2db7ab4a60600a5342fdc5c62c24ea1d99c8669e # v. 4.4.2
-    additional steps:
-    - composer update
-    required extensions:
-    - Bootstrap
 - CologneBlue:
     Wikidata ID: Q22712970
     commit: 9134d2e26c9d1c8f9f4a942cbeeff3e26ed11f21
