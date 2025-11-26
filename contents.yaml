@@ -3,6 +3,12 @@
 # extension with that name is used, and the default branch used is REL1_43.
 # Where the repository *is* specified, the default branch used is master.
 extensions:
+- AbuseFilter:
+    Wikidata ID: Q134589302
+    bundled: true
+    additional steps:
+    - composer update
+    - database update
 - AdminLinks:
     Wikidata ID: Q21676187
     branch: master
@@ -10,6 +16,289 @@ extensions:
 - AdvancedSearch:
     Wikidata ID: Q21676196
     commit: d879c5105bbdc574d6c7e95fa4cd20d7b6de6dcd
+- AJAXPoll:
+    Wikidata ID: Q21676062
+    commit: fbfd07ef43063e806026d5bd3f95493e2b189378
+- AntiSpoof:
+    Wikidata ID: Q21676294
+    commit: a010c2d53618aa99b8b8a32d9665de9000e53188
+    additional steps:
+    - composer update
+    - database update
+- ApprovedRevs:
+    Wikidata ID: Q21676333
+    branch: master
+    commit: fb0a4b9b3b8a38dfc1beaaf3304a93120c73dd52 # v. 2.3
+    additional steps:
+    - database update
+- Arrays:
+    Wikidata ID: Q21676367
+    commit: 96357a3708ec36ae4b6deebb63991c86268d0e2a
+- AWS:
+    Wikidata ID: Q21676069
+    repository: https://github.com/edwardspec/mediawiki-aws-s3
+    branch: master
+    commit: f85bb579b57f22175ff0cbca7664ad26cacdbb58 # v. 0.13.1
+    additional steps:
+    - composer update
+- Babel:
+    Wikidata ID: Q21676619
+    commit: 52c75f4ad7802fbcf930fd5506510e1451326601
+    additional steps:
+    - database update
+- BetaFeatures:
+    Wikidata ID: Q21676633
+    commit: b6d1cdf01dea38eabc69f55ae1d1ccb851080750
+    additional steps:
+    - database update
+- Bootstrap:
+    Wikidata ID: Q21676802
+    repository: https://github.com/ProfessionalWiki/Bootstrap
+    commit: 0d6e4460f98e7d0207281b615e4bebbee64c2e46 # v. 5.0.0
+    additional steps:
+    - composer update
+- BootstrapComponents:
+    Wikidata ID: Q47528699
+    repository: https://github.com/oetterer/BootstrapComponents
+    commit: bec7dd3e864d61df620008143ebe879de70d5f0f # v. 5.2.1
+    required extensions:
+    - Bootstrap
+- BreadCrumbs2:
+    Wikidata ID: Q21676848
+    commit: 28e82570da8d7e9e8a422a9a3f55392cf6166e0f
+- Cargo:
+    Wikidata ID: Q21676223
+    branch: master
+    commit: 3dc65263537bfaf2ee24f3147926876daf25b86e # v. 3.8.5
+    additional steps:
+    - database update
+- CategoryTree:
+    Wikidata ID: Q21676245
+    bundled: true
+- CharInsert:
+    Wikidata ID: Q21676306
+    commit: ee7b17910ece1ebaf6ad53857926d797b0ff374d
+- CheckUser:
+    Wikidata ID: Q21676386
+    commit: 1de925985d764b50f80c08bd473a23312435bdae
+    additional steps:
+    - database update
+- CirrusSearch:
+    Wikidata ID: Q21676498
+    commit: 3461fc8daae0f1d8e555d1d1da21d6a76d836b3b
+    additional steps:
+    - composer update
+- Cite:
+    Wikidata ID: Q21676449
+    bundled: true
+- CiteThisPage:
+    Wikidata ID: Q21676453
+    bundled: true
+- cldr:
+    Wikidata ID: Q21676160
+    commit: cf6c9c70150cec6c1193f6f50dc54b72dc6e0f40
+- CodeEditor:
+    Wikidata ID: Q21676530
+    bundled: true
+- CodeMirror:
+    Wikidata ID: Q21676540
+    commit: da01975ea050fe20ea80ff6728bbe0a7a2090c78
+- Collection:
+    Wikidata ID: Q134413164
+    commit: f5f15ade19be8d5f07518d335be9a7047b6b7437
+- CommentStreams:
+    Wikidata ID: Q25662100
+    commit: 23e8579bcbd4e7263836f2105d15fa7ef431f98e
+    additional steps:
+    - database update
+- CommonsMetadata:
+    Wikidata ID: Q21676600
+    commit: 133fd7511eff158456e194315e5f477166ef3206
+- ConfirmAccount:
+    Wikidata ID: Q21676649
+    commit: dc1a1db096f4ecadfe178fccd26a1b7a854254ad
+    additional steps:
+    - database update
+- ConfirmEdit:
+    Wikidata ID: Q21676645
+    bundled: true
+- ContactPage:
+    Wikidata ID: Q21676642
+    commit: 733c519feeafdf296b288500f317512262ffecb7
+- ContributionScores:
+    Wikidata ID: Q21676708
+    commit: 6370730e6cec3ccff17d2ea988dd414fa87f1e16
+- CookieWarning:
+    Wikidata ID: Q26719043
+    commit: f697459d94ac1aa8c9d3e417a9b0e04f92640447
+- CreateRedirect:
+    Wikidata ID: Q21676753
+    commit: 17f4ab36038cdf7d568bd17dcf8ebc2110c9dcb9
+- DataTransfer:
+    Wikidata ID: Q21677041
+    branch: master
+    commit: 8ffc202389decbe6c0fe2f974ecf7e7283db7a97 # v. 1.7
+    additional steps:
+    - composer update
+- DeleteBatch:
+    Wikidata ID: Q21677046
+    commit: 55ec7006ba073f16942ffa91620485b8f6cfc241
+- Description2:
+    Wikidata ID: Q21677193
+    commit: 50e2aef88053be12a66b617657c414a665e2d38e
+- Disambiguator:
+    Wikidata ID: Q21677221
+    commit: 56a4738b35d331fe3d3f985b9e3d1c084ab75ed9
+- DiscussionTools:
+    Wikidata ID: Q94698747
+    bundled: true
+    additional steps:
+    - database update
+    required extensions:
+    - VisualEditor
+- DismissableSiteNotice:
+    Wikidata ID: Q21677163
+    commit: caca5bf6baaf5b85487a5b822e42c6ee74aa0e9d
+- DisplayTitle:
+    Wikidata ID: Q27948979
+    commit: 920768a8efb9f316aed1f134fc07aa153d612eb7
+- Echo:
+    Wikidata ID: Q21676230
+    bundled: true
+    additional steps:
+    - database update
+- EditAccount:
+    Wikidata ID: Q21676224
+    commit: 19ef898ce9cecc34dfed190d2d8628bbeb863f89
+- Editcount:
+    Wikidata ID: Q21676209
+    commit: 84a4c08a26605ab8c89beb77d6f7bd6fc3e97ec6
+- Elastica:
+    Wikidata ID: Q21676277
+    commit: 3f2c3cad516c875091c3536d8d17b0297e8d2d87
+    additional steps:
+    - composer update
+- EmailAuthorization:
+    Wikidata ID: Q30248653
+    commit: 69ca5f8dfa9217c542bfd34ee9736dc8e04d0903
+    additional steps:
+    - git submodule update
+    - database update
+    required extensions:
+    - PluggableAuth
+- EmbedVideo:
+    Wikidata ID: Q123153544
+    repository: https://github.com/StarCitizenWiki/mediawiki-extensions-EmbedVideo
+    branch: REL1_43
+    commit: 8c7c8994b1ac2466339e53674df9140c4de76c67
+- EventLogging:
+    Wikidata ID: Q21676443
+    commit: 411fc0d6c8538b0064e0d75b5302534c7f28ac50
+- EventStreamConfig:
+    Wikidata ID: Q117195457
+    commit: 0989b79f4663360f5b1173441e1fc562b3c63b62
+- ExternalData:
+    Wikidata ID: Q21676576
+    branch: master
+    commit: bee4371617089195e3885a3deef16c8fcb8de4fb
+    additional steps:
+    - database update
+- FlexDiagrams:
+    Wikidata ID: Q125545336
+    branch: master
+    commit: 183efb105deda9d228041b976cd36c50d3c63628 # v. 0.7
+- Gadgets:
+    Wikidata ID: Q21676981
+    bundled: true
+- GlobalNotice:
+    Wikidata ID: Q21677217
+    commit: 0cc66c56ebcfdebc0d407d82ae584a5426523d9f
+- GoogleAnalyticsMetrics:
+    Wikidata ID: Q21677376
+    commit: 441511d7c848f8b59a08dc160fb1062f67778032
+    additional steps:
+    - composer update
+- GoogleDocCreator:
+    Wikidata ID: Q56031068
+    commit: 9db568cb4113ab99919fcb2e107e3428212f6ee1
+- GTag:
+    Wikidata ID: Q122891572
+    repository: https://github.com/SkizNet/mediawiki-GTag
+    commit: 90d87ea56777b2be3ab5f718b0b6644623a24d04
+- HeaderFooter:
+    Wikidata ID: Q21676879
+    commit: a0d0f4e39f3069925815ca37320f72995aeb80c3
+- HeaderTabs:
+    Wikidata ID: Q21676903
+    commit: bcb060829c5d643e746921641ea5dbd5a84f35f4
+- HTMLTags:
+    Wikidata ID: Q21676978
+    branch: master
+    commit: 3903111e4c1075e0f24695d8ee57aecf8d5cb4a8 # v. 0.4
+- ImageMap:
+    Wikidata ID: Q21677197
+    bundled: true
+- InlineComments:
+    Wikidata ID: Q123261828
+    branch: master
+    commit: 1e1015bfc8d7737265a9e348f8289a7292c5d1fc # v. 1.0.1
+- InputBox:
+    Wikidata ID: Q134413220
+    bundled: true
+- Interwiki:
+    Wikidata ID: Q21677398
+    bundled: true
+- JWTAuth:
+    Wikidata ID: Q123281437
+    branch: master
+    commit: 1649b7a2baeaf996caf2de463d6004807e26748d # v. 2.1.0
+    additional steps:
+    - database update
+    required extensions:
+    - PluggableAuth
+- LabeledSectionTransclusion:
+    Wikidata ID: Q51882461
+    commit: 68ef6ea74b39e37278eadd5ab9a1ac62bd85de82
+- LDAPAuthentication2:
+    Wikidata ID: Q59419025
+    commit: 808036a082e429c54799b0bbce89cba74a74157f
+- LDAPAuthorization:
+    Wikidata ID: Q21677194
+    commit: 05a9d007c24429cfee90337077c9d3276edc73ad
+- LDAPProvider:
+    Wikidata ID: Q59419015
+    commit: c8a4cad128f7aa898c8660648a7da1aef571765d
+    additional steps:
+    - database update
+- Lingo:
+    Wikidata ID: Q21677266
+    commit: 27893843b7529951deed9a3ef9fc25c778934eea
+- LinkSuggest:
+    Wikidata ID: Q21677268
+    commit: 145247abb87a61b4c19523ce62de37161780bd14
+- LinkTarget:
+    Wikidata ID: Q21677320
+    commit: 83007f7c813204e769aecdfe15abf61cccb0c43b
+- Linter:
+    Wikidata ID: Q27292553
+    bundled: true
+    additional steps:
+    - database update
+- LockAuthor:
+    Wikidata ID: Q123144339
+    commit: 29fc3cad3e6b9c47c04161a03d758ff355ca5723
+- Lockdown:
+    Wikidata ID: Q21677332
+    commit: 977cfa553b8f40f731b9b86f7dcc18cf181bd854
+- LoginNotify:
+    Wikidata ID: Q27907726
+    bundled: true
+- LookupUser:
+    Wikidata ID: Q21677427
+    commit: d0198361db26d3c6c69ce4cff52c85edae79bbe8
+- Loops:
+    Wikidata ID: Q21677430
+    commit: dee5dd131110a73ebcb3c09cad9eec0e130f9315
 skins:
 - Vector:
     Wikidata ID: Q22713102
