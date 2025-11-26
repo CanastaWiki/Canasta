@@ -13,8 +13,8 @@ ENV MW_MAINTENANCE_CIRRUSSEARCH_UPDATECONFIG=2 \
 	MW_MAINTENANCE_CIRRUSSEARCH_FORCEINDEX=2
 
 # Dirty hack for Semantic MediaWiki
-#RUN set -x; \
-#	sed -i "s/#wfLoadExtension('SemanticMediaWiki');/#enableSemantics('localhost');/g" $MW_ORIGIN_FILES/installedExtensions.txt
+RUN set -x; \
+	sed -i "s/#wfLoadExtension('SemanticMediaWiki');/#enableSemantics('localhost');/g" $MW_ORIGIN_FILES/installedExtensions.txt
 
 # Maintenance scripts for specific extensions
 COPY cirrus-search-maintenance.sh _sources/scripts/maintenance-scripts/
