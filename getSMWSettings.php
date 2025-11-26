@@ -41,7 +41,7 @@ class GetSMWSettings extends Maintenance {
 
 		if ( $this->hasOption( 'UpgradeKey' ) ) {
 			$smwId = SMW\Site::id();
-			this->output( $GLOBALS['smw.json'][$smwId]['upgrade_key'] ?? '' );
+			$this->output( $GLOBALS['smw.json'][$smwId]['upgrade_key'] ?? '' );
 		} elseif ( $this->hasOption( 'IncompleteSetupTasks' ) ) {
 			$SMWSetupFile = new SMW\SetupFile();
 			$SMWIncompleteTasks = $SMWSetupFile->findIncompleteTasks();
