@@ -1,1 +1,16 @@
-inherits: https://raw.githubusercontent.com/CanastaWiki/RecommendedRevisions/4f23bae9d3a6d2889caaa46648546082c94e2b64/1.43.yaml
+# Recommended revisions for extensions and skins for MediaWiki 1.43.
+# Where the repository is not specified, the Wikimedia Git repository for the
+# extension with that name is used, and the default branch used is REL1_43.
+# Where the repository *is* specified, the default branch used is master.
+extensions:
+- AdminLinks:
+    Wikidata ID: Q21676187
+    branch: master
+    commit: 92f1e05e2458368ad7a8477b2d84acfc99c36026 # v. 0.7.1
+- AdvancedSearch:
+    Wikidata ID: Q21676196
+    commit: d879c5105bbdc574d6c7e95fa4cd20d7b6de6dcd
+skins:
+- Vector:
+    Wikidata ID: Q22713102
+    bundled: true
