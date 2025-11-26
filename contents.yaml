@@ -656,6 +656,35 @@ extensions:
     required extensions:
     - PluggableAuth
 skins:
+- chameleon:
+    Wikidata ID: Q22712965
+    repository: https://github.com/ProfessionalWiki/chameleon
+    commit: 2db7ab4a60600a5342fdc5c62c24ea1d99c8669e # v. 4.4.2
+    additional steps:
+    - composer update
+    required extensions:
+    - Bootstrap
+- CologneBlue:
+    Wikidata ID: Q22712970
+    commit: 9134d2e26c9d1c8f9f4a942cbeeff3e26ed11f21
+- MinervaNeue:
+    Wikidata ID: Q22713032
+    bundled: true
+- Modern:
+    Wikidata ID: Q22713034
+    commit: 5597681b7f0423a7e71cda64929c9d60dc999b8c
+- MonoBook:
+    Wikidata ID: Q22713043
+    bundled: true
+- Pivot:
+    Wikidata ID: Q29001625
+    commit: f6b35ca2b8b07ced0e467d8b99421a41b0af3fa3
+- Refreshed:
+    Wikidata ID: Q22713061
+    commit: 2570c3ee3996cd8ca3f766131b301c33695f68e6
+- Timeless:
+    Wikidata ID: Q22713093
+    bundled: true
 - Vector:
     Wikidata ID: Q22713102
     bundled: true
