@@ -42,11 +42,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       -
-        name: Extract MW_VERSION from parent Docker image
+        name: Extract MW_VERSION from CanastaBase labels
         id: extract_mw
         run: |
-          docker build -t temp-image .
-          MW_VERSION=$(docker run --rm temp-image env | grep ^MW_CORE_VERSION= | cut -d '=' -f2-)
+          set -euo pipefail
+          BASE_IMAGE=$(grep -E '^FROM[[:space:]]+ghcr.io/canastawiki/canasta-base' Dockerfile | head -n1 | awk '{print $2}')
+          docker pull "$BASE_IMAGE" >/dev/null
+          MW_VERSION=$(docker inspect --format '{{ index .Config.Labels "org.canasta.mediawiki.version" }}' "$BASE_IMAGE")
           echo "MW_VERSION=$MW_VERSION"
           echo "MW_VERSION=$MW_VERSION" >> $GITHUB_ENV
 
@@ -70,7 +72,7 @@ jobs:
 
           # Strip git ref prefix from version and use it as suffix for version
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-          
+
           # Get the Canasta version from the "VERSION" file
           CANASTA_VERSION=$(cat VERSION)
 
@@ -98,10 +100,10 @@ jobs:
           echo VERSION=$VERSION
           echo REGISTRY_TAGS=$REGISTRY_TAGS
           echo headref=${{ github.head_ref }}
-          
+
           SHA_SHORT=$(echo ${{ github.sha }} | cut -c1-8)
           [ "${{ github.event_name }}" == "pull_request" ] && SHA_SHORT=$(echo ${{ github.event.pull_request.head.sha }} | cut -c1-8)
-        
+
           echo "Final image tag to be pushed:"
           echo $REGISTRY_TAGS
           echo "REGISTRY_TAGS=$REGISTRY_TAGS" >> $GITHUB_OUTPUT
