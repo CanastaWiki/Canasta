@@ -70,7 +70,7 @@ jobs:
 
           # Strip git ref prefix from version and use it as suffix for version
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-          
+
           # Get the Canasta version from the "VERSION" file
           CANASTA_VERSION=$(cat VERSION)
 
@@ -98,10 +98,10 @@ jobs:
           echo VERSION=$VERSION
           echo REGISTRY_TAGS=$REGISTRY_TAGS
           echo headref=${{ github.head_ref }}
-          
+
           SHA_SHORT=$(echo ${{ github.sha }} | cut -c1-8)
           [ "${{ github.event_name }}" == "pull_request" ] && SHA_SHORT=$(echo ${{ github.event.pull_request.head.sha }} | cut -c1-8)
-        
+
           echo "Final image tag to be pushed:"
           echo $REGISTRY_TAGS
           echo "REGISTRY_TAGS=$REGISTRY_TAGS" >> $GITHUB_OUTPUT
@@ -117,14 +117,6 @@ jobs:
         with:
           install: true
       -
-        name: Cache Docker layers
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-      -
         name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -134,21 +126,14 @@ jobs:
       -
         name: Build and push
         id: docker_build
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: ${{ steps.generate.outputs.REGISTRY_TAGS }}
-      -
-        # https://github.com/docker/build-push-action/issues/252
-        # https://github.com/moby/buildkit/issues/1896
-        name: Move cache
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
