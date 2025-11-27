@@ -48,7 +48,7 @@ jobs:
           set -euo pipefail
           BASE_IMAGE=$(awk '/^FROM ghcr\.io\/canastawiki\/canasta-base/ {print $2}' Dockerfile)
           docker pull "$BASE_IMAGE" >/dev/null
-          MW_VERSION=$(docker inspect --format '{{ index .Config.Labels "org.canasta.mediawiki.version" }}' "$BASE_IMAGE")
+          MW_VERSION=$(docker inspect --format '{{ index .Config.Labels "wiki.canasta.mediawiki.version" }}' "$BASE_IMAGE")
           echo "MW_VERSION=$MW_VERSION"
           echo "MW_VERSION=$MW_VERSION" >> $GITHUB_ENV
 
