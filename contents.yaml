@@ -1,4 +1,8 @@
 inherits: https://raw.githubusercontent.com/CanastaWiki/RecommendedRevisions/b4a24d46a803b0d459433224f8fb42a6974ee809/1.43.yaml
 skins:
 - chameleon:
-    remove: true
+    Wikidata ID: Q22712965
+    repository: https://github.com/yaronkoren/chameleon
+    commit: 2a19b8f6dffeeace15249e9130bb3ce0fd151a51 # v. 5.0.2
+    required extensions:
+    - Bootstrap
