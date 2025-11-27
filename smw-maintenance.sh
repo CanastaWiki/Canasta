@@ -14,5 +14,5 @@ do
         *)
             echo >&2 "######## Unknown SMW maintenance setup task - $task ########"
             ;;
-     sac
+     esac
 done
