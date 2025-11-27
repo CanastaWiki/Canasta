@@ -4,5 +4,6 @@ skins:
     Wikidata ID: Q22712965
     repository: https://github.com/yaronkoren/chameleon
     commit: 2a19b8f6dffeeace15249e9130bb3ce0fd151a51 # v. 5.0.2
+    additional steps:
     required extensions:
     - Bootstrap
