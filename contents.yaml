@@ -1,4 +1,4 @@
-inherits: https://raw.githubusercontent.com/CanastaWiki/RecommendedRevisions/4f23bae9d3a6d2889caaa46648546082c94e2b64/1.43.yaml
+inherits: https://raw.githubusercontent.com/CanastaWiki/RecommendedRevisions/b4a24d46a803b0d459433224f8fb42a6974ee809/1.43.yaml
 skins:
 - chameleon:
     remove: true
