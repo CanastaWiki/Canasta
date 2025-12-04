@@ -4,7 +4,7 @@ LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
 
 # Uncomment this if there are any skin or extension patches
-# COPY _sources/patches/* /tmp/
+COPY patches/* /tmp/
 COPY contents.yaml /tmp/
 RUN php /tmp/extensions-skins.php "/tmp/contents.yaml"
 
