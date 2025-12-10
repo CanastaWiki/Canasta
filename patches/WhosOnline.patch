@@ -1,0 +1,76 @@
+From d014562b2c09d79969369f5614c92d5269aca75b Mon Sep 17 00:00:00 2001
+From: Daniel Scherzer <daniel@wikiteq.com>
+Date: Sun, 30 Nov 2025 15:34:26 -0800
+Subject: [PATCH] Fix Special:WhosOnline navigation building and limit handling
+
+Navigation building broken since core removed
+`IndexPager::buildPrevNextNavigation()` in
+wikimedia/mediawiki@1e86517db52d5c2d45ee30935834f94ab47b1223 in 1.41.
+---
+ includes/PagerWhosOnline.php | 42 ++++++++++++++++++++++++++++--------
+ 1 file changed, 33 insertions(+), 9 deletions(-)
+
+diff --git a/includes/PagerWhosOnline.php b/includes/PagerWhosOnline.php
+index f01dd8a..3b2bf8d 100644
+--- a/includes/PagerWhosOnline.php
++++ b/includes/PagerWhosOnline.php
+@@ -14,7 +14,7 @@
+ class PagerWhosOnline extends IndexPager {
+ 	function __construct() {
+ 		parent::__construct();
+-		$this->mLimit = $this->mDefaultLimit;
++		// $this->mLimit = $this->mDefaultLimit;
+ 	}
+ 
+ 	/** @inheritDoc */
+@@ -92,15 +92,39 @@ class PagerWhosOnline extends IndexPager {
+ 		return $users;
+ 	}
+ 
++	/** @inheritDoc */
++	public function getPagingQueries() {
++		$urlLimit = $this->mLimit == $this->mDefaultLimit ? null : $this->mLimit;
++		$limit = (int)$this->mLimit;
++		$offset = (int)$this->mOffset;
++		$result = [
++			'prev' => [
++				'offset' => (string)max( $offset - $limit, 0 ),
++				'limit' => $urlLimit,
++			],
++			'next' => [
++				'offset' => $offset + $limit,
++				'limit' => $urlLimit,
++			],
++		];
++		if ( (int)$this->mOffset === 0 ) {
++			$result['prev'] = false;
++		}
++		$atend = $this->countUsersOnline() < ( (int)$this->mLimit + (int)$this->mOffset );
++		if ( $atend ) {
++			$result['next'] = false;
++		}
++		return $result;
++	}
++
+ 	/** @inheritDoc */
+ 	function getNavigationBar() {
+-		return $this->buildPrevNextNavigation(
+-			SpecialPage::getTitleFor( 'WhosOnline' ),
+-			$this->mOffset,
+-			$this->mLimit,
+-			[],
+-			// show next link
+-			$this->countUsersOnline() < ( $this->mLimit + (int)$this->mOffset )
+-		);
++		$navBuilder = $this->getNavigationBuilder();
++		$navBuilder
++			->setPrevTooltipMsg( 'prevn-title' )
++			->setNextTooltipMsg( 'nextn-title' )
++			->setLimitTooltipMsg( 'shown-title' );
++
++		return $navBuilder->getHtml();
+ 	}
+ }
+-- 
+2.49.0.windows.1
+
