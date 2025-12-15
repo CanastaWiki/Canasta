@@ -1,0 +1,1 @@
+If any patches for extensions and skins are called for in the contents YAML (as specified by the "patches:" parameter), they should be placed in this directory.
