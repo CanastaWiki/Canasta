@@ -1,5 +1,1 @@
-inherits: https://raw.githubusercontent.com/CanastaWiki/RecommendedRevisions/c89b4a8c7a28d508e3c19d7b5f1b5cdd386e748c/1.43.yaml
-extensions:
-  - WhosOnline:
-      patches:
-        - WhosOnline.patch
+inherits: https://raw.githubusercontent.com/CanastaWiki/RecommendedRevisions/e988cf5e89e62ee3fe6353e382c12e6402a998fa/1.43.yaml
