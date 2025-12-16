@@ -13,8 +13,9 @@ Canasta version history:
 - 2.0.1 - April 14, 2024 - update MediaWiki version to 1.39.7; move extension installation settings from Dockerfile into extensions.yaml; rename run-apache.sh to run-all.sh; remove WikiForum extension
 - 3.0.0 - June 23, 2025 - move most functionality into CanastaBase repository (which currently uses MediaWiki 1.43), leaving only extension- and skin-specific code; place all extension and skin installation settings into a single file, contents.yaml, which in turn inherits from "Recommended Revisions" page; add the DiscussionTools, InlineComments, LoginNotify, OAuth, Page Schemas, QuickInstantCommons and Paragraph-based Edit Conflict Interface ("TwoColConflict") extensions; remove the Graph, RenameUser, Semantic Breadcrumb Links, Semantic Forms Select, Semantic Tasks and TinyMCE extensions
 - 3.0.1 - June 30, 2025 - update to CanastaBase 1.0.1, which uses MediaWiki 1.43.2
-- 3.0.2 - July 1, 2025 - update to CanastaBase 1.0.2, which uses MediaWiki 1.43.3
+- 3.0.2 - July 1, 2025 - update to CanastaBase 1.0.2, which uses MediaWiki 1.43.3; update Contribution Scores and WhosOnline extensions
 - 3.0.3 - September 3, 2025 - update to CanastaBase 1.0.3; get MediaWiki version from CanastaBase instead of hardcoding it; add Babel, CLDR, CreateRedirect, RandomSelection, RegexFunctions, RelatedArticles, RSS, TemplateStylesExtender and VariablesLua extensions; update Cargo, JWTAuth, Maps and WatchAnalytics extensions
 - 3.0.4 - October 3, 2025 - update to CanastaBase 1.0.4, which uses MediaWiki 1.43.4; update Admin Links, Cargo, EmbedVideo and Page Forms extensions
 - 3.0.5 - October 8, 2025 - update to CanastaBase 1.0.5, which uses MediaWiki 1.43.5
 - 3.0.6 - December 2, 2025 - update to CanastaBase 1.0.6; fix Chameleon skin error; update Approved Revs, Cargo, UserPageViewTracker and WatchAnalytics extensions
+- 3.0.7 - December 16, 2025 - update to CanastaBase 1.0.7, which uses MediaWiki 1.43.6
