@@ -1,4 +1,4 @@
-FROM ghcr.io/canastawiki/canasta-base:1.0.6 AS base
+FROM ghcr.io/canastawiki/canasta-base:1.0.7 AS base
 
 LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
