@@ -18,4 +18,4 @@ Canasta version history:
 - 3.0.4 - October 3, 2025 - update to CanastaBase 1.0.4, which uses MediaWiki 1.43.4; update Admin Links, Cargo, EmbedVideo and Page Forms extensions
 - 3.0.5 - October 8, 2025 - update to CanastaBase 1.0.5, which uses MediaWiki 1.43.5
 - 3.0.6 - December 2, 2025 - update to CanastaBase 1.0.6; fix Chameleon skin error; update Approved Revs, Cargo, UserPageViewTracker and WatchAnalytics extensions
-- 3.0.7 - December 16, 2025 - update to CanastaBase 1.0.7, which uses MediaWiki 1.43.6
+- 3.0.7 - December 17, 2025 - update to CanastaBase 1.0.7, which uses MediaWiki 1.43.6; update Contribution Scores and WhosOnline extensions
