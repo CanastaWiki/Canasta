@@ -1,4 +1,5 @@
-FROM ghcr.io/canastawiki/canasta-base:1.0.7 AS base
+ARG BASE_IMAGE=ghcr.io/canastawiki/canasta-base:1.0.7
+FROM ${BASE_IMAGE} AS base
 
 LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
