@@ -4,3 +4,11 @@ Canasta is a full-featured MediaWiki stack for easy deployment of enterprise-rea
 This repository is just one of the repositories for the Canasta distribution, and arguably not the main one (that would be [CanastaBase](https://github.com/CanastaWiki/CanastaBase), the base layer for this Canasta repository, and the one that holds MediaWiki and all its dependencies). This Canasta repository adds on to CanastaBase a set of over 170 extensions and skins.
 
 For more information on Canasta, for both users and developers, see the Canasta homepage at https://canasta.wiki/.
+
+## Generating Sitemaps
+
+To generate XML sitemaps for search engines:
+
+```bash
+sudo canasta maintenance script -i CONTAINER_ID "generateSitemap.php --fspath=/var/www/mediawiki/w/sitemap --urlpath=/w/sitemap/ --compress=yes --skip-redirects"
+```
