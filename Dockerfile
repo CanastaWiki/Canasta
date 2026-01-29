@@ -21,7 +21,3 @@ RUN set -x; \
 COPY cirrus-search-maintenance.sh _sources/scripts/maintenance-scripts/
 COPY getSMWSettings.php _sources/canasta/
 COPY smw-maintenance.sh _sources/scripts/maintenance-scripts/
-
-# Create sitemap directory for web-accessible sitemaps
-RUN mkdir -p /var/www/mediawiki/w/sitemap && \
-    chmod 755 /var/www/mediawiki/w/sitemap
