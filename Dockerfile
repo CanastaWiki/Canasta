@@ -14,6 +14,6 @@ ENV MW_MAINTENANCE_CIRRUSSEARCH_UPDATECONFIG=2 \
 	MW_MAINTENANCE_CIRRUSSEARCH_FORCEINDEX=2
 
 # Maintenance scripts for specific extensions
-COPY cirrus-search-maintenance.sh _sources/scripts/maintenance-scripts/
-COPY getSMWSettings.php _sources/canasta/
-COPY smw-maintenance.sh _sources/scripts/maintenance-scripts/
+COPY cirrus-search-maintenance.sh /_sources/scripts/maintenance-scripts/
+COPY getSMWSettings.php /_sources/canasta/
+COPY smw-maintenance.sh /_sources/scripts/maintenance-scripts/
