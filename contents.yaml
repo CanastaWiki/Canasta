@@ -1,4 +1,5 @@
 inherits: https://raw.githubusercontent.com/CanastaWiki/RecommendedRevisions/60773238271491d00d2f8d320619a1e3b2fad9cf/1.43.yaml
 extensions:
   - SubPageList:
+      repository: https://github.com/ProfessionalWiki/SubPageList
       commit: ae42bd0f2c3e0c73b82787692c75a13cee929121 # v3.0.1
