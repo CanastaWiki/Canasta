@@ -3,3 +3,6 @@ extensions:
   - SubPageList:
       repository: https://github.com/ProfessionalWiki/SubPageList
       commit: ae42bd0f2c3e0c73b82787692c75a13cee929121 # v3.0.1
+  - CrawlerProtection:
+      repository: https://github.com/mywikis/CrawlerProtection.git
+      commit: 890492d17b4beb68042c88dce8d010c1a14225e7
