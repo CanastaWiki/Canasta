@@ -233,7 +233,7 @@ RUN set -x; \
 	# CrawlerProtection
 	&& git clone --single-branch -b main https://github.com/mywikis/CrawlerProtection $MW_HOME/extensions/CrawlerProtection \
 	&& cd $MW_HOME/extensions/CrawlerProtection \
-	&& git checkout -q 1b757313dafcb476bfeb0c0148c2a21326672c41 \
+	&& git checkout -q 890492d17b4beb68042c88dce8d010c1a14225e7 \
 	# DataTransfer
 	&& git clone --single-branch -b $MW_VERSION https://github.com/wikimedia/mediawiki-extensions-DataTransfer $MW_HOME/extensions/DataTransfer \
 	&& cd $MW_HOME/extensions/DataTransfer \
