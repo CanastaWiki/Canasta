@@ -49,8 +49,30 @@ jobs:
         run: |
           set -euo pipefail
           BASE_IMAGE=$(awk -F'=' '/^ARG BASE_IMAGE=/ {print $2}' Dockerfile)
-          docker pull "$BASE_IMAGE" >/dev/null
-          MW_VERSION=$(docker inspect --format '{{ index .Config.Labels "wiki.canasta.mediawiki.version" }}' "$BASE_IMAGE")
+          # Parse registry, image path, and tag from BASE_IMAGE
+          REGISTRY=$(echo "$BASE_IMAGE" | cut -d/ -f1)
+          IMAGE_PATH=$(echo "$BASE_IMAGE" | cut -d/ -f2- | cut -d: -f1)
+          TAG=$(echo "$BASE_IMAGE" | grep -o ':[^:]*$' | tr -d ':')
+          TAG=${TAG:-latest}
+          # Get anonymous bearer token
+          TOKEN=$(curl -s "https://$REGISTRY/token?scope=repository:${IMAGE_PATH}:pull" | jq -r .token)
+          # Fetch OCI image index and pick the amd64/linux manifest digest
+          MANIFEST_DIGEST=$(curl -s \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Accept: application/vnd.oci.image.index.v1+json" \
+            "https://$REGISTRY/v2/${IMAGE_PATH}/manifests/$TAG" \
+            | jq -r '.manifests[] | select(.platform.architecture=="amd64" and .platform.os=="linux") | .digest')
+          # Fetch the platform manifest to get the config blob digest
+          CONFIG_DIGEST=$(curl -s \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Accept: application/vnd.oci.image.manifest.v1+json" \
+            "https://$REGISTRY/v2/${IMAGE_PATH}/manifests/$MANIFEST_DIGEST" \
+            | jq -r '.config.digest')
+          # Fetch the config blob (a few KB) and extract the label
+          MW_VERSION=$(curl -sL \
+            -H "Authorization: Bearer $TOKEN" \
+            "https://$REGISTRY/v2/${IMAGE_PATH}/blobs/$CONFIG_DIGEST" \
+            | jq -r '.config.Labels["wiki.canasta.mediawiki.version"]')
           echo "MW_VERSION=$MW_VERSION"
           echo "MW_VERSION=$MW_VERSION" >> $GITHUB_ENV
 
