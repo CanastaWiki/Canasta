@@ -17,6 +17,9 @@ on:
   # Plus for any pull-requests
   pull_request:
 
+  # Manual trigger (e.g., after CanastaBase is rebuilt)
+  workflow_dispatch:
+
 env:
   IMAGE_NAME: canasta
 
@@ -24,7 +27,7 @@ jobs:
   # Test the image Dockerfile syntax using https://github.com/replicatedhq/dockerfilelint
   test:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     steps:
       - uses: actions/checkout@v3
 
@@ -36,7 +39,7 @@ jobs:
   push:
     needs: [test]
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -163,7 +166,7 @@ jobs:
   auto-tag:
     needs: [push]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/master' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     steps:
       - uses: actions/checkout@v3
         with:
