@@ -10,9 +10,6 @@ on:
     branches:
       - master
       - 1.2.x
-    # Plus for all tags
-    tags:
-      - '*'
 
   # Plus for any pull-requests
   pull_request:
@@ -34,8 +31,8 @@ jobs:
   # Push image to GitHub Packages.
   # The image tag pattern is:
   # for pull-requests: <MW_VERSION>-<DATE>-<PR_NUMBER>, eg: 1.43.1-20260224-25
-  # for git tags: <TAG> (with "v" prefix stripped, e.g., v3.2.0 → 3.2.0)
   # for `master` branch: latest + <MW_MAJOR>-latest + <MW_VERSION>-latest + <MW_VERSION>-<DATE>-<SHA>
+  #   (plus <CANASTA_VERSION> when VERSION file changes)
   push:
     needs: [test]
     runs-on: ubuntu-latest
@@ -86,9 +83,6 @@ jobs:
           # Append version
           [ "${{ github.event_name }}" == "pull_request" ] && VERSION=$MEDIAWIKI_VERSION-$BDATE-$VERSION
 
-          # Strip "v" prefix from tag name (e.g., v3.2.0 → 3.2.0)
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-
           # Use Docker `latest` tag convention if it's a master branch build
           [ "$VERSION" == "master" ] && VERSION=latest
 
@@ -96,9 +90,13 @@ jobs:
           REGISTRY_TAGS=$IMAGE_ID:$VERSION
 
           # For master branch also supply extra tags: <MW_MAJOR>-latest, <MW_VERSION>-latest, <MW_VERSION>-<DATE>-<SHA>
-          # Note: $CANASTA_VERSION (e.g., 3.2.0) is NOT included here — it is only
-          # published when a Git tag is pushed, making it an immutable release tag.
           [ "$VERSION" == "latest" ] && REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:$MEDIAWIKI_MAJOR_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-$BDATE-$(git rev-parse --short HEAD)
+
+          # Publish the immutable Canasta version tag (e.g., 3.2.1) only when
+          # the VERSION file changed in this push, so the tag is set once per release.
+          if [ "$VERSION" == "latest" ] && git diff HEAD~1 --name-only | grep -q '^VERSION$'; then
+            REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:$CANASTA_VERSION
+          fi
 
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
@@ -159,25 +157,3 @@ jobs:
           message: ":whale: The image based on [${{ steps.generate.outputs.SHA_SHORT }}](https://github.com/CanastaWiki/Canasta/pull/${{ steps.generate.outputs.REGISTRY_TAGS_PR_NUMBER }}/commits/${{ github.event.pull_request.head.sha }}) commit has been built with `${{ steps.generate.outputs.REGISTRY_TAGS_VERSION }}` tag as [${{ steps.generate.outputs.REGISTRY_TAGS }}](https://github.com/${{ github.repository }}/pkgs/container/${{ env.IMAGE_NAME }}/${{ steps.docker_build.outputs.imageid }}?tag=${{ steps.generate.outputs.REGISTRY_TAGS_VERSION }})"
           recreate: true
           fail: false
-
-  # Auto-tag when the VERSION file changes on master.
-  # This triggers a new workflow run for the tag event, which builds and
-  # publishes the immutable versioned Docker image tag (e.g., 3.2.1).
-  auto-tag:
-    needs: [push]
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Create Git tag from VERSION if it does not exist
-        run: |
-          VERSION=$(cat VERSION)
-          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
-            echo "Tag v$VERSION already exists, skipping."
-          else
-            echo "Creating tag v$VERSION"
-            git tag "v$VERSION"
-            git push origin "v$VERSION"
-          fi
