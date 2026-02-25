@@ -31,7 +31,8 @@ jobs:
   # Push image to GitHub Packages.
   # The image tag pattern is:
   # for pull-requests: <MW_VERSION>-<DATE>-<PR_NUMBER>, eg: 1.43.1-20260224-25
-  # for `master` branch: latest + <MW_MAJOR>-latest + <MW_VERSION>-latest + <MW_VERSION>-<DATE>-<SHA> + <CANASTA_VERSION>
+  # for `master` branch: latest + <MW_MAJOR>-latest + <MW_VERSION>-latest + <MW_VERSION>-<DATE>-<SHA>
+  #   (plus <CANASTA_VERSION> when VERSION file changes)
   push:
     needs: [test]
     runs-on: ubuntu-latest
@@ -88,8 +89,14 @@ jobs:
           # Compose REGISTRY_TAGS variable
           REGISTRY_TAGS=$IMAGE_ID:$VERSION
 
-          # For master branch also supply extra tags: <MW_MAJOR>-latest, <MW_VERSION>-latest, <MW_VERSION>-<DATE>-<SHA>, <CANASTA_VERSION>
-          [ "$VERSION" == "latest" ] && REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:$MEDIAWIKI_MAJOR_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-$BDATE-$(git rev-parse --short HEAD),$IMAGE_ID:$CANASTA_VERSION
+          # For master branch also supply extra tags: <MW_MAJOR>-latest, <MW_VERSION>-latest, <MW_VERSION>-<DATE>-<SHA>
+          [ "$VERSION" == "latest" ] && REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:$MEDIAWIKI_MAJOR_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-$BDATE-$(git rev-parse --short HEAD)
+
+          # Publish the immutable Canasta version tag (e.g., 3.2.1) only when
+          # the VERSION file changed in this push, so the tag is set once per release.
+          if [ "$VERSION" == "latest" ] && git diff HEAD~1 --name-only | grep -q '^VERSION$'; then
+            REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:$CANASTA_VERSION
+          fi
 
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
