@@ -31,6 +31,8 @@ if [[ "${file_to_compress}" ]]; then
     # remove old log files
     if [ -n "$LOG_FILES_REMOVE_OLDER_THAN_DAYS" ] && [ "$LOG_FILES_REMOVE_OLDER_THAN_DAYS" != false ]; then
         LOG_DIRECTORY=$(dirname "${file_to_compress}")
+        # If the directory is a symlink the trailing slash is mandatory for the `find` to work, see HOS-66
+        LOG_DIRECTORY="$LOG_DIRECTORY/"
         find "$LOG_DIRECTORY" -type f -mtime "+$LOG_FILES_REMOVE_OLDER_THAN_DAYS" ! -iname ".*" ! -iname "*.current" -exec rm -f {} \;
     fi
 
