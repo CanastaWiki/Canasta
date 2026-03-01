@@ -41,13 +41,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       -
+        name: Install regctl
+        uses: regclient/actions/regctl-installer@v0.1
+      -
         name: Extract MW_VERSION from CanastaBase labels
         id: extract_mw
         run: |
           set -euo pipefail
           BASE_IMAGE=$(awk -F'=' '/^ARG BASE_IMAGE=/ {print $2}' Dockerfile)
-          docker pull "$BASE_IMAGE" >/dev/null
-          MW_VERSION=$(docker inspect --format '{{ index .Config.Labels "wiki.canasta.mediawiki.version" }}' "$BASE_IMAGE")
+          MW_VERSION=$(regctl image config "$BASE_IMAGE" | jq -r '.config.Labels["wiki.canasta.mediawiki.version"]')
           echo "MW_VERSION=$MW_VERSION"
           echo "MW_VERSION=$MW_VERSION" >> $GITHUB_ENV
 
