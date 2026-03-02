@@ -7,6 +7,7 @@ LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
 # Uncomment this if there are any skin or extension patches
 COPY patches/* /tmp/
 COPY contents.yaml /tmp/
+COPY VERSION /tmp/canasta-version
 RUN php /tmp/extensions-skins.php "/tmp/contents.yaml"
 
 # Default values
