@@ -23,4 +23,5 @@ Canasta version history:
 - 3.2.0 - February 18, 2026 - Update to CanastaBase 1.2.0; remove special handling for Semantic MediaWiki
 - 3.2.1 - February 24, 2026 - Update to CanastaBase 1.2.1; stabilize Canasta version tag to always point to the actual version commit; update SimpleMathJax and SubPageList extensions
 - 3.3.0 - March 1, 2026 - Update to CanastaBase 1.3.0
-- 3.3.1 - March 1, 2026 - Show Canasta version on Special:Version; update to CanastaBase 1.3.1
+- 3.3.1 - March 1, 2026 - Show Canasta version on Special:Version
+- 3.3.2 - March 2, 2026 - Update to CanastaBase 1.3.1
