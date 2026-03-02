@@ -161,3 +161,36 @@ jobs:
           message: ":whale: The image based on [${{ steps.generate.outputs.SHA_SHORT }}](https://github.com/CanastaWiki/Canasta/pull/${{ steps.generate.outputs.REGISTRY_TAGS_PR_NUMBER }}/commits/${{ github.event.pull_request.head.sha }}) commit has been built with `${{ steps.generate.outputs.REGISTRY_TAGS_VERSION }}` tag as [${{ steps.generate.outputs.REGISTRY_TAGS }}](https://github.com/${{ github.repository }}/pkgs/container/${{ env.IMAGE_NAME }}/${{ steps.docker_build.outputs.imageid }}?tag=${{ steps.generate.outputs.REGISTRY_TAGS_VERSION }})"
           recreate: true
           fail: false
+
+  # Notify the Canasta-CLI repo when the Canasta version changes
+  notify-cli:
+    needs: [push]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Check for VERSION change
+        id: version
+        run: |
+          if git diff HEAD~1 --name-only | grep -q '^VERSION$'; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "new_version=$(cat VERSION)" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Dispatch to Canasta-CLI
+        if: steps.version.outputs.changed == 'true'
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.CROSS_REPO_PAT }}
+          repository: CanastaWiki/Canasta-CLI
+          event-type: canasta-version-bump
+          client-payload: >-
+            {
+              "new_version": "${{ steps.version.outputs.new_version }}"
+            }

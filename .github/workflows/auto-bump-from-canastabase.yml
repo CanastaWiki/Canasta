@@ -1,0 +1,129 @@
+name: Auto-bump CanastaBase version
+
+on:
+  repository_dispatch:
+    types: [canastabase-version-bump]
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.CROSS_REPO_PAT }}
+          fetch-depth: 0
+
+      - name: Read payload
+        id: payload
+        run: |
+          echo "new_base=${{ github.event.client_payload.new_version }}" >> $GITHUB_OUTPUT
+          echo "old_base=${{ github.event.client_payload.old_version }}" >> $GITHUB_OUTPUT
+          echo "bump_type=${{ github.event.client_payload.bump_type }}" >> $GITHUB_OUTPUT
+
+      - name: Compute new Canasta version
+        id: version
+        run: |
+          CURRENT=$(cat VERSION)
+          BUMP_TYPE=${{ steps.payload.outputs.bump_type }}
+
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
+          case "$BUMP_TYPE" in
+            major) MAJOR=$((MAJOR + 1)); MINOR=0; PATCH=0 ;;
+            minor) MINOR=$((MINOR + 1)); PATCH=0 ;;
+            patch) PATCH=$((PATCH + 1)) ;;
+          esac
+
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+          echo "current=$CURRENT" >> $GITHUB_OUTPUT
+          echo "new=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Install regctl
+        uses: regclient/actions/regctl-installer@v0.1
+
+      - name: Check for MediaWiki version change
+        id: mw
+        run: |
+          OLD_IMG="ghcr.io/canastawiki/canasta-base:${{ steps.payload.outputs.old_base }}"
+          NEW_IMG="ghcr.io/canastawiki/canasta-base:${{ steps.payload.outputs.new_base }}"
+
+          OLD_MW=$(regctl image config "$OLD_IMG" | jq -r '.config.Labels["wiki.canasta.mediawiki.version"]')
+          NEW_MW=$(regctl image config "$NEW_IMG" | jq -r '.config.Labels["wiki.canasta.mediawiki.version"]')
+
+          echo "old_mw=$OLD_MW" >> $GITHUB_OUTPUT
+          echo "new_mw=$NEW_MW" >> $GITHUB_OUTPUT
+          if [ "$OLD_MW" != "$NEW_MW" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create branch and apply changes
+        run: |
+          NEW_BASE=${{ steps.payload.outputs.new_base }}
+          NEW_VERSION=${{ steps.version.outputs.new }}
+          BRANCH="auto/bump-canastabase-${NEW_BASE}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+
+          # Update Dockerfile base image tag
+          sed -i "s|^ARG BASE_IMAGE=ghcr.io/canastawiki/canasta-base:.*|ARG BASE_IMAGE=ghcr.io/canastawiki/canasta-base:${NEW_BASE}|" Dockerfile
+
+          # Update VERSION
+          echo "$NEW_VERSION" > VERSION
+
+          # Append release notes entry
+          DATE=$(date +"%B %-d, %Y")
+          if [ "${{ steps.mw.outputs.changed }}" == "true" ]; then
+            ENTRY="- ${NEW_VERSION} - ${DATE} - Update to CanastaBase ${NEW_BASE}, which uses MediaWiki ${{ steps.mw.outputs.new_mw }}"
+          else
+            ENTRY="- ${NEW_VERSION} - ${DATE} - Update to CanastaBase ${NEW_BASE}"
+          fi
+          echo "$ENTRY" >> RELEASE_NOTES.md
+
+          git add Dockerfile VERSION RELEASE_NOTES.md
+          git commit -m "Update to CanastaBase ${NEW_BASE}"
+          git push origin "$BRANCH"
+
+      - name: Close superseded PRs
+        env:
+          GH_TOKEN: ${{ secrets.CROSS_REPO_PAT }}
+        run: |
+          NEW_BASE=${{ steps.payload.outputs.new_base }}
+          CURRENT_BRANCH="auto/bump-canastabase-${NEW_BASE}"
+
+          # Find and close any existing auto-bump PRs (except the one we're about to create)
+          gh pr list --state open --json number,headRefName --jq '.[] | select(.headRefName | startswith("auto/bump-canastabase-")) | select(.headRefName != "'"$CURRENT_BRANCH"'") | .number' | while read -r pr; do
+            gh pr close "$pr" --comment "Superseded by CanastaBase ${NEW_BASE} bump."
+          done
+
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ secrets.CROSS_REPO_PAT }}
+        run: |
+          NEW_BASE=${{ steps.payload.outputs.new_base }}
+          NEW_VERSION=${{ steps.version.outputs.new }}
+          BRANCH="auto/bump-canastabase-${NEW_BASE}"
+
+          if [ "${{ steps.mw.outputs.changed }}" == "true" ]; then
+            MW_NOTE="MediaWiki version updated from ${{ steps.mw.outputs.old_mw }} to ${{ steps.mw.outputs.new_mw }}."
+          else
+            MW_NOTE="MediaWiki version unchanged (${{ steps.mw.outputs.new_mw }})."
+          fi
+
+          gh pr create \
+            --base master \
+            --head "$BRANCH" \
+            --title "Update to CanastaBase ${NEW_BASE}" \
+            --body "$(cat <<EOF
+          Automated version bump triggered by CanastaBase ${NEW_BASE} release.
+
+          - CanastaBase: ${{ steps.payload.outputs.old_base }} → ${NEW_BASE}
+          - Canasta: ${{ steps.version.outputs.current }} → ${NEW_VERSION}
+          - ${MW_NOTE}
+
+          Please review the Dockerfile, VERSION, and RELEASE_NOTES.md changes before merging.
+          EOF
+          )"
