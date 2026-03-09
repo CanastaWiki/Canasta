@@ -26,3 +26,4 @@ Canasta version history:
 - 3.3.2 - March 2, 2026 - Update to CanastaBase 1.3.1
 - 3.4.0 - March 4, 2026 - Version alignment with Canasta-CLI 3.4.0
 - 3.5.0 - March 8, 2026 - Version alignment with Canasta-CLI 3.5.0
+- 3.5.1 - March 9, 2026 - Version alignment with Canasta-CLI 3.5.1
