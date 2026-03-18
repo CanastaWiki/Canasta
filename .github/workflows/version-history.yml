@@ -1,0 +1,23 @@
+name: Update Version History on Wiki
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - RELEASE_NOTES.md
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Publish version history
+        env:
+          WIKI_API_URL: ${{ secrets.WIKI_API_URL }}
+          WIKI_BOT_USER: ${{ secrets.WIKI_BOT_USER }}
+          WIKI_BOT_PASSWORD: ${{ secrets.WIKI_BOT_PASSWORD }}
+        run: python3 .github/scripts/publish-version-history.py "Version_history/Canasta"
