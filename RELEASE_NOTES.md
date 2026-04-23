@@ -32,3 +32,4 @@ Canasta version history:
 - 3.5.4 - April 10, 2026 - Update to CanastaBase 1.3.4
 - 3.5.5 - April 15, 2026 - Update to CanastaBase 1.3.5
 - 3.5.6 - April 16, 2026 - Update to CanastaBase 1.3.6; fixes broken skin rendering and API access on wiki farms with sub-path wikis
+- 3.5.7 - April 21, 2026 - Update to CanastaBase 1.3.7
