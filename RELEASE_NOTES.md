@@ -36,3 +36,4 @@ Canasta version history:
 - 3.5.8 - May 15, 2026 - Add DynamicSidebar extension; update Cargo and Mermaid extensions
 - 3.5.9 - June 7, 2026 - Accidental release; no change
 - 3.5.10 - June 8, 2026 - Update to CanastaBase 1.3.9; update PageForms extension
+- 3.5.11 - June 29, 2026 - Update to CanastaBase 1.3.10, which uses MediaWiki 1.43.9 (security release); add the CreateUserPage extension; update the Cargo extension
