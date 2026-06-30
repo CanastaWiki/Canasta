@@ -37,4 +37,4 @@ Canasta version history:
 - 3.5.9 - June 7, 2026 - Accidental release; no change
 - 3.5.10 - June 8, 2026 - Update to CanastaBase 1.3.9; update PageForms extension
 - 3.5.11 - June 29, 2026 - Update to CanastaBase 1.3.10, which uses MediaWiki 1.43.9 (security release); add the CreateUserPage extension; update the Cargo extension
-- 3.5.12 - June 29, 2026 - Fix a broken Composer build introduced by MediaWiki 1.43.9: the bundled TemplateStyles required wikimedia/css-sanitizer ^5.x while MediaWiki core now requires 6.2.1, so the unified composer update failed to resolve and shipped an image missing the dependencies of all bundled Composer extensions (Elastica, SemanticMediaWiki, etc.); bumped the RecommendedRevisions TemplateStyles pin to a css-sanitizer ^6.0.0 commit
+- 3.5.12 - June 30, 2026 - Update to CanastaBase 1.3.11; update the TemplateStyles pin for css-sanitizer 6 compatibility, fixing the broken Composer build in 3.5.11 that left bundled extension dependencies (Elastica, Semantic MediaWiki, etc.) uninstalled
