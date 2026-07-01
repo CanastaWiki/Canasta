@@ -38,3 +38,4 @@ Canasta version history:
 - 3.5.10 - June 8, 2026 - Update to CanastaBase 1.3.9; update PageForms extension
 - 3.5.11 - June 29, 2026 - Update to CanastaBase 1.3.10, which uses MediaWiki 1.43.9 (security release); add the CreateUserPage extension; update the Cargo extension
 - 3.5.12 - June 30, 2026 - Update to CanastaBase 1.3.11; update the TemplateStyles extension for css-sanitizer 6 compatibility, fixing the broken Composer build in 3.5.11
+- 3.5.13 - July 1, 2026 - Update to CanastaBase 1.3.12; fix errors in downloading the EmbedVideo, WhosOnline and WSOAuth extensions (the latest code was accidentally downloaded); remove no-longer-used persistent directory for Semantic MediaWiki
