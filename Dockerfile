@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=ghcr.io/canastawiki/canasta-base:1.3.11
+ARG BASE_IMAGE=ghcr.io/canastawiki/canasta-base:1.3.12
 FROM ${BASE_IMAGE} AS base
 
 LABEL maintainers=""
