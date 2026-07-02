@@ -21,20 +21,12 @@ env:
   IMAGE_NAME: canasta
 
 jobs:
-  # Test the image Dockerfile syntax using https://github.com/replicatedhq/dockerfilelint
-  test:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
-    steps:
-      - uses: actions/checkout@v4
-
   # Push image to GitHub Packages.
   # The image tag pattern is:
   # for pull-requests: <MW_VERSION>-<DATE>-<PR_NUMBER>, eg: 1.43.1-20260224-25
   # for `master` branch: latest + <MW_MAJOR>-latest + <MW_VERSION>-latest + <MW_VERSION>-<DATE>-<SHA>
   #   (plus <CANASTA_VERSION> when VERSION file changes)
   push:
-    needs: [test]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     steps:
