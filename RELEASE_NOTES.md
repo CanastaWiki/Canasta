@@ -41,3 +41,4 @@ Canasta version history:
 - 3.5.13 - July 1, 2026 - Update to CanastaBase 1.3.12; fix errors in downloading the EmbedVideo, WhosOnline and WSOAuth extensions (the latest code was accidentally downloaded); remove no-longer-used persistent directory for Semantic MediaWiki
 - 3.5.14 - July 2, 2026 - Update to CanastaBase 1.3.14; remove dead CirrusSearch and SMW maintenance scripts (#652); remove a no-op CI test job (#654)
 - 3.5.15 - July 3, 2026 - Update the Maps and OAuth extensions (security updates) and the Page Forms extension
+- 3.5.16 - July 14, 2026 - Update the Cargo extension
