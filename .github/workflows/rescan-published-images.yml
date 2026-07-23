@@ -173,6 +173,7 @@ jobs:
 
           ISSUE_NUMBER=$(gh issue list \
             --state all \
+            --label "$ISSUE_LABEL" \
             --limit 1000 \
             --json number,state,title |
             jq -r --arg title "$ISSUE_TITLE" \
