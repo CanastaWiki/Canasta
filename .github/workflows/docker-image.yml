@@ -14,8 +14,12 @@ on:
   # Plus for any pull-requests
   pull_request:
 
-  # Manual trigger (e.g., after CanastaBase is rebuilt)
   workflow_dispatch:
+    inputs:
+      version:
+        description: Existing Canasta version to attest (leave blank to rebuild)
+        required: false
+        type: string
 
 env:
   IMAGE_NAME: canasta
@@ -28,12 +32,25 @@ jobs:
   #   (plus <CANASTA_VERSION> when VERSION file changes)
   push:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'push' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.version == '')
+    permissions:
+      artifact-metadata: write
+      attestations: write
+      contents: read
+      id-token: write
+      packages: write
+      pull-requests: write
+      security-events: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          # fetch-depth: 0 (full history) so the "Generate tags" step can diff
+          # the entire pushed range (github.event.before..HEAD) to detect a
+          # VERSION-file change. A shallow clone leaves the push's base commit
+          # unreachable, which silently suppresses the immutable Canasta version
+          # tag when the bump is not the tip commit of a multi-commit push.
+          fetch-depth: 0
       -
         name: Install regctl
         uses: regclient/actions/regctl-installer@v0.1
@@ -50,6 +67,10 @@ jobs:
       -
         name: Generate tags
         id: generate
+        # docker manifest inspect handles the anonymous token dance itself, so
+        # the registry-existence check below works without logging in.
+        env:
+          DOCKER_CLI_EXPERIMENTAL: enabled
         run: |
 
           # Image ID
@@ -89,9 +110,27 @@ jobs:
           [ "$VERSION" == "latest" ] && REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:$MEDIAWIKI_MAJOR_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-$BDATE-$(git rev-parse --short HEAD)
 
           # Publish the immutable Canasta version tag (e.g., 3.2.1) only when
-          # the VERSION file changed in this push, so the tag is set once per release.
-          if [ "$VERSION" == "latest" ] && git diff HEAD~1 --name-only | grep -q '^VERSION$'; then
-            REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:$CANASTA_VERSION
+          # VERSION file changed anywhere in this push, so the tag is set once per
+          # release even when the bump is not the tip commit of a multi-commit push.
+          # Diff the whole pushed range (before..HEAD); fall back to HEAD~1 when the
+          # base commit is the zero SHA (branch creation) or otherwise unreachable.
+          BEFORE_SHA="${{ github.event.before }}"
+          DIFF_BASE="HEAD~1"
+          if [ -n "$BEFORE_SHA" ] && ! echo "$BEFORE_SHA" | grep -qE '^0+$' && git cat-file -e "$BEFORE_SHA" 2>/dev/null; then
+            DIFF_BASE="$BEFORE_SHA"
+          fi
+          IS_RELEASE=false
+          if [ "$VERSION" == "latest" ] && git diff "$DIFF_BASE" HEAD --name-only | grep -q '^VERSION$'; then
+            # The version tag is meant to be immutable. If it already exists in
+            # the registry (e.g. this workflow was re-run, or a later master
+            # push landed after the release), do not re-push it from a different
+            # commit; warn instead so the mismatch is visible in the run log.
+            if docker manifest inspect "$IMAGE_ID:$CANASTA_VERSION" >/dev/null 2>&1; then
+              echo "::warning::Immutable tag $CANASTA_VERSION already exists in the registry; not re-pushing it from this commit."
+            else
+              REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:$CANASTA_VERSION
+              IS_RELEASE=true
+            fi
           fi
 
           echo IMAGE_ID=$IMAGE_ID
@@ -107,6 +146,8 @@ jobs:
           echo "REGISTRY_TAGS=$REGISTRY_TAGS" >> $GITHUB_OUTPUT
           echo "REGISTRY_TAGS_VERSION=$VERSION" >> $GITHUB_OUTPUT
           echo "REGISTRY_TAGS_PR_NUMBER=$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "CANASTA_VERSION=$CANASTA_VERSION" >> "$GITHUB_OUTPUT"
+          echo "IS_RELEASE=$IS_RELEASE" >> "$GITHUB_OUTPUT"
           echo "SHA_SHORT=$SHA_SHORT" >> $GITHUB_OUTPUT
       -
         name: Set up QEMU
@@ -138,6 +179,86 @@ jobs:
       -
         name: Image tags debug
         run: echo ${{ steps.generate.outputs.REGISTRY_TAGS }}
+      -
+        name: Resolve platform image digests
+        id: platform_digests
+        env:
+          IMAGE_REF: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}@${{ steps.docker_build.outputs.digest }}
+        run: |
+          MANIFEST=$(docker buildx imagetools inspect --raw "$IMAGE_REF")
+          AMD64_DIGEST=$(jq -er '.manifests[] | select(.platform.os == "linux" and .platform.architecture == "amd64") | .digest' <<< "$MANIFEST")
+          ARM64_DIGEST=$(jq -er '.manifests[] | select(.platform.os == "linux" and .platform.architecture == "arm64") | .digest' <<< "$MANIFEST")
+          echo "amd64=$AMD64_DIGEST" >> "$GITHUB_OUTPUT"
+          echo "arm64=$ARM64_DIGEST" >> "$GITHUB_OUTPUT"
+      -
+        name: Scan amd64 image with Trivy
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}@${{ steps.platform_digests.outputs.amd64 }}
+          format: sarif
+          output: trivy-results-amd64.sarif
+          ignore-unfixed: true
+          limit-severities-for-sarif: true
+          severity: CRITICAL,HIGH
+      -
+        name: Upload amd64 Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81 # v4.37.3
+        with:
+          sarif_file: trivy-results-amd64.sarif
+          category: trivy-container-image-amd64
+      -
+        name: Scan arm64 image with Trivy
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}@${{ steps.platform_digests.outputs.arm64 }}
+          format: sarif
+          output: trivy-results-arm64.sarif
+          ignore-unfixed: true
+          limit-severities-for-sarif: true
+          severity: CRITICAL,HIGH
+          skip-setup-trivy: true
+      -
+        name: Upload arm64 Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81 # v4.37.3
+        with:
+          sarif_file: trivy-results-arm64.sarif
+          category: trivy-container-image-arm64
+      -
+        name: Generate amd64 CycloneDX SBOM
+        if: steps.generate.outputs.IS_RELEASE == 'true'
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}@${{ steps.platform_digests.outputs.amd64 }}
+          format: cyclonedx
+          output: canasta-${{ steps.generate.outputs.CANASTA_VERSION }}-amd64.cdx.json
+          skip-setup-trivy: true
+      -
+        name: Generate arm64 CycloneDX SBOM
+        if: steps.generate.outputs.IS_RELEASE == 'true'
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}@${{ steps.platform_digests.outputs.arm64 }}
+          format: cyclonedx
+          output: canasta-${{ steps.generate.outputs.CANASTA_VERSION }}-arm64.cdx.json
+          skip-setup-trivy: true
+      -
+        name: Attest amd64 release SBOM
+        if: steps.generate.outputs.IS_RELEASE == 'true'
+        uses: actions/attest-sbom@c604332985a26aa8cf1bdc465b92731239ec6b9e # v4.1.0
+        with:
+          subject-name: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.platform_digests.outputs.amd64 }}
+          sbom-path: canasta-${{ steps.generate.outputs.CANASTA_VERSION }}-amd64.cdx.json
+          push-to-registry: true
+      -
+        name: Attest arm64 release SBOM
+        if: steps.generate.outputs.IS_RELEASE == 'true'
+        uses: actions/attest-sbom@c604332985a26aa8cf1bdc465b92731239ec6b9e # v4.1.0
+        with:
+          subject-name: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.platform_digests.outputs.arm64 }}
+          sbom-path: canasta-${{ steps.generate.outputs.CANASTA_VERSION }}-arm64.cdx.json
+          push-to-registry: true
 
       -
         name: Notify about image tag
@@ -146,3 +267,67 @@ jobs:
         with:
           header: canasta-image-tag
           message: ":whale: The image based on [${{ steps.generate.outputs.SHA_SHORT }}](https://github.com/CanastaWiki/Canasta/pull/${{ steps.generate.outputs.REGISTRY_TAGS_PR_NUMBER }}/commits/${{ github.event.pull_request.head.sha }}) commit has been built with `${{ steps.generate.outputs.REGISTRY_TAGS_VERSION }}` tag as [${{ steps.generate.outputs.REGISTRY_TAGS }}](https://github.com/${{ github.repository }}/pkgs/container/${{ env.IMAGE_NAME }}/${{ steps.docker_build.outputs.imageid }}?tag=${{ steps.generate.outputs.REGISTRY_TAGS_VERSION }})"
+
+  recover-attestation:
+    name: Recover release SBOM attestations
+    if: github.event_name == 'workflow_dispatch' && inputs.version != ''
+    runs-on: ubuntu-latest
+    permissions:
+      attestations: write
+      contents: read
+      id-token: write
+      packages: write
+    steps:
+      - name: Validate version
+        id: recovery
+        env:
+          RECOVERY_VERSION: ${{ inputs.version }}
+        run: |
+          if [[ ! "$RECOVERY_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Version must use the X.Y.Z format."
+            exit 1
+          fi
+          echo "version=$RECOVERY_VERSION" >> "$GITHUB_OUTPUT"
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Resolve published platform image digests
+        id: platform_digests
+        env:
+          IMAGE_REF: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}:${{ steps.recovery.outputs.version }}
+        run: |
+          MANIFEST=$(docker buildx imagetools inspect --raw "$IMAGE_REF")
+          AMD64_DIGEST=$(jq -er '.manifests[] | select(.platform.os == "linux" and .platform.architecture == "amd64") | .digest' <<< "$MANIFEST")
+          ARM64_DIGEST=$(jq -er '.manifests[] | select(.platform.os == "linux" and .platform.architecture == "arm64") | .digest' <<< "$MANIFEST")
+          echo "amd64=$AMD64_DIGEST" >> "$GITHUB_OUTPUT"
+          echo "arm64=$ARM64_DIGEST" >> "$GITHUB_OUTPUT"
+      - name: Generate amd64 CycloneDX SBOM
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}@${{ steps.platform_digests.outputs.amd64 }}
+          format: cyclonedx
+          output: canasta-${{ steps.recovery.outputs.version }}-amd64.cdx.json
+      - name: Generate arm64 CycloneDX SBOM
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}@${{ steps.platform_digests.outputs.arm64 }}
+          format: cyclonedx
+          output: canasta-${{ steps.recovery.outputs.version }}-arm64.cdx.json
+          skip-setup-trivy: true
+      - name: Attest amd64 release SBOM
+        uses: actions/attest-sbom@c604332985a26aa8cf1bdc465b92731239ec6b9e # v4.1.0
+        with:
+          subject-name: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.platform_digests.outputs.amd64 }}
+          sbom-path: canasta-${{ steps.recovery.outputs.version }}-amd64.cdx.json
+          push-to-registry: true
+      - name: Attest arm64 release SBOM
+        uses: actions/attest-sbom@c604332985a26aa8cf1bdc465b92731239ec6b9e # v4.1.0
+        with:
+          subject-name: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.platform_digests.outputs.arm64 }}
+          sbom-path: canasta-${{ steps.recovery.outputs.version }}-arm64.cdx.json
+          push-to-registry: true
