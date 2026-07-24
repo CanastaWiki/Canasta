@@ -99,7 +99,7 @@ jobs:
 
             container=$(docker create "$IMAGE@$digest")
             mkdir -p "$extracted"
-            for tree in canasta-extensions extensions user-extensions; do
+            for tree in canasta-extensions extensions user-extensions canasta-skins skins user-skins; do
               mkdir -p "$extracted/$tree"
               docker cp "$container:/var/www/mediawiki/w/$tree/." "$extracted/$tree" 2>/dev/null || true
             done
@@ -261,7 +261,7 @@ jobs:
               echo
               echo '<details><summary>Unique findings (first 200)</summary>'
               echo
-              echo '| Digest | Platform | Severity | Vulnerability | Package | Installed | Fixed | Extension |'
+              echo '| Digest | Platform | Severity | Vulnerability | Package | Installed | Fixed | Component |'
               echo '| --- | --- | --- | --- | --- | --- | --- | --- |'
               sort -u "$FINDINGS" | awk 'NR <= 200' |
                 while IFS=$'\t' read -r DIGEST ARCH SEVERITY VULNERABILITY PACKAGE INSTALLED FIXED EXTENSION; do
