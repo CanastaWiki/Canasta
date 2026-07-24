@@ -77,6 +77,85 @@ jobs:
           : > "$FINDINGS"
           SCANNED=0
 
+          extract_extension_from_target() {
+            local target="$1"
+            if [[ "$target" =~ /extensions/([^/]+)/ ]]; then
+              echo "${BASH_REMATCH[1]}"
+              return 0
+            fi
+            return 1
+          }
+
+          build_extension_package_map() {
+            local digest="$1"
+            local key="${digest#sha256:}"
+            local manifests="$RESULT_DIR/${key}-extension-manifests.tsv"
+            local raw_map="$RESULT_DIR/${key}-extension-map-raw.tsv"
+            local map="$RESULT_DIR/${key}-extension-map.tsv"
+
+            [ -f "$map" ] && return
+
+            docker run --rm --entrypoint sh "$IMAGE@$digest" -lc '
+              set -eu
+              for f in /var/www/mediawiki/w/extensions/*/composer.json /var/www/mediawiki/w/extensions/*/package.json; do
+                [ -f "$f" ] || continue
+                ext=$(basename "$(dirname "$f")")
+                kind=$(basename "$f")
+                printf "%s\t%s\t" "$ext" "$kind"
+                base64 -w0 "$f"
+                printf "\n"
+              done
+            ' > "$manifests"
+
+            : > "$raw_map"
+            while IFS=$'\t' read -r EXT KIND MANIFEST_B64; do
+              [ -n "$EXT" ] || continue
+              [ -n "$MANIFEST_B64" ] || continue
+              MANIFEST_JSON=$(printf '%s' "$MANIFEST_B64" | base64 -d 2>/dev/null || true)
+              [ -n "$MANIFEST_JSON" ] || continue
+
+              if [ "$KIND" = "composer.json" ]; then
+                printf '%s' "$MANIFEST_JSON" |
+                  jq -r --arg ext "$EXT" '
+                    (.require // {})
+                    | keys[]
+                    | select(. != "php")
+                    | select(startswith("ext-") | not)
+                    | "\(.)\t\($ext)"
+                  ' >> "$raw_map"
+              elif [ "$KIND" = "package.json" ]; then
+                printf '%s' "$MANIFEST_JSON" |
+                  jq -r --arg ext "$EXT" '
+                    (.dependencies // {})
+                    | keys[]
+                    | "\(.)\t\($ext)"
+                  ' >> "$raw_map"
+              fi
+            done < "$manifests"
+
+            if [ -s "$raw_map" ]; then
+              sort -u "$raw_map" | awk -F '\t' '
+                {
+                  if ($1 == "") {
+                    next
+                  }
+                  if (owners[$1] == "") {
+                    owners[$1] = $2
+                  } else {
+                    owners[$1] = owners[$1] "," $2
+                  }
+                }
+                END {
+                  for (pkg in owners) {
+                    print pkg "\t" owners[pkg]
+                  }
+                }
+              ' | sort > "$map"
+            else
+              : > "$map"
+            fi
+          }
+
           for TAG in latest "$MEDIAWIKI_TAG" "$VERSION_TAG"; do
             INSPECT_ERROR="$RESULT_DIR/inspect-error"
             if ! MANIFEST=$(docker buildx imagetools inspect --raw "$IMAGE:$TAG" 2> "$INSPECT_ERROR"); then
@@ -103,16 +182,44 @@ jobs:
                   --ignore-unfixed \
                   --severity CRITICAL,HIGH \
                   "$IMAGE@$DIGEST"
-
-                jq -r --arg digest "$DIGEST" --arg arch "$ARCH" '
-                  [.Results[]?.Vulnerabilities[]?]
-                  | sort_by(.VulnerabilityID, .PkgName, .InstalledVersion)
-                  | unique_by(.VulnerabilityID, .PkgName, .InstalledVersion)
-                  | .[]
-                  | [$digest, $arch, .Severity, .VulnerabilityID, .PkgName, .InstalledVersion, (.FixedVersion // "")]
-                  | @tsv
-                ' "$RESULT" >> "$FINDINGS"
               fi
+
+              MAP_FILE="$RESULT_DIR/${DIGEST#sha256:}-extension-map.tsv"
+              jq -r '
+                [
+                  .Results[]? as $result
+                  | $result.Vulnerabilities[]?
+                  | [
+                      .Severity,
+                      .VulnerabilityID,
+                      .PkgName,
+                      .InstalledVersion,
+                      (.FixedVersion // ""),
+                      ($result.Class // ""),
+                      ($result.Target // "")
+                    ]
+                ]
+                | sort_by(.[1], .[2], .[3], .[5], .[6])
+                | unique
+                | .[]
+                | @tsv
+              ' "$RESULT" |
+                while IFS=$'\t' read -r SEVERITY VULNERABILITY PACKAGE INSTALLED FIXED CLASS TARGET; do
+                  EXTENSION=""
+                  if EXTENSION_FROM_TARGET=$(extract_extension_from_target "$TARGET"); then
+                    EXTENSION="$EXTENSION_FROM_TARGET"
+                  elif [ "$CLASS" = "lang-pkgs" ]; then
+                    if [ ! -f "$MAP_FILE" ]; then
+                      build_extension_package_map "$DIGEST"
+                    fi
+                    EXTENSION=$(awk -F '\t' -v package="$PACKAGE" '$1 == package { print $2; exit }' "$MAP_FILE")
+                  elif [ "$CLASS" = "os-pkgs" ]; then
+                    EXTENSION="base"
+                  fi
+
+                  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+                    "$DIGEST" "$ARCH" "$SEVERITY" "$VULNERABILITY" "$PACKAGE" "$INSTALLED" "$FIXED" "$EXTENSION"
+                done >> "$FINDINGS"
 
               COUNT=$(jq '
                 [.Results[]?.Vulnerabilities[]?.VulnerabilityID]
@@ -144,12 +251,12 @@ jobs:
               echo
               echo '<details><summary>Unique findings (first 200)</summary>'
               echo
-              echo '| Digest | Platform | Severity | Vulnerability | Package | Installed | Fixed |'
-              echo '| --- | --- | --- | --- | --- | --- | --- |'
+              echo '| Digest | Platform | Severity | Vulnerability | Package | Installed | Fixed | Extension |'
+              echo '| --- | --- | --- | --- | --- | --- | --- | --- |'
               sort -u "$FINDINGS" | awk 'NR <= 200' |
-                while IFS=$'\t' read -r DIGEST ARCH SEVERITY VULNERABILITY PACKAGE INSTALLED FIXED; do
-                  printf '| `%s` | `%s` | %s | `%s` | `%s` | `%s` | `%s` |\n' \
-                    "$DIGEST" "$ARCH" "$SEVERITY" "$VULNERABILITY" "$PACKAGE" "$INSTALLED" "$FIXED"
+                while IFS=$'\t' read -r DIGEST ARCH SEVERITY VULNERABILITY PACKAGE INSTALLED FIXED EXTENSION; do
+                  printf '| `%s` | `%s` | %s | `%s` | `%s` | `%s` | `%s` | `%s` |\n' \
+                    "$DIGEST" "$ARCH" "$SEVERITY" "$VULNERABILITY" "$PACKAGE" "$INSTALLED" "$FIXED" "$EXTENSION"
                 done
               echo
               echo '</details>'
