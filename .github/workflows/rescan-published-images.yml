@@ -79,8 +79,8 @@ jobs:
 
           extract_extension_from_target() {
             local target="$1"
-            if [[ "$target" =~ /extensions/([^/]+)/ ]]; then
-              echo "${BASH_REMATCH[1]}"
+            if [[ "$target" =~ /(canasta-extensions|extensions|user-extensions|canasta-skins|skins|user-skins)/([^/]+)/ ]]; then
+              echo "${BASH_REMATCH[2]}"
               return 0
             fi
             return 1
@@ -92,20 +92,30 @@ jobs:
             local manifests="$RESULT_DIR/${key}-extension-manifests.tsv"
             local raw_map="$RESULT_DIR/${key}-extension-map-raw.tsv"
             local map="$RESULT_DIR/${key}-extension-map.tsv"
+            local extracted="$RESULT_DIR/${key}-extension-manifests"
+            local container
 
             [ -f "$map" ] && return
 
-            docker run --rm --entrypoint sh "$IMAGE@$digest" -lc '
-              set -eu
-              for f in /var/www/mediawiki/w/extensions/*/composer.json /var/www/mediawiki/w/extensions/*/package.json; do
-                [ -f "$f" ] || continue
-                ext=$(basename "$(dirname "$f")")
-                kind=$(basename "$f")
-                printf "%s\t%s\t" "$ext" "$kind"
-                base64 -w0 "$f"
-                printf "\n"
-              done
-            ' > "$manifests"
+            container=$(docker create "$IMAGE@$digest")
+            mkdir -p "$extracted"
+            for tree in canasta-extensions extensions user-extensions; do
+              mkdir -p "$extracted/$tree"
+              docker cp "$container:/var/www/mediawiki/w/$tree/." "$extracted/$tree" 2>/dev/null || true
+            done
+            docker rm "$container" > /dev/null
+
+            : > "$manifests"
+            while IFS= read -r -d '' manifest; do
+              ext=$(basename "$(dirname "$manifest")")
+              kind=$(basename "$manifest")
+              printf '%s\t%s\t' "$ext" "$kind" >> "$manifests"
+              base64 -w0 "$manifest" >> "$manifests"
+              printf '\n' >> "$manifests"
+            done < <(
+              find "$extracted" -mindepth 3 -maxdepth 3 -type f \
+                \( -name composer.json -o -name package.json \) -print0
+            )
 
             : > "$raw_map"
             while IFS=$'\t' read -r EXT KIND MANIFEST_B64; do
