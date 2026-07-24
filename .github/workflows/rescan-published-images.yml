@@ -87,8 +87,8 @@ jobs:
           }
 
           build_extension_package_map() {
-            local digest="$1"
-            local key="${digest#sha256:}"
+            local key="$1"
+            local digest="$2"
             local manifests="$RESULT_DIR/${key}-extension-manifests.tsv"
             local raw_map="$RESULT_DIR/${key}-extension-map-raw.tsv"
             local map="$RESULT_DIR/${key}-extension-map.tsv"
@@ -194,7 +194,7 @@ jobs:
                   "$IMAGE@$DIGEST"
               fi
 
-              MAP_FILE="$RESULT_DIR/${DIGEST#sha256:}-extension-map.tsv"
+              MAP_FILE="$RESULT_DIR/${TAG}-extension-map.tsv"
               jq -r '
                 [
                   .Results[]? as $result
@@ -220,7 +220,7 @@ jobs:
                     EXTENSION="$EXTENSION_FROM_TARGET"
                   elif [ "$CLASS" = "lang-pkgs" ]; then
                     if [ ! -f "$MAP_FILE" ]; then
-                      build_extension_package_map "$DIGEST"
+                      build_extension_package_map "$TAG" "$DIGEST"
                     fi
                     EXTENSION=$(awk -F '\t' -v package="$PACKAGE" '$1 == package { print $2; exit }' "$MAP_FILE")
                   elif [ "$CLASS" = "os-pkgs" ]; then
