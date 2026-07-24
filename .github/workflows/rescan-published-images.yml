@@ -261,7 +261,7 @@ jobs:
               echo
               echo '<details><summary>Unique findings (first 200)</summary>'
               echo
-              echo '| Digest | Platform | Severity | Vulnerability | Package | Installed | Fixed | Extension |'
+              echo '| Digest | Platform | Severity | Vulnerability | Package | Installed | Fixed | Component |'
               echo '| --- | --- | --- | --- | --- | --- | --- | --- |'
               sort -u "$FINDINGS" | awk 'NR <= 200' |
                 while IFS=$'\t' read -r DIGEST ARCH SEVERITY VULNERABILITY PACKAGE INSTALLED FIXED EXTENSION; do
