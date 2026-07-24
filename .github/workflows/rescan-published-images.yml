@@ -1,0 +1,196 @@
+name: Rescan published images
+
+on:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: rescan-published-canasta-images
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+  packages: read
+
+env:
+  IMAGE: ghcr.io/canastawiki/canasta
+  ISSUE_LABEL: automated
+  ISSUE_TITLE: Scheduled Canasta image vulnerability scan
+
+jobs:
+  scan:
+    name: Scan published tags
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Install regctl
+        uses: regclient/actions/regctl-installer@1b705e32d40851370799ea5814e83d0a5f6a70dc # v0.1.0
+
+      - name: Determine current tags
+        id: tags
+        run: |
+          BASE_IMAGE=$(awk -F'=' '/^ARG BASE_IMAGE=/ {print $2}' Dockerfile)
+          MEDIAWIKI_VERSION=$(regctl image config "$BASE_IMAGE" | jq -r '.config.Labels["wiki.canasta.mediawiki.version"]')
+          MEDIAWIKI_BRANCH=${MEDIAWIKI_VERSION%.*}
+          CANASTA_VERSION=$(cat VERSION)
+
+          if [[ ! "$MEDIAWIKI_BRANCH" =~ ^[0-9]+\.[0-9]+$ ]] ||
+             [[ ! "$CANASTA_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Could not determine valid published image tags."
+            exit 1
+          fi
+
+          {
+            echo "mediawiki=$MEDIAWIKI_BRANCH-latest"
+            echo "version=$CANASTA_VERSION"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Login to GitHub Container Registry
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+
+      - name: Set up Trivy
+        uses: aquasecurity/setup-trivy@3fb12ec12f41e471780db15c232d5dd185dcb514 # v0.2.6
+        with:
+          version: v0.70.0
+          cache: true
+
+      - name: Scan tags and prepare report
+        id: scan
+        env:
+          MEDIAWIKI_TAG: ${{ steps.tags.outputs.mediawiki }}
+          VERSION_TAG: ${{ steps.tags.outputs.version }}
+        run: |
+          RESULT_DIR="$RUNNER_TEMP/trivy-results"
+          mkdir -p "$RESULT_DIR"
+          SUMMARY="$RESULT_DIR/summary"
+          FINDINGS="$RESULT_DIR/findings"
+          : > "$SUMMARY"
+          : > "$FINDINGS"
+          SCANNED=0
+
+          for TAG in latest "$MEDIAWIKI_TAG" "$VERSION_TAG"; do
+            INSPECT_ERROR="$RESULT_DIR/inspect-error"
+            if ! MANIFEST=$(docker buildx imagetools inspect --raw "$IMAGE:$TAG" 2> "$INSPECT_ERROR"); then
+              cat "$INSPECT_ERROR" >&2
+              if grep -Fqi 'manifest unknown' "$INSPECT_ERROR" ||
+                 grep -Fqi "$IMAGE:${TAG}: not found" "$INSPECT_ERROR"; then
+                echo "::warning::Skipping missing image tag $IMAGE:$TAG"
+                continue
+              fi
+              echo "::error::Could not inspect image tag $IMAGE:$TAG"
+              exit 1
+            fi
+            for ARCH in amd64 arm64; do
+              DIGEST=$(jq -er --arg arch "$ARCH" \
+                '.manifests[] | select(.platform.os == "linux" and .platform.architecture == $arch) | .digest' \
+                <<< "$MANIFEST")
+              RESULT="$RESULT_DIR/${DIGEST#sha256:}.json"
+
+              if [ ! -f "$RESULT" ]; then
+                trivy image \
+                  --image-src remote \
+                  --format json \
+                  --output "$RESULT" \
+                  --ignore-unfixed \
+                  --severity CRITICAL,HIGH \
+                  "$IMAGE@$DIGEST"
+
+                jq -r --arg digest "$DIGEST" --arg arch "$ARCH" '
+                  [.Results[]?.Vulnerabilities[]?]
+                  | sort_by(.VulnerabilityID, .PkgName, .InstalledVersion)
+                  | unique_by(.VulnerabilityID, .PkgName, .InstalledVersion)
+                  | .[]
+                  | [$digest, $arch, .Severity, .VulnerabilityID, .PkgName, .InstalledVersion, (.FixedVersion // "")]
+                  | @tsv
+                ' "$RESULT" >> "$FINDINGS"
+              fi
+
+              COUNT=$(jq '
+                [.Results[]?.Vulnerabilities[]?.VulnerabilityID]
+                | unique
+                | length
+              ' "$RESULT")
+              SCANNED=$((SCANNED + 1))
+              printf '| `%s` | `%s` | %s |\n' "$TAG" "$ARCH" "$COUNT" >> "$SUMMARY"
+            done
+          done
+
+          if (( SCANNED == 0 )); then
+            echo "::error::No published platform images were available to scan."
+            exit 1
+          fi
+
+          TOTAL=$(cut -f4 "$FINDINGS" | sort -u | sed '/^$/d' | wc -l | tr -d ' ')
+          REPORT="$RESULT_DIR/report.md"
+          {
+            echo "Trivy found **$TOTAL** distinct fixable HIGH/CRITICAL CVEs across the published images."
+            echo
+            echo "[View workflow run]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)"
+            echo
+            echo '| Tag | Platform | Distinct CVEs |'
+            echo '| --- | --- | ---: |'
+            cat "$SUMMARY"
+
+            if (( TOTAL > 0 )); then
+              echo
+              echo '<details><summary>Unique findings (first 200)</summary>'
+              echo
+              echo '| Digest | Platform | Severity | Vulnerability | Package | Installed | Fixed |'
+              echo '| --- | --- | --- | --- | --- | --- | --- |'
+              sort -u "$FINDINGS" | awk 'NR <= 200' |
+                while IFS=$'\t' read -r DIGEST ARCH SEVERITY VULNERABILITY PACKAGE INSTALLED FIXED; do
+                  printf '| `%s` | `%s` | %s | `%s` | `%s` | `%s` | `%s` |\n' \
+                    "$DIGEST" "$ARCH" "$SEVERITY" "$VULNERABILITY" "$PACKAGE" "$INSTALLED" "$FIXED"
+                done
+              echo
+              echo '</details>'
+            fi
+          } > "$REPORT"
+
+          cat "$REPORT" >> "$GITHUB_STEP_SUMMARY"
+          echo "findings=$TOTAL" >> "$GITHUB_OUTPUT"
+          echo "report=$REPORT" >> "$GITHUB_OUTPUT"
+
+      - name: Open or update tracking issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FINDINGS: ${{ steps.scan.outputs.findings }}
+          REPORT: ${{ steps.scan.outputs.report }}
+        run: |
+          gh label create "$ISSUE_LABEL" \
+            --color ededed \
+            --description "Created and maintained by automation" \
+            --force
+
+          ISSUE_NUMBER=$(gh issue list \
+            --state all \
+            --label "$ISSUE_LABEL" \
+            --limit 1000 \
+            --json number,state,title |
+            jq -r --arg title "$ISSUE_TITLE" \
+              '[.[] | select(.title == $title)][0].number // empty')
+
+          if (( FINDINGS > 0 )); then
+            if [ -n "$ISSUE_NUMBER" ]; then
+              gh issue reopen "$ISSUE_NUMBER" 2>/dev/null || true
+              gh issue edit "$ISSUE_NUMBER" --add-label "$ISSUE_LABEL" --body-file "$REPORT"
+            else
+              gh issue create --label "$ISSUE_LABEL" --title "$ISSUE_TITLE" --body-file "$REPORT"
+            fi
+          elif [ -n "$ISSUE_NUMBER" ]; then
+            gh issue edit "$ISSUE_NUMBER" --add-label "$ISSUE_LABEL"
+            STATE=$(gh issue view "$ISSUE_NUMBER" --json state --jq '.state')
+            if [ "$STATE" = "OPEN" ]; then
+              gh issue close "$ISSUE_NUMBER" \
+                --comment "The latest scheduled scan found no fixable HIGH/CRITICAL vulnerabilities."
+            fi
+          fi
