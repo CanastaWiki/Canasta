@@ -99,7 +99,7 @@ jobs:
 
             container=$(docker create "$IMAGE@$digest")
             mkdir -p "$extracted"
-            for tree in canasta-extensions extensions user-extensions; do
+            for tree in canasta-extensions extensions user-extensions canasta-skins skins user-skins; do
               mkdir -p "$extracted/$tree"
               docker cp "$container:/var/www/mediawiki/w/$tree/." "$extracted/$tree" 2>/dev/null || true
             done
