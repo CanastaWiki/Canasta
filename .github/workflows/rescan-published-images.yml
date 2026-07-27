@@ -132,6 +132,25 @@ jobs:
               fi
             done < "$manifests"
 
+            # Vendored libraries are committed into an extension rather than declared
+            # as a dependency, so they appear in no manifest above. MediaWiki records
+            # them in foreign-resources.yaml, whose purl package names match Trivy's
+            # PkgName. Location varies by extension, so search by name rather than depth.
+            while IFS= read -r -d '' FR_FILE; do
+              FR_REL=${FR_FILE#"$extracted"/}
+              FR_EXT=${FR_REL#*/}
+              FR_EXT=${FR_EXT%%/*}
+              [ -n "$FR_EXT" ] || continue
+              # purl names first; top-level keys cover entries declared without a purl.
+              {
+                grep -oE 'purl: *pkg:npm/[^@[:space:]]+@' "$FR_FILE" 2>/dev/null |
+                  sed -E 's|.*pkg:npm/||; s|@$||'
+                grep -oE '^[A-Za-z0-9_.-]+:$' "$FR_FILE" 2>/dev/null | tr -d ':'
+              } | sort -u | while IFS= read -r FR_PKG; do
+                [ -n "$FR_PKG" ] && printf '%s\t%s\n' "$FR_PKG" "$FR_EXT"
+              done >> "$raw_map"
+            done < <(find "$extracted" -type f -name foreign-resources.yaml -print0)
+
             if [ -s "$raw_map" ]; then
               sort -u "$raw_map" | awk -F '\t' '
                 {
