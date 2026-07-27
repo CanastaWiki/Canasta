@@ -30,27 +30,17 @@ jobs:
         with:
           ref: ${{ github.event.repository.default_branch }}
 
-      - name: Install regctl
-        uses: regclient/actions/regctl-installer@1b705e32d40851370799ea5814e83d0a5f6a70dc # v0.1.0
-
       - name: Determine current tags
         id: tags
         run: |
-          BASE_IMAGE=$(awk -F'=' '/^ARG BASE_IMAGE=/ {print $2}' Dockerfile)
-          MEDIAWIKI_VERSION=$(regctl image config "$BASE_IMAGE" | jq -r '.config.Labels["wiki.canasta.mediawiki.version"]')
-          MEDIAWIKI_BRANCH=${MEDIAWIKI_VERSION%.*}
           CANASTA_VERSION=$(cat VERSION)
 
-          if [[ ! "$MEDIAWIKI_BRANCH" =~ ^[0-9]+\.[0-9]+$ ]] ||
-             [[ ! "$CANASTA_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "::error::Could not determine valid published image tags."
+          if [[ ! "$CANASTA_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Could not determine a valid published version tag."
             exit 1
           fi
 
-          {
-            echo "mediawiki=$MEDIAWIKI_BRANCH-latest"
-            echo "version=$CANASTA_VERSION"
-          } >> "$GITHUB_OUTPUT"
+          echo "version=$CANASTA_VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Login to GitHub Container Registry
         env:
@@ -66,7 +56,6 @@ jobs:
       - name: Scan tags and prepare report
         id: scan
         env:
-          MEDIAWIKI_TAG: ${{ steps.tags.outputs.mediawiki }}
           VERSION_TAG: ${{ steps.tags.outputs.version }}
         run: |
           RESULT_DIR="$RUNNER_TEMP/trivy-results"
@@ -166,7 +155,7 @@ jobs:
             fi
           }
 
-          for TAG in latest "$MEDIAWIKI_TAG" "$VERSION_TAG"; do
+          for TAG in "$VERSION_TAG"; do
             INSPECT_ERROR="$RESULT_DIR/inspect-error"
             if ! MANIFEST=$(docker buildx imagetools inspect --raw "$IMAGE:$TAG" 2> "$INSPECT_ERROR"); then
               cat "$INSPECT_ERROR" >&2
@@ -184,12 +173,14 @@ jobs:
                 <<< "$MANIFEST")
               RESULT="$RESULT_DIR/${DIGEST#sha256:}.json"
 
+              # Unfixed findings are kept here (no --ignore-unfixed) so unfixed
+              # CRITICALs in extension/skin dependencies can be reported for
+              # awareness; the report partitions fixable from unfixed below.
               if [ ! -f "$RESULT" ]; then
                 trivy image \
                   --image-src remote \
                   --format json \
                   --output "$RESULT" \
-                  --ignore-unfixed \
                   --severity CRITICAL,HIGH \
                   "$IMAGE@$DIGEST"
               fi
@@ -231,8 +222,13 @@ jobs:
                     "$DIGEST" "$ARCH" "$SEVERITY" "$VULNERABILITY" "$PACKAGE" "$INSTALLED" "$FIXED" "$EXTENSION"
                 done >> "$FINDINGS"
 
+              # Fixable only: the per-tag column tracks what a rebuild/release clears.
               COUNT=$(jq '
-                [.Results[]?.Vulnerabilities[]?.VulnerabilityID]
+                [
+                  .Results[]?.Vulnerabilities[]?
+                  | select((.FixedVersion // "") != "")
+                  | .VulnerabilityID
+                ]
                 | unique
                 | length
               ' "$RESULT")
@@ -246,24 +242,40 @@ jobs:
             exit 1
           fi
 
-          TOTAL=$(cut -f4 "$FINDINGS" | sort -u | sed '/^$/d' | wc -l | tr -d ' ')
+          # Partition findings: fixable (a release clears these) vs. unfixed
+          # CRITICALs owned by an extension/skin (no upstream fix yet, but we have
+          # leverage: escalate upstream, patch, fork, or drop). Unfixed OS findings
+          # are excluded — those are Debian's to fix, not actionable here.
+          # Row layout: DIGEST ARCH SEVERITY VULN PACKAGE INSTALLED FIXED COMPONENT
+          FIXABLE="$RESULT_DIR/findings-fixable"
+          UNFIXED_CRIT="$RESULT_DIR/findings-unfixed-critical"
+          awk -F '\t' '$7 != ""' "$FINDINGS" | sort -u > "$FIXABLE"
+          awk -F '\t' '$7 == "" && $3 == "CRITICAL" && $8 != "base"' "$FINDINGS" |
+            sort -u > "$UNFIXED_CRIT"
+
+          TOTAL=$(cut -f4 "$FIXABLE" | sort -u | sed '/^$/d' | wc -l | tr -d ' ')
+          UNFIXED_TOTAL=$(cut -f4 "$UNFIXED_CRIT" | sort -u | sed '/^$/d' | wc -l | tr -d ' ')
           REPORT="$RESULT_DIR/report.md"
           {
             echo "Trivy found **$TOTAL** distinct fixable HIGH/CRITICAL CVEs across the published images."
+            if (( UNFIXED_TOTAL > 0 )); then
+              echo
+              echo "Additionally, **$UNFIXED_TOTAL** distinct CRITICAL CVEs in extension/skin dependencies have **no upstream fix available**; see below."
+            fi
             echo
             echo "[View workflow run]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)"
             echo
-            echo '| Tag | Platform | Distinct CVEs |'
+            echo '| Tag | Platform | Distinct fixable CVEs |'
             echo '| --- | --- | ---: |'
             cat "$SUMMARY"
 
             if (( TOTAL > 0 )); then
               echo
-              echo '<details><summary>Unique findings (first 200)</summary>'
+              echo '<details><summary>Fixable findings (first 200)</summary>'
               echo
               echo '| Digest | Platform | Severity | Vulnerability | Package | Installed | Fixed | Component |'
               echo '| --- | --- | --- | --- | --- | --- | --- | --- |'
-              sort -u "$FINDINGS" | awk 'NR <= 200' |
+              awk 'NR <= 200' "$FIXABLE" |
                 while IFS=$'\t' read -r DIGEST ARCH SEVERITY VULNERABILITY PACKAGE INSTALLED FIXED EXTENSION; do
                   printf '| `%s` | `%s` | %s | `%s` | `%s` | `%s` | `%s` | `%s` |\n' \
                     "$DIGEST" "$ARCH" "$SEVERITY" "$VULNERABILITY" "$PACKAGE" "$INSTALLED" "$FIXED" "$EXTENSION"
@@ -271,16 +283,33 @@ jobs:
               echo
               echo '</details>'
             fi
+
+            if (( UNFIXED_TOTAL > 0 )); then
+              echo
+              echo '### Unfixed CRITICAL (no upstream fix — candidates for patch / upstream escalation / removal)'
+              echo
+              echo 'These have no fixed version available upstream, so a rebuild or release will not clear them. Options: escalate with the extension maintainer, patch locally, replace the extension, or accept and document the risk.'
+              echo
+              echo '| Digest | Platform | Vulnerability | Package | Installed | Component |'
+              echo '| --- | --- | --- | --- | --- | --- |'
+              awk 'NR <= 100' "$UNFIXED_CRIT" |
+                while IFS=$'\t' read -r DIGEST ARCH SEVERITY VULNERABILITY PACKAGE INSTALLED FIXED EXTENSION; do
+                  printf '| `%s` | `%s` | `%s` | `%s` | `%s` | `%s` |\n' \
+                    "$DIGEST" "$ARCH" "$VULNERABILITY" "$PACKAGE" "$INSTALLED" "$EXTENSION"
+                done
+            fi
           } > "$REPORT"
 
           cat "$REPORT" >> "$GITHUB_STEP_SUMMARY"
           echo "findings=$TOTAL" >> "$GITHUB_OUTPUT"
+          echo "unfixed_critical=$UNFIXED_TOTAL" >> "$GITHUB_OUTPUT"
           echo "report=$REPORT" >> "$GITHUB_OUTPUT"
 
       - name: Open or update tracking issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FINDINGS: ${{ steps.scan.outputs.findings }}
+          UNFIXED_CRITICAL: ${{ steps.scan.outputs.unfixed_critical }}
           REPORT: ${{ steps.scan.outputs.report }}
         run: |
           gh label create "$ISSUE_LABEL" \
@@ -296,7 +325,11 @@ jobs:
             jq -r --arg title "$ISSUE_TITLE" \
               '[.[] | select(.title == $title)][0].number // empty')
 
-          if (( FINDINGS > 0 )); then
+          # Keep the tracker open while there is anything to act on: fixable CVEs
+          # (a release clears them) or unfixed CRITICALs owned by an extension/skin
+          # (needs upstream escalation, a patch, or removal). Closing on fixable == 0
+          # alone would bury a standing unfixed CRITICAL.
+          if (( FINDINGS > 0 || UNFIXED_CRITICAL > 0 )); then
             if [ -n "$ISSUE_NUMBER" ]; then
               gh issue reopen "$ISSUE_NUMBER" 2>/dev/null || true
               gh issue edit "$ISSUE_NUMBER" --add-label "$ISSUE_LABEL" --body-file "$REPORT"
@@ -308,6 +341,6 @@ jobs:
             STATE=$(gh issue view "$ISSUE_NUMBER" --json state --jq '.state')
             if [ "$STATE" = "OPEN" ]; then
               gh issue close "$ISSUE_NUMBER" \
-                --comment "The latest scheduled scan found no fixable HIGH/CRITICAL vulnerabilities."
+                --comment "The latest scheduled scan found no fixable HIGH/CRITICAL vulnerabilities and no unfixed CRITICALs in extension or skin dependencies."
             fi
           fi
