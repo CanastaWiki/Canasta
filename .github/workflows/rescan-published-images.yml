@@ -205,7 +205,10 @@ jobs:
                 | .[]
                 | @tsv
               ' "$RESULT" |
-                while IFS=$'\t' read -r SEVERITY VULNERABILITY PACKAGE INSTALLED FIXED CLASS TARGET; do
+                # Split on a non-whitespace delimiter: tab is IFS whitespace, so an
+                # empty FixedVersion collapses and shifts every later field left.
+                tr '\t' '\037' |
+                while IFS=$'\037' read -r SEVERITY VULNERABILITY PACKAGE INSTALLED FIXED CLASS TARGET; do
                   EXTENSION=""
                   if EXTENSION_FROM_TARGET=$(extract_extension_from_target "$TARGET"); then
                     EXTENSION="$EXTENSION_FROM_TARGET"
