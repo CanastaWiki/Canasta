@@ -43,3 +43,4 @@ Canasta version history:
 - 3.5.15 - July 3, 2026 - Update the Maps and OAuth extensions (security updates) and the Page Forms extension
 - 3.5.16 - July 14, 2026 - Update the Cargo extension
 - 3.5.17 - July 25, 2026 - Update to CanastaBase 1.3.16; update the Data Transfer extension
+- 3.5.18 - July 27, 2026 - Update to CanastaBase 1.3.17; image rescan reporting (#675, #677)
