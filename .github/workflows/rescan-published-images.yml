@@ -317,11 +317,15 @@ jobs:
             --description "Created and maintained by automation" \
             --force
 
+          # Adopt only an OPEN tracker, so a closed one stays closed as a permanent
+          # record of what the release that closed it cleared. A later scan that finds
+          # new work opens a fresh issue (one issue per remediation cycle) instead of
+          # resurrecting the old one and overwriting its report.
           ISSUE_NUMBER=$(gh issue list \
-            --state all \
+            --state open \
             --label "$ISSUE_LABEL" \
             --limit 1000 \
-            --json number,state,title |
+            --json number,title |
             jq -r --arg title "$ISSUE_TITLE" \
               '[.[] | select(.title == $title)][0].number // empty')
 
@@ -331,16 +335,12 @@ jobs:
           # alone would bury a standing unfixed CRITICAL.
           if (( FINDINGS > 0 || UNFIXED_CRITICAL > 0 )); then
             if [ -n "$ISSUE_NUMBER" ]; then
-              gh issue reopen "$ISSUE_NUMBER" 2>/dev/null || true
-              gh issue edit "$ISSUE_NUMBER" --add-label "$ISSUE_LABEL" --body-file "$REPORT"
+              # Same cycle, still outstanding: refresh the open tracker in place.
+              gh issue edit "$ISSUE_NUMBER" --body-file "$REPORT"
             else
               gh issue create --label "$ISSUE_LABEL" --title "$ISSUE_TITLE" --body-file "$REPORT"
             fi
           elif [ -n "$ISSUE_NUMBER" ]; then
-            gh issue edit "$ISSUE_NUMBER" --add-label "$ISSUE_LABEL"
-            STATE=$(gh issue view "$ISSUE_NUMBER" --json state --jq '.state')
-            if [ "$STATE" = "OPEN" ]; then
-              gh issue close "$ISSUE_NUMBER" \
-                --comment "The latest scheduled scan found no fixable HIGH/CRITICAL vulnerabilities and no unfixed CRITICALs in extension or skin dependencies."
-            fi
+            gh issue close "$ISSUE_NUMBER" \
+              --comment "The latest scheduled scan found no fixable HIGH/CRITICAL vulnerabilities and no unfixed CRITICALs in extension or skin dependencies."
           fi
