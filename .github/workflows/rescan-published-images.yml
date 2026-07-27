@@ -278,8 +278,8 @@ jobs:
               echo
               echo '| Digest | Platform | Severity | Vulnerability | Package | Installed | Fixed | Component |'
               echo '| --- | --- | --- | --- | --- | --- | --- | --- |'
-              awk 'NR <= 200' "$FIXABLE" |
-                while IFS=$'\t' read -r DIGEST ARCH SEVERITY VULNERABILITY PACKAGE INSTALLED FIXED EXTENSION; do
+              awk 'NR <= 200' "$FIXABLE" | tr '\t' '\037' |
+                while IFS=$'\037' read -r DIGEST ARCH SEVERITY VULNERABILITY PACKAGE INSTALLED FIXED EXTENSION; do
                   printf '| `%s` | `%s` | %s | `%s` | `%s` | `%s` | `%s` | `%s` |\n' \
                     "$DIGEST" "$ARCH" "$SEVERITY" "$VULNERABILITY" "$PACKAGE" "$INSTALLED" "$FIXED" "$EXTENSION"
                 done
@@ -295,8 +295,8 @@ jobs:
               echo
               echo '| Digest | Platform | Vulnerability | Package | Installed | Component |'
               echo '| --- | --- | --- | --- | --- | --- |'
-              awk 'NR <= 100' "$UNFIXED_CRIT" |
-                while IFS=$'\t' read -r DIGEST ARCH SEVERITY VULNERABILITY PACKAGE INSTALLED FIXED EXTENSION; do
+              awk 'NR <= 100' "$UNFIXED_CRIT" | tr '\t' '\037' |
+                while IFS=$'\037' read -r DIGEST ARCH SEVERITY VULNERABILITY PACKAGE INSTALLED FIXED EXTENSION; do
                   printf '| `%s` | `%s` | `%s` | `%s` | `%s` | `%s` |\n' \
                     "$DIGEST" "$ARCH" "$VULNERABILITY" "$PACKAGE" "$INSTALLED" "$EXTENSION"
                 done
