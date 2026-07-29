@@ -1,5 +1,5 @@
 ENV MW_VERSION=REL1_43 \
-	MW_CORE_VERSION=1.43.8 \
+	MW_CORE_VERSION=1.43.9 \
 	WWW_ROOT=/var/www/mediawiki \
 	MW_HOME=/var/www/mediawiki/w \
 	MW_LOG=/var/log/mediawiki \
