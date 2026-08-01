@@ -45,3 +45,4 @@ Canasta version history:
 - 3.5.17 - July 25, 2026 - Update to CanastaBase 1.3.16; update the Data Transfer extension
 - 3.5.18 - July 27, 2026 - Update to CanastaBase 1.3.17; image rescan reporting (#675, #677)
 - 3.5.19 - July 28, 2026 - Update to CanastaBase 1.3.18; update the Data Transfer, Display Title, CrawlerProtection and Page Forms extensions; rescan reporting (#680, #682, #684)
+- 3.5.20 - August 1, 2026 - Update to CanastaBase 1.3.19; update the CrawlerProtection extension
