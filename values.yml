@@ -542,7 +542,7 @@ skins:
   - Modern:
       Wikidata ID: Q22713034
       commit: 5597681b7f0423a7e71cda64929c9d60dc999b8c
-  - pivot:
+  - Pivot:
       Wikidata ID: Q29001625
       repository: https://gerrit.wikimedia.org/r/mediawiki/skins/Pivot
       commit: f6b35ca2b8b07ced0e467d8b99421a41b0af3fa3
