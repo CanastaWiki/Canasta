@@ -119,7 +119,8 @@ extensions:
       commit: caca5bf6baaf5b85487a5b822e42c6ee74aa0e9d
   - DisplayTitle:
       Wikidata ID: Q27948979
-      commit: 920768a8efb9f316aed1f134fc07aa153d612eb7
+      branch: REL1_43
+      commit: e9a645f1abc9fe7cf810ee4b60ebfe9af8ca9a2a
   - DynamicPageList4:
       repository: https://github.com/Universal-Omega/DynamicPageList4.git
       branch: REL1_43
