@@ -1,5 +1,10 @@
 import {test, expect} from '@playwright/test';
 
+test('non-prod indicator is off by default', async ({page}) => {
+    await page.goto('/wiki/Main_Page');
+    await expect(page.locator('.wikiteq-nonprod-label')).toHaveCount(0);
+});
+
 test('has successful installation message', async ({page}) => {
     await page.goto('/wiki/Main_Page');
     await expect(page.locator('#content')).toContainText(/MediaWiki has been installed/);

@@ -18,6 +18,14 @@ Taqasta reads many settings from environment variables (admin account, database,
 
 CI and local e2e stacks use [.env.ci](../.env.ci). Copy it to `.env` before running `docker compose` (see [e2e/README.md](../e2e/README.md)).
 
+### Non-prod visual indicator
+
+Set `MW_SHOW_NON_PROD_INDICATOR` to `true` to show a red frame and a NOT PRODUCTION label on every page. The default value is off.
+
+You can also set `$wgWikiTeqNonProdIndicator` to `true` in the site `LocalSettings.php` file. Do not enable this on a production wiki.
+
+Click the label to hide the frame and the label for 20 seconds on the current page. A new page load shows the overlay again.
+
 ## Compose and Kubernetes templates
 
 | Path | Purpose |

@@ -523,6 +523,34 @@ $wgCirrusSearchPhraseSuggestUseOpeningText = true;
 $wgDefaultUserOptions['smw-prefs-general-options-show-entity-issue-panel'] = 0;
 $wgHiddenPrefs[] = 'smw-prefs-general-options-show-entity-issue-panel';
 
+########################### Non-prod indicator ############################
+# Visual overlay only (red frame + "NOT PRODUCTION"). Off by default.
+# Enable with MW_SHOW_NON_PROD_INDICATOR=true, or set
+# $wgWikiTeqNonProdIndicator in site LocalSettings.php (loaded below).
+# Click the label to hide the overlay for 20 seconds on this page.
+$wgWikiTeqNonProdIndicator = isEnvTrue( 'MW_SHOW_NON_PROD_INDICATOR' );
+
+$wgHooks['ResourceLoaderRegisterModules'][] = static function ( $resourceLoader ) {
+	global $IP, $wgResourceBasePath, $wgWikiTeqNonProdIndicator;
+	if ( !$wgWikiTeqNonProdIndicator ) {
+		return;
+	}
+	$resourceLoader->register( 'ext.wikiteq.nonProd', [
+		'localBasePath' => "$IP/resources/wikiteq-non-prod",
+		'remoteBasePath' => "$wgResourceBasePath/resources/wikiteq-non-prod",
+		'styles' => [ 'indicator.css' ],
+		'scripts' => [ 'indicator.js' ],
+	] );
+};
+
+$wgHooks['BeforePageDisplay'][] = static function ( $out, $skin ) {
+	global $wgWikiTeqNonProdIndicator;
+	if ( !$wgWikiTeqNonProdIndicator ) {
+		return;
+	}
+	$out->addModules( [ 'ext.wikiteq.nonProd' ] );
+};
+
 ######################### Custom Settings ##########################
 $canastaLocalSettingsFilePath = getenv( 'MW_CONFIG_DIR' ) . '/LocalSettings.php';
 $emulateLocalSettingsDoesNotExists = false;

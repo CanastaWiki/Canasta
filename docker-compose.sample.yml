@@ -12,6 +12,8 @@ x-web-environment: &x-web-environment
     MW_SITE_LANG:
     MW_DB_TYPE: ${MW_DB_TYPE:-mysql}
     MW_SHOW_EXCEPTION_DETAILS:
+    # Red frame + "NOT PRODUCTION" label. Keep false on production wikis.
+    MW_SHOW_NON_PROD_INDICATOR: "false"
     PHP_UPLOAD_MAX_FILESIZE: 500M
     PHP_POST_MAX_SIZE: 500M
     # disable bundled runners as we have a worker container now

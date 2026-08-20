@@ -28,6 +28,7 @@ ENV MW_AUTOUPDATE=true \
 	MW_JOB_TRANSCODER_PAUSE=60 \
 	MW_MAP_DOMAIN_TO_DOCKER_GATEWAY=0 \
 	MW_ENABLE_SITEMAP_GENERATOR=false \
+	MW_SHOW_NON_PROD_INDICATOR=false \
 	MW_SITEMAP_PAUSE_DAYS=1 \
 	MW_SITEMAP_SUBDIR="" \
 	MW_SITEMAP_IDENTIFIER="mediawiki" \
@@ -68,6 +69,7 @@ COPY _sources/configs/robots.txt $WWW_ROOT/
 COPY _sources/configs/.htaccess $WWW_ROOT/
 COPY _sources/images/favicon.ico $WWW_ROOT/
 COPY _sources/canasta/DockerSettings.php $MW_HOME/
+COPY _sources/canasta/non-prod-indicator $MW_HOME/resources/wikiteq-non-prod/
 COPY _sources/canasta/getMediawikiSettings.php /
 COPY _sources/configs/mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf.template
 
