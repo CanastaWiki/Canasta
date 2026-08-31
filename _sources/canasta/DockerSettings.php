@@ -71,6 +71,7 @@ const DOCKER_EXTENSIONS = [
 	'ConfirmEdit/ReCaptchaNoCaptcha', # bundled
 	'ContactPage',
 	'ContributionScores',
+	'CookieConsent',
 	'CookieWarning',
 	'Cloudflare',
 	'CrawlerProtection',

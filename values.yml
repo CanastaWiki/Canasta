@@ -535,6 +535,9 @@ extensions:
       branch: master
       # Pin matches former CKN submodule (2.1.0-alpha); 3.0.0 requires SMW >= 7.0.
       commit: bc69880ff2c33688138d1db1e3cc61acc6617221
+  - CookieConsent:
+      branch: master
+      commit: 8a400299d45317d7df0597290fdff6533f69096d
 # Skins to install
 skins:
   - CologneBlue:
