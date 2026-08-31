@@ -133,8 +133,6 @@ spec:
                 secretKeyRef:
                   name: mysql-password
                   key: password
-            - name: PHP_MEMORY_LIMIT
-              value: 128M
           volumeMounts:
             - name: git
               mountPath: /git
@@ -184,8 +182,6 @@ spec:
                 secretKeyRef:
                   name: mysql-password
                   key: password
-            - name: PHP_MEMORY_LIMIT
-              value: 128M
           volumeMounts:
             - name: git
               mountPath: /git
@@ -235,8 +231,6 @@ spec:
                 secretKeyRef:
                   name: mysql-password
                   key: password
-            - name: PHP_MEMORY_LIMIT
-              value: 128M
           volumeMounts:
             - name: git
               mountPath: /git
