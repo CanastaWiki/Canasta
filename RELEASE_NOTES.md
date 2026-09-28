@@ -49,3 +49,4 @@ Canasta version history:
 - 3.5.21 - August 24, 2026 - Update to CanastaBase 1.3.20 (#696); update the Cargo extension (#694)
 - 3.5.22 - September 24, 2026 - Update the External Data and Page Forms extensions
 - 3.5.23 - September 24, 2026 - Update to CanastaBase 1.3.21
+- 3.5.24 - September 28, 2026 - Update to CanastaBase 1.3.22 (#705)
