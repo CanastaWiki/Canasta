@@ -583,7 +583,7 @@ packages:
   - name: mediawiki/sub-page-list
     version: 3.0.1
   - name: mediawiki/maps
-    version: 12.0.0
+    version: 12.1.9
   - name: mediawiki/semantic-watchlist
     version: dev-master#63039778bf686dc1ef38eb4e9aa41ace139fdd87
   # Not an extension, loaded so that we can use shell.php in the containers
