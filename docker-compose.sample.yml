@@ -20,6 +20,8 @@ x-web-environment: &x-web-environment
     # WIKITEQ_POLICY_FOOTER_LINK_URL: "https://wikiteq.com/hosted-wiki-legal"
     PHP_UPLOAD_MAX_FILESIZE: 500M
     PHP_POST_MAX_SIZE: 500M
+    # PHP errors to container stderr (docker/kubectl logs). Unset = Apache ErrorLog files.
+    # PHP_ERROR_LOG: /proc/self/fd/2
     # disable bundled runners as we have a worker container now
     MW_ENABLE_TRANSCODER: false
     MW_ENABLE_JOB_RUNNER: false
