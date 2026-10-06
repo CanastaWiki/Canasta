@@ -104,4 +104,4 @@ Example patches:
 - [remove extension](https://github.com/WikiTeq/Taqasta/commit/42b7cf2fc0c0fad6830789c314882520230170c5)
 - [remove extension with patch](https://github.com/WikiTeq/Taqasta/commit/1c58a664045232afb7b2c1600dd47f65232582c)
 
-Do **not** edit [DockerSettings.php](../_sources/canasta/DockerSettings.php) for removals on `master`; extension availability in the image is driven by [values.yml](../values.yml). The `DOCKER_EXTENSIONS` list there is a legacy allowlist for deprecated `MW_LOAD_EXTENSIONS` (see [deployment.md](deployment.md)). Wikis that still reference the extension need it removed from their `LocalSettings.php` separately.
+Extension availability in the image is driven by [values.yml](../values.yml). For the legacy env path, the `DOCKER_EXTENSIONS` list in [DockerSettings.php](../_sources/canasta/DockerSettings.php) may still need updating until that path is cleaned up (see [deployment.md](deployment.md)). Wikis that still reference the extension need it removed from their `LocalSettings.php` separately.
