@@ -71,6 +71,7 @@ jobs:
         # the registry-existence check below works without logging in.
         env:
           DOCKER_CLI_EXPERIMENTAL: enabled
+          HEAD_REF: ${{ github.head_ref }}
         run: |
 
           # Image ID
@@ -136,7 +137,7 @@ jobs:
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           echo REGISTRY_TAGS=$REGISTRY_TAGS
-          echo headref=${{ github.head_ref }}
+          echo "headref=$HEAD_REF"
 
           SHA_SHORT=$(echo ${{ github.sha }} | cut -c1-8)
           [ "${{ github.event_name }}" == "pull_request" ] && SHA_SHORT=$(echo ${{ github.event.pull_request.head.sha }} | cut -c1-8)
