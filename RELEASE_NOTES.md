@@ -52,3 +52,4 @@ Canasta version history:
 - 3.5.24 - September 28, 2026 - Update to CanastaBase 1.3.22 (#705)
 - 3.5.25 - October 2, 2026 - Update to CanastaBase 1.3.23 (#711); extension and skin security updates (#712)
 - 3.5.26 - October 5, 2026 - Update to CanastaBase 1.3.24 (#717)
+- 3.5.27 - October 12, 2026 - Update to CanastaBase 1.3.25 (#731)
