@@ -41,6 +41,9 @@ jobs:
       packages: write
       pull-requests: write
       security-events: write
+    env:
+      # Fork PRs get a read-only token: build and scan, but publish nothing.
+      CAN_PUBLISH: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -157,6 +160,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
       -
         name: Login to GitHub Container Registry
+        if: env.CAN_PUBLISH == 'true'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -169,10 +173,29 @@ jobs:
         with:
           context: .
           platforms: linux/amd64, linux/arm64
-          push: true
+          push: ${{ env.CAN_PUBLISH == 'true' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: ${{ steps.generate.outputs.REGISTRY_TAGS }}
+      -
+        name: Build amd64 image locally for scanning
+        if: env.CAN_PUBLISH != 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          load: true
+          cache-from: type=gha
+          tags: ${{ env.IMAGE_NAME }}:pr-scan
+      -
+        name: Scan local amd64 image with Trivy
+        if: env.CAN_PUBLISH != 'true'
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ${{ env.IMAGE_NAME }}:pr-scan
+          format: table
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
@@ -181,6 +204,7 @@ jobs:
         run: echo ${{ steps.generate.outputs.REGISTRY_TAGS }}
       -
         name: Resolve platform image digests
+        if: env.CAN_PUBLISH == 'true'
         id: platform_digests
         env:
           IMAGE_REF: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}@${{ steps.docker_build.outputs.digest }}
@@ -192,6 +216,7 @@ jobs:
           echo "arm64=$ARM64_DIGEST" >> "$GITHUB_OUTPUT"
       -
         name: Scan amd64 image with Trivy
+        if: env.CAN_PUBLISH == 'true'
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}@${{ steps.platform_digests.outputs.amd64 }}
@@ -202,12 +227,14 @@ jobs:
           severity: CRITICAL,HIGH
       -
         name: Upload amd64 Trivy results to GitHub Security
+        if: env.CAN_PUBLISH == 'true'
         uses: github/codeql-action/upload-sarif@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81 # v4.37.3
         with:
           sarif_file: trivy-results-amd64.sarif
           category: trivy-container-image-amd64
       -
         name: Scan arm64 image with Trivy
+        if: env.CAN_PUBLISH == 'true'
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}@${{ steps.platform_digests.outputs.arm64 }}
@@ -219,6 +246,7 @@ jobs:
           skip-setup-trivy: true
       -
         name: Upload arm64 Trivy results to GitHub Security
+        if: env.CAN_PUBLISH == 'true'
         uses: github/codeql-action/upload-sarif@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81 # v4.37.3
         with:
           sarif_file: trivy-results-arm64.sarif
@@ -262,7 +290,7 @@ jobs:
 
       -
         name: Notify about image tag
-        if: github.event_name == 'pull_request' && steps.docker_build.outputs.digest != ''
+        if: github.event_name == 'pull_request' && env.CAN_PUBLISH == 'true' && steps.docker_build.outputs.digest != ''
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: canasta-image-tag
