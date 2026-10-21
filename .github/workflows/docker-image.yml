@@ -25,14 +25,95 @@ env:
   IMAGE_NAME: canasta
 
 jobs:
+  # Build each platform on a runner of that architecture and push it by digest;
+  # the push job below joins the digests into one multi-platform tag.
+  build:
+    if: github.event_name == 'push' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.version == '')
+    strategy:
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+      packages: write
+    env:
+      # Fork PRs get a read-only token: build and scan, but publish nothing.
+      CAN_PUBLISH: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Login to GitHub Container Registry
+        if: env.CAN_PUBLISH == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Build and push by digest
+        id: docker_build
+        if: env.CAN_PUBLISH == 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/${{ matrix.arch }}
+          outputs: type=image,name=ghcr.io/canastawiki/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=${{ matrix.arch }}
+          cache-to: type=gha,scope=${{ matrix.arch }},mode=max
+      -
+        name: Export digest
+        if: env.CAN_PUBLISH == 'true'
+        env:
+          DIGEST: ${{ steps.docker_build.outputs.digest }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/digests"
+          touch "$RUNNER_TEMP/digests/${DIGEST#sha256:}"
+      -
+        name: Upload digest
+        if: env.CAN_PUBLISH == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ matrix.arch }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
+      -
+        name: Build image locally for scanning
+        if: env.CAN_PUBLISH != 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/${{ matrix.arch }}
+          load: true
+          cache-from: type=gha,scope=${{ matrix.arch }}
+          tags: ${{ env.IMAGE_NAME }}:pr-scan
+      -
+        name: Scan local image with Trivy
+        if: env.CAN_PUBLISH != 'true'
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ${{ env.IMAGE_NAME }}:pr-scan
+          format: table
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
   # Push image to GitHub Packages.
   # The image tag pattern is:
   # for pull-requests: <MW_VERSION>-<DATE>-<PR_NUMBER>, eg: 1.43.1-20260224-25
   # for `master` branch: latest + <MW_MAJOR>-latest + <MW_VERSION>-latest + <MW_VERSION>-<DATE>-<SHA>
   #   (plus <CANASTA_VERSION> when VERSION file changes)
   push:
+    needs: [build]
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || (github.event_name == 'workflow_dispatch' && inputs.version == '')
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.version == '')
     permissions:
       artifact-metadata: write
       attestations: write
@@ -41,9 +122,6 @@ jobs:
       packages: write
       pull-requests: write
       security-events: write
-    env:
-      # Fork PRs get a read-only token: build and scan, but publish nothing.
-      CAN_PUBLISH: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -154,49 +232,43 @@ jobs:
           echo "IS_RELEASE=$IS_RELEASE" >> "$GITHUB_OUTPUT"
           echo "SHA_SHORT=$SHA_SHORT" >> $GITHUB_OUTPUT
       -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: digests-*
+          merge-multiple: true
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       -
         name: Login to GitHub Container Registry
-        if: env.CAN_PUBLISH == 'true'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       -
-        name: Build and push
+        # The per-platform pushes carry their provenance attestations, which the
+        # joined index keeps alongside the platform images.
+        name: Create multi-platform tags
         id: docker_build
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          platforms: linux/amd64, linux/arm64
-          push: ${{ env.CAN_PUBLISH == 'true' }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          tags: ${{ steps.generate.outputs.REGISTRY_TAGS }}
-      -
-        name: Build amd64 image locally for scanning
-        if: env.CAN_PUBLISH != 'true'
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          platforms: linux/amd64
-          load: true
-          cache-from: type=gha
-          tags: ${{ env.IMAGE_NAME }}:pr-scan
-      -
-        name: Scan local amd64 image with Trivy
-        if: env.CAN_PUBLISH != 'true'
-        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
-        with:
-          image-ref: ${{ env.IMAGE_NAME }}:pr-scan
-          format: table
-          ignore-unfixed: true
-          severity: CRITICAL,HIGH
+        working-directory: ${{ runner.temp }}/digests
+        env:
+          REGISTRY_TAGS: ${{ steps.generate.outputs.REGISTRY_TAGS }}
+        run: |
+          IFS=',' read -ra TAGS <<< "$REGISTRY_TAGS"
+          TAG_ARGS=()
+          for TAG in "${TAGS[@]}"; do
+            TAG_ARGS+=(-t "$TAG")
+          done
+          SOURCES=()
+          for DIGEST in *; do
+            SOURCES+=("ghcr.io/canastawiki/$IMAGE_NAME@sha256:$DIGEST")
+          done
+          docker buildx imagetools create "${TAG_ARGS[@]}" "${SOURCES[@]}"
+          DIGEST=$(docker buildx imagetools inspect --format '{{json .Manifest}}' "${TAGS[0]}" | jq -er .digest)
+          echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
@@ -205,7 +277,6 @@ jobs:
         run: echo ${{ steps.generate.outputs.REGISTRY_TAGS }}
       -
         name: Resolve platform image digests
-        if: env.CAN_PUBLISH == 'true'
         id: platform_digests
         env:
           IMAGE_REF: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}@${{ steps.docker_build.outputs.digest }}
@@ -217,7 +288,6 @@ jobs:
           echo "arm64=$ARM64_DIGEST" >> "$GITHUB_OUTPUT"
       -
         name: Scan amd64 image with Trivy
-        if: env.CAN_PUBLISH == 'true'
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}@${{ steps.platform_digests.outputs.amd64 }}
@@ -228,14 +298,12 @@ jobs:
           severity: CRITICAL,HIGH
       -
         name: Upload amd64 Trivy results to GitHub Security
-        if: env.CAN_PUBLISH == 'true'
         uses: github/codeql-action/upload-sarif@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81 # v4.37.3
         with:
           sarif_file: trivy-results-amd64.sarif
           category: trivy-container-image-amd64
       -
         name: Scan arm64 image with Trivy
-        if: env.CAN_PUBLISH == 'true'
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}@${{ steps.platform_digests.outputs.arm64 }}
@@ -247,7 +315,6 @@ jobs:
           skip-setup-trivy: true
       -
         name: Upload arm64 Trivy results to GitHub Security
-        if: env.CAN_PUBLISH == 'true'
         uses: github/codeql-action/upload-sarif@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81 # v4.37.3
         with:
           sarif_file: trivy-results-arm64.sarif
@@ -291,11 +358,11 @@ jobs:
 
       -
         name: Notify about image tag
-        if: github.event_name == 'pull_request' && env.CAN_PUBLISH == 'true' && steps.docker_build.outputs.digest != ''
+        if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: canasta-image-tag
-          message: ":whale: The image based on [${{ steps.generate.outputs.SHA_SHORT }}](https://github.com/CanastaWiki/Canasta/pull/${{ steps.generate.outputs.REGISTRY_TAGS_PR_NUMBER }}/commits/${{ github.event.pull_request.head.sha }}) commit has been built with `${{ steps.generate.outputs.REGISTRY_TAGS_VERSION }}` tag as [${{ steps.generate.outputs.REGISTRY_TAGS }}](https://github.com/${{ github.repository }}/pkgs/container/${{ env.IMAGE_NAME }}/${{ steps.docker_build.outputs.imageid }}?tag=${{ steps.generate.outputs.REGISTRY_TAGS_VERSION }})"
+          message: ":whale: The image based on [${{ steps.generate.outputs.SHA_SHORT }}](https://github.com/CanastaWiki/Canasta/pull/${{ steps.generate.outputs.REGISTRY_TAGS_PR_NUMBER }}/commits/${{ github.event.pull_request.head.sha }}) commit has been built with `${{ steps.generate.outputs.REGISTRY_TAGS_VERSION }}` tag as [${{ steps.generate.outputs.REGISTRY_TAGS }}](https://github.com/${{ github.repository }}/pkgs/container/${{ env.IMAGE_NAME }}?tag=${{ steps.generate.outputs.REGISTRY_TAGS_VERSION }})"
 
   recover-attestation:
     name: Recover release SBOM attestations
