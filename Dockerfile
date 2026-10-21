@@ -1,4 +1,4 @@
-FROM mirror.gcr.io/library/debian:12.15 AS debian
+FROM mirror.gcr.io/library/debian:13.7 AS debian
 
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
 
@@ -71,7 +71,7 @@ RUN set -x; \
 	php-redis \
 	php-curl \
 	php-zip \
-	php8.2-fpm \
+	php8.4-fpm \
 	php-yaml \
 	php-ldap \
 	php-bcmath \
@@ -90,7 +90,7 @@ RUN set -x; \
     && a2enmod rewrite \
 	# enabling mpm_event and php-fpm
 	&& a2dismod mpm_prefork \
-	&& a2enconf php8.2-fpm \
+	&& a2enconf php8.4-fpm \
 	&& a2enmod mpm_event \
 	&& a2enmod proxy_fcgi \
     # Create directories
@@ -222,11 +222,11 @@ ENV MW_AUTOUPDATE=true \
 COPY _sources/configs/mediawiki.conf /etc/apache2/sites-enabled/
 COPY _sources/configs/writable-dirs.conf /etc/apache2/conf-available/
 COPY _sources/configs/status.conf /etc/apache2/mods-available/
-COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini _sources/configs/php_memory_limit.ini /etc/php/8.2/cli/conf.d/
-COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini _sources/configs/php_memory_limit.ini /etc/php/8.2/fpm/conf.d/
-COPY _sources/configs/php_max_input_vars.ini /etc/php/8.2/fpm/conf.d/
-COPY _sources/configs/php_timeouts.ini /etc/php/8.2/fpm/conf.d/
-COPY _sources/configs/php-fpm-www.conf /etc/php/8.2/fpm/pool.d/www.conf
+COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini _sources/configs/php_memory_limit.ini /etc/php/8.4/cli/conf.d/
+COPY _sources/configs/php_error_reporting.ini _sources/configs/php_upload_max_filesize.ini _sources/configs/php_memory_limit.ini /etc/php/8.4/fpm/conf.d/
+COPY _sources/configs/php_max_input_vars.ini /etc/php/8.4/fpm/conf.d/
+COPY _sources/configs/php_timeouts.ini /etc/php/8.4/fpm/conf.d/
+COPY _sources/configs/php-fpm-www.conf /etc/php/8.4/fpm/pool.d/www.conf
 COPY _sources/scripts/*.sh /
 COPY _sources/scripts/maintenance-scripts/*.sh /maintenance-scripts/
 COPY _sources/scripts/composer-local.php _sources/scripts/createSessionsTable.php _sources/scripts/verify-composer-deps.php $MW_HOME/maintenance/
