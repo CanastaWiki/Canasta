@@ -56,3 +56,4 @@ Canasta version history:
 - 3.5.28 - October 14, 2026 - Update to CanastaBase 1.3.26 (#737); composer dependencies for OAuth, JWTAuth and CheckUser, JWTAuth 2.1.1, archived GoogleAnalyticsMetrics removed (#735)
 - 3.5.29 - October 21, 2026 - Update to CanastaBase 1.3.27 (#743)
 - 3.5.30 - October 25, 2026 - Update to CanastaBase 1.3.28 (#748)
+- 3.5.31 - October 26, 2026 - Update to CanastaBase 1.3.29 (#752)
