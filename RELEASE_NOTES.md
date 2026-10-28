@@ -57,3 +57,4 @@ Canasta version history:
 - 3.5.29 - October 21, 2026 - Update to CanastaBase 1.3.27 (#743)
 - 3.5.30 - October 25, 2026 - Update to CanastaBase 1.3.28 (#748)
 - 3.5.31 - October 26, 2026 - Update to CanastaBase 1.3.29 (#752)
+- 3.5.32 - October 28, 2026 - Update to CanastaBase 1.3.30 (#760); update the Data Transfer and External Data extensions (#758)
