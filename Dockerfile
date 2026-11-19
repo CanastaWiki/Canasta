@@ -1,4 +1,4 @@
-FROM mirror.gcr.io/library/debian:12.8 AS base
+FROM mirror.gcr.io/library/debian:12.15 AS base
 
 LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/CanastaBase
