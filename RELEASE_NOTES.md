@@ -60,3 +60,4 @@ Canasta version history:
 - 3.5.32 - October 28, 2026 - Update to CanastaBase 1.3.30 (#760); update the Data Transfer and External Data extensions (#758)
 - 3.5.33 - November 1, 2026 - Update to CanastaBase 1.3.31 (#766); update the VEForAll extension (#764)
 - 3.5.34 - November 1, 2026 - Update the AdminLinks extension (#770)
+- 3.5.35 - November 20, 2026 - Update to CanastaBase 1.3.32 (#776); update the CheckUser extension (#778)
