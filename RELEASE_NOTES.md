@@ -45,3 +45,4 @@ CanastaBase version history:
 - 1.3.30 - October 28, 2026 - Time-bounded job runner batches via new settings `MW_JOB_RUNNER_MAXTIME` and `MW_JOB_RUNNER_MAXJOBS` (#314)
 - 1.3.31 - November 1, 2026 - Redis main cache via `CANASTA_ENABLE_REDIS` (#320); sessions in their own database table (#320, #323); job runner memory limit on every `runJobs.php` call (#319); Debian security package refresh (#313)
 - 1.3.32 - November 20, 2026 - Update to MediaWiki 1.43.12 (#326); Debian 12.15 with security package refresh (#327)
+- 1.3.33 - November 23, 2026 - Native arm64 image builds (#332); build pipeline fixes (#335, #336)
