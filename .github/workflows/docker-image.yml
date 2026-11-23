@@ -87,6 +87,26 @@ jobs:
         name: Build and push by digest
         id: docker_build
         if: env.CAN_PUBLISH == 'true'
+        continue-on-error: true
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/${{ matrix.arch }}
+          outputs: type=image,name=ghcr.io/canastawiki/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=${{ matrix.arch }}
+          cache-to: type=gha,scope=${{ matrix.arch }},mode=max
+          build-args: |
+            APT_REFRESH=${{ steps.refresh.outputs.APT_REFRESH }}
+      -
+        # Registries rate-limit pulls of the Debian base image with a 429 that
+        # clears within a minute; the retry reuses the layers built so far.
+        name: Wait before retrying the build
+        if: steps.docker_build.outcome == 'failure'
+        run: sleep 60
+      -
+        name: Retry build and push by digest
+        id: docker_build_retry
+        if: steps.docker_build.outcome == 'failure'
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -100,7 +120,7 @@ jobs:
         name: Export digest
         if: env.CAN_PUBLISH == 'true'
         env:
-          DIGEST: ${{ steps.docker_build.outputs.digest }}
+          DIGEST: ${{ steps.docker_build.outputs.digest || steps.docker_build_retry.outputs.digest }}
         run: |
           mkdir -p "$RUNNER_TEMP/digests"
           touch "$RUNNER_TEMP/digests/${DIGEST#sha256:}"
@@ -115,7 +135,25 @@ jobs:
           retention-days: 1
       -
         name: Build image locally for scanning
+        id: scan_build
         if: env.CAN_PUBLISH != 'true'
+        continue-on-error: true
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/${{ matrix.arch }}
+          load: true
+          cache-from: type=gha,scope=${{ matrix.arch }}
+          build-args: |
+            APT_REFRESH=${{ steps.refresh.outputs.APT_REFRESH }}
+          tags: ${{ env.IMAGE_NAME }}:pr-scan
+      -
+        name: Wait before retrying the scan build
+        if: steps.scan_build.outcome == 'failure'
+        run: sleep 60
+      -
+        name: Retry build image locally for scanning
+        if: steps.scan_build.outcome == 'failure'
         uses: docker/build-push-action@v6
         with:
           context: .
