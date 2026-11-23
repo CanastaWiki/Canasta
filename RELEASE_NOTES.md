@@ -61,3 +61,4 @@ Canasta version history:
 - 3.5.33 - November 1, 2026 - Update to CanastaBase 1.3.31 (#766); update the VEForAll extension (#764)
 - 3.5.34 - November 1, 2026 - Update the AdminLinks extension (#770)
 - 3.5.35 - November 20, 2026 - Update to CanastaBase 1.3.32 (#776); update the CheckUser extension (#778)
+- 3.5.36 - November 23, 2026 - Update to CanastaBase 1.3.33 (#788); update the Semantic MediaWiki, EditAccount and MobileFrontend extensions (#786)
