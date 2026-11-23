@@ -1,4 +1,4 @@
-FROM mirror.gcr.io/library/debian:12.15 AS base
+FROM mirror.gcr.io/library/debian:12.15 AS debian
 
 LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/CanastaBase
@@ -20,6 +20,8 @@ ENV MW_VERSION=${MW_VERSION} \
 
 LABEL wiki.canasta.mediawiki.version="$MW_CORE_VERSION" \
       wiki.canasta.mediawiki.branch="$MW_VERSION"
+
+FROM debian AS base
 
 # Cache-bust the package-refresh layer below so a rebuild actually pulls current
 # Debian security updates instead of reusing a stale cached apt layer. CI passes a
@@ -115,7 +117,17 @@ RUN set -x; \
 	&& rm /tmp/composer-setup.php \
 	&& composer self-update --2
 
-FROM base AS source
+# Built from debian rather than base so the package refresh does not
+# invalidate the MediaWiki clone: only files are copied out of this stage, so
+# its own packages never reach the image.
+FROM debian AS source
+
+# hadolint ignore=DL3008
+RUN set -x; \
+	apt-get update \
+	&& apt-get install -y --no-install-recommends git ca-certificates \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& mkdir -p "$MW_HOME" "$MW_ORIGIN_FILES"
 
 # MediaWiki core
 # The submodules come from Gerrit, which refuses requests carrying git's
