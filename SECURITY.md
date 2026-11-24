@@ -22,7 +22,7 @@ This policy covers both images built from this repository, `canasta-base` and `c
 - The startup, maintenance, and helper scripts in `_sources/scripts`
 - The Apache, PHP, and PHP-FPM configuration in `_sources/configs`
 - How the images install and lay out MediaWiki core, extensions, and skins
-- The selection and pinned versions of the extensions and skins in `canasta/contents.yaml`
+- The selection and pinned versions of the extensions and skins in `extended/contents.yaml`
 
 Report these elsewhere:
 - Vulnerabilities in MediaWiki core or Wikimedia-maintained extensions and skins: https://www.mediawiki.org/wiki/Reporting_security_bugs

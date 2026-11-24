@@ -6,7 +6,7 @@ FROM ${BASE_IMAGE} AS base
 LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
 
-COPY canasta/contents.yaml /tmp/
+COPY extended/contents.yaml /tmp/
 RUN php /tmp/extensions-skins.php "/tmp/contents.yaml"
 COPY VERSION /tmp/
 RUN printf '%s\n%s\n' '[https://canasta.wiki/ Canasta]' "$(cat /tmp/VERSION)" > /tmp/canasta-version && rm /tmp/VERSION

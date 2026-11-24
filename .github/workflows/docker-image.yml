@@ -30,7 +30,7 @@ jobs:
       contents: read
     strategy:
       matrix:
-        dockerfile: [Dockerfile, canasta/Dockerfile]
+        dockerfile: [Dockerfile, extended/Dockerfile]
     steps:
       - uses: actions/checkout@v4
       -
@@ -133,7 +133,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: canasta/Dockerfile
+          file: extended/Dockerfile
           platforms: linux/${{ matrix.arch }}
           outputs: type=image,name=ghcr.io/canastawiki/canasta,push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha,scope=canasta-${{ matrix.arch }}
@@ -215,7 +215,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: canasta/Dockerfile
+          file: extended/Dockerfile
           platforms: linux/${{ matrix.arch }}
           load: true
           cache-from: type=gha,scope=canasta-${{ matrix.arch }}
