@@ -6,8 +6,8 @@
  * different executables for different architectures.
  *
  * Given that the YAML parsing is already in PHP, we do all the rest of the
- * installation in PHP too: Git download, Composer updates, etc. - it seems
- * easier to do everything in one spot.
+ * installation in PHP too: Git download, Composer updates, applying patches,
+ * etc. - it seems easier to do everything in one spot.
  */
 
 $MW_HOME = getenv("MW_HOME");
@@ -35,14 +35,10 @@ foreach (['extensions', 'skins'] as $type) {
             continue;
         }
 
-        if (array_key_exists('patches', $data)) {
-            fwrite(STDERR, "ERROR: $type/$name sets 'patches:', which is no longer supported. Pin a commit that contains the fix instead. Aborting the build.\n");
-            exit(1);
-        }
-
         $repository = $data['repository'] ?? null;
         $commit = $data['commit'] ?? null;
         $branch = $data['branch'] ?? null;
+        $patches = $data['patches'] ?? null;
         $persistentDirectories = $data['persistent directories'] ?? null;
         $additionalSteps = $data['additional steps'] ?? null;
         $bundled = $data['bundled'] ?? false;
@@ -88,6 +84,17 @@ foreach (['extensions', 'skins'] as $type) {
             if ($checkoutReturnCode !== 0) {
                 fwrite(STDERR, "ERROR: git checkout $commit failed for $type/$name (exit $checkoutReturnCode); the pinned commit may be unreachable. Aborting the build.\n");
                 exit($checkoutReturnCode);
+            }
+        }
+
+        if ($patches !== null) {
+            foreach ($patches as $patch) {
+                $gitApplyCmd = "cd $MW_HOME/canasta-$type/$name && git apply /tmp/$patch";
+                exec($gitApplyCmd, $applyOutput, $applyReturnCode);
+                if ($applyReturnCode !== 0) {
+                    fwrite(STDERR, "ERROR: git apply /tmp/$patch failed for $type/$name (exit $applyReturnCode); the extension would ship unpatched. Aborting the build.\n");
+                    exit($applyReturnCode);
+                }
             }
         }
 
