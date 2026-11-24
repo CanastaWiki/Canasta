@@ -6,8 +6,6 @@ FROM ${BASE_IMAGE} AS base
 LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
 
-# Uncomment this if there are any skin or extension patches
-COPY canasta/patches/* /tmp/
 COPY canasta/contents.yaml /tmp/
 RUN php /tmp/extensions-skins.php "/tmp/contents.yaml"
 COPY VERSION /tmp/
