@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: rescan-published-canasta-images
+  group: rescan-published-images
   cancel-in-progress: false
 
 permissions:
@@ -15,15 +15,24 @@ permissions:
   packages: read
 
 env:
-  IMAGE: ghcr.io/canastawiki/canasta
   ISSUE_LABEL: automated
-  ISSUE_TITLE: Scheduled Canasta image vulnerability scan
 
 jobs:
   scan:
-    name: Scan published tags
+    name: Scan published ${{ matrix.image }} tags
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: canasta-base
+            issue_title: Scheduled CanastaBase image vulnerability scan
+          - image: canasta
+            issue_title: Scheduled Canasta image vulnerability scan
+    env:
+      IMAGE: ghcr.io/canastawiki/${{ matrix.image }}
+      ISSUE_TITLE: ${{ matrix.issue_title }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
