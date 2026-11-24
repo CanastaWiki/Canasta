@@ -9,6 +9,8 @@ on:
     # Only activate for `master` branch
     branches:
       - master
+      # MediaWiki 1.47 development; publishes the mw-1.47 tag, never latest
+      - mw-1.47
 
   # Plus for any pull-requests
   pull_request:

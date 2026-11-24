@@ -2,8 +2,8 @@ FROM mirror.gcr.io/library/debian:13.7 AS debian
 
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
 
-ARG MW_VERSION=REL1_43
-ARG MW_CORE_VERSION=1.43.12
+ARG MW_VERSION=REL1_47
+ARG MW_CORE_VERSION=1.47.0-rc.1
 
 ENV MW_VERSION=${MW_VERSION} \
 	MW_CORE_VERSION=${MW_CORE_VERSION} \
