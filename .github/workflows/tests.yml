@@ -1,0 +1,86 @@
+---
+name: Tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  sast:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    env:
+      # Fork PRs get a read-only token: scan, but upload nothing.
+      CAN_PUBLISH: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Run Semgrep for PHP
+        run: |
+          python -m venv .semgrep
+          .semgrep/bin/pip install semgrep==1.170.1
+          .semgrep/bin/semgrep scan --config p/php --include '*.php' --sarif --output semgrep.sarif _sources
+
+      - name: Upload Semgrep results to GitHub Security
+        if: env.CAN_PUBLISH == 'true'
+        uses: github/codeql-action/upload-sarif@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81 # v4.37.3
+        with:
+          sarif_file: semgrep.sarif
+          category: semgrep-php
+
+      - name: Run Semgrep for shell
+        run: .semgrep/bin/semgrep scan --config p/security-audit --include '*.sh' --exclude '**/wait-for-it.sh' --sarif --output semgrep-shell.sarif _sources
+
+      - name: Upload shell Semgrep results to GitHub Security
+        if: env.CAN_PUBLISH == 'true'
+        uses: github/codeql-action/upload-sarif@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81 # v4.37.3
+        with:
+          sarif_file: semgrep-shell.sarif
+          category: semgrep-shell
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@00cae500b08a931fb5698e11e79bfbd38e612a38 # 2.0.0
+        env:
+          SHELLCHECK_OPTS: --shell=bash
+        with:
+          check_together: true
+          ignore_names: wait-for-it.sh
+          scandir: _sources
+          severity: error
+          version: v0.10.0
+
+  unit:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install test dependencies
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install -r requirements-test.txt
+
+      # The CanastaFarm404.php tests render the page through php and skip
+      # when it is absent, so fail here rather than skipping silently.
+      - name: Check for php
+        run: php --version
+
+      - name: Run tests
+        run: .venv/bin/pytest tests/ -v

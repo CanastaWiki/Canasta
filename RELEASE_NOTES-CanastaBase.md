@@ -1,0 +1,48 @@
+CanastaBase version history:
+
+- 1.0.0 - June 18, 2025 - Initial version. Based on version 2.0.1 of Canasta, but with the following changes: MediaWiki upgraded to 1.43.0; extension and skin download and handling removed; Postfix added; Debian upgraded to 12.8; USE_EXTERNAL_DB handling fixed; MW_VOLUME mountpoint check removed
+- 1.0.1 - June 30, 2025 - Upgrade to MediaWiki 1.43.2
+- 1.0.2 - July 1, 2025 - Upgrade to MediaWiki 1.43.3
+- 1.0.3 - September 3, 2025 - Fixes for the creation of extension/skin symlinks; removed the setting of $wgJobRunRate to 0; added 404 response for nonexistent URLs; renamed mail variables for consistency; added X-Forwarded-For information to log files
+- 1.0.4 - October 3, 2025 - Upgrade to MediaWiki 1.43.4
+- 1.0.5 - October 8, 2025 - Upgrade to MediaWiki 1.43.5
+- 1.0.6 - November 27, 2025 - Added OCI labels exposing the bundled MediaWiki version and branch for easier image introspection
+- 1.0.7 - December 16, 2025 - Upgrade to MediaWiki 1.43.6
+- 1.0.8 - February 2, 2026 - Changed to new configuration directory structure; added MW_SECRET_KEY and DISABLE_DIRECTORY_MONITOR environment variables; fixes for extension and skin symlink generation; fixed job runner in non-farm mode; fixed handling of DB access in wait-for-it.sh; fixed handling of non-standard web server port; added php8.1-bcmath extension
+- 1.1.0 - February 10, 2026 - Upgraded PHP version from 8.1 to 8.2, enabling the use of LuaSandbox for Scribunto; added public_assets/ directory for publicly accessible wiki files; moved Vector skin loading out of CanastaDefaultSettings.php; fixed MediaWiki purging to also purge Varnish cache; fixed running of maintenance scripts for wiki farm setup; added gitinfo.json files to restore correct Special:Version display, after removal of .git directories; changed health check to access /server-status instead of MediaWiki API
+- 1.2.0 - February 18, 2026 - Replaced individual Composer installs with a single install (via composer.local.json) for all relevant extensions and skins; moved sitemap storage to public_assets/ directory; removed CanastaUtils.php; removed generated installedExtensions.txt and installedSkins.txt files; removed automatic call to Semantic MediaWiki's rebuildData.php; re-added warning if $wgSMTP is not set; fix for $wgMetaNamespace for wiki names containing spaces; permission fix for writing to log
+- 1.2.1 - February 24, 2026 - Moved .composer-deps-hash and .smw.json to config/persistent/ directory
+- 1.3.0 - March 1, 2026 - Removed Postfix; added YAML settings file loading for extensions/skins; added styled 404 page and optional wiki directory for wiki farms; derived $wgServer scheme from MW_SITE_SERVER instead of hardcoding HTTPS; added default MediaWiki error logging and log rotation
+- 1.3.1 - March 1, 2026 - Show distribution version on Special:Version via SoftwareInfo hook
+- 1.3.2 - March 22, 2026 - Removed default.vcl (now managed by CLI installation template); switched FarmConfigLoader from PECL yaml to Symfony YAML parser; fixed composer hash check to account for require and repositories sections; skip Varnish CDN settings when CANASTA_ENABLE_VARNISH is explicitly disabled (backward compatible: Varnish remains enabled by default)
+- 1.3.3 - April 7, 2026 - Upgrade to MediaWiki 1.43.8; GitHub actions upgrades
+- 1.3.4 - April 10, 2026 - Removed canasta_img.php in favor of upstream img_auth.php; removed public_assets.php so files are served directly from the filesystem; fixed composer hash mismatch and sourced-entry-point bugs at container startup; added opt-in CANASTA_ENABLE_VERY_SHORT_URLS env variable for root-relative short URLs
+- 1.3.5 - April 15, 2026 - Fixed img_auth.php and rest.php for private wiki farms with sub-path wikis; subdirectory .htaccess no longer prefixes passthrough rules with wiki path and uses [END] flag to prevent catch-all re-entry
+- 1.3.6 - April 16, 2026 - Fixed .htaccess to route sub-path wiki entry points (load.php, api.php, rest.php, index.php, img_auth.php) to the real PHP files instead of falling through to the catch-all rewrite; fixes broken skin rendering and API access on wiki farms with sub-path wikis
+- 1.3.7 - April 20, 2026 - Added external database support: $wgDBserver, $wgDBuser, and $wgDBpassword now read from MYSQL_HOST, MYSQL_USER, and MYSQL_PASSWORD environment variables; non-standard database ports are appended to $wgDBserver as host:port; version tag publishing workflow now only fires on VERSION changes, making the published tag immutable
+- 1.3.8 - June 7, 2026 - Added Ghostscript and Xpdfutils to support PDF rendering and thumbnailing
+- 1.3.9 - June 8, 2026 - Removed (unnecessary) addition of Xpdfutils
+- 1.3.10 - June 29, 2026 - Upgrade to MediaWiki 1.43.9 (security release); MW_VERSION and MW_CORE_VERSION are now build-time ARGs (overridable with docker build --build-arg) so a non-default MediaWiki version or branch can be built without editing the Dockerfile (#185); wait for LocalSettings.php with an external database to prevent startup exit 123 (#176); guard PHP-FPM log directory setup against an unset PHP_LOG_DIR (#177); detect host-side directory events without the inotify ISDIR flag so host-added extensions and skins are picked up (#179); heal config/persistent ownership before run_autoupdate (#180); guard canastaLoadConfigYaml against a null $wgSettings (#181)
+- 1.3.11 - June 30, 2026 - Fail the image build when the unified Composer update fails to resolve or leaves a bundled extension's dependencies uninstalled, instead of silently shipping an image with an incomplete vendor/; added a build-time dependency self-test that aborts the build if any merged-in extension's required package is missing from vendor/ (#187)
+- 1.3.12 - July 1, 2026 - Fail the image build if there are Git errors during extension and skin setup (#190)
+- 1.3.13 - July 2, 2026 - Idempotent Apache/.htaccess generation (#197); fail the build on Composer and Git errors (#195); maintenance-script fixes (#194); Dockerfile hardening (#198)
+- 1.3.14 - July 2, 2026 - Fix public_assets file serving (logo, favicon) for wikis.yaml with indented entries (#202)
+- 1.3.15 - July 23, 2026 - Rebuild with current Debian 12 packages to remediate fixable HIGH/CRITICAL vulnerabilities in the 1.3.14 image (#208)
+- 1.3.16 - July 25, 2026 - Removed the unused MediaWiki web installer (mw-config) from the image (#213)
+- 1.3.17 - July 27, 2026 - Apt-layer cache-bust (#217); Debian security package refresh (#208); version-tag-only image rescan (#219)
+- 1.3.18 - July 27, 2026 - robots.txt User-agent line and load.php allow restored (#224); scan tracker per cycle (#222)
+- 1.3.19 - August 1, 2026 - /server-status served to loopback over IPv6; healthcheck addresses it numerically (#227)
+- 1.3.20 - August 24, 2026 - Wiki directory logos on private wikis (#231); Debian security package refresh (#229); upstream composer pin patching removed (#233)
+- 1.3.21 - September 24, 2026 - Debian security update and other package updates
+- 1.3.22 - September 28, 2026 - No PHP in web-writable dirs (#239); `exec` logging (#240); code and `config/` read-only to web user (#242)
+- 1.3.23 - October 2, 2026 - Upgrade to MediaWiki 1.43.10 (#246); Debian security package refresh (#229)
+- 1.3.24 - October 5, 2026 - Upgrade to MediaWiki 1.43.11 (#251); Debian security package refresh (#249)
+- 1.3.25 - October 12, 2026 - Per-host `/sitemap.xml` index (#275); per-wiki farm startup settings (#261); persistent update fingerprints (#271); startup update continuing past failures (#273), running once and honoring `MW_AUTOUPDATE=false` (#280), skipping uninstalled wikis (#281); stale `robots.txt`, sitemap and farm pages in Varnish (#279); Debian security package refresh (#256)
+- 1.3.26 - October 14, 2026 - Bundled composer list moved into the image, `config/composer.local.json` holding operator additions only, failed startup composer updates recorded (#286)
+- 1.3.27 - October 21, 2026 - PHP 8.2.35 security update via Debian security package refresh (#293); graceful Apache stop (#290); Gerrit submodule user agent (#292)
+- 1.3.28 - October 25, 2026 - Maintenance scripts' `--wiki` server and path (#301); configurable sitemap URL path and identifier (#302); Debian security package refresh (#298)
+- 1.3.29 - October 26, 2026 - Path wiki sitemap URLs (#306); Debian security package refresh (#307)
+- 1.3.30 - October 28, 2026 - Time-bounded job runner batches via new settings `MW_JOB_RUNNER_MAXTIME` and `MW_JOB_RUNNER_MAXJOBS` (#314)
+- 1.3.31 - November 1, 2026 - Redis main cache via `CANASTA_ENABLE_REDIS` (#320); sessions in their own database table (#320, #323); job runner memory limit on every `runJobs.php` call (#319); Debian security package refresh (#313)
+- 1.3.32 - November 20, 2026 - Update to MediaWiki 1.43.12 (#326); Debian 12.15 with security package refresh (#327)
+- 1.3.33 - November 23, 2026 - Native arm64 image builds (#332); build pipeline fixes (#335, #336)
