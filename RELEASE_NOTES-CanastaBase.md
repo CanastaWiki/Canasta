@@ -1,4 +1,4 @@
-CanastaBase version history:
+CanastaBase version history, through 1.3.33. From 3.6.0 on, `canasta-base` shares Canasta's version number and its release notes are in `RELEASE_NOTES.md`.
 
 - 1.0.0 - June 18, 2025 - Initial version. Based on version 2.0.1 of Canasta, but with the following changes: MediaWiki upgraded to 1.43.0; extension and skin download and handling removed; Postfix added; Debian upgraded to 12.8; USE_EXTERNAL_DB handling fixed; MW_VOLUME mountpoint check removed
 - 1.0.1 - June 30, 2025 - Upgrade to MediaWiki 1.43.2
