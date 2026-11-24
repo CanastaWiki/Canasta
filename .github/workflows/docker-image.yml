@@ -21,14 +21,32 @@ on:
         required: false
         type: string
 
-env:
-  IMAGE_NAME: canasta
-
 jobs:
-  # Build each platform on a runner of that architecture and push it by digest;
-  # the push job below joins the digests into one multi-platform tag.
+  # Lint both Dockerfiles with hadolint.
+  lint:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        dockerfile: [Dockerfile, canasta/Dockerfile]
+    steps:
+      - uses: actions/checkout@v4
+      -
+        name: Run linter (hadolint)
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ${{ matrix.dockerfile }}
+          config: "hadolint.yaml"
+
+  # Build each platform on a runner of that architecture: first canasta-base
+  # from the top-level Dockerfile, then canasta on top of the canasta-base this job just built.
+  # Each image is pushed by digest; the push job below joins the digests into
+  # one multi-platform tag per image.
   build:
-    if: github.event_name == 'push' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.version == '')
+    needs: [lint]
+    if: always() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && (github.event_name == 'push' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.version == ''))
     strategy:
       matrix:
         include:
@@ -47,6 +65,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       -
+        # Passed to the base build as APT_REFRESH so the apt-upgrade layer's
+        # cache key changes daily and with each version; otherwise a rebuild
+        # reuses a stale cached layer, and a release built after the day's
+        # first build ships the packages that build cached.
+        name: Set package refresh key
+        id: refresh
+        run: echo "APT_REFRESH=$(date +%Y%m%d)-$(cat VERSION)" >> "$GITHUB_OUTPUT"
+      -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       -
@@ -58,61 +84,175 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       -
-        name: Build and push by digest
-        id: docker_build
+        name: Build and push canasta-base by digest
+        id: base_build
         if: env.CAN_PUBLISH == 'true'
+        continue-on-error: true
         uses: docker/build-push-action@v6
         with:
           context: .
           platforms: linux/${{ matrix.arch }}
-          outputs: type=image,name=ghcr.io/canastawiki/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=gha,scope=${{ matrix.arch }}
-          cache-to: type=gha,scope=${{ matrix.arch }},mode=max
+          outputs: type=image,name=ghcr.io/canastawiki/canasta-base,push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=base-${{ matrix.arch }}
+          cache-to: type=gha,scope=base-${{ matrix.arch }},mode=max
+          build-args: |
+            APT_REFRESH=${{ steps.refresh.outputs.APT_REFRESH }}
       -
-        name: Export digest
+        # Registries rate-limit pulls of the Debian base image with a 429 that
+        # clears within a minute; the retry reuses the layers built so far.
+        name: Wait before retrying the canasta-base build
+        if: steps.base_build.outcome == 'failure'
+        run: sleep 60
+      -
+        name: Retry build and push canasta-base by digest
+        id: base_build_retry
+        if: steps.base_build.outcome == 'failure'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/${{ matrix.arch }}
+          outputs: type=image,name=ghcr.io/canastawiki/canasta-base,push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=base-${{ matrix.arch }}
+          cache-to: type=gha,scope=base-${{ matrix.arch }},mode=max
+          build-args: |
+            APT_REFRESH=${{ steps.refresh.outputs.APT_REFRESH }}
+      -
+        name: Record canasta-base digest
+        id: base_digest
         if: env.CAN_PUBLISH == 'true'
         env:
-          DIGEST: ${{ steps.docker_build.outputs.digest }}
+          DIGEST: ${{ steps.base_build.outputs.digest || steps.base_build_retry.outputs.digest }}
         run: |
-          mkdir -p "$RUNNER_TEMP/digests"
-          touch "$RUNNER_TEMP/digests/${DIGEST#sha256:}"
+          mkdir -p "$RUNNER_TEMP/digests-canasta-base"
+          touch "$RUNNER_TEMP/digests-canasta-base/${DIGEST#sha256:}"
+          echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
       -
-        name: Upload digest
+        name: Build and push canasta by digest
+        id: canasta_build
+        if: env.CAN_PUBLISH == 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: canasta/Dockerfile
+          platforms: linux/${{ matrix.arch }}
+          outputs: type=image,name=ghcr.io/canastawiki/canasta,push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=canasta-${{ matrix.arch }}
+          cache-to: type=gha,scope=canasta-${{ matrix.arch }},mode=max
+          build-args: |
+            BASE_IMAGE=ghcr.io/canastawiki/canasta-base@${{ steps.base_digest.outputs.digest }}
+      -
+        name: Record canasta digest
+        if: env.CAN_PUBLISH == 'true'
+        env:
+          DIGEST: ${{ steps.canasta_build.outputs.digest }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/digests-canasta"
+          touch "$RUNNER_TEMP/digests-canasta/${DIGEST#sha256:}"
+      -
+        name: Upload canasta-base digest
         if: env.CAN_PUBLISH == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: digests-${{ matrix.arch }}
-          path: ${{ runner.temp }}/digests/*
+          name: digests-${{ matrix.arch }}-canasta-base
+          path: ${{ runner.temp }}/digests-canasta-base/*
           if-no-files-found: error
           retention-days: 1
       -
-        name: Build image locally for scanning
+        name: Upload canasta digest
+        if: env.CAN_PUBLISH == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ matrix.arch }}-canasta
+          path: ${{ runner.temp }}/digests-canasta/*
+          if-no-files-found: error
+          retention-days: 1
+      -
+        name: Build canasta-base locally for scanning
+        id: base_scan_build
         if: env.CAN_PUBLISH != 'true'
+        continue-on-error: true
         uses: docker/build-push-action@v6
         with:
           context: .
           platforms: linux/${{ matrix.arch }}
           load: true
-          cache-from: type=gha,scope=${{ matrix.arch }}
-          tags: ${{ env.IMAGE_NAME }}:pr-scan
+          cache-from: type=gha,scope=base-${{ matrix.arch }}
+          build-args: |
+            APT_REFRESH=${{ steps.refresh.outputs.APT_REFRESH }}
+          tags: canasta-base:pr-scan
       -
-        name: Scan local image with Trivy
+        name: Wait before retrying the canasta-base scan build
+        if: steps.base_scan_build.outcome == 'failure'
+        run: sleep 60
+      -
+        name: Retry build canasta-base locally for scanning
+        if: steps.base_scan_build.outcome == 'failure'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/${{ matrix.arch }}
+          load: true
+          cache-from: type=gha,scope=base-${{ matrix.arch }}
+          build-args: |
+            APT_REFRESH=${{ steps.refresh.outputs.APT_REFRESH }}
+          tags: canasta-base:pr-scan
+      -
+        name: Scan local canasta-base with Trivy
         if: env.CAN_PUBLISH != 'true'
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
-          image-ref: ${{ env.IMAGE_NAME }}:pr-scan
+          image-ref: canasta-base:pr-scan
           format: table
           ignore-unfixed: true
           severity: CRITICAL,HIGH
+      -
+        # A fork PR can't push the canasta-base it built, and the builder can't
+        # read images loaded into the local Docker daemon, so canasta builds on
+        # the published canasta-base. Changes to canasta-base are covered by the
+        # canasta-base scan above.
+        name: Build canasta locally for scanning
+        if: env.CAN_PUBLISH != 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: canasta/Dockerfile
+          platforms: linux/${{ matrix.arch }}
+          load: true
+          cache-from: type=gha,scope=canasta-${{ matrix.arch }}
+          build-args: |
+            BASE_IMAGE=ghcr.io/canastawiki/canasta-base:latest
+          tags: canasta:pr-scan
+      -
+        name: Scan local canasta with Trivy
+        if: env.CAN_PUBLISH != 'true'
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: canasta:pr-scan
+          format: table
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+          skip-setup-trivy: true
 
-  # Push image to GitHub Packages.
-  # The image tag pattern is:
+  # Push the images to GitHub Packages, one matrix leg per image. Both images
+  # get the same tags:
   # for pull-requests: <MW_VERSION>-<DATE>-<PR_NUMBER>, eg: 1.43.1-20260224-25
   # for `master` branch: latest + <MW_MAJOR>-latest + <MW_VERSION>-latest + <MW_VERSION>-<DATE>-<SHA>
   #   (plus <CANASTA_VERSION> when VERSION file changes)
+  # <MW_VERSION> being parsed from Dockerfile
   push:
     needs: [build]
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || (github.event_name == 'workflow_dispatch' && inputs.version == '')
+    if: always() && needs.build.result == 'success' && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || (github.event_name == 'workflow_dispatch' && inputs.version == ''))
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # The canasta legs keep the code-scanning categories the canasta
+          # image used before canasta-base was built here, so its existing
+          # alerts stay matched.
+          - image: canasta-base
+            sarif_category: trivy-canasta-base-image
+          - image: canasta
+            sarif_category: trivy-container-image
     runs-on: ubuntu-latest
     permissions:
       artifact-metadata: write
@@ -122,6 +262,8 @@ jobs:
       packages: write
       pull-requests: write
       security-events: write
+    env:
+      IMAGE_NAME: ${{ matrix.image }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -132,19 +274,6 @@ jobs:
           # unreachable, which silently suppresses the immutable Canasta version
           # tag when the bump is not the tip commit of a multi-commit push.
           fetch-depth: 0
-      -
-        name: Install regctl
-        uses: regclient/actions/regctl-installer@v0.1
-      -
-        name: Extract MW_VERSION from CanastaBase labels
-        id: extract_mw
-        run: |
-          set -euo pipefail
-          BASE_IMAGE=$(awk -F'=' '/^ARG BASE_IMAGE=/ {print $2}' Dockerfile)
-          MW_VERSION=$(regctl image config "$BASE_IMAGE" | jq -r '.config.Labels["wiki.canasta.mediawiki.version"]')
-          echo "MW_VERSION=$MW_VERSION"
-          echo "MW_VERSION=$MW_VERSION" >> $GITHUB_ENV
-
       -
         name: Generate tags
         id: generate
@@ -161,7 +290,9 @@ jobs:
           # Date
           BDATE=$(date +%Y%m%d)
 
-          MEDIAWIKI_VERSION=${{ env.MW_VERSION }}
+          # Extract MW version from the MW_CORE_VERSION default in Dockerfile
+          # (matches whether it is declared via ARG or ENV; ignores any prefix and trailing chars)
+          MEDIAWIKI_VERSION=$(sed -nr 's/.*MW_CORE_VERSION=([0-9]+\.[0-9]+\.[0-9]+).*/\1/p' Dockerfile | head -n1)
           # Extract MW major version (like 1.43)
           MEDIAWIKI_MAJOR_VERSION=${MEDIAWIKI_VERSION%.*}
 
@@ -191,7 +322,7 @@ jobs:
           # For master branch also supply extra tags: <MW_MAJOR>-latest, <MW_VERSION>-latest, <MW_VERSION>-<DATE>-<SHA>
           [ "$VERSION" == "latest" ] && REGISTRY_TAGS=$REGISTRY_TAGS,$IMAGE_ID:$MEDIAWIKI_MAJOR_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-latest,$IMAGE_ID:$MEDIAWIKI_VERSION-$BDATE-$(git rev-parse --short HEAD)
 
-          # Publish the immutable Canasta version tag (e.g., 3.2.1) only when
+          # Publish the immutable Canasta version tag (e.g., 3.6.0) only when
           # VERSION file changed anywhere in this push, so the tag is set once per
           # release even when the bump is not the tip commit of a multi-commit push.
           # Diff the whole pushed range (before..HEAD); fall back to HEAD~1 when the
@@ -236,7 +367,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ${{ runner.temp }}/digests
-          pattern: digests-*
+          pattern: digests-*-${{ matrix.image }}
           merge-multiple: true
       -
         name: Set up Docker Buildx
@@ -301,7 +432,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81 # v4.37.3
         with:
           sarif_file: trivy-results-amd64.sarif
-          category: trivy-container-image-amd64
+          category: ${{ matrix.sarif_category }}-amd64
       -
         name: Scan arm64 image with Trivy
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
@@ -318,7 +449,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81 # v4.37.3
         with:
           sarif_file: trivy-results-arm64.sarif
-          category: trivy-container-image-arm64
+          category: ${{ matrix.sarif_category }}-arm64
       -
         name: Generate amd64 CycloneDX SBOM
         if: steps.generate.outputs.IS_RELEASE == 'true'
@@ -326,7 +457,7 @@ jobs:
         with:
           image-ref: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}@${{ steps.platform_digests.outputs.amd64 }}
           format: cyclonedx
-          output: canasta-${{ steps.generate.outputs.CANASTA_VERSION }}-amd64.cdx.json
+          output: ${{ env.IMAGE_NAME }}-${{ steps.generate.outputs.CANASTA_VERSION }}-amd64.cdx.json
           skip-setup-trivy: true
       -
         name: Generate arm64 CycloneDX SBOM
@@ -335,7 +466,7 @@ jobs:
         with:
           image-ref: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}@${{ steps.platform_digests.outputs.arm64 }}
           format: cyclonedx
-          output: canasta-${{ steps.generate.outputs.CANASTA_VERSION }}-arm64.cdx.json
+          output: ${{ env.IMAGE_NAME }}-${{ steps.generate.outputs.CANASTA_VERSION }}-arm64.cdx.json
           skip-setup-trivy: true
       -
         name: Attest amd64 release SBOM
@@ -344,7 +475,7 @@ jobs:
         with:
           subject-name: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}
           subject-digest: ${{ steps.platform_digests.outputs.amd64 }}
-          sbom-path: canasta-${{ steps.generate.outputs.CANASTA_VERSION }}-amd64.cdx.json
+          sbom-path: ${{ env.IMAGE_NAME }}-${{ steps.generate.outputs.CANASTA_VERSION }}-amd64.cdx.json
           push-to-registry: true
       -
         name: Attest arm64 release SBOM
@@ -353,7 +484,7 @@ jobs:
         with:
           subject-name: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}
           subject-digest: ${{ steps.platform_digests.outputs.arm64 }}
-          sbom-path: canasta-${{ steps.generate.outputs.CANASTA_VERSION }}-arm64.cdx.json
+          sbom-path: ${{ env.IMAGE_NAME }}-${{ steps.generate.outputs.CANASTA_VERSION }}-arm64.cdx.json
           push-to-registry: true
 
       -
@@ -361,18 +492,24 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          header: canasta-image-tag
-          message: ":whale: The image based on [${{ steps.generate.outputs.SHA_SHORT }}](https://github.com/CanastaWiki/Canasta/pull/${{ steps.generate.outputs.REGISTRY_TAGS_PR_NUMBER }}/commits/${{ github.event.pull_request.head.sha }}) commit has been built with `${{ steps.generate.outputs.REGISTRY_TAGS_VERSION }}` tag as [${{ steps.generate.outputs.REGISTRY_TAGS }}](https://github.com/${{ github.repository }}/pkgs/container/${{ env.IMAGE_NAME }}?tag=${{ steps.generate.outputs.REGISTRY_TAGS_VERSION }})"
+          header: ${{ env.IMAGE_NAME }}-image-tag
+          message: ":whale: The `${{ env.IMAGE_NAME }}` image based on [${{ steps.generate.outputs.SHA_SHORT }}](https://github.com/CanastaWiki/Canasta/pull/${{ steps.generate.outputs.REGISTRY_TAGS_PR_NUMBER }}/commits/${{ github.event.pull_request.head.sha }}) commit has been built with `${{ steps.generate.outputs.REGISTRY_TAGS_VERSION }}` tag as [${{ steps.generate.outputs.REGISTRY_TAGS }}](https://github.com/${{ github.repository }}/pkgs/container/${{ env.IMAGE_NAME }}?tag=${{ steps.generate.outputs.REGISTRY_TAGS_VERSION }})"
 
   recover-attestation:
     name: Recover release SBOM attestations
     if: github.event_name == 'workflow_dispatch' && inputs.version != ''
+    strategy:
+      fail-fast: false
+      matrix:
+        image: [canasta-base, canasta]
     runs-on: ubuntu-latest
     permissions:
       attestations: write
       contents: read
       id-token: write
       packages: write
+    env:
+      IMAGE_NAME: ${{ matrix.image }}
     steps:
       - name: Validate version
         id: recovery
@@ -405,25 +542,25 @@ jobs:
         with:
           image-ref: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}@${{ steps.platform_digests.outputs.amd64 }}
           format: cyclonedx
-          output: canasta-${{ steps.recovery.outputs.version }}-amd64.cdx.json
+          output: ${{ env.IMAGE_NAME }}-${{ steps.recovery.outputs.version }}-amd64.cdx.json
       - name: Generate arm64 CycloneDX SBOM
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}@${{ steps.platform_digests.outputs.arm64 }}
           format: cyclonedx
-          output: canasta-${{ steps.recovery.outputs.version }}-arm64.cdx.json
+          output: ${{ env.IMAGE_NAME }}-${{ steps.recovery.outputs.version }}-arm64.cdx.json
           skip-setup-trivy: true
       - name: Attest amd64 release SBOM
         uses: actions/attest-sbom@c604332985a26aa8cf1bdc465b92731239ec6b9e # v4.1.0
         with:
           subject-name: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}
           subject-digest: ${{ steps.platform_digests.outputs.amd64 }}
-          sbom-path: canasta-${{ steps.recovery.outputs.version }}-amd64.cdx.json
+          sbom-path: ${{ env.IMAGE_NAME }}-${{ steps.recovery.outputs.version }}-amd64.cdx.json
           push-to-registry: true
       - name: Attest arm64 release SBOM
         uses: actions/attest-sbom@c604332985a26aa8cf1bdc465b92731239ec6b9e # v4.1.0
         with:
           subject-name: ghcr.io/canastawiki/${{ env.IMAGE_NAME }}
           subject-digest: ${{ steps.platform_digests.outputs.arm64 }}
-          sbom-path: canasta-${{ steps.recovery.outputs.version }}-arm64.cdx.json
+          sbom-path: ${{ env.IMAGE_NAME }}-${{ steps.recovery.outputs.version }}-arm64.cdx.json
           push-to-registry: true
