@@ -1,7 +1,7 @@
 FROM mirror.gcr.io/library/debian:12.15 AS debian
 
 LABEL maintainers=""
-LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/CanastaBase
+LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
 
 ARG MW_VERSION=REL1_43
 ARG MW_CORE_VERSION=1.43.12
