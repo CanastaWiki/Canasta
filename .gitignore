@@ -14,3 +14,9 @@ cscope.out
 # Contains private data
 /.env
 /docker-compose.override.yml
+
+# Test infrastructure
+.venv/
+.pytest_cache/
+__pycache__/
+*.pyc
