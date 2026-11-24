@@ -1,6 +1,8 @@
-# CanastaBase
-A MediaWiki stack for easy deployment of enterprise-ready MediaWiki on production environments.
+# Canasta
+Canasta is a full-featured MediaWiki stack for easy deployment of enterprise-ready MediaWiki on production environments. It is "A comfy home for your knowledge"!
 
-This repository is for the Docker image CanastaBase, which, as its name implies, serves as the base image for the Canasta Docker image. It includes all of the Canasta functionality except for extensions and skins, and a few extensions' related scripts. CanastaBase can also easily be used as a base image for any other Canasta-like MediaWiki distribution, which can then apply its own set of extensions, scripts and utilities.
+This repository builds two Docker images with the same version number:
+- `canasta-base`, from the top-level `Dockerfile`: MediaWiki core and the extensions and skins bundled with it, PHP and Apache on Debian, and Canasta's startup, maintenance and configuration scripts. Other Canasta-like MediaWiki distributions can use it as a base image and add their own extensions, skins and tools.
+- `canasta`, from `Dockerfile.canasta`: `canasta-base` plus more than 170 extensions and skins, chosen and pinned in `extensions-skins.yaml` through [Recommended Revisions](https://github.com/CanastaWiki/RecommendedRevisions).
 
-For complete documentation on the overall Canasta tech stack, including installation instructions, please visit https://canasta.wiki/.
+For more information on Canasta, for both users and developers, see the Canasta homepage at https://canasta.wiki/.

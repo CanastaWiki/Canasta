@@ -1,47 +1,65 @@
-CanastaBase version history:
+Canasta version history:
 
-- 1.0.0 - June 18, 2025 - Initial version. Based on version 2.0.1 of Canasta, but with the following changes: MediaWiki upgraded to 1.43.0; extension and skin download and handling removed; Postfix added; Debian upgraded to 12.8; USE_EXTERNAL_DB handling fixed; MW_VOLUME mountpoint check removed
-- 1.0.1 - June 30, 2025 - Upgrade to MediaWiki 1.43.2
-- 1.0.2 - July 1, 2025 - Upgrade to MediaWiki 1.43.3
-- 1.0.3 - September 3, 2025 - Fixes for the creation of extension/skin symlinks; removed the setting of $wgJobRunRate to 0; added 404 response for nonexistent URLs; renamed mail variables for consistency; added X-Forwarded-For information to log files
-- 1.0.4 - October 3, 2025 - Upgrade to MediaWiki 1.43.4
-- 1.0.5 - October 8, 2025 - Upgrade to MediaWiki 1.43.5
-- 1.0.6 - November 27, 2025 - Added OCI labels exposing the bundled MediaWiki version and branch for easier image introspection
-- 1.0.7 - December 16, 2025 - Upgrade to MediaWiki 1.43.6
-- 1.0.8 - February 2, 2026 - Changed to new configuration directory structure; added MW_SECRET_KEY and DISABLE_DIRECTORY_MONITOR environment variables; fixes for extension and skin symlink generation; fixed job runner in non-farm mode; fixed handling of DB access in wait-for-it.sh; fixed handling of non-standard web server port; added php8.1-bcmath extension
-- 1.1.0 - February 10, 2026 - Upgraded PHP version from 8.1 to 8.2, enabling the use of LuaSandbox for Scribunto; added public_assets/ directory for publicly accessible wiki files; moved Vector skin loading out of CanastaDefaultSettings.php; fixed MediaWiki purging to also purge Varnish cache; fixed running of maintenance scripts for wiki farm setup; added gitinfo.json files to restore correct Special:Version display, after removal of .git directories; changed health check to access /server-status instead of MediaWiki API
-- 1.2.0 - February 18, 2026 - Replaced individual Composer installs with a single install (via composer.local.json) for all relevant extensions and skins; moved sitemap storage to public_assets/ directory; removed CanastaUtils.php; removed generated installedExtensions.txt and installedSkins.txt files; removed automatic call to Semantic MediaWiki's rebuildData.php; re-added warning if $wgSMTP is not set; fix for $wgMetaNamespace for wiki names containing spaces; permission fix for writing to log
-- 1.2.1 - February 24, 2026 - Moved .composer-deps-hash and .smw.json to config/persistent/ directory
-- 1.3.0 - March 1, 2026 - Removed Postfix; added YAML settings file loading for extensions/skins; added styled 404 page and optional wiki directory for wiki farms; derived $wgServer scheme from MW_SITE_SERVER instead of hardcoding HTTPS; added default MediaWiki error logging and log rotation
-- 1.3.1 - March 1, 2026 - Show distribution version on Special:Version via SoftwareInfo hook
-- 1.3.2 - March 22, 2026 - Removed default.vcl (now managed by CLI installation template); switched FarmConfigLoader from PECL yaml to Symfony YAML parser; fixed composer hash check to account for require and repositories sections; skip Varnish CDN settings when CANASTA_ENABLE_VARNISH is explicitly disabled (backward compatible: Varnish remains enabled by default)
-- 1.3.3 - April 7, 2026 - Upgrade to MediaWiki 1.43.8; GitHub actions upgrades
-- 1.3.4 - April 10, 2026 - Removed canasta_img.php in favor of upstream img_auth.php; removed public_assets.php so files are served directly from the filesystem; fixed composer hash mismatch and sourced-entry-point bugs at container startup; added opt-in CANASTA_ENABLE_VERY_SHORT_URLS env variable for root-relative short URLs
-- 1.3.5 - April 15, 2026 - Fixed img_auth.php and rest.php for private wiki farms with sub-path wikis; subdirectory .htaccess no longer prefixes passthrough rules with wiki path and uses [END] flag to prevent catch-all re-entry
-- 1.3.6 - April 16, 2026 - Fixed .htaccess to route sub-path wiki entry points (load.php, api.php, rest.php, index.php, img_auth.php) to the real PHP files instead of falling through to the catch-all rewrite; fixes broken skin rendering and API access on wiki farms with sub-path wikis
-- 1.3.7 - April 20, 2026 - Added external database support: $wgDBserver, $wgDBuser, and $wgDBpassword now read from MYSQL_HOST, MYSQL_USER, and MYSQL_PASSWORD environment variables; non-standard database ports are appended to $wgDBserver as host:port; version tag publishing workflow now only fires on VERSION changes, making the published tag immutable
-- 1.3.8 - June 7, 2026 - Added Ghostscript and Xpdfutils to support PDF rendering and thumbnailing
-- 1.3.9 - June 8, 2026 - Removed (unnecessary) addition of Xpdfutils
-- 1.3.10 - June 29, 2026 - Upgrade to MediaWiki 1.43.9 (security release); MW_VERSION and MW_CORE_VERSION are now build-time ARGs (overridable with docker build --build-arg) so a non-default MediaWiki version or branch can be built without editing the Dockerfile (#185); wait for LocalSettings.php with an external database to prevent startup exit 123 (#176); guard PHP-FPM log directory setup against an unset PHP_LOG_DIR (#177); detect host-side directory events without the inotify ISDIR flag so host-added extensions and skins are picked up (#179); heal config/persistent ownership before run_autoupdate (#180); guard canastaLoadConfigYaml against a null $wgSettings (#181)
-- 1.3.11 - June 30, 2026 - Fail the image build when the unified Composer update fails to resolve or leaves a bundled extension's dependencies uninstalled, instead of silently shipping an image with an incomplete vendor/; added a build-time dependency self-test that aborts the build if any merged-in extension's required package is missing from vendor/ (#187)
-- 1.3.12 - July 1, 2026 - Fail the image build if there are Git errors during extension and skin setup (#190)
-- 1.3.13 - July 2, 2026 - Idempotent Apache/.htaccess generation (#197); fail the build on Composer and Git errors (#195); maintenance-script fixes (#194); Dockerfile hardening (#198)
-- 1.3.14 - July 2, 2026 - Fix public_assets file serving (logo, favicon) for wikis.yaml with indented entries (#202)
-- 1.3.15 - July 23, 2026 - Rebuild with current Debian 12 packages to remediate fixable HIGH/CRITICAL vulnerabilities in the 1.3.14 image (#208)
-- 1.3.16 - July 25, 2026 - Removed the unused MediaWiki web installer (mw-config) from the image (#213)
-- 1.3.17 - July 27, 2026 - Apt-layer cache-bust (#217); Debian security package refresh (#208); version-tag-only image rescan (#219)
-- 1.3.18 - July 27, 2026 - robots.txt User-agent line and load.php allow restored (#224); scan tracker per cycle (#222)
-- 1.3.19 - August 1, 2026 - /server-status served to loopback over IPv6; healthcheck addresses it numerically (#227)
-- 1.3.20 - August 24, 2026 - Wiki directory logos on private wikis (#231); Debian security package refresh (#229); upstream composer pin patching removed (#233)
-- 1.3.21 - September 24, 2026 - Debian security update and other package updates
-- 1.3.22 - September 28, 2026 - No PHP in web-writable dirs (#239); `exec` logging (#240); code and `config/` read-only to web user (#242)
-- 1.3.23 - October 2, 2026 - Upgrade to MediaWiki 1.43.10 (#246); Debian security package refresh (#229)
-- 1.3.24 - October 5, 2026 - Upgrade to MediaWiki 1.43.11 (#251); Debian security package refresh (#249)
-- 1.3.25 - October 12, 2026 - Per-host `/sitemap.xml` index (#275); per-wiki farm startup settings (#261); persistent update fingerprints (#271); startup update continuing past failures (#273), running once and honoring `MW_AUTOUPDATE=false` (#280), skipping uninstalled wikis (#281); stale `robots.txt`, sitemap and farm pages in Varnish (#279); Debian security package refresh (#256)
-- 1.3.26 - October 14, 2026 - Bundled composer list moved into the image, `config/composer.local.json` holding operator additions only, failed startup composer updates recorded (#286)
-- 1.3.27 - October 21, 2026 - PHP 8.2.35 security update via Debian security package refresh (#293); graceful Apache stop (#290); Gerrit submodule user agent (#292)
-- 1.3.28 - October 25, 2026 - Maintenance scripts' `--wiki` server and path (#301); configurable sitemap URL path and identifier (#302); Debian security package refresh (#298)
-- 1.3.29 - October 26, 2026 - Path wiki sitemap URLs (#306); Debian security package refresh (#307)
-- 1.3.30 - October 28, 2026 - Time-bounded job runner batches via new settings `MW_JOB_RUNNER_MAXTIME` and `MW_JOB_RUNNER_MAXJOBS` (#314)
-- 1.3.31 - November 1, 2026 - Redis main cache via `CANASTA_ENABLE_REDIS` (#320); sessions in their own database table (#320, #323); job runner memory limit on every `runJobs.php` call (#319); Debian security package refresh (#313)
-- 1.3.32 - November 20, 2026 - Update to MediaWiki 1.43.12 (#326); Debian 12.15 with security package refresh (#327)
+- 1.0.0 - April 14, 2022 - Initial version
+- 1.0.1 - April 14, 2022 - Update MediaWiki version to 1.35.6
+- 1.1.0 - April 29, 2022 - Rename /user-extensions and /user-skins directories to /extensions and /skins
+- 1.1.1 - June 16, 2022 - Disable sitemap generator by default; update CommentStreams extension; remove Favorites and MobileDetect extensions; add iputils-ping package
+- 1.1.2 - July 12, 2022 - Update MediaWiki version to 1.35.7; add default setting of $wgServer; add CookieWarning extension; update CommentStreams, Echo and EmbedVideo extensions; remove HeadScript extension; add poppler-utils package for PDF rendering
+- 1.2.0 - October 2, 2022 - Update MediaWiki version to 1.35.8; remove cfLoadExtension() and cfLoadSkin() functionality in favor of symlink-based approach; add displayWikiInfo.php script; make use of gateway.docker.internal to detect host address
+- 1.2.1 - November 25, 2022 - Add AArch64 support; update SimpleBatchUpload extension
+- 1.2.2 - December 22, 2022 - Fix installation of EmailAuthorization extension; fix web installer to also install Boostrap extension if Chameleon skin gets installed; add MW_MAP_DOMAIN_TO_DOCKER_GATEWAY as an environment variable (set to true by default); remove patches made unnecessary by cfLoad... removal
+- 1.3.0 - February 17, 2023 - Update MediaWiki version to 1.39.0; update all extensions to a compatible version (in most cases, using the REL1_39 Git branch); add the extensions AbuseFilter, DeleteBatch, MediaUploader, Mermaid, SemanticDependencyUpdater, TemplateWizard, Title Icon, UserPageViewTracker, WatchAnalytics, WhosOnline; remove the extensions DiscussionTools, LocalisationUpdate; add the skin Vector 2022; add header warning to email-related special pages if $wgSMTP is not set
+- 2.0.0 - December 11, 2023 - Add wiki farm support; add maintenance-scripts/ directory; add automated symlinking of local versions of extensions and skins; add AWS, EditAccount, GTag, JWTAuth, TemplateSandbox, Semantic Tasks and Semantic Watchlist extensions
+- 2.0.1 - April 14, 2024 - Update MediaWiki version to 1.39.7; move extension installation settings from Dockerfile into extensions.yaml; rename run-apache.sh to run-all.sh; remove WikiForum extension
+- 3.0.0 - June 23, 2025 - Move most functionality into CanastaBase repository (which currently uses MediaWiki 1.43), leaving only extension- and skin-specific code; place all extension and skin installation settings into a single file, contents.yaml, which in turn inherits from "Recommended Revisions" page; add the DiscussionTools, InlineComments, LoginNotify, OAuth, Page Schemas, QuickInstantCommons and Paragraph-based Edit Conflict Interface ("TwoColConflict") extensions; remove the Graph, RenameUser, Semantic Breadcrumb Links, Semantic Forms Select, Semantic Tasks and TinyMCE extensions
+- 3.0.1 - June 30, 2025 - Update to CanastaBase 1.0.1, which uses MediaWiki 1.43.2
+- 3.0.2 - July 1, 2025 - Update to CanastaBase 1.0.2, which uses MediaWiki 1.43.3; update Contribution Scores and WhosOnline extensions
+- 3.0.3 - September 3, 2025 - Update to CanastaBase 1.0.3; get MediaWiki version from CanastaBase instead of hardcoding it; add Babel, CLDR, CreateRedirect, RandomSelection, RegexFunctions, RelatedArticles, RSS, TemplateStylesExtender and VariablesLua extensions; update Cargo, JWTAuth, Maps and WatchAnalytics extensions
+- 3.0.4 - October 3, 2025 - Update to CanastaBase 1.0.4, which uses MediaWiki 1.43.4; update Admin Links, Cargo, EmbedVideo and Page Forms extensions
+- 3.0.5 - October 8, 2025 - Update to CanastaBase 1.0.5, which uses MediaWiki 1.43.5
+- 3.0.6 - December 2, 2025 - Update to CanastaBase 1.0.6; fix Chameleon skin error; update Approved Revs, Cargo, UserPageViewTracker and WatchAnalytics extensions
+- 3.0.7 - December 17, 2025 - Update to CanastaBase 1.0.7, which uses MediaWiki 1.43.6; update Contribution Scores and WhosOnline extensions
+- 3.1.0 - February 10, 2026 - Update to CanastaBase 1.1.0; update Approved Revs, Cargo, External Data, Flex Diagrams and WhosOnline extensions
+- 3.2.0 - February 18, 2026 - Update to CanastaBase 1.2.0; remove special handling for Semantic MediaWiki
+- 3.2.1 - February 24, 2026 - Update to CanastaBase 1.2.1; stabilize Canasta version tag to always point to the actual version commit; update SimpleMathJax and SubPageList extensions
+- 3.3.1 - March 1, 2026 - Show Canasta version on Special:Version
+- 3.3.2 - March 2, 2026 - Update to CanastaBase 1.3.1
+- 3.4.0 - March 4, 2026 - Version alignment with Canasta-CLI 3.4.0
+- 3.5.0 - March 8, 2026 - Version alignment with Canasta-CLI 3.5.0
+- 3.5.1 - March 9, 2026 - Version alignment with Canasta-CLI 3.5.1
+- 3.5.2 - March 22, 2026 - Update to CanastaBase 1.3.2; update WSOAuth extension
+- 3.5.3 - April 7, 2026 - Update to CanastaBase 1.3.3, which uses MediaWiki 1.43.8; add the CrawlerProtection extension
+- 3.5.4 - April 10, 2026 - Update to CanastaBase 1.3.4
+- 3.5.5 - April 15, 2026 - Update to CanastaBase 1.3.5
+- 3.5.6 - April 16, 2026 - Update to CanastaBase 1.3.6; fixes broken skin rendering and API access on wiki farms with sub-path wikis
+- 3.5.7 - April 21, 2026 - Update to CanastaBase 1.3.7
+- 3.5.8 - May 15, 2026 - Add DynamicSidebar extension; update Cargo and Mermaid extensions
+- 3.5.9 - June 7, 2026 - Accidental release; no change
+- 3.5.10 - June 8, 2026 - Update to CanastaBase 1.3.9; update PageForms extension
+- 3.5.11 - June 29, 2026 - Update to CanastaBase 1.3.10, which uses MediaWiki 1.43.9 (security release); add the CreateUserPage extension; update the Cargo extension
+- 3.5.12 - June 30, 2026 - Update to CanastaBase 1.3.11; update the TemplateStyles extension for css-sanitizer 6 compatibility, fixing the broken Composer build in 3.5.11
+- 3.5.13 - July 1, 2026 - Update to CanastaBase 1.3.12; fix errors in downloading the EmbedVideo, WhosOnline and WSOAuth extensions (the latest code was accidentally downloaded); remove no-longer-used persistent directory for Semantic MediaWiki
+- 3.5.14 - July 2, 2026 - Update to CanastaBase 1.3.14; remove dead CirrusSearch and SMW maintenance scripts (#652); remove a no-op CI test job (#654)
+- 3.5.15 - July 3, 2026 - Update the Maps and OAuth extensions (security updates) and the Page Forms extension
+- 3.5.16 - July 14, 2026 - Update the Cargo extension
+- 3.5.17 - July 25, 2026 - Update to CanastaBase 1.3.16; update the Data Transfer extension
+- 3.5.18 - July 27, 2026 - Update to CanastaBase 1.3.17; image rescan reporting (#675, #677)
+- 3.5.19 - July 28, 2026 - Update to CanastaBase 1.3.18; update the Data Transfer, Display Title, CrawlerProtection and Page Forms extensions; rescan reporting (#680, #682, #684)
+- 3.5.20 - August 1, 2026 - Update to CanastaBase 1.3.19; update the CrawlerProtection extension
+- 3.5.21 - August 24, 2026 - Update to CanastaBase 1.3.20 (#696); update the Cargo extension (#694)
+- 3.5.22 - September 24, 2026 - Update the External Data and Page Forms extensions
+- 3.5.23 - September 24, 2026 - Update to CanastaBase 1.3.21
+- 3.5.24 - September 28, 2026 - Update to CanastaBase 1.3.22 (#705)
+- 3.5.25 - October 2, 2026 - Update to CanastaBase 1.3.23 (#711); extension and skin security updates (#712)
+- 3.5.26 - October 5, 2026 - Update to CanastaBase 1.3.24 (#717)
+- 3.5.27 - October 12, 2026 - Update to CanastaBase 1.3.25 (#731)
+- 3.5.28 - October 14, 2026 - Update to CanastaBase 1.3.26 (#737); composer dependencies for OAuth, JWTAuth and CheckUser, JWTAuth 2.1.1, archived GoogleAnalyticsMetrics removed (#735)
+- 3.5.29 - October 21, 2026 - Update to CanastaBase 1.3.27 (#743)
+- 3.5.30 - October 25, 2026 - Update to CanastaBase 1.3.28 (#748)
+- 3.5.31 - October 26, 2026 - Update to CanastaBase 1.3.29 (#752)
+- 3.5.32 - October 28, 2026 - Update to CanastaBase 1.3.30 (#760); update the Data Transfer and External Data extensions (#758)
+- 3.5.33 - November 1, 2026 - Update to CanastaBase 1.3.31 (#766); update the VEForAll extension (#764)
+- 3.5.34 - November 1, 2026 - Update the AdminLinks extension (#770)
+- 3.5.35 - November 20, 2026 - Update to CanastaBase 1.3.32 (#776); update the CheckUser extension (#778)
+- 3.5.36 - November 23, 2026 - Update to CanastaBase 1.3.33 (#788); update the Semantic MediaWiki, EditAccount and MobileFrontend extensions (#786)
+- 3.6.0 - November 24, 2026 - CanastaBase merged into this repository; canasta-base and canasta share one version number (#756)

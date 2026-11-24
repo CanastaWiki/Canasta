@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: rescan-published-canasta-base-images
+  group: rescan-published-images
   cancel-in-progress: false
 
 permissions:
@@ -15,18 +15,27 @@ permissions:
   packages: read
 
 env:
-  IMAGE: ghcr.io/canastawiki/canasta-base
   ISSUE_LABEL: automated
-  ISSUE_TITLE: Scheduled CanastaBase image vulnerability scan
 
 jobs:
   scan:
-    name: Scan published tags
+    name: Scan published ${{ matrix.image }} tags
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: canasta-base
+            issue_title: Scheduled CanastaBase image vulnerability scan
+          - image: canasta
+            issue_title: Scheduled Canasta image vulnerability scan
+    env:
+      IMAGE: ghcr.io/canastawiki/${{ matrix.image }}
+      ISSUE_TITLE: ${{ matrix.issue_title }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.repository.default_branch }}
 
@@ -66,6 +75,114 @@ jobs:
           : > "$FINDINGS"
           SCANNED=0
 
+          extract_extension_from_target() {
+            local target="$1"
+            if [[ "$target" =~ /(canasta-extensions|extensions|user-extensions|canasta-skins|skins|user-skins)/([^/]+)/ ]]; then
+              echo "${BASH_REMATCH[2]}"
+              return 0
+            fi
+            return 1
+          }
+
+          build_extension_package_map() {
+            local key="$1"
+            local digest="$2"
+            local manifests="$RESULT_DIR/${key}-extension-manifests.tsv"
+            local raw_map="$RESULT_DIR/${key}-extension-map-raw.tsv"
+            local map="$RESULT_DIR/${key}-extension-map.tsv"
+            local extracted="$RESULT_DIR/${key}-extension-manifests"
+            local container
+
+            [ -f "$map" ] && return
+
+            container=$(docker create "$IMAGE@$digest")
+            mkdir -p "$extracted"
+            for tree in canasta-extensions extensions user-extensions canasta-skins skins user-skins; do
+              mkdir -p "$extracted/$tree"
+              docker cp "$container:/var/www/mediawiki/w/$tree/." "$extracted/$tree" 2>/dev/null || true
+            done
+            docker rm "$container" > /dev/null
+
+            : > "$manifests"
+            while IFS= read -r -d '' manifest; do
+              ext=$(basename "$(dirname "$manifest")")
+              kind=$(basename "$manifest")
+              printf '%s\t%s\t' "$ext" "$kind" >> "$manifests"
+              base64 -w0 "$manifest" >> "$manifests"
+              printf '\n' >> "$manifests"
+            done < <(
+              find "$extracted" -mindepth 3 -maxdepth 3 -type f \
+                \( -name composer.json -o -name package.json \) -print0
+            )
+
+            : > "$raw_map"
+            while IFS=$'\t' read -r EXT KIND MANIFEST_B64; do
+              [ -n "$EXT" ] || continue
+              [ -n "$MANIFEST_B64" ] || continue
+              MANIFEST_JSON=$(printf '%s' "$MANIFEST_B64" | base64 -d 2>/dev/null || true)
+              [ -n "$MANIFEST_JSON" ] || continue
+
+              if [ "$KIND" = "composer.json" ]; then
+                printf '%s' "$MANIFEST_JSON" |
+                  jq -r --arg ext "$EXT" '
+                    (.require // {})
+                    | keys[]
+                    | select(. != "php")
+                    | select(startswith("ext-") | not)
+                    | "\(.)\t\($ext)"
+                  ' >> "$raw_map"
+              elif [ "$KIND" = "package.json" ]; then
+                printf '%s' "$MANIFEST_JSON" |
+                  jq -r --arg ext "$EXT" '
+                    (.dependencies // {})
+                    | keys[]
+                    | "\(.)\t\($ext)"
+                  ' >> "$raw_map"
+              fi
+            done < "$manifests"
+
+            # Vendored libraries are committed into an extension rather than declared
+            # as a dependency, so they appear in no manifest above. MediaWiki records
+            # them in foreign-resources.yaml, whose purl package names match Trivy's
+            # PkgName. Location varies by extension, so search by name rather than depth.
+            while IFS= read -r -d '' FR_FILE; do
+              FR_REL=${FR_FILE#"$extracted"/}
+              FR_EXT=${FR_REL#*/}
+              FR_EXT=${FR_EXT%%/*}
+              [ -n "$FR_EXT" ] || continue
+              # purl names first; top-level keys cover entries declared without a purl.
+              {
+                grep -oE 'purl: *pkg:npm/[^@[:space:]]+@' "$FR_FILE" 2>/dev/null |
+                  sed -E 's|.*pkg:npm/||; s|@$||'
+                grep -oE '^[A-Za-z0-9_.-]+:$' "$FR_FILE" 2>/dev/null | tr -d ':'
+              } | sort -u | while IFS= read -r FR_PKG; do
+                [ -n "$FR_PKG" ] && printf '%s\t%s\n' "$FR_PKG" "$FR_EXT"
+              done >> "$raw_map"
+            done < <(find "$extracted" -type f -name foreign-resources.yaml -print0)
+
+            if [ -s "$raw_map" ]; then
+              sort -u "$raw_map" | awk -F '\t' '
+                {
+                  if ($1 == "") {
+                    next
+                  }
+                  if (owners[$1] == "") {
+                    owners[$1] = $2
+                  } else {
+                    owners[$1] = owners[$1] "," $2
+                  }
+                }
+                END {
+                  for (pkg in owners) {
+                    print pkg "\t" owners[pkg]
+                  }
+                }
+              ' | sort > "$map"
+            else
+              : > "$map"
+            fi
+          }
+
           for TAG in "$VERSION_TAG"; do
             INSPECT_ERROR="$RESULT_DIR/inspect-error"
             if ! MANIFEST=$(docker buildx imagetools inspect --raw "$IMAGE:$TAG" 2> "$INSPECT_ERROR"); then
@@ -84,26 +201,68 @@ jobs:
                 <<< "$MANIFEST")
               RESULT="$RESULT_DIR/${DIGEST#sha256:}.json"
 
+              # Unfixed findings are kept here (no --ignore-unfixed) so unfixed
+              # CRITICALs in extension/skin dependencies can be reported for
+              # awareness; the report partitions fixable from unfixed below.
               if [ ! -f "$RESULT" ]; then
                 trivy image \
                   --image-src remote \
                   --format json \
                   --output "$RESULT" \
-                  --ignore-unfixed \
                   --severity CRITICAL,HIGH \
                   "$IMAGE@$DIGEST"
-
-                jq -r --arg digest "$DIGEST" --arg arch "$ARCH" '
-                  [.Results[]?.Vulnerabilities[]?]
-                  | sort_by(.VulnerabilityID, .PkgName, .InstalledVersion)
-                  | unique_by(.VulnerabilityID, .PkgName, .InstalledVersion)
-                  | .[]
-                  | [$digest, $arch, .Severity, .VulnerabilityID, .PkgName, .InstalledVersion, (.FixedVersion // "")]
-                  | @tsv
-                ' "$RESULT" >> "$FINDINGS"
               fi
 
-              COUNT=$(jq '[.Results[]?.Vulnerabilities[]?.VulnerabilityID] | unique | length' "$RESULT")
+              MAP_FILE="$RESULT_DIR/${TAG}-extension-map.tsv"
+              jq -r '
+                [
+                  .Results[]? as $result
+                  | $result.Vulnerabilities[]?
+                  | [
+                      .Severity,
+                      .VulnerabilityID,
+                      .PkgName,
+                      .InstalledVersion,
+                      (.FixedVersion // ""),
+                      ($result.Class // ""),
+                      ($result.Target // "")
+                    ]
+                ]
+                | sort_by(.[1], .[2], .[3], .[5], .[6])
+                | unique
+                | .[]
+                | @tsv
+              ' "$RESULT" |
+                # Split on a non-whitespace delimiter: tab is IFS whitespace, so an
+                # empty FixedVersion collapses and shifts every later field left.
+                tr '\t' '\037' |
+                while IFS=$'\037' read -r SEVERITY VULNERABILITY PACKAGE INSTALLED FIXED CLASS TARGET; do
+                  EXTENSION=""
+                  if EXTENSION_FROM_TARGET=$(extract_extension_from_target "$TARGET"); then
+                    EXTENSION="$EXTENSION_FROM_TARGET"
+                  elif [ "$CLASS" = "lang-pkgs" ]; then
+                    if [ ! -f "$MAP_FILE" ]; then
+                      build_extension_package_map "$TAG" "$DIGEST"
+                    fi
+                    EXTENSION=$(awk -F '\t' -v package="$PACKAGE" '$1 == package { print $2; exit }' "$MAP_FILE")
+                  elif [ "$CLASS" = "os-pkgs" ]; then
+                    EXTENSION="base"
+                  fi
+
+                  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+                    "$DIGEST" "$ARCH" "$SEVERITY" "$VULNERABILITY" "$PACKAGE" "$INSTALLED" "$FIXED" "$EXTENSION"
+                done >> "$FINDINGS"
+
+              # Fixable only: the per-tag column tracks what a rebuild/release clears.
+              COUNT=$(jq '
+                [
+                  .Results[]?.Vulnerabilities[]?
+                  | select((.FixedVersion // "") != "")
+                  | .VulnerabilityID
+                ]
+                | unique
+                | length
+              ' "$RESULT")
               SCANNED=$((SCANNED + 1))
               printf '| `%s` | `%s` | %s |\n' "$TAG" "$ARCH" "$COUNT" >> "$SUMMARY"
             done
@@ -114,42 +273,74 @@ jobs:
             exit 1
           fi
 
-          TOTAL=$(cut -f4 "$FINDINGS" | sort -u | sed '/^$/d' | wc -l | tr -d ' ')
+          # Partition findings: fixable (a release clears these) vs. unfixed
+          # CRITICALs owned by an extension/skin (no upstream fix yet, but we have
+          # leverage: escalate upstream, patch, fork, or drop). Unfixed OS findings
+          # are excluded — those are Debian's to fix, not actionable here.
+          # Row layout: DIGEST ARCH SEVERITY VULN PACKAGE INSTALLED FIXED COMPONENT
+          FIXABLE="$RESULT_DIR/findings-fixable"
+          UNFIXED_CRIT="$RESULT_DIR/findings-unfixed-critical"
+          awk -F '\t' '$7 != ""' "$FINDINGS" | sort -u > "$FIXABLE"
+          awk -F '\t' '$7 == "" && $3 == "CRITICAL" && $8 != "base"' "$FINDINGS" |
+            sort -u > "$UNFIXED_CRIT"
 
+          TOTAL=$(cut -f4 "$FIXABLE" | sort -u | sed '/^$/d' | wc -l | tr -d ' ')
+          UNFIXED_TOTAL=$(cut -f4 "$UNFIXED_CRIT" | sort -u | sed '/^$/d' | wc -l | tr -d ' ')
           REPORT="$RESULT_DIR/report.md"
           {
             echo "Trivy found **$TOTAL** distinct fixable HIGH/CRITICAL CVEs across the published images."
+            if (( UNFIXED_TOTAL > 0 )); then
+              echo
+              echo "Additionally, **$UNFIXED_TOTAL** distinct CRITICAL CVEs in extension/skin dependencies have **no upstream fix available**; see below."
+            fi
             echo
             echo "[View workflow run]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)"
             echo
-            echo '| Tag | Platform | CVEs |'
+            echo '| Tag | Platform | Distinct fixable CVEs |'
             echo '| --- | --- | ---: |'
             cat "$SUMMARY"
 
             if (( TOTAL > 0 )); then
               echo
-              echo '<details><summary>Unique findings (first 200)</summary>'
+              echo '<details><summary>Fixable findings (first 200)</summary>'
               echo
-              echo '| Digest | Platform | Severity | Vulnerability | Package | Installed | Fixed |'
-              echo '| --- | --- | --- | --- | --- | --- | --- |'
-              sort -u "$FINDINGS" | awk 'NR <= 200' |
-                while IFS=$'\t' read -r DIGEST ARCH SEVERITY VULNERABILITY PACKAGE INSTALLED FIXED; do
-                  printf '| `%s` | `%s` | %s | `%s` | `%s` | `%s` | `%s` |\n' \
-                    "$DIGEST" "$ARCH" "$SEVERITY" "$VULNERABILITY" "$PACKAGE" "$INSTALLED" "$FIXED"
+              echo '| Digest | Platform | Severity | Vulnerability | Package | Installed | Fixed | Component |'
+              echo '| --- | --- | --- | --- | --- | --- | --- | --- |'
+              awk 'NR <= 200' "$FIXABLE" | tr '\t' '\037' |
+                while IFS=$'\037' read -r DIGEST ARCH SEVERITY VULNERABILITY PACKAGE INSTALLED FIXED EXTENSION; do
+                  printf '| `%s` | `%s` | %s | `%s` | `%s` | `%s` | `%s` | `%s` |\n' \
+                    "$DIGEST" "$ARCH" "$SEVERITY" "$VULNERABILITY" "$PACKAGE" "$INSTALLED" "$FIXED" "$EXTENSION"
                 done
               echo
               echo '</details>'
+            fi
+
+            if (( UNFIXED_TOTAL > 0 )); then
+              echo
+              echo '### Unfixed CRITICAL (no upstream fix — candidates for patch / upstream escalation / removal)'
+              echo
+              echo 'These have no fixed version available upstream, so a rebuild or release will not clear them. Options: escalate with the extension maintainer, patch locally, replace the extension, or accept and document the risk.'
+              echo
+              echo '| Digest | Platform | Vulnerability | Package | Installed | Component |'
+              echo '| --- | --- | --- | --- | --- | --- |'
+              awk 'NR <= 100' "$UNFIXED_CRIT" | tr '\t' '\037' |
+                while IFS=$'\037' read -r DIGEST ARCH SEVERITY VULNERABILITY PACKAGE INSTALLED FIXED EXTENSION; do
+                  printf '| `%s` | `%s` | `%s` | `%s` | `%s` | `%s` |\n' \
+                    "$DIGEST" "$ARCH" "$VULNERABILITY" "$PACKAGE" "$INSTALLED" "$EXTENSION"
+                done
             fi
           } > "$REPORT"
 
           cat "$REPORT" >> "$GITHUB_STEP_SUMMARY"
           echo "findings=$TOTAL" >> "$GITHUB_OUTPUT"
+          echo "unfixed_critical=$UNFIXED_TOTAL" >> "$GITHUB_OUTPUT"
           echo "report=$REPORT" >> "$GITHUB_OUTPUT"
 
       - name: Open or update tracking issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FINDINGS: ${{ steps.scan.outputs.findings }}
+          UNFIXED_CRITICAL: ${{ steps.scan.outputs.unfixed_critical }}
           REPORT: ${{ steps.scan.outputs.report }}
         run: |
           gh label create "$ISSUE_LABEL" \
@@ -160,8 +351,7 @@ jobs:
           # Adopt only an OPEN tracker, so a closed one stays closed as a permanent
           # record of what the release that closed it cleared. A later scan that finds
           # new work opens a fresh issue (one issue per remediation cycle) instead of
-          # resurrecting the old one and overwriting its report. Scoped to the
-          # automation label so a human-filed issue is never adopted.
+          # resurrecting the old one and overwriting its report.
           ISSUE_NUMBER=$(gh issue list \
             --state open \
             --label "$ISSUE_LABEL" \
@@ -170,7 +360,11 @@ jobs:
             jq -r --arg title "$ISSUE_TITLE" \
               '[.[] | select(.title == $title)][0].number // empty')
 
-          if (( FINDINGS > 0 )); then
+          # Keep the tracker open while there is anything to act on: fixable CVEs
+          # (a release clears them) or unfixed CRITICALs owned by an extension/skin
+          # (needs upstream escalation, a patch, or removal). Closing on fixable == 0
+          # alone would bury a standing unfixed CRITICAL.
+          if (( FINDINGS > 0 || UNFIXED_CRITICAL > 0 )); then
             if [ -n "$ISSUE_NUMBER" ]; then
               # Same cycle, still outstanding: refresh the open tracker in place.
               gh issue edit "$ISSUE_NUMBER" --body-file "$REPORT"
@@ -179,5 +373,5 @@ jobs:
             fi
           elif [ -n "$ISSUE_NUMBER" ]; then
             gh issue close "$ISSUE_NUMBER" \
-              --comment "The latest scheduled scan found no fixable HIGH/CRITICAL vulnerabilities."
+              --comment "The latest scheduled scan found no fixable HIGH/CRITICAL vulnerabilities and no unfixed CRITICALs in extension or skin dependencies."
           fi
