@@ -64,7 +64,10 @@ def test_makes_unwritable_files_group_writable(run):
     sub.chmod(0o555)
     calls = run()
     group = grp.getgrgid(os.getgid()).gr_name
-    assert calls == ["%s %s" % (group, sub), "%s %s" % (group, upload)]
+    # find may batch the paths into fewer chgrp calls.
+    assert all(c.split()[0] == group for c in calls)
+    assert sorted(a for c in calls for a in c.split()[1:]) == sorted(
+        [str(sub), str(upload)])
     assert mode(upload) == 0o464
     assert mode(sub) == 0o575
 
