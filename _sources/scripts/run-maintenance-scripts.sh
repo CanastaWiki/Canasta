@@ -52,8 +52,9 @@ waitdatabase() {
             done
         fi
         if [ "$WG_DB_TYPE" != "mysql" ]; then
-            echo >&2 "Unsupported database type ($WG_DB_TYPE)"
-            exit 123
+            echo >&2 "Could not get a supported wgDBtype (mysql or sqlite). The settings returned:"
+            echo >&2 "${WG_DB_TYPE:-(nothing)}"
+            return 1
         fi
     fi
 
@@ -78,7 +79,7 @@ waitdatabase() {
           sleep 1
       done
       show_secrets
-      if [ "$i" = 0 ]; then
+      if [ -z "$db_started" ]; then
           echo >&2 'Could not connect to the database.'
           return 1
       fi

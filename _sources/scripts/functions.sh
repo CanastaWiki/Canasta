@@ -53,7 +53,7 @@ make_dir_writable() {
            '(' -group "$WWW_GROUP" -perm -g=w ')' -o \
            '(' -perm -o=w ')' \
          ')' \
-         -exec chgrp "$WWW_GROUP" {} \; -exec chmod g=rwX {} \;
+         -exec chgrp "$WWW_GROUP" {} + -exec chmod g=rwX {} +
 }
 
 # Make $MW_VOLUME/config, except persistent/, unwritable by the web server

@@ -44,16 +44,23 @@ trap 'rm -f "$GENERATED_CONF"' EXIT
 # key. Leading indentation is tolerated: both the flat block style
 # (list item at column 0) and the nested style (list item indented under
 # "wikis:") are valid YAML and appear in the wild, so the anchors match
-# either. awk tracks the current wiki and flushes when it sees the next
-# entry or end-of-file.
+# either. Quoted scalars (yaml.dump quotes an all-digit id) are unquoted.
+# awk tracks the current wiki and flushes when it sees the next entry or
+# end-of-file.
 parse_wikis() {
-    awk '
+    awk -v sq="'" '
+        function unquote(v,    c) {
+            c = substr(v, 1, 1)
+            if ((c == "\"" || c == sq) && length(v) > 1 && substr(v, length(v)) == c)
+                v = substr(v, 2, length(v) - 2)
+            return v
+        }
         /^[ \t]*-[ \t]+id:/ {
             if (id != "" && url != "") { print id "\t" url }
-            id = $3
+            id = unquote($3)
             url = ""
         }
-        /^[ \t]*url:/ { url = $2 }
+        /^[ \t]*url:/ { url = unquote($2) }
         END { if (id != "" && url != "") print id "\t" url }
     ' "$WIKIS_YAML"
 }

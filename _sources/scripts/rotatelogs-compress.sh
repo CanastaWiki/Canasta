@@ -28,9 +28,10 @@ if [[ "${file_to_compress}" ]]; then
         echo "File ${file_to_compress} does not exist".
     fi
 
+    LOG_DIRECTORY=$(dirname "${file_to_compress}")
+
     # remove old log files
     if [ -n "$LOG_FILES_REMOVE_OLDER_THAN_DAYS" ] && [ "$LOG_FILES_REMOVE_OLDER_THAN_DAYS" != false ]; then
-        LOG_DIRECTORY=$(dirname "${file_to_compress}")
         find "$LOG_DIRECTORY" -type f -mtime "+$LOG_FILES_REMOVE_OLDER_THAN_DAYS" ! -iname ".*" ! -iname "*.current" -exec rm -f {} \;
     fi
 

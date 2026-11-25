@@ -390,3 +390,9 @@ def test_dockerfile_stop_signal_is_graceful():
     with open(os.path.join(REPO_ROOT, "Dockerfile")) as f:
         directives = [l.split() for l in f if l.startswith("STOPSIGNAL")]
     assert directives == [["STOPSIGNAL", "SIGWINCH"]]
+
+
+def test_run_all_rsync_chown_is_user_then_group():
+    with open(os.path.join(REPO_ROOT, "_sources", "scripts", "run-all.sh")) as f:
+        body = f.read()
+    assert '--chown="$WWW_USER:$WWW_GROUP"' in body
