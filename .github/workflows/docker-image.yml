@@ -130,6 +130,25 @@ jobs:
         name: Build and push canasta by digest
         id: canasta_build
         if: env.CAN_PUBLISH == 'true'
+        continue-on-error: true
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.canasta
+          platforms: linux/${{ matrix.arch }}
+          outputs: type=image,name=ghcr.io/canastawiki/canasta,push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=canasta-${{ matrix.arch }}
+          cache-to: type=gha,scope=canasta-${{ matrix.arch }},mode=max
+          build-args: |
+            BASE_IMAGE=ghcr.io/canastawiki/canasta-base@${{ steps.base_digest.outputs.digest }}
+      -
+        name: Wait before retrying the canasta build
+        if: steps.canasta_build.outcome == 'failure'
+        run: sleep 60
+      -
+        name: Retry build and push canasta by digest
+        id: canasta_build_retry
+        if: steps.canasta_build.outcome == 'failure'
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -142,12 +161,14 @@ jobs:
             BASE_IMAGE=ghcr.io/canastawiki/canasta-base@${{ steps.base_digest.outputs.digest }}
       -
         name: Record canasta digest
+        id: canasta_digest
         if: env.CAN_PUBLISH == 'true'
         env:
-          DIGEST: ${{ steps.canasta_build.outputs.digest }}
+          DIGEST: ${{ steps.canasta_build.outputs.digest || steps.canasta_build_retry.outputs.digest }}
         run: |
           mkdir -p "$RUNNER_TEMP/digests-canasta"
           touch "$RUNNER_TEMP/digests-canasta/${DIGEST#sha256:}"
+          echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
       -
         name: Upload canasta-base digest
         if: env.CAN_PUBLISH == 'true'
@@ -232,6 +253,18 @@ jobs:
           ignore-unfixed: true
           severity: CRITICAL,HIGH
           skip-setup-trivy: true
+      -
+        # Boots each image this job built, as `canasta create` would, before
+        # the push job tags it.
+        name: Smoke test canasta-base
+        env:
+          IMAGE: ${{ env.CAN_PUBLISH == 'true' && format('ghcr.io/canastawiki/canasta-base@{0}', steps.base_digest.outputs.digest) || 'canasta-base:pr-scan' }}
+        run: .github/scripts/smoke-test.sh "$IMAGE"
+      -
+        name: Smoke test canasta
+        env:
+          IMAGE: ${{ env.CAN_PUBLISH == 'true' && format('ghcr.io/canastawiki/canasta@{0}', steps.canasta_digest.outputs.digest) || 'canasta:pr-scan' }}
+        run: .github/scripts/smoke-test.sh "$IMAGE"
 
   # Push the images to GitHub Packages, one matrix leg per image. Both images
   # get the same tags:

@@ -16,7 +16,7 @@ for db_name in "${ids[@]}"; do
     # Change the permissions of these directories
     chown -R $WWW_USER:$WWW_GROUP $MW_VOLUME/cache/$db_name
     chown -R $WWW_USER:$WWW_GROUP $MW_VOLUME/images/$db_name
-    chown $(stat -c '%u' $MW_VOLUME/public_assets):$WWW_GROUP $MW_VOLUME/public_assets/$db_name
+    chown "$(stat -c '%u' "$MW_VOLUME/public_assets"):$WWW_GROUP" "$MW_VOLUME/public_assets/$db_name"
 done
 
 # Protect Images Directory from Internet Access (only add the rule once; this

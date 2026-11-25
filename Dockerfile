@@ -247,6 +247,9 @@ COPY _sources/configs/mpm_event.conf /etc/apache2/mods-available/mpm_event.conf
 RUN set -x; \
 	chmod -v +x /*.sh \
 	&& chmod -v +x /maintenance-scripts/*.sh \
+	# Record that vendor/ matches no operator Composer content, so a start
+	# without any skips composer. The canasta build overwrites both files.
+	&& php "$MW_HOME/maintenance/composer-local.php" "$MW_HOME" "$MW_HOME/composer.canasta.json" /nonexistent "$MW_HOME/composer.local.json" > "$MW_HOME/.composer-deps-hash" \
 	# The directory monitor maintains the links in extensions/ and skins/ as
 	# this user, which owns only those two directories
 	&& useradd --system --no-create-home --home-dir /nonexistent --shell /usr/sbin/nologin "$LINKS_USER" \
