@@ -64,3 +64,4 @@ Canasta version history:
 - 3.5.36 - November 23, 2026 - Update to CanastaBase 1.3.33 (#788); update the Semantic MediaWiki, EditAccount and MobileFrontend extensions (#786)
 - 3.6.0 - November 24, 2026 - CanastaBase merged into this repository; canasta-base and canasta share one version number (#791)
 - 3.6.1 - November 24, 2026 - Update the OAuth, AntiSpoof, BetaFeatures and ExternalData extensions (#799); remove the unused `patches:` option (#793)
+- 3.6.2 - November 25, 2026 - Farm URL, purge host and cache directory fixes (#806); startup script fixes (#807); `canasta-base` composer baseline and version file (#808, #811); merge cruft removal (#809)
