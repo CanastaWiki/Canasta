@@ -35,7 +35,7 @@ def _php_calls(tmp_path, maxtime="60", maxjobs="", farm=False):
     })
     wrapper = textwrap.dedent("""
         php() {
-            [ "$1" = -r ] && { echo "main,wiki.example.com "; return; }
+            [ "$1" = -r ] && { echo "main "; return; }
             echo "$*" >> "$CALLS"
         }
         sleep() { [ "$1" = stop ] && exit 0; :; }

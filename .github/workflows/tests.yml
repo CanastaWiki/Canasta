@@ -56,7 +56,7 @@ jobs:
           check_together: true
           ignore_names: wait-for-it.sh
           scandir: _sources
-          severity: error
+          severity: warning
           version: v0.10.0
 
   unit:
@@ -77,10 +77,17 @@ jobs:
           python -m venv .venv
           .venv/bin/pip install -r requirements-test.txt
 
-      # The CanastaFarm404.php tests render the page through php and skip
-      # when it is absent, so fail here rather than skipping silently.
+      # The image's PHP version, so the php tests catch what the image would
+      # reject. The tests skip when php is absent, so fail here rather than
+      # skipping silently.
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          coverage: none
+
       - name: Check for php
-        run: php --version
+        run: php --version | grep '^PHP 8\.2\.'
 
       - name: Run tests
         run: .venv/bin/pytest tests/ -v

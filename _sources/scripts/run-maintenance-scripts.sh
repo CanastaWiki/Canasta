@@ -15,7 +15,6 @@ show_secrets() { [ -n "$_trace_on" ] && set -x; return 0; }
 hide_secrets
 WG_DB_TYPE=$(get_mediawiki_db_var wgDBtype)
 WG_DB_SERVER=$(get_mediawiki_db_var wgDBserver)
-WG_DB_NAME=$(get_mediawiki_db_var wgDBname)
 WG_DB_USER=$(get_mediawiki_db_var wgDBuser)
 WG_DB_PASSWORD=$(get_mediawiki_db_var wgDBpassword)
 show_secrets
@@ -44,7 +43,6 @@ waitdatabase() {
                     # script start were empty, so reload the rest to match.
                     hide_secrets
                     WG_DB_SERVER=$(get_mediawiki_db_var wgDBserver)
-                    WG_DB_NAME=$(get_mediawiki_db_var wgDBname)
                     WG_DB_USER=$(get_mediawiki_db_var wgDBuser)
                     WG_DB_PASSWORD=$(get_mediawiki_db_var wgDBpassword)
                     show_secrets
@@ -307,7 +305,6 @@ else
     hide_secrets
     WG_DB_TYPE=$(get_mediawiki_db_var wgDBtype)
     WG_DB_SERVER=$(get_mediawiki_db_var wgDBserver)
-    WG_DB_NAME=$(get_mediawiki_db_var wgDBname)
     WG_DB_USER=$(get_mediawiki_db_var wgDBuser)
     WG_DB_PASSWORD=$(get_mediawiki_db_var wgDBpassword)
     show_secrets
