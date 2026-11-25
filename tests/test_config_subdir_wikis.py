@@ -237,3 +237,24 @@ class TestIndentationTolerance:
         ], indent=indent)
         assert "/mediawiki/public_assets/canasta/" in cfg
         assert "/mediawiki/public_assets/demo/" in cfg
+
+
+class TestQuotedScalars:
+    """yaml.dump quotes scalars that would otherwise parse as another
+    type, such as an all-digit wiki ID. The quotes are YAML syntax, not
+    part of the value, so they must not reach the generated paths."""
+
+    @pytest.mark.parametrize("quote", ["'", '"'])
+    def test_quoted_id_is_unquoted(self, script_runner, quote):
+        cfg, result = script_runner([
+            {"id": "%s2024%s" % (quote, quote),
+             "url": "%sexample.com/y2024%s" % (quote, quote)},
+        ])
+        assert result.returncode == 0, result.stderr
+        assert (
+            "RewriteRule ^/y2024/public_assets/(.*)$ "
+            "/mediawiki/public_assets/2024/$1 [L]"
+        ) in cfg
+        assert "'" not in cfg
+        assert '"' not in cfg
+        assert (script_runner.workspace["www_root"] / "y2024").is_dir()

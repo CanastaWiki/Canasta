@@ -14,7 +14,7 @@ set -x
 # note that this command will also set all the necessary permissions
 echo "Syncing files..."
 rsync -ah --inplace --ignore-existing \
-  -og --chown="$WWW_GROUP:$WWW_USER" --chmod=Fg=rw,Dg=rwx \
+  -og --chown="$WWW_USER:$WWW_GROUP" --chmod=Fg=rw,Dg=rwx \
   "$MW_ORIGIN_FILES"/ "$MW_VOLUME"/
 protect_config
 
