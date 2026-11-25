@@ -108,6 +108,10 @@ $wgDBTableOptions = "ENGINE=InnoDB, DEFAULT CHARSET=binary";
 # Semantic MediaWiki: store smw.json on the persistent volume
 $smwgConfigFileDir = getenv( 'MW_VOLUME' ) . '/config/persistent';
 
+# Semantic MediaWiki stores no annotations from pages parsed by Parsoid, so
+# render with the legacy parser.
+$wgUseParsoidParser = false;
+
 # Main cache: APCu, or Redis when the instance runs one. APCu is private to
 # each PHP process, so maintenance scripts cannot purge the web server's copy;
 # a Redis the web server and scripts share can be purged.
@@ -303,5 +307,5 @@ $wgHooks['SiteNoticeAfter'][] = function ( &$siteNotice, Skin $skin ) {
 	}
 
 	$warningText = 'Please note that mailing does not currently work on this wiki, because Canasta requires <a href="https://www.mediawiki.org/wiki/Manual:$wgSMTP">$wgSMTP</a> to be set in order to send emails.';
-	$siteNotice .= Html::warningBox( '<span style="font-size: larger;">' . $warningText . '</span>' );
+	$siteNotice .= \MediaWiki\Html\Html::warningBox( '<span style="font-size: larger;">' . $warningText . '</span>' );
 };
