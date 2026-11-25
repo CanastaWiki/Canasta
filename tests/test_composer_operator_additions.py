@@ -163,6 +163,36 @@ def test_new_instance_uses_build_vendor(inst):
     assert not inst.config.exists()
 
 
+def _base_image_hash_command():
+    """The command the canasta-base Dockerfile runs to write the baseline
+    hash, with its line continuation removed."""
+    with open(os.path.join(REPO_ROOT, "Dockerfile")) as f:
+        dockerfile = f.read()
+    match = re.search(r'php "\$MW_HOME/maintenance/composer-local\.php"[^\n]*?'
+                      r'(?= \\\n)', dockerfile)
+    assert match, "Dockerfile no longer writes .composer-deps-hash"
+    return match.group(0)
+
+
+def test_base_image_without_operator_content_skips_composer(tmp_path):
+    # canasta-base has no composer.canasta.json; its Dockerfile records the
+    # hash vendor/ matches, so a new container does not run composer.
+    base = Instance(tmp_path)
+    subprocess.run(["bash", "-c", _base_image_hash_command()], env=base.env,
+                   check=True)
+    result, ran = base.start()
+    assert result.returncode == 0, result.stderr
+    assert not ran, "composer must not run on canasta-base without operator content"
+    assert "unchanged" in result.stdout
+
+    base.user_extension("Mine", {"require": {"mine/lib": "^1"}})
+    _write_json(base.config, {"extra": {"merge-plugin": {"include": [
+        "user-extensions/Mine/composer.json"]}}})
+    result, ran = base.start()
+    assert result.returncode == 0, result.stderr
+    assert ran
+
+
 def test_old_bundled_copy_skips_composer(inst):
     # A copy seeded by an older image: its own bundled list, including an
     # extension the image no longer bundles.
