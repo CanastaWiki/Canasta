@@ -55,7 +55,6 @@ waitdatabase() {
         fi
         if [ "$WG_DB_TYPE" != "mysql" ]; then
             echo >&2 "Unsupported database type ($WG_DB_TYPE)"
-            rm "$WWW_ROOT/.maintenance"
             exit 123
         fi
     fi
@@ -282,10 +281,8 @@ if [ -e "$MW_VOLUME/config/wikis.yaml" ] || [ -e "$MW_VOLUME/config/LocalSetting
   if isTrue "$MW_AUTOUPDATE"; then
       waitdatabase
   fi
-  rm "$WWW_ROOT/.maintenance"
   run_maintenance_scripts
 else
-    rm "$WWW_ROOT/.maintenance"
     set +x
     echo "Waiting for configuration (wikis.yaml or LocalSettings.php)..."
     n=6

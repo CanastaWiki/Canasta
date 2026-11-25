@@ -9,7 +9,6 @@ on:
     # Only activate for `master` branch
     branches:
       - master
-      - 1.2.x
 
   # Plus for any pull-requests
   pull_request:

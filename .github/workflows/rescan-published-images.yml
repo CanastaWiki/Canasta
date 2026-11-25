@@ -27,7 +27,7 @@ jobs:
       matrix:
         include:
           - image: canasta-base
-            issue_title: Scheduled CanastaBase image vulnerability scan
+            issue_title: Scheduled canasta-base image vulnerability scan
           - image: canasta
             issue_title: Scheduled Canasta image vulnerability scan
     env:

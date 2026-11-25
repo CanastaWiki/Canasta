@@ -126,7 +126,10 @@ def test_image_ships_the_sessions_table_files():
         r"^COPY .*_sources/canasta/canasta_sessions\.sql .*\$MW_HOME/$",
         dockerfile, re.M,
     )
-    assert re.search(r"^COPY _sources/scripts/\*\.php \$MW_HOME/maintenance/$", dockerfile, re.M)
+    assert re.search(
+        r"^COPY .*_sources/scripts/createSessionsTable\.php .*\$MW_HOME/maintenance/$",
+        dockerfile, re.M,
+    )
     assert os.path.exists(
         os.path.join(REPO_ROOT, "_sources", "scripts", "createSessionsTable.php")
     )

@@ -20,7 +20,6 @@ def _execute_entry_point(tmp_path, autoupdate):
     (mw_volume / "config").mkdir(parents=True)
     www_root.mkdir()
     (mw_volume / "config" / "wikis.yaml").touch()
-    (www_root / ".maintenance").touch()
     env = os.environ.copy()
     env.update({
         "MW_VOLUME": str(mw_volume),
@@ -49,13 +48,11 @@ def test_background_entry_point_does_not_update(tmp_path):
     assert "Checking for configuration" in result.stdout, result.stderr
     assert "Check for the need to run maintenance scripts" not in result.stderr
     assert "update.php" not in result.stderr
-    assert not (www_root / ".maintenance").exists()
 
 
 def test_background_entry_point_with_autoupdate_disabled(tmp_path):
     result, www_root = _execute_entry_point(tmp_path, "false")
     assert "Check for the need to run maintenance scripts" not in result.stderr
-    assert not (www_root / ".maintenance").exists()
 
 
 def _code_lines(path):
