@@ -40,13 +40,21 @@ namespace {
 	}
 	function canastaLoadConfigYaml( $dir ) {
 	}
+	function isEnvTrue( $name ): bool {
+		return in_array( getenv( $name ), [ 'True', 'TRUE', 'true', '1' ], true );
+	}
 	$IP = '/var/www/mediawiki/w';
+	if ( getenv( 'TEST_INTERNAL_SERVER' ) !== false ) {
+		$wgInternalServer = getenv( 'TEST_INTERNAL_SERVER' );
+	}
 	require $argv[1];
 	echo json_encode( [
 		'dbname' => $wgDBname,
 		'server' => $wgServer,
 		'scriptPath' => $wgScriptPath,
 		'articlePath' => $wgArticlePath,
+		'internalServer' => $wgInternalServer ?? null,
+		'cacheDirectory' => $wgCacheDirectory,
 	] );
 }
 """
@@ -64,7 +72,8 @@ def loader(tmp_path):
             json.dumps({"wikis": wikis}))
         run_env = os.environ.copy()
         for name in ("ORIGINAL_URL", "CANASTA_ENABLE_VERY_SHORT_URLS",
-                     "CANASTA_ENABLE_WIKI_DIRECTORY"):
+                     "CANASTA_ENABLE_WIKI_DIRECTORY", "MW_USE_CACHE_DIRECTORY",
+                     "TEST_INTERNAL_SERVER"):
             run_env.pop(name, None)
         run_env.update({"MW_VOLUME": str(mw_volume),
                         "MW_SITE_SERVER": "https://example.com"})
@@ -86,7 +95,9 @@ FARM = [
 
 class TestNamedWiki:
     def test_path_based_wiki_after_the_first(self, loader):
-        assert loader(FARM, wiki="en") == {
+        result = loader(FARM, wiki="en")
+        assert {k: result[k] for k in
+                ("dbname", "server", "scriptPath", "articlePath")} == {
             "dbname": "en",
             "server": "https://example.com",
             "scriptPath": "/en/w",
@@ -122,9 +133,53 @@ class TestNamedWiki:
 
 class TestNoWikiNamed:
     def test_defaults_to_the_first_wiki(self, loader):
-        assert loader(FARM) == {
+        result = loader(FARM)
+        assert {k: result[k] for k in
+                ("dbname", "server", "scriptPath", "articlePath")} == {
             "dbname": "de",
             "server": "https://example.com",
             "scriptPath": "/de/w",
             "articlePath": "/de/wiki/$1",
         }
+
+
+DOMAIN_FARM = [
+    {"id": "one", "url": "wiki1.example.com"},
+    {"id": "two", "url": "wiki2.example.org"},
+]
+
+
+class TestInternalServer:
+    """CDN purges go to $wgInternalServer, and Varnish hashes on the Host."""
+
+    def test_follows_the_selected_wiki_host(self, loader):
+        result = loader(DOMAIN_FARM, wiki="two", env={
+            "MW_SITE_SERVER": "https://wiki1.example.com",
+            "TEST_INTERNAL_SERVER": "http://wiki1.example.com",
+        })
+        assert result["internalServer"] == "http://wiki2.example.org"
+
+    def test_global_override_is_kept(self, loader):
+        result = loader(DOMAIN_FARM, wiki="two", env={
+            "MW_SITE_SERVER": "https://wiki1.example.com",
+            "TEST_INTERNAL_SERVER": "http://varnish.internal",
+        })
+        assert result["internalServer"] == "http://varnish.internal"
+
+    def test_unset_without_varnish(self, loader):
+        result = loader(DOMAIN_FARM, wiki="two")
+        assert result["internalServer"] is None
+
+
+class TestCacheDirectory:
+    @pytest.mark.parametrize("value", [None, "", "true", "1"])
+    def test_per_wiki_directory(self, loader, value):
+        env = {} if value is None else {"MW_USE_CACHE_DIRECTORY": value}
+        result = loader(FARM, wiki="en", env=env)
+        assert result["cacheDirectory"] == "/var/www/mediawiki/w/cache/en"
+
+    @pytest.mark.parametrize("value", ["false", "0"])
+    def test_turned_off(self, loader, value):
+        result = loader(FARM, wiki="en",
+                        env={"MW_USE_CACHE_DIRECTORY": value})
+        assert result["cacheDirectory"] is False
