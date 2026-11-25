@@ -30,8 +30,8 @@ def per_image_count_jq():
 def test_both_images_are_scanned_with_their_own_tracker():
     assert "- image: canasta-base" in WORKFLOW
     assert "- image: canasta\n" in WORKFLOW
-    assert "issue_title: Scheduled CanastaBase image vulnerability scan" in WORKFLOW
-    assert "issue_title: Scheduled Canasta image vulnerability scan" in WORKFLOW
+    assert "issue_title: Scheduled canasta-base image vulnerability scan" in WORKFLOW
+    assert "issue_title: Scheduled canasta image vulnerability scan" in WORKFLOW
 
 
 def test_one_cve_many_packages_counts_once_per_image():

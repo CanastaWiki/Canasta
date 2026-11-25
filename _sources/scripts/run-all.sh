@@ -177,7 +177,6 @@ fi
 echo "Starting services..."
 
 # Run maintenance scripts in background.
-touch "$WWW_ROOT/.maintenance"
 /run-maintenance-scripts.sh &
 
 echo "Checking permissions of Mediawiki log dir $MW_LOG..."
