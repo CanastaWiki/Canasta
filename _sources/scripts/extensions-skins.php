@@ -46,7 +46,6 @@ foreach (['extensions', 'skins'] as $type) {
         $persistentDirectories = $data['persistent directories'] ?? null;
         $additionalSteps = $data['additional steps'] ?? null;
         $bundled = $data['bundled'] ?? false;
-        $requiredExtensions = $data['required extensions'] ?? null;
 
         // Installation of extensions using their composer package (for SMW, etc.,)
         if ($data['composer-name'] ?? null) {

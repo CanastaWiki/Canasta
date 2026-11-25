@@ -51,7 +51,6 @@ def _run_under_stub_env(snippet, mw_volume, www_root, has_config=True,
     if has_config:
         # Touch wikis.yaml so the entry-point block sees a config
         open(os.path.join(mw_volume, "config", "wikis.yaml"), "w").close()
-    open(os.path.join(www_root, ".maintenance"), "w").close()
 
     wrapped = textwrap.dedent("""
         export MW_VOLUME=%(mw_volume)s
@@ -136,7 +135,6 @@ class TestSourceVsExecuteGuard:
         (mw_volume / "config").mkdir(parents=True)
         www_root.mkdir()
         (mw_volume / "config" / "wikis.yaml").touch()
-        (www_root / ".maintenance").touch()
         env.update({
             "MW_VOLUME": str(mw_volume),
             "WWW_ROOT": str(www_root),

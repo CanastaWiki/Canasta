@@ -1,6 +1,5 @@
 FROM mirror.gcr.io/library/debian:12.15 AS debian
 
-LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
 
 ARG MW_VERSION=REL1_43
@@ -43,18 +42,13 @@ RUN set -x; \
 	git \
 	inotify-tools \
 	apache2 \
-	software-properties-common \
-	gpg \
-	apt-transport-https \
 	ca-certificates \
 	wget \
-	lsb-release \
 	poppler-utils \
 	imagemagick  \
 	librsvg2-bin \
 	ghostscript \
 	python3-pygments \
-	patch \
 	vim \
 	mc \
 	ffmpeg \
@@ -135,7 +129,7 @@ RUN set -x; \
 # cd is used within a multi-command && chain
 # hadolint ignore=DL3003
 RUN set -x; \
-	export GIT_HTTP_USER_AGENT="CanastaBase (https://github.com/CanastaWiki/CanastaBase)" \
+	export GIT_HTTP_USER_AGENT="Canasta (https://github.com/CanastaWiki/Canasta)" \
 	&& git clone --depth 1 -b "$MW_CORE_VERSION" https://github.com/wikimedia/mediawiki "$MW_HOME" \
 	&& cd "$MW_HOME" \
 	&& git submodule update --init --recursive
@@ -235,7 +229,7 @@ COPY _sources/configs/php_timeouts.ini /etc/php/8.2/fpm/conf.d/
 COPY _sources/configs/php-fpm-www.conf /etc/php/8.2/fpm/pool.d/www.conf
 COPY _sources/scripts/*.sh /
 COPY _sources/scripts/maintenance-scripts/*.sh /maintenance-scripts/
-COPY _sources/scripts/*.php $MW_HOME/maintenance/
+COPY _sources/scripts/composer-local.php _sources/scripts/createSessionsTable.php _sources/scripts/verify-composer-deps.php $MW_HOME/maintenance/
 COPY _sources/scripts/extensions-skins.php /tmp/
 COPY _sources/configs/robots-main.txt _sources/configs/robots.php _sources/configs/sitemap.php _sources/configs/canasta-sitemaps.php $WWW_ROOT/
 COPY _sources/configs/.htaccess $WWW_ROOT/
@@ -257,7 +251,7 @@ RUN set -x; \
 	# Comment out ErrorLog and CustomLog parameters, we use rotatelogs in mediawiki.conf for the log files
 	&& sed -i 's/^\(\s*ErrorLog .*\)/# \1/g' /etc/apache2/apache2.conf \
 	&& sed -i 's/^\(\s*CustomLog .*\)/# \1/g' /etc/apache2/apache2.conf \
-	# Make web installer work with Canasta
+	# Shown when a wiki has no configuration file
 	&& cp "$MW_HOME/includes/Output/NoLocalSettings.php" "$MW_HOME/includes/CanastaNoLocalSettings.php" \
 	&& sed -i 's/MW_CONFIG_FILE/CANASTA_CONFIG_FILE/g' "$MW_HOME/includes/CanastaNoLocalSettings.php" \
 	# Modify config
@@ -275,9 +269,7 @@ RUN set -x; \
 	&& a2enconf writable-dirs \
 	&& a2disconf other-vhosts-access-log \
 	# Fail the build rather than the container start on an Apache config error
-	&& apachectl -t \
-	# Enable environment variables for FPM workers
-	&& sed -i '/clear_env/s/^;//' /etc/php/8.2/fpm/pool.d/www.conf
+	&& apachectl -t
 
 COPY _sources/images/Powered-by-Canasta.png /var/www/mediawiki/w/resources/assets/
 

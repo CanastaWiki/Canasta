@@ -1,4 +1,4 @@
-"""Shared fixtures for CanastaBase tests."""
+"""Shared fixtures for the Canasta image tests."""
 
 import json
 import os

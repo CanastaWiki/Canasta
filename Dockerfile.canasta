@@ -3,7 +3,6 @@
 ARG BASE_IMAGE=ghcr.io/canastawiki/canasta-base:latest
 FROM ${BASE_IMAGE} AS base
 
-LABEL maintainers=""
 LABEL org.opencontainers.image.source=https://github.com/CanastaWiki/Canasta
 
 COPY extensions-skins.yaml /tmp/

@@ -280,10 +280,8 @@ if [ -e "$MW_VOLUME/config/wikis.yaml" ] || [ -e "$MW_VOLUME/config/LocalSetting
   if isTrue "$MW_AUTOUPDATE"; then
       waitdatabase
   fi
-  rm "$WWW_ROOT/.maintenance"
   run_maintenance_scripts
 else
-    rm "$WWW_ROOT/.maintenance"
     set +x
     echo "Waiting for configuration (wikis.yaml or LocalSettings.php)..."
     n=6
