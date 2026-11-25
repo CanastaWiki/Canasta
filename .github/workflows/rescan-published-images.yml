@@ -29,7 +29,7 @@ jobs:
           - image: canasta-base
             issue_title: Scheduled canasta-base image vulnerability scan
           - image: canasta
-            issue_title: Scheduled Canasta image vulnerability scan
+            issue_title: Scheduled canasta image vulnerability scan
     env:
       IMAGE: ghcr.io/canastawiki/${{ matrix.image }}
       ISSUE_TITLE: ${{ matrix.issue_title }}
