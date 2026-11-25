@@ -24,7 +24,7 @@ def version_file_writer(dockerfile):
 
 
 @pytest.mark.parametrize("dockerfile,label", [
-    ("Dockerfile", "[https://canasta.wiki/ Canasta (base)]"),
+    ("Dockerfile", "[https://canasta.wiki/ CanastaBase]"),
     ("Dockerfile.canasta", "[https://canasta.wiki/ Canasta]"),
 ])
 def test_image_writes_version_file(dockerfile, label):

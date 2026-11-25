@@ -284,7 +284,7 @@ COPY _sources/images/Powered-by-Canasta.png /var/www/mediawiki/w/resources/asset
 # Line 1 is the Special:Version label, line 2 the version. The canasta
 # image overwrites this file with its own label.
 COPY VERSION /tmp/
-RUN printf '%s\n%s\n' '[https://canasta.wiki/ Canasta (base)]' "$(cat /tmp/VERSION)" > /tmp/canasta-version && rm /tmp/VERSION
+RUN printf '%s\n%s\n' '[https://canasta.wiki/ CanastaBase]' "$(cat /tmp/VERSION)" > /tmp/canasta-version && rm /tmp/VERSION
 
 EXPOSE 80
 WORKDIR $MW_HOME
