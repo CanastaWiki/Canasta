@@ -242,6 +242,15 @@ if ( !empty( $selectedWikiConfig ) ) {
 // Configure the wiki server and URL paths
 $scheme = parse_url( getenv( 'MW_SITE_SERVER' ) ?: 'https://localhost', PHP_URL_SCHEME ) ?: 'https';
 $wgServer = "$scheme://$serverName";
+
+// CDN purge URLs are built from $wgInternalServer and Varnish hashes on
+// the Host, so it must name this wiki's host rather than MW_SITE_SERVER's.
+// A value set in the global settings files is left alone.
+if ( isset( $wgInternalServer )
+	&& $wgInternalServer === preg_replace( '/^https:/', 'http:', getenv( 'MW_SITE_SERVER' ) ?: 'http://localhost' )
+) {
+	$wgInternalServer = preg_replace( '/^https:/', 'http:', $wgServer );
+}
 $wgScriptPath = !empty( $path )
 	? "/$path/w"
 	: "/w";
@@ -258,7 +267,11 @@ if ( $veryShortUrls ) {
 		? "/$path/wiki/$1"
 		: "/wiki/$1";
 }
-$wgCacheDirectory = "$IP/cache/$wikiID";
+// Each wiki gets its own cache directory unless MW_USE_CACHE_DIRECTORY
+// is set to turn cache directories off
+$wgCacheDirectory = ( (string)getenv( 'MW_USE_CACHE_DIRECTORY' ) === '' || isEnvTrue( 'MW_USE_CACHE_DIRECTORY' ) )
+	? "$IP/cache/$wikiID"
+	: false;
 $wgUploadDirectory = "$IP/images/$wikiID";
 
 // Load additional configuration files specific to the wiki ID

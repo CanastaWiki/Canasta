@@ -20,13 +20,11 @@ sleep 10
 
 # Check if wikis.yaml file exists
 if [ -f "$MW_VOLUME/config/wikis.yaml" ]; then
-    # Get all wiki ids and URLs from the YAML file using PHP
-    wikis=$(php -r '$wikis = yaml_parse_file("'$MW_VOLUME/config/wikis.yaml'")["wikis"]; foreach ($wikis as $wiki) { echo $wiki["id"] . "," . $wiki["url"] . " "; }')
+    # Get all wiki ids from the YAML file using PHP. MediaWiki derives each
+    # wiki's server and paths from wikis.yaml, given --wiki.
+    wikis=$(php -r '$wikis = yaml_parse_file("'$MW_VOLUME/config/wikis.yaml'")["wikis"]; foreach ($wikis as $wiki) { echo $wiki["id"] . " "; }')
 
-    for wiki_data in $wikis; do
-        # Split the id and url data into separate variables
-        IFS=',' read -r wiki_id wiki_url <<< "$wiki_data"
-        
+    for wiki_id in $wikis; do
         echo "$wiki_id job runner started"
 
         {
@@ -40,16 +38,16 @@ if [ -f "$MW_VOLUME/config/wikis.yaml" ]; then
                 date >> "$logfileNow"
                 # Job types that need to be run ASAP no matter how many of them are in the queue
                 # Those jobs should be very "cheap" to run
-                php $RJ --memory-limit="$MW_JOB_RUNNER_MEMORY_LIMIT" --type="enotifNotify" --server="https://$wiki_url" --wiki="$wiki_id" >> "$logfileNow" 2>&1
+                php $RJ --memory-limit="$MW_JOB_RUNNER_MEMORY_LIMIT" --type="enotifNotify" --wiki="$wiki_id" >> "$logfileNow" 2>&1
                 sleep 1
-                php $RJ --memory-limit="$MW_JOB_RUNNER_MEMORY_LIMIT" --type="createPage" --server="https://$wiki_url" --wiki="$wiki_id" >> "$logfileNow" 2>&1
+                php $RJ --memory-limit="$MW_JOB_RUNNER_MEMORY_LIMIT" --type="createPage" --wiki="$wiki_id" >> "$logfileNow" 2>&1
                 sleep 1
-                php $RJ --memory-limit="$MW_JOB_RUNNER_MEMORY_LIMIT" --type="refreshLinks" --server="https://$wiki_url" --wiki="$wiki_id" >> "$logfileNow" 2>&1
+                php $RJ --memory-limit="$MW_JOB_RUNNER_MEMORY_LIMIT" --type="refreshLinks" --wiki="$wiki_id" >> "$logfileNow" 2>&1
                 sleep 1
-                php $RJ --memory-limit="$MW_JOB_RUNNER_MEMORY_LIMIT" --type="htmlCacheUpdate" --maxjobs=500 --server="https://$wiki_url" --wiki="$wiki_id" >> "$logfileNow" 2>&1
+                php $RJ --memory-limit="$MW_JOB_RUNNER_MEMORY_LIMIT" --type="htmlCacheUpdate" --maxjobs=500 --wiki="$wiki_id" >> "$logfileNow" 2>&1
                 sleep 1
                 # Everything else, limit the length of each batch
-                php $RJ --memory-limit="$MW_JOB_RUNNER_MEMORY_LIMIT" "${general_limits[@]}" --server="https://$wiki_url" --wiki="$wiki_id" >> "$logfileNow" 2>&1
+                php $RJ --memory-limit="$MW_JOB_RUNNER_MEMORY_LIMIT" "${general_limits[@]}" --wiki="$wiki_id" >> "$logfileNow" 2>&1
 
                 # Wait some seconds to let the CPU do other things, like handling web requests, etc
                 echo mwjobrunner waits for "$MW_JOB_RUNNER_PAUSE" seconds... >> "$logfileNow"
