@@ -89,6 +89,14 @@ docker run -d --name "$name-db" --network "$name" --network-alias db \
 start_web
 echo "$image: first start is healthy"
 
+# `canasta version` reads the running version from line 2.
+expected_version=$(cat "$(dirname "$0")/../../VERSION")
+running_version=$(docker exec "$name-web" sed -n 2p /tmp/canasta-version) \
+  || fail "the image has no /tmp/canasta-version"
+[ "$running_version" = "$expected_version" ] \
+  || fail "/tmp/canasta-version says '$running_version', not '$expected_version'"
+echo "$image: reports version $running_version"
+
 # install.php as the CLI runs it, with its LocalSettings.php discarded.
 docker exec -i "$name-web" bash -c \
   'umask 077 && mkdir -p /tmp/canasta-install && IFS= read -r p && printf %s "$p" > /tmp/canasta-install/.dbpass && IFS= read -r p && printf %s "$p" > /tmp/canasta-install/.pass' \
