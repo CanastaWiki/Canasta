@@ -6,6 +6,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 }
 
 use Symfony\Component\Yaml\Yaml;
+use Wikimedia\Http\HttpStatus;
 
 // Very-short-URL mode for wiki farms.
 //

@@ -85,7 +85,7 @@ def test_sessions_use_their_own_table():
     assert run_cache_section(
         "echo json_encode($wgObjectCaches['canasta-sessions']);"
     ) == {
-        "class": "SqlBagOStuff",
+        "class": "MediaWiki\\ObjectCache\\SqlBagOStuff",
         "loggroup": "SQLBagOStuff",
         "tableName": "canasta_sessions",
     }

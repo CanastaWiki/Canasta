@@ -131,7 +131,7 @@ $wgMemCachedServers = [];
 # objectcache, which would log every user out. The table is created at
 # container start (run-maintenance-scripts.sh) and by update.php.
 $wgObjectCaches['canasta-sessions'] = [
-	'class' => SqlBagOStuff::class,
+	'class' => \MediaWiki\ObjectCache\SqlBagOStuff::class,
 	'loggroup' => 'SQLBagOStuff',
 	'tableName' => 'canasta_sessions',
 ];

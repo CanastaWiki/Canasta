@@ -1,7 +1,12 @@
 <?php
 
+use MediaWiki\Json\FormatJson;
+use MediaWiki\Maintenance\Maintenance;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\Settings\SettingsBuilder;
+use MediaWiki\Specials\SpecialVersion;
+use MediaWiki\Utils\GitInfo;
 
 $mwHome = getenv( 'MW_HOME' );
 
