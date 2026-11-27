@@ -272,6 +272,8 @@ jobs:
   # for pull-requests: <MW_VERSION>-<DATE>-<PR_NUMBER>, eg: 1.43.1-20260224-25
   # for `master` branch: latest + <MW_MAJOR>-latest + <MW_VERSION>-latest + <MW_VERSION>-<DATE>-<SHA>
   #   (plus <CANASTA_VERSION> when VERSION file changes)
+  # for `mw-1.47` branch: mw-1.47
+  #   (plus <CANASTA_VERSION> when VERSION file changes to a pre-release, eg: 5.0.0-rc.1)
   # <MW_VERSION> being parsed from Dockerfile
   push:
     needs: [build]
@@ -359,6 +361,8 @@ jobs:
           # Publish the immutable Canasta version tag (e.g., 3.6.0) only when
           # VERSION file changed anywhere in this push, so the tag is set once per
           # release even when the bump is not the tip commit of a multi-commit push.
+          # mw-1.47 publishes only pre-release versions (e.g., 5.0.0-rc.1): its
+          # final release comes from master.
           # Diff the whole pushed range (before..HEAD); fall back to HEAD~1 when the
           # base commit is the zero SHA (branch creation) or otherwise unreachable.
           BEFORE_SHA="${{ github.event.before }}"
@@ -367,7 +371,10 @@ jobs:
             DIFF_BASE="$BEFORE_SHA"
           fi
           IS_RELEASE=false
-          if [ "$VERSION" == "latest" ] && git diff "$DIFF_BASE" HEAD --name-only | grep -q '^VERSION$'; then
+          RELEASE_BRANCH=false
+          [ "$VERSION" == "latest" ] && RELEASE_BRANCH=true
+          [ "$VERSION" == "mw-1.47" ] && [[ "$CANASTA_VERSION" == *-* ]] && RELEASE_BRANCH=true
+          if [ "$RELEASE_BRANCH" == "true" ] && git diff "$DIFF_BASE" HEAD --name-only | grep -q '^VERSION$'; then
             # The version tag is meant to be immutable. If it already exists in
             # the registry (e.g. this workflow was re-run, or a later master
             # push landed after the release), do not re-push it from a different
